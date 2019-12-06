@@ -27,6 +27,16 @@ android {
             )
         }
     }
+
+    compileOptions {
+        incremental = true
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
 
 dependencies {
@@ -95,5 +105,10 @@ dependencies {
             group = "androidx.test.espresso",
             name = "espresso-core",
             version = "3.2.0"
+    )
+    implementation(
+            group = "org.apache.commons",
+            name = "commons-csv",
+            version = "1.7"
     )
 }
