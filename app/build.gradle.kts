@@ -3,6 +3,7 @@ plugins {
     id("kotlin-android")
     id("kotlin-android-extensions")
     id("androidx.navigation.safeargs")
+    kotlin("kapt")
 }
 
 android {
@@ -111,4 +112,10 @@ dependencies {
             name = "commons-csv",
             version = "1.7"
     )
+    val roomVersion by extra { "2.2.2" }
+    implementation(group = "androidx.room", name = "room-runtime", version = roomVersion)
+    kapt(group = "androidx.room", name = "room-compiler", version = roomVersion)
+    implementation("androidx.room:room-ktx:$roomVersion")
+    implementation("androidx.room:room-rxjava2:$roomVersion")
+    testImplementation("androidx.room:room-testing:$roomVersion")
 }
