@@ -2,6 +2,7 @@ package com.github.cheapmon.balalaika
 
 import com.github.cheapmon.balalaika.util.CSV
 import com.github.cheapmon.balalaika.util.ResourceLoader
+import org.junit.Assert.assertArrayEquals
 import org.junit.Test
 import java.io.ByteArrayInputStream
 import java.io.InputStream
@@ -23,7 +24,7 @@ class CsvTest {
 
     @Test
     fun `Correctly parses categories`() {
-        assert(csv.getCategories() contentDeepEquals arrayOf(Pair("Title", "plain"), Pair("Wordnet", "url")))
+        assertArrayEquals(csv.getCategories(), arrayOf(Pair("Title", "plain"), Pair("Wordnet", "url")))
     }
 
 }
