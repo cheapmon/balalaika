@@ -30,7 +30,7 @@ android {
     }
 
     compileOptions {
-        incremental = true
+        //incremental = true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -118,4 +118,7 @@ dependencies {
     implementation("androidx.room:room-ktx:$roomVersion")
     implementation("androidx.room:room-rxjava2:$roomVersion")
     testImplementation("androidx.room:room-testing:$roomVersion")
+    implementation("io.reactivex.rxjava3:rxjava:3.0.0-RC6")
+    implementation("io.reactivex.rxjava2:rxandroid:2.1.1")
+    implementation("io.reactivex.rxjava2:rxkotlin:2.4.0")
 }
