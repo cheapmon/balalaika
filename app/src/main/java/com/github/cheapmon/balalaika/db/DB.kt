@@ -11,11 +11,11 @@ import com.github.cheapmon.balalaika.util.CSV
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-@Database(entities = [Category::class, Word::class, WordInfo::class], version = 1, exportSchema = false)
+@Database(entities = [Category::class, Lemma::class, LemmaValue::class], version = 1, exportSchema = false)
 abstract class BalalaikaDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
-    abstract fun wordDao(): WordDao
-    abstract fun wordInfoDao(): WordInfoDao
+    abstract fun lemmaDao(): LemmaDao
+    abstract fun lemmaValueDao(): LemmaValueDao
 }
 
 object DB {
@@ -40,10 +40,10 @@ object DB {
                 val csv = CSV(AndroidResourceLoader(context))
                 it.categoryDao().insertAll(*csv.getCategories())
                 Log.i(this::class.java.name, "Inserted ${it.categoryDao().count()} categories")
-                it.wordDao().insertAll(*csv.getWords())
-                Log.i(this::class.java.name, "Inserted ${it.wordDao().count()} words")
-                it.wordInfoDao().insertAll(*csv.getWordInfos())
-                Log.i(this::class.java.name, "Inserted ${it.wordInfoDao().count()} tags")
+                it.lemmaDao().insertAll(*csv.getWords())
+                Log.i(this::class.java.name, "Inserted ${it.lemmaDao().count()} lemmata")
+                it.lemmaValueDao().insertAll(*csv.getWordInfos())
+                Log.i(this::class.java.name, "Inserted ${it.lemmaValueDao().count()} tags")
                 preferences.edit().putBoolean(dbInitKey, true).apply()
                 it
             }

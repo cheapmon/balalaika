@@ -12,6 +12,6 @@ interface ResourceLoader {
 
 class AndroidResourceLoader(private val context: Context) : ResourceLoader {
     override val defaultCategoriesID: Int = R.raw.categories
-    override val defaultWordsID: Int = R.raw.words
+    override val defaultWordsID: Int = R.raw.lemmata
     override fun openCSV(resourceID: Int): InputStream = this.context.resources.openRawResource(resourceID)
 }

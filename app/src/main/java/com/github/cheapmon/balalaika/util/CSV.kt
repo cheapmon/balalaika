@@ -1,8 +1,8 @@
 package com.github.cheapmon.balalaika.util
 
 import com.github.cheapmon.balalaika.db.Category
-import com.github.cheapmon.balalaika.db.Word
-import com.github.cheapmon.balalaika.db.WordInfo
+import com.github.cheapmon.balalaika.db.Lemma
+import com.github.cheapmon.balalaika.db.LemmaValue
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVRecord
 import java.io.InputStreamReader
@@ -15,18 +15,18 @@ class CSV(private val res: ResourceLoader) {
         }.toTypedArray()
     }
 
-    public fun getWords(): Array<Word> {
+    public fun getWords(): Array<Lemma> {
         return this.read(this.res.defaultWordsID).map {
-            Word(id = it["id"])
+            Lemma(id = it["id"])
         }.toTypedArray()
     }
 
-    public fun getWordInfos(): Array<WordInfo> {
+    public fun getWordInfos(): Array<LemmaValue> {
         return this.read(this.res.defaultWordsID).flatMap { record ->
             record.toMap().filterNot { (key, _) -> key == "id" }
                     .map { (key, value) ->
-                        WordInfo(
-                                wordId = record["id"],
+                        LemmaValue(
+                                lemmaId = record["id"],
                                 categoryId = key,
                                 value = value
                         )

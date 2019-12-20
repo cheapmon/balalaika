@@ -1,7 +1,7 @@
 package com.github.cheapmon.balalaika
 
 import com.github.cheapmon.balalaika.db.Category
-import com.github.cheapmon.balalaika.db.Word
+import com.github.cheapmon.balalaika.db.Lemma
 import com.github.cheapmon.balalaika.util.CSV
 import com.github.cheapmon.balalaika.util.ResourceLoader
 import org.junit.Assert.assertArrayEquals
@@ -37,17 +37,17 @@ class CsvTest {
     @Test
     fun `Correctly parses categories`() {
         assertArrayEquals(csv.getCategories(), arrayOf(
-                Category(id = 0, externalId = "title", name = "Title", widget = "plain"),
-                Category(id = 0, externalId = "wordnet", name = "Wordnet", widget = "url")
+                Category(id = "title", name = "Title", widget = "plain"),
+                Category(id = "wordnet", name = "Wordnet", widget = "url")
         ))
     }
 
     @Test
     fun `Correctly parses words`() {
         assertArrayEquals(csv.getWords(), arrayOf(
-                Word(id = 0, externalId = "word1"),
-                Word(id = 0, externalId = "word2"),
-                Word(id = 0, externalId = "word3")
+                Lemma(id = "word1"),
+                Lemma(id = "word2"),
+                Lemma(id = "word3")
         ))
     }
 
