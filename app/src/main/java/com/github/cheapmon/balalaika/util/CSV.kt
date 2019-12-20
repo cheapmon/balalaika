@@ -3,6 +3,7 @@ package com.github.cheapmon.balalaika.util
 import com.github.cheapmon.balalaika.db.Category
 import com.github.cheapmon.balalaika.db.Lemma
 import com.github.cheapmon.balalaika.db.LemmaValue
+import com.github.cheapmon.balalaika.db.Lexeme
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVRecord
 import java.io.InputStreamReader
@@ -16,13 +17,13 @@ class CSV(private val res: ResourceLoader) {
     }
 
     public fun getLemmata(): Array<Lemma> {
-        return this.read(this.res.defaultWordsID).map {
+        return this.read(this.res.defaultLemmataID).map {
             Lemma(id = it["id"])
         }.toTypedArray()
     }
 
     public fun getLemmaValues(): Array<LemmaValue> {
-        return this.read(this.res.defaultWordsID).flatMap { record ->
+        return this.read(this.res.defaultLemmataID).flatMap { record ->
             record.toMap().filterNot { (key, _) -> key == "id" }
                     .map { (key, value) ->
                         LemmaValue(
@@ -31,6 +32,12 @@ class CSV(private val res: ResourceLoader) {
                                 value = value
                         )
                     }
+        }.toTypedArray()
+    }
+
+    public fun getLexemes(): Array<Lexeme> {
+        return this.read(this.res.defaultLexemesID).map {
+            Lexeme(lemmaId = it["lemma"], lexeme = it["lexeme"])
         }.toTypedArray()
     }
 

@@ -11,11 +11,17 @@ import com.github.cheapmon.balalaika.util.CSV
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-@Database(entities = [Category::class, Lemma::class, LemmaValue::class], version = 1, exportSchema = false)
+@Database(entities = [
+    Category::class,
+    Lemma::class,
+    LemmaValue::class,
+    Lexeme::class
+], version = 1, exportSchema = false)
 abstract class BalalaikaDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
     abstract fun lemmaDao(): LemmaDao
     abstract fun lemmaValueDao(): LemmaValueDao
+    abstract fun lexemeValueDao(): LexemeDao
 }
 
 object DB {
@@ -43,7 +49,9 @@ object DB {
                 it.lemmaDao().insertAll(*csv.getLemmata())
                 Log.i(this::class.java.name, "Inserted ${it.lemmaDao().count()} lemmata")
                 it.lemmaValueDao().insertAll(*csv.getLemmaValues())
-                Log.i(this::class.java.name, "Inserted ${it.lemmaValueDao().count()} tags")
+                Log.i(this::class.java.name, "Inserted ${it.lemmaValueDao().count()} lemma values")
+                it.lexemeValueDao().insertAll(*csv.getLexemes())
+                Log.i(this::class.java.name, "Inserted ${it.lexemeValueDao().count()} lexemes")
                 preferences.edit().putBoolean(dbInitKey, true).apply()
                 it
             }

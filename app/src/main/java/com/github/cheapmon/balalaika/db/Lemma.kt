@@ -19,5 +19,5 @@ interface LemmaDao {
     fun count(): Int
 
     @Insert
-    fun insertAll(vararg categories: Lemma)
+    fun insertAll(vararg lemmata: Lemma)
 }
