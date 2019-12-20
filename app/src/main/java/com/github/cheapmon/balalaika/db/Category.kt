@@ -18,6 +18,9 @@ interface CategoryDao {
     @Query("SELECT * FROM category WHERE name like (:name) LIMIT 1")
     fun findByName(name: String): Category?
 
+    @Query("SELECT count(*) FROM category")
+    fun count(): Int
+
     @Insert
     fun insertAll(vararg categories: Category)
 }

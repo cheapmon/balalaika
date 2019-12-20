@@ -1,6 +1,7 @@
 package com.github.cheapmon.balalaika.db
 
 import android.content.Context
+import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -10,38 +11,44 @@ import com.github.cheapmon.balalaika.util.CSV
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-@Database(entities = [Category::class, Word::class], version = 1)
+@Database(entities = [Category::class, Word::class, WordInfo::class], version = 1)
 abstract class BalalaikaDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
     abstract fun wordDao(): WordDao
+    abstract fun wordInfoDao(): WordInfoDao
 }
 
 object DB {
     private lateinit var db: BalalaikaDatabase
     lateinit var connection: Observable<BalalaikaDatabase>
 
-    fun init(context: Context) {
+    fun init(context: Context): Observable<BalalaikaDatabase> {
         db = Room.databaseBuilder(context, BalalaikaDatabase::class.java, "balalaika").build()
-        this.populate(context)
+        return this.populate(context)
     }
 
-    fun connect(): Observable<BalalaikaDatabase> {
+    private fun connect(): Observable<BalalaikaDatabase> {
         return Observable.just(db).subscribeOn(Schedulers.io())
     }
 
-    private fun populate(context: Context) {
+    private fun populate(context: Context): Observable<BalalaikaDatabase> {
         val preferencesFile = context.resources.getString(R.string.preferences)
         val dbInitKey = context.resources.getString(R.string.db_init_key)
         val preferences = context.getSharedPreferences(preferencesFile, Context.MODE_PRIVATE)
-        if (!preferences.getBoolean(dbInitKey, false)) {
-            this.connect().subscribe {
+        return if (!preferences.getBoolean(dbInitKey, false)) {
+            this.connect().map {
                 val csv = CSV(AndroidResourceLoader(context))
-                val categories = csv.getCategories()
-                it.categoryDao().insertAll(*categories)
-                val words = csv.getWords()
-                it.wordDao().insertAll(*words)
+                it.categoryDao().insertAll(*csv.getCategories())
+                Log.i(this::class.java.name, "Inserted ${it.categoryDao().count()} categories")
+                it.wordDao().insertAll(*csv.getWords())
+                Log.i(this::class.java.name, "Inserted ${it.wordDao().count()} words")
+                it.wordInfoDao().insertAll(*csv.getWordInfos(it.wordDao().getAll(), it.categoryDao().getAll()))
+                Log.i(this::class.java.name, "Inserted ${it.wordInfoDao().count()} tags")
+                preferences.edit().putBoolean(dbInitKey, true).apply()
+                it
             }
-            preferences.edit().putBoolean(dbInitKey, true).apply()
+        } else {
+            this.connect()
         }
     }
 }

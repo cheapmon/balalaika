@@ -16,6 +16,9 @@ interface WordDao {
     @Query("SELECT * FROM word WHERE external_id = (:id) LIMIT 1")
     fun findById(id: String): Word?
 
+    @Query("SELECT count(*) FROM word")
+    fun count(): Int
+
     @Insert
     fun insertAll(vararg categories: Word)
 }
