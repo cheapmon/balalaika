@@ -5,8 +5,9 @@ import androidx.room.*
 @Entity
 data class Category(
         @PrimaryKey(autoGenerate = true) val id: Int,
-        @ColumnInfo(name = "name") val name: String?,
-        @ColumnInfo(name = "widget") val widget: String?
+        @ColumnInfo(name = "external_id") val externalId: String,
+        @ColumnInfo(name = "name") val name: String,
+        @ColumnInfo(name = "widget") val widget: String
 )
 
 @Dao

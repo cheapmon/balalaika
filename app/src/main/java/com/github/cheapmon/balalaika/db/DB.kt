@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.util.AndroidResourceLoader
 import com.github.cheapmon.balalaika.util.CSV
 import io.reactivex.rxjava3.core.Observable
@@ -28,14 +29,12 @@ object DB {
     }
 
     private fun populate(context: Context) {
-        val preferences = context.getSharedPreferences("com.github.cheapmon.balalaika.preferences", Context.MODE_PRIVATE)
-        if (preferences.getBoolean("isDatabaseInitialized", false)) {
-            return
-        } else {
+        val preferencesFile = context.resources.getString(R.string.preferences)
+        val dbInitKey = context.resources.getString(R.string.db_init_key)
+        val preferences = context.getSharedPreferences(preferencesFile, Context.MODE_PRIVATE)
+        if (!preferences.getBoolean(dbInitKey, false)) {
             this.connect().subscribe {
-                val categories = CSV(AndroidResourceLoader(context)).getCategories().map { pair ->
-                    Category(id = 0, name = pair.first, widget = pair.second)
-                }.toTypedArray()
+                val categories = CSV(AndroidResourceLoader(context)).getCategories()
                 it.categoryDao().insertAll(*categories)
             }
             preferences.edit().putBoolean("isDatabaseInitialized", true).apply()

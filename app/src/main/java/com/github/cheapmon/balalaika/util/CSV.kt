@@ -1,17 +1,15 @@
 package com.github.cheapmon.balalaika.util
 
+import com.github.cheapmon.balalaika.db.Category
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVRecord
 import java.io.InputStreamReader
 
-typealias Name = String
-typealias Widget = String
-
 class CSV(private val res: ResourceLoader) {
 
-    public fun getCategories(): Array<Pair<Name, Widget>> {
+    public fun getCategories(): Array<Category> {
         return this.read(this.res.defaultCategoriesID).map {
-            it["name"] to it["widget"]
+            Category(id = 0, externalId = it["id"], name = it["name"], widget = it["widget"])
         }.toTypedArray()
     }
 
