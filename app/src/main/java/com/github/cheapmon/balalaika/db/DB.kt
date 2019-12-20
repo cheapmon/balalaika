@@ -40,9 +40,9 @@ object DB {
                 val csv = CSV(AndroidResourceLoader(context))
                 it.categoryDao().insertAll(*csv.getCategories())
                 Log.i(this::class.java.name, "Inserted ${it.categoryDao().count()} categories")
-                it.lemmaDao().insertAll(*csv.getWords())
+                it.lemmaDao().insertAll(*csv.getLemmata())
                 Log.i(this::class.java.name, "Inserted ${it.lemmaDao().count()} lemmata")
-                it.lemmaValueDao().insertAll(*csv.getWordInfos())
+                it.lemmaValueDao().insertAll(*csv.getLemmaValues())
                 Log.i(this::class.java.name, "Inserted ${it.lemmaValueDao().count()} tags")
                 preferences.edit().putBoolean(dbInitKey, true).apply()
                 it

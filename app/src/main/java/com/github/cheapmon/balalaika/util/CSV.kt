@@ -15,13 +15,13 @@ class CSV(private val res: ResourceLoader) {
         }.toTypedArray()
     }
 
-    public fun getWords(): Array<Lemma> {
+    public fun getLemmata(): Array<Lemma> {
         return this.read(this.res.defaultWordsID).map {
             Lemma(id = it["id"])
         }.toTypedArray()
     }
 
-    public fun getWordInfos(): Array<LemmaValue> {
+    public fun getLemmaValues(): Array<LemmaValue> {
         return this.read(this.res.defaultWordsID).flatMap { record ->
             record.toMap().filterNot { (key, _) -> key == "id" }
                     .map { (key, value) ->

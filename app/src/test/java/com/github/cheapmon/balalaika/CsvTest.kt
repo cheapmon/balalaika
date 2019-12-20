@@ -44,7 +44,7 @@ class CsvTest {
 
     @Test
     fun `Correctly parses words`() {
-        assertArrayEquals(csv.getWords(), arrayOf(
+        assertArrayEquals(csv.getLemmata(), arrayOf(
                 Lemma(id = "word1"),
                 Lemma(id = "word2"),
                 Lemma(id = "word3")
