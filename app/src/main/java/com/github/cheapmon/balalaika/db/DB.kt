@@ -11,7 +11,7 @@ import com.github.cheapmon.balalaika.util.CSV
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-@Database(entities = [Category::class, Word::class, WordInfo::class], version = 1)
+@Database(entities = [Category::class, Word::class, WordInfo::class], version = 1, exportSchema = false)
 abstract class BalalaikaDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
     abstract fun wordDao(): WordDao
@@ -42,7 +42,7 @@ object DB {
                 Log.i(this::class.java.name, "Inserted ${it.categoryDao().count()} categories")
                 it.wordDao().insertAll(*csv.getWords())
                 Log.i(this::class.java.name, "Inserted ${it.wordDao().count()} words")
-                it.wordInfoDao().insertAll(*csv.getWordInfos(it.wordDao().getAll(), it.categoryDao().getAll()))
+                it.wordInfoDao().insertAll(*csv.getWordInfos())
                 Log.i(this::class.java.name, "Inserted ${it.wordInfoDao().count()} tags")
                 preferences.edit().putBoolean(dbInitKey, true).apply()
                 it

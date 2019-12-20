@@ -11,26 +11,23 @@ class CSV(private val res: ResourceLoader) {
 
     public fun getCategories(): Array<Category> {
         return this.read(this.res.defaultCategoriesID).map {
-            Category(id = 0, externalId = it["id"], name = it["name"], widget = it["widget"])
+            Category(id = it["id"], name = it["name"], widget = it["widget"])
         }.toTypedArray()
     }
 
     public fun getWords(): Array<Word> {
         return this.read(this.res.defaultWordsID).map {
-            Word(id = 0, externalId = it["id"])
+            Word(id = it["id"])
         }.toTypedArray()
     }
 
-    public fun getWordInfos(words: List<Word>, categories: List<Category>): Array<WordInfo> {
+    public fun getWordInfos(): Array<WordInfo> {
         return this.read(this.res.defaultWordsID).flatMap { record ->
-            val wordsMap = hashMapOf(*words.map { it.externalId to it.id }.toTypedArray())
-            val categoriesMap = hashMapOf(*categories.map { it.externalId to it.id }.toTypedArray())
             record.toMap().filterNot { (key, _) -> key == "id" }
                     .map { (key, value) ->
                         WordInfo(
-                                id = 0,
-                                wordId = wordsMap[record["id"]] ?: 0,
-                                categoryId = categoriesMap[key] ?: 0,
+                                wordId = record["id"],
+                                categoryId = key,
                                 value = value
                         )
                     }

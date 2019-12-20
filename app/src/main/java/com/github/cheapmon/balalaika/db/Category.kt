@@ -4,8 +4,7 @@ import androidx.room.*
 
 @Entity
 data class Category(
-        @PrimaryKey(autoGenerate = true) val id: Int,
-        @ColumnInfo(name = "external_id") val externalId: String,
+        @PrimaryKey val id: String,
         @ColumnInfo(name = "name") val name: String,
         @ColumnInfo(name = "widget") val widget: String
 )

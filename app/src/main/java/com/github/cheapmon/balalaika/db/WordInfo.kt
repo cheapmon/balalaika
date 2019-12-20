@@ -5,11 +5,10 @@ import androidx.room.*
 @Entity(foreignKeys = [
     ForeignKey(entity = Word::class, parentColumns = ["id"], childColumns = ["word_id"]),
     ForeignKey(entity = Category::class, parentColumns = ["id"], childColumns = ["category_id"])
-])
+], primaryKeys = ["word_id", "category_id"], indices = [Index(value = ["category_id"])])
 data class WordInfo(
-        @PrimaryKey(autoGenerate = true) val id: Int,
-        @ColumnInfo(name = "word_id") val wordId: Int,
-        @ColumnInfo(name = "category_id") val categoryId: Int,
+        @ColumnInfo(name = "word_id") val wordId: String,
+        @ColumnInfo(name = "category_id") val categoryId: String,
         @ColumnInfo(name = "value") val value: String
 )
 
@@ -19,7 +18,7 @@ interface WordInfoDao {
     fun getAll(): List<WordInfo>
 
     @Query("SELECT * FROM wordinfo WHERE word_id = (:word)")
-    fun getInfos(word: Int): List<WordInfo>
+    fun getInfos(word: String): List<WordInfo>
 
     @Query("SELECT count(*) FROM wordinfo")
     fun count(): Int
