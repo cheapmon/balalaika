@@ -10,9 +10,10 @@ import com.github.cheapmon.balalaika.util.CSV
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-@Database(entities = [Category::class], version = 1)
+@Database(entities = [Category::class, Word::class], version = 1)
 abstract class BalalaikaDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
+    abstract fun wordDao(): WordDao
 }
 
 object DB {
@@ -34,10 +35,13 @@ object DB {
         val preferences = context.getSharedPreferences(preferencesFile, Context.MODE_PRIVATE)
         if (!preferences.getBoolean(dbInitKey, false)) {
             this.connect().subscribe {
-                val categories = CSV(AndroidResourceLoader(context)).getCategories()
+                val csv = CSV(AndroidResourceLoader(context))
+                val categories = csv.getCategories()
                 it.categoryDao().insertAll(*categories)
+                val words = csv.getWords()
+                it.wordDao().insertAll(*words)
             }
-            preferences.edit().putBoolean("isDatabaseInitialized", true).apply()
+            preferences.edit().putBoolean(dbInitKey, true).apply()
         }
     }
 }

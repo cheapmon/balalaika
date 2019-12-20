@@ -6,10 +6,12 @@ import java.io.InputStream
 
 interface ResourceLoader {
     public val defaultCategoriesID: Int
-    public fun open(resourceID: Int): InputStream
+    public val defaultWordsID: Int
+    public fun openCSV(resourceID: Int): InputStream
 }
 
 class AndroidResourceLoader(private val context: Context) : ResourceLoader {
     override val defaultCategoriesID: Int = R.raw.categories
-    override fun open(resourceID: Int): InputStream = this.context.resources.openRawResource(resourceID)
+    override val defaultWordsID: Int = R.raw.words
+    override fun openCSV(resourceID: Int): InputStream = this.context.resources.openRawResource(resourceID)
 }

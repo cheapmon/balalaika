@@ -1,2 +1,3 @@
 id,name,widget
-title,Title,plain
+lexem,Lexem,title
+morphology,Morphology,plain
