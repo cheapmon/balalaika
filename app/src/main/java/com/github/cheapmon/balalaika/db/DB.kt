@@ -41,7 +41,6 @@ abstract class BalalaikaDatabase : RoomDatabase() {
             val preferencesFile = context.resources.getString(R.string.preferences)
             val preferences = context.getSharedPreferences(preferencesFile, Context.MODE_PRIVATE)
             val csv = CSV(AndroidResourceLoader(context))
-            val dbVersion = preferences.getInt("db_version", -1)
             if (csv.getVersion() > preferences.getInt("db_version", -1)) {
                 instance.clearAllTables()
                 instance.categoryDao().insertAll(*csv.getCategories())
