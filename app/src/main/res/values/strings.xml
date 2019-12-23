@@ -18,5 +18,4 @@
     <string name="hello_gallery_second">Hello GallerySecondFragment. Arg: %1$s</string>
     <string name="hello_slideshow_second">Hello SlideshowSecondFragment. Arg: %1$s</string>
     <string name="preferences">com.github.cheapmon.preferences</string>
-    <string name="db_init_key">isDatabaseInitialized</string>
 </resources>

@@ -116,9 +116,8 @@ dependencies {
     implementation(group = "androidx.room", name = "room-runtime", version = roomVersion)
     kapt(group = "androidx.room", name = "room-compiler", version = roomVersion)
     implementation("androidx.room:room-ktx:$roomVersion")
-    implementation("androidx.room:room-rxjava2:$roomVersion")
     testImplementation("androidx.room:room-testing:$roomVersion")
-    implementation("io.reactivex.rxjava3:rxjava:3.0.0-RC6")
-    implementation("io.reactivex.rxjava2:rxandroid:2.1.1")
-    implementation("io.reactivex.rxjava2:rxkotlin:2.4.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-rc03")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.2.0-rc03")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.2.0-rc03")
 }

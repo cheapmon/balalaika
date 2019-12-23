@@ -10,6 +10,12 @@ import java.io.InputStreamReader
 
 class CSV(private val res: ResourceLoader) {
 
+    public fun getVersion(): Int {
+        return this.read(this.res.defaultVersionID).firstOrNull() { record ->
+            record["key"] == "version"
+        }?.get("value")?.toInt() ?: -1
+    }
+
     public fun getCategories(): Array<Category> {
         return this.read(this.res.defaultCategoriesID).map {
             Category(id = it["id"], name = it["name"], widget = it["widget"])

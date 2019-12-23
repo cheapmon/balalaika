@@ -7,6 +7,7 @@ import com.github.cheapmon.balalaika.db.Lexeme
 import com.github.cheapmon.balalaika.util.CSV
 import com.github.cheapmon.balalaika.util.ResourceLoader
 import org.junit.Assert.assertArrayEquals
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.io.ByteArrayInputStream
 import java.io.InputStream
@@ -17,6 +18,7 @@ class CsvTest {
         override val defaultCategoriesID: Int = 0
         override val defaultLemmataID: Int = 1
         override val defaultLexemesID: Int = 2
+        override val defaultVersionID: Int = 3
         override fun openCSV(resourceID: Int): InputStream {
             return when (resourceID) {
                 this.defaultCategoriesID -> ByteArrayInputStream("""
@@ -35,6 +37,10 @@ class CsvTest {
                     word1,word11
                     word2,word21
                     word3,word31
+                """.trimIndent().toByteArray())
+                this.defaultVersionID -> ByteArrayInputStream("""
+                    key,value
+                    version,3
                 """.trimIndent().toByteArray())
                 else -> ByteArrayInputStream("".toByteArray())
             }
@@ -79,6 +85,11 @@ class CsvTest {
                 Lexeme(lemmaId = "word2", lexeme = "word21"),
                 Lexeme(lemmaId = "word3", lexeme = "word31")
         ))
+    }
+
+    @Test
+    fun `Correctly parses version`() {
+        assertEquals(csv.getVersion(), 3)
     }
 
 }

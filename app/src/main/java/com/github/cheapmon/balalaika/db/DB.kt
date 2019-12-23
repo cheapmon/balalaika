@@ -8,8 +8,6 @@ import androidx.room.RoomDatabase
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.util.AndroidResourceLoader
 import com.github.cheapmon.balalaika.util.CSV
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.schedulers.Schedulers
 
 @Database(entities = [
     Category::class,
@@ -22,41 +20,41 @@ abstract class BalalaikaDatabase : RoomDatabase() {
     abstract fun lemmaDao(): LemmaDao
     abstract fun lemmaValueDao(): LemmaValueDao
     abstract fun lexemeValueDao(): LexemeDao
-}
 
-object DB {
-    private lateinit var db: BalalaikaDatabase
-    lateinit var connection: Observable<BalalaikaDatabase>
+    companion object {
+        private lateinit var instance: BalalaikaDatabase
 
-    fun init(context: Context): Observable<BalalaikaDatabase> {
-        db = Room.databaseBuilder(context, BalalaikaDatabase::class.java, "balalaika").build()
-        return this.populate(context)
-    }
-
-    private fun connect(): Observable<BalalaikaDatabase> {
-        return Observable.just(db).subscribeOn(Schedulers.io())
-    }
-
-    private fun populate(context: Context): Observable<BalalaikaDatabase> {
-        val preferencesFile = context.resources.getString(R.string.preferences)
-        val dbInitKey = context.resources.getString(R.string.db_init_key)
-        val preferences = context.getSharedPreferences(preferencesFile, Context.MODE_PRIVATE)
-        return if (!preferences.getBoolean(dbInitKey, false)) {
-            this.connect().map {
-                val csv = CSV(AndroidResourceLoader(context))
-                it.categoryDao().insertAll(*csv.getCategories())
-                Log.i(this::class.java.name, "Inserted ${it.categoryDao().count()} categories")
-                it.lemmaDao().insertAll(*csv.getLemmata())
-                Log.i(this::class.java.name, "Inserted ${it.lemmaDao().count()} lemmata")
-                it.lemmaValueDao().insertAll(*csv.getLemmaValues())
-                Log.i(this::class.java.name, "Inserted ${it.lemmaValueDao().count()} lemma values")
-                it.lexemeValueDao().insertAll(*csv.getLexemes())
-                Log.i(this::class.java.name, "Inserted ${it.lexemeValueDao().count()} lexemes")
-                preferences.edit().putBoolean(dbInitKey, true).apply()
-                it
+        fun connect(context: Context): BalalaikaDatabase {
+            if (!this::instance.isInitialized) {
+                instance = Room.databaseBuilder(
+                        context,
+                        BalalaikaDatabase::class.java,
+                        "balalaika"
+                ).build()
+                val version = this.populate(context)
+                Log.i(this::class.java.name, "Initialized Database version $version")
             }
-        } else {
-            this.connect()
+            return instance
+        }
+
+        private fun populate(context: Context): Int {
+            val preferencesFile = context.resources.getString(R.string.preferences)
+            val preferences = context.getSharedPreferences(preferencesFile, Context.MODE_PRIVATE)
+            val csv = CSV(AndroidResourceLoader(context))
+            val dbVersion = preferences.getInt("db_version", -1)
+            if (csv.getVersion() > preferences.getInt("db_version", -1)) {
+                instance.clearAllTables()
+                instance.categoryDao().insertAll(*csv.getCategories())
+                instance.lemmaDao().insertAll(*csv.getLemmata())
+                instance.lemmaValueDao().insertAll(*csv.getLemmaValues())
+                instance.lexemeValueDao().insertAll(*csv.getLexemes())
+                preferences.edit().putInt("db_version", csv.getVersion()).apply()
+                Log.i(this::class.java.name, "Inserted ${instance.categoryDao().count()} categories")
+                Log.i(this::class.java.name, "Inserted ${instance.lemmaDao().count()} lemmata")
+                Log.i(this::class.java.name, "Inserted ${instance.lemmaValueDao().count()} lemma values")
+                Log.i(this::class.java.name, "Inserted ${instance.lexemeValueDao().count()} lexemes")
+            }
+            return csv.getVersion()
         }
     }
 }
