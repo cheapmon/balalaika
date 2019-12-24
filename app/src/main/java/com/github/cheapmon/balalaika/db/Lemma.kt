@@ -20,4 +20,12 @@ interface LemmaDao {
 
     @Insert
     fun insertAll(vararg lemmata: Lemma)
+
+    @Transaction
+    @Query("SELECT * FROM lemma")
+    fun getAllWithLexemes(): List<LemmaWithLexemes>
+
+    @Transaction
+    @Query("SELECT * FROM lemma WHERE id = (:id) LIMIT 1")
+    fun findByIdWithLexemes(id: String): LemmaWithLexemes?
 }
