@@ -2,7 +2,7 @@ package com.github.cheapmon.balalaika.util
 
 import com.github.cheapmon.balalaika.db.Category
 import com.github.cheapmon.balalaika.db.Lemma
-import com.github.cheapmon.balalaika.db.LemmaValue
+import com.github.cheapmon.balalaika.db.LemmaProperty
 import com.github.cheapmon.balalaika.db.Lexeme
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVRecord
@@ -28,11 +28,11 @@ class CSV(private val res: ResourceLoader) {
         }.toTypedArray()
     }
 
-    public fun getLemmaValues(): Array<LemmaValue> {
+    public fun getLemmaProperties(): Array<LemmaProperty> {
         return this.read(this.res.defaultLemmataID).flatMap { record ->
             record.toMap().filterNot { (key, _) -> key == "id" }
                     .map { (key, value) ->
-                        LemmaValue(
+                        LemmaProperty(
                                 lemmaId = record["id"],
                                 categoryId = key,
                                 value = if(value.isEmpty()) null else value

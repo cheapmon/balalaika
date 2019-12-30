@@ -2,7 +2,7 @@ package com.github.cheapmon.balalaika
 
 import com.github.cheapmon.balalaika.db.Category
 import com.github.cheapmon.balalaika.db.Lemma
-import com.github.cheapmon.balalaika.db.LemmaValue
+import com.github.cheapmon.balalaika.db.LemmaProperty
 import com.github.cheapmon.balalaika.db.Lexeme
 import com.github.cheapmon.balalaika.util.CSV
 import com.github.cheapmon.balalaika.util.ResourceLoader
@@ -68,13 +68,13 @@ class CsvTest {
 
     @Test
     fun `Correctly parses lemma values`() {
-        assertArrayEquals(csv.getLemmaValues(), arrayOf(
-                LemmaValue(lemmaId = "word1", categoryId = "title", value = "WORD"),
-                LemmaValue(lemmaId = "word1", categoryId = "wordnet", value = "-"),
-                LemmaValue(lemmaId = "word2", categoryId = "title", value = "WORD"),
-                LemmaValue(lemmaId = "word2", categoryId = "wordnet", value = "-"),
-                LemmaValue(lemmaId = "word3", categoryId = "title", value = "WORD"),
-                LemmaValue(lemmaId = "word3", categoryId = "wordnet", value = "-")
+        assertArrayEquals(csv.getLemmaProperties(), arrayOf(
+                LemmaProperty(lemmaId = "word1", categoryId = "title", value = "WORD"),
+                LemmaProperty(lemmaId = "word1", categoryId = "wordnet", value = "-"),
+                LemmaProperty(lemmaId = "word2", categoryId = "title", value = "WORD"),
+                LemmaProperty(lemmaId = "word2", categoryId = "wordnet", value = "-"),
+                LemmaProperty(lemmaId = "word3", categoryId = "title", value = "WORD"),
+                LemmaProperty(lemmaId = "word3", categoryId = "wordnet", value = "-")
         ))
     }
 

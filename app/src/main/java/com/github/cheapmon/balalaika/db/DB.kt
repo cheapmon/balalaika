@@ -12,14 +12,14 @@ import com.github.cheapmon.balalaika.util.CSV
 @Database(entities = [
     Category::class,
     Lemma::class,
-    LemmaValue::class,
+    LemmaProperty::class,
     Lexeme::class
 ], version = 1, exportSchema = false)
 abstract class BalalaikaDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
     abstract fun lemmaDao(): LemmaDao
-    abstract fun lemmaValueDao(): LemmaValueDao
-    abstract fun lexemeValueDao(): LexemeDao
+    abstract fun lemmaPropertyDao(): LemmaPropertyDao
+    abstract fun lexemeDao(): LexemeDao
 
     companion object {
         private lateinit var instance: BalalaikaDatabase
@@ -45,13 +45,13 @@ abstract class BalalaikaDatabase : RoomDatabase() {
                 instance.clearAllTables()
                 instance.categoryDao().insertAll(*csv.getCategories())
                 instance.lemmaDao().insertAll(*csv.getLemmata())
-                instance.lemmaValueDao().insertAll(*csv.getLemmaValues())
-                instance.lexemeValueDao().insertAll(*csv.getLexemes())
+                instance.lemmaPropertyDao().insertAll(*csv.getLemmaProperties())
+                instance.lexemeDao().insertAll(*csv.getLexemes())
                 preferences.edit().putInt("db_version", csv.getVersion()).apply()
                 Log.i(this::class.java.name, "Inserted ${instance.categoryDao().count()} categories")
                 Log.i(this::class.java.name, "Inserted ${instance.lemmaDao().count()} lemmata")
-                Log.i(this::class.java.name, "Inserted ${instance.lemmaValueDao().count()} lemma values")
-                Log.i(this::class.java.name, "Inserted ${instance.lexemeValueDao().count()} lexemes")
+                Log.i(this::class.java.name, "Inserted ${instance.lemmaPropertyDao().count()} lemma properties")
+                Log.i(this::class.java.name, "Inserted ${instance.lexemeDao().count()} lexemes")
             }
             return csv.getVersion()
         }

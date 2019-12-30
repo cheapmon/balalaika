@@ -6,30 +6,30 @@ import androidx.room.*
     ForeignKey(entity = Lemma::class, parentColumns = ["id"], childColumns = ["lemma_id"]),
     ForeignKey(entity = Category::class, parentColumns = ["id"], childColumns = ["category_id"])
 ], primaryKeys = ["lemma_id", "category_id"], indices = [Index(value = ["category_id"])],
-        tableName = "lemma_value")
-data class LemmaValue(
+        tableName = "lemma_property")
+data class LemmaProperty(
         @ColumnInfo(name = "lemma_id") val lemmaId: String,
         @ColumnInfo(name = "category_id") val categoryId: String,
         @ColumnInfo(name = "value") val value: String?
 )
 
 @Dao
-interface LemmaValueDao {
-    @Query("SELECT * FROM lemma_value")
-    fun getAll(): List<LemmaValue>
+interface LemmaPropertyDao {
+    @Query("SELECT * FROM lemma_property")
+    fun getAll(): List<LemmaProperty>
 
-    @Query("SELECT * FROM lemma_value WHERE lemma_id = (:word)")
-    fun getValues(word: String): List<LemmaValue>
+    @Query("SELECT * FROM lemma_property WHERE lemma_id = (:word)")
+    fun getValues(word: String): List<LemmaProperty>
 
-    @Query("SELECT count(*) FROM lemma_value")
+    @Query("SELECT count(*) FROM lemma_property")
     fun count(): Int
 
     @Insert
-    fun insertAll(vararg lemmaValues: LemmaValue)
+    fun insertAll(vararg lemmaProperties: LemmaProperty)
 
     @Transaction
-    @Query("""SELECT lemma_value.lemma_id, lemma_value.category_id, lemma_value.value
-                    FROM lemma_value LEFT JOIN lexeme ON lemma_value.lemma_id = lexeme.lemma_id
+    @Query("""SELECT lemma_property.lemma_id, lemma_property.category_id, lemma_property.value
+                    FROM lemma_property LEFT JOIN lexeme ON lemma_property.lemma_id = lexeme.lemma_id
                     WHERE lexeme.lexeme = (:lexeme)""")
-    fun findByLexeme(lexeme: String): List<LemmaValue>
+    fun findByLexeme(lexeme: String): List<LemmaProperty>
 }
