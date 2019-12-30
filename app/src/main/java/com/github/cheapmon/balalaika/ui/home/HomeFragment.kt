@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -12,7 +12,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.db.BalalaikaDatabase
+import com.github.cheapmon.balalaika.db.LemmaProperty
 import com.github.cheapmon.balalaika.db.Lexeme
+import com.github.cheapmon.balalaika.ui.Widget
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -30,10 +33,13 @@ class HomeFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         viewLifecycleOwner.lifecycleScope.launch {
             val lexemes = withContext(Dispatchers.Default) {
-                BalalaikaDatabase.connect(view.context).lexemeDao().getAll()
+                val db = BalalaikaDatabase.connect(view.context)
+                db.lexemeDao().getAll().map {
+                    it to db.lemmaPropertyDao().findByLexeme(it.lexeme)
+                }
             }
             viewManager = LinearLayoutManager(view.context)
-            viewAdapter = HomeAdapter(lexemes)
+            viewAdapter = HomeAdapter(viewLifecycleOwner.lifecycleScope, lexemes)
             recyclerView = view.findViewById<RecyclerView>(R.id.home).apply {
                 setHasFixedSize(true)
                 layoutManager = viewManager
@@ -43,7 +49,7 @@ class HomeFragment : Fragment() {
         return view
     }
 
-    class HomeAdapter(private val data: List<Lexeme>) :
+    class HomeAdapter(private val scope: CoroutineScope, private val data: List<Pair<Lexeme, List<LemmaProperty>>>) :
             RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
         class HomeViewHolder(val cardView: CardView) : RecyclerView.ViewHolder(cardView)
 
@@ -55,7 +61,13 @@ class HomeFragment : Fragment() {
         }
 
         override fun onBindViewHolder(holder: HomeViewHolder, position: Int) {
-            holder.cardView.findViewById<TextView>(R.id.title).text = data[position].lexeme
+            val container = holder.cardView.findViewById<LinearLayoutCompat>(R.id.container)
+            val values = data[position].second
+            scope.launch {
+                for (value in values) {
+                    container.addView(Widget.get(container, value))
+                }
+            }
         }
 
         override fun getItemCount() = data.size

@@ -24,6 +24,13 @@ abstract class BalalaikaDatabase : RoomDatabase() {
     companion object {
         private lateinit var instance: BalalaikaDatabase
 
+        fun connect(): BalalaikaDatabase {
+            if (!this::instance.isInitialized) {
+                throw IllegalStateException("Database not yet initialized")
+            }
+            return instance
+        }
+
         fun connect(context: Context): BalalaikaDatabase {
             if (!this::instance.isInitialized) {
                 instance = Room.databaseBuilder(

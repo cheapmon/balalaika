@@ -1,3 +1,4 @@
 id,name,widget
 lemma,Lemma,title
 morphology,Morphology,plain
+mood,Mood,plain
