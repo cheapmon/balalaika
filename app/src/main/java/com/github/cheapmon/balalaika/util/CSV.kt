@@ -35,7 +35,7 @@ class CSV(private val res: ResourceLoader) {
                         LemmaValue(
                                 lemmaId = record["id"],
                                 categoryId = key,
-                                value = value
+                                value = if(value.isEmpty()) null else value
                         )
                     }
         }.toTypedArray()

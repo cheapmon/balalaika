@@ -10,7 +10,7 @@ import androidx.room.*
 data class LemmaValue(
         @ColumnInfo(name = "lemma_id") val lemmaId: String,
         @ColumnInfo(name = "category_id") val categoryId: String,
-        @ColumnInfo(name = "value") val value: String
+        @ColumnInfo(name = "value") val value: String?
 )
 
 @Dao
