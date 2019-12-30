@@ -8,15 +8,6 @@ data class Lexeme(
         @ColumnInfo(name = "lexeme") val lexeme: String
 )
 
-data class LemmaWithLexemes(
-        @Embedded val lemma: Lemma,
-        @Relation(
-                parentColumn = "id",
-                entityColumn = "lemma_id"
-        )
-        val lexemes: List<Lexeme>
-)
-
 @Dao
 interface LexemeDao {
     @Query("SELECT * FROM lexeme")

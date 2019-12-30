@@ -26,4 +26,10 @@ interface LemmaValueDao {
 
     @Insert
     fun insertAll(vararg lemmaValues: LemmaValue)
+
+    @Transaction
+    @Query("""SELECT lemma_value.lemma_id, lemma_value.category_id, lemma_value.value
+                    FROM lemma_value LEFT JOIN lexeme ON lemma_value.lemma_id = lexeme.lemma_id
+                    WHERE lexeme.lexeme = (:lexeme)""")
+    fun findByLexeme(lexeme: String): List<LemmaValue>
 }
