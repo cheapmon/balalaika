@@ -22,10 +22,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setupView()
         GlobalScope.launch {
             BalalaikaDatabase.connect(this@MainActivity)
         }
+        setupView()
     }
 
     private fun setupView() {
