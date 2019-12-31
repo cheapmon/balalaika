@@ -5,4 +5,5 @@
     <string name="nav_header_description">Navigation</string>
     <string name="preferences">com.github.cheapmon.preferences</string>
     <string name="icon_src">The Balalaika icon was made by https://www.flaticon.com/authors/freepik</string>
+    <string name="add_to_bookmarks">Add to bookmarks</string>
 </resources>
