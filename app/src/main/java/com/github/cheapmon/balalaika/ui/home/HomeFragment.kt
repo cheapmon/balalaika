@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
@@ -62,10 +63,10 @@ class HomeFragment : Fragment() {
 
         override fun onBindViewHolder(holder: HomeViewHolder, position: Int) {
             val container = holder.cardView.findViewById<LinearLayoutCompat>(R.id.container)
-            val values = data[position].second
+            val (lexeme, values) = data[position]
             scope.launch {
                 for (value in values) {
-                    container.addView(Widget.get(container, value))
+                    container.addView(Widget.get(container, lexeme, value))
                 }
             }
         }
