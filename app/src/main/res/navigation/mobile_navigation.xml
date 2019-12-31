@@ -11,4 +11,10 @@
         android:label="@string/app_name"
         tools:layout="@layout/fragment_home"/>
 
+    <fragment
+        android:id="@+id/nav_info"
+        android:name="com.github.cheapmon.balalaika.ui.info.InfoFragment"
+        android:label="@string/menu_info"
+        tools:layout="@layout/fragment_info"/>
+
 </navigation>
