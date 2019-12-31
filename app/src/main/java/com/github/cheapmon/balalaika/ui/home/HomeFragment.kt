@@ -37,6 +37,7 @@ class HomeFragment : Fragment() {
                 val db = BalalaikaDatabase.connect(view.context)
                 db.lexemeDao().getAll().map {
                     it to db.lemmaPropertyDao().findByLexeme(it.lexeme)
+                            .filter { property -> property.value != null }
                 }
             }
             viewManager = LinearLayoutManager(view.context)
