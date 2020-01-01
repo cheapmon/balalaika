@@ -1,5 +1,7 @@
 package com.github.cheapmon.balalaika.db
 
+import androidx.lifecycle.LiveData
+import androidx.paging.DataSource
 import androidx.room.*
 
 @Entity(primaryKeys = ["lemma_id", "lexeme"], indices = [Index(value = ["lemma_id"])])
@@ -11,7 +13,7 @@ data class Lexeme(
 @Dao
 interface LexemeDao {
     @Query("SELECT * FROM lexeme")
-    fun getAll(): List<Lexeme>
+    fun getAll(): DataSource.Factory<Int, Lexeme>
 
     @Query("SELECT * FROM lexeme WHERE lemma_id = (:lemmaId)")
     fun getLexemes(lemmaId: String): List<Lexeme>

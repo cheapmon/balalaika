@@ -1,5 +1,6 @@
 package com.github.cheapmon.balalaika.db
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 
 @Entity
@@ -14,8 +15,8 @@ interface CategoryDao {
     @Query("SELECT * FROM category")
     fun getAll(): List<Category>
 
-    @Query("SELECT * FROM category WHERE name like (:name) LIMIT 1")
-    fun findByName(name: String): Category?
+    @Query("SELECT * FROM category WHERE id = (:id) LIMIT 1")
+    fun findById(id: String): Category?
 
     @Query("SELECT count(*) FROM category")
     fun count(): Int

@@ -93,6 +93,7 @@ dependencies {
             name = "navigation-ui-ktx",
             version = "2.1.0"
     )
+    implementation("androidx.paging:paging-runtime-ktx:2.1.0")
     testImplementation(
             group = "junit",
             name = "junit",
