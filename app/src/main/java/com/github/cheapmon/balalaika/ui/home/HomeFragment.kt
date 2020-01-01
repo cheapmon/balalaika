@@ -55,7 +55,7 @@ class HomeFragment : Fragment() {
             if (entry != null) {
                 container.removeAllViews()
                 for (line in entry.lines) {
-                    val widget = Widget.get(holder.cardView, line)
+                    val widget = Widget.get(container, line)
                     container.addView(widget)
                 }
             }

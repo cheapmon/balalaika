@@ -9,8 +9,6 @@
     android:layout_marginTop="12dp"
     android:layout_marginRight="12dp"
     android:layout_marginBottom="0dp"
-    android:clickable="true"
-    android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
     app:cardElevation="8dp">
 
@@ -25,7 +23,7 @@
             style="@android:style/Widget.DeviceDefault.ImageButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:contentDescription="@string/add_to_bookmarks"
@@ -38,9 +36,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
