@@ -34,7 +34,7 @@ class HomeFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         viewLifecycleOwner.lifecycleScope.launch {
             val lexemes = withContext(Dispatchers.Default) {
-                val db = BalalaikaDatabase.connect(view.context)
+                val db = BalalaikaDatabase.instance
                 db.lexemeDao().getAll().map {
                     it to db.lemmaPropertyDao().findByLexeme(it.lexeme)
                             .filter { property -> property.value != null }

@@ -1,6 +1,7 @@
 package com.github.cheapmon.balalaika
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -22,9 +23,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        GlobalScope.launch {
-            BalalaikaDatabase.connect(this@MainActivity)
-        }
+        BalalaikaDatabase.init(this)
         setupView()
     }
 

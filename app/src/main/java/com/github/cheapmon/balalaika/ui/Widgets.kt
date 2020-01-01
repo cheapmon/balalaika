@@ -24,7 +24,7 @@ abstract class Widget {
         suspend fun get(group: ViewGroup, lexeme: Lexeme, property: LemmaProperty): View {
             if (!this::categories.isInitialized) {
                 categories = withContext(Dispatchers.Default) {
-                    mapOf(*BalalaikaDatabase.connect().categoryDao().getAll().map { it.id to it }.toTypedArray())
+                    mapOf(*BalalaikaDatabase.instance.categoryDao().getAll().map { it.id to it }.toTypedArray())
                 }
             }
             val widget: Widget = when (categories[property.categoryId]?.widget) {
