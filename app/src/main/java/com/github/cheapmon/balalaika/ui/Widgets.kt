@@ -5,9 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.db.LemmaProperty
-import com.github.cheapmon.balalaika.db.Lexeme
-import com.github.cheapmon.balalaika.ui.home.DictionaryEntry
 import com.github.cheapmon.balalaika.ui.home.PropertyLine
 
 abstract class Widget {
@@ -35,7 +32,11 @@ object LemmaWidget : Widget() {
     override fun create(group: ViewGroup, line: PropertyLine): View {
         val view = super.inflate(group, R.layout.lexeme_widget_title)
         view.findViewById<TextView>(R.id.title).text = line.lexeme.lexeme
-        view.findViewById<TextView>(R.id.lemma).text = line.property.value
+        if (line.lexeme.lexeme != line.property.value) {
+            view.findViewById<TextView>(R.id.lemma).text = line.property.value
+        } else {
+            view.findViewById<TextView>(R.id.lemma).text = ""
+        }
         return view
     }
 }
