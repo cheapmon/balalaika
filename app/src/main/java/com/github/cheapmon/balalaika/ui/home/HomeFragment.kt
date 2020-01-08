@@ -9,12 +9,14 @@ import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.ui.Widget
+import kotlinx.coroutines.CoroutineScope
 
 class HomeFragment : Fragment() {
     override fun onCreateView(
@@ -26,7 +28,7 @@ class HomeFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         val viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         val recyclerView = view.findViewById<RecyclerView>(R.id.home)
-        val adapter = HomeAdapter()
+        val adapter = HomeAdapter(viewLifecycleOwner.lifecycleScope)
         viewModel.lexemes.observe(this, Observer {
             adapter.submitList(it)
         })
@@ -36,7 +38,7 @@ class HomeFragment : Fragment() {
         return view
     }
 
-    class HomeAdapter() : PagedListAdapter<DictionaryEntry, HomeAdapter.HomeViewHolder>(
+    class HomeAdapter(private val scope: CoroutineScope) : PagedListAdapter<DictionaryEntry, HomeAdapter.HomeViewHolder>(
             object : DiffUtil.ItemCallback<DictionaryEntry>() {
                 override fun areContentsTheSame(oldItem: DictionaryEntry, newItem: DictionaryEntry): Boolean {
                     return oldItem.lexeme.lexeme == newItem.lexeme.lexeme
@@ -55,7 +57,7 @@ class HomeFragment : Fragment() {
             if (entry != null) {
                 container.removeAllViews()
                 for (line in entry.lines) {
-                    val widget = Widget.get(container, line)
+                    val widget = Widget.get(scope, container, line)
                     container.addView(widget)
                 }
             }

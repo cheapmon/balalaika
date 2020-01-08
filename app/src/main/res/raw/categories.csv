@@ -1,4 +1,5 @@
 id,name,widget
 lemma,Lemma,lemma
 morphology,Morphology,plain
-mood,Mood,plain
+wordclass,Wordclass,plain
+trans_en,English Translation,text_url

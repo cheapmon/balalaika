@@ -1,35 +1,40 @@
 package com.github.cheapmon.balalaika.ui
 
+import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
+import androidx.core.content.ContextCompat.startActivity
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.ui.home.PropertyLine
+import kotlinx.coroutines.CoroutineScope
+
 
 abstract class Widget {
-    abstract fun create(group: ViewGroup, line: PropertyLine): View
+    abstract fun create(scope: CoroutineScope, group: ViewGroup, line: PropertyLine): View
     fun inflate(group: ViewGroup, id: Int): View {
         return LayoutInflater.from(group.context).inflate(id, group, false)
     }
 
     companion object {
-        const val PLAIN = "plain"
-        const val LEMMA = "lemma"
+        private val WIDGET_CODES = mapOf(
+                "plain" to PlainWidget,
+                "lemma" to LemmaWidget,
+                "text_url" to TextUrlWidget
+        )
 
-        fun get(group: ViewGroup, line: PropertyLine): View {
-            val widgetClass = when (line.widget) {
-                LEMMA -> LemmaWidget
-                PLAIN -> PlainWidget
-                else -> PlainWidget
-            }
-            return widgetClass.create(group, line)
+        fun get(scope: CoroutineScope, group: ViewGroup, line: PropertyLine): View {
+            val widgetClass: Widget = WIDGET_CODES.getOrElse(line.widget) { PlainWidget }
+            return widgetClass.create(scope, group, line)
         }
     }
 }
 
 object LemmaWidget : Widget() {
-    override fun create(group: ViewGroup, line: PropertyLine): View {
+    override fun create(scope: CoroutineScope, group: ViewGroup, line: PropertyLine): View {
         val view = super.inflate(group, R.layout.lexeme_widget_title)
         view.findViewById<TextView>(R.id.title).text = line.lexeme.lexeme
         if (line.lexeme.lexeme != line.property.value) {
@@ -42,10 +47,33 @@ object LemmaWidget : Widget() {
 }
 
 object PlainWidget : Widget() {
-    override fun create(group: ViewGroup, line: PropertyLine): View {
+    override fun create(scope: CoroutineScope, group: ViewGroup, line: PropertyLine): View {
         val view = super.inflate(group, R.layout.lexeme_widget_plain)
         view.findViewById<TextView>(R.id.name).text = line.category
         view.findViewById<TextView>(R.id.value).text = line.property.value
+        return view
+    }
+}
+
+object TextUrlWidget : Widget() {
+    override fun create(scope: CoroutineScope, group: ViewGroup, line: PropertyLine): View {
+        val view = super.inflate(group, R.layout.lexeme_widget_text_url)
+        view.findViewById<TextView>(R.id.category).text = line.category
+        val value = line.property.value?.split(Regex(";;;"))?.first()
+        val link = line.property.value?.split(Regex(";;;"))?.getOrNull(1)
+        if (link != null) {
+            view.findViewById<TextView>(R.id.value_with_link).text = value
+            view.findViewById<ImageButton>(R.id.link_btn).setOnClickListener {
+                startActivity(view.context, Intent(Intent.ACTION_VIEW, Uri.parse(link)), null)
+            }
+        } else {
+            view.findViewById<TextView>(R.id.value).apply {
+                text = value
+                visibility = View.VISIBLE
+            }
+            view.findViewById<TextView>(R.id.value_with_link).visibility = View.GONE
+            view.findViewById<ImageButton>(R.id.link_btn).visibility = View.GONE
+        }
         return view
     }
 }
