@@ -1,5 +1,5 @@
 id,name,widget
-lemma,Lemma,lemma
+lexeme,Lexeme,lexeme
 morphology,Morphology,plain
 wordclass,Wordclass,plain
 trans_en,English Translation,text_url

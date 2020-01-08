@@ -1,9 +1,9 @@
 package com.github.cheapmon.balalaika
 
 import com.github.cheapmon.balalaika.db.Category
-import com.github.cheapmon.balalaika.db.Lemma
-import com.github.cheapmon.balalaika.db.LemmaProperty
 import com.github.cheapmon.balalaika.db.Lexeme
+import com.github.cheapmon.balalaika.db.LexemeProperty
+import com.github.cheapmon.balalaika.db.FullForm
 import com.github.cheapmon.balalaika.util.CSV
 import com.github.cheapmon.balalaika.util.ResourceLoader
 import org.junit.Assert.assertArrayEquals
@@ -16,9 +16,10 @@ class CsvTest {
 
     private object MockResourceLoader : ResourceLoader {
         override val defaultCategoriesID: Int = 0
-        override val defaultLemmataID: Int = 1
-        override val defaultLexemesID: Int = 2
+        override val defaultLexemesID: Int = 1
+        override val defaultFullFormsID: Int = 2
         override val defaultVersionID: Int = 3
+        override val defaultPropertiesID: Int = 4
         override fun openCSV(resourceID: Int): InputStream {
             return when (resourceID) {
                 this.defaultCategoriesID -> ByteArrayInputStream("""
@@ -26,14 +27,14 @@ class CsvTest {
                     title,Title,plain
                     wordnet,Wordnet,url
                 """.trimIndent().toByteArray())
-                this.defaultLemmataID -> ByteArrayInputStream("""
+                this.defaultLexemesID -> ByteArrayInputStream("""
                     id,title,wordnet
                     word1,WORD,-
                     word2,WORD,-
                     word3,WORD,-
                     """.trimIndent().toByteArray())
-                this.defaultLexemesID -> ByteArrayInputStream("""
-                    lemma,lexeme
+                this.defaultFullFormsID -> ByteArrayInputStream("""
+                    lexeme,full_form
                     word1,word11
                     word2,word21
                     word3,word31
@@ -41,6 +42,10 @@ class CsvTest {
                 this.defaultVersionID -> ByteArrayInputStream("""
                     key,value
                     version,3
+                """.trimIndent().toByteArray())
+                this.defaultPropertiesID -> ByteArrayInputStream("""
+                    lexeme,category,value
+                    word1,wordnet,https://example.org
                 """.trimIndent().toByteArray())
                 else -> ByteArrayInputStream("".toByteArray())
             }
@@ -58,32 +63,33 @@ class CsvTest {
     }
 
     @Test
-    fun `Correctly parses lemmata`() {
-        assertArrayEquals(csv.getLemmata(), arrayOf(
-                Lemma(id = "word1"),
-                Lemma(id = "word2"),
-                Lemma(id = "word3")
-        ))
-    }
-
-    @Test
-    fun `Correctly parses lemma values`() {
-        assertArrayEquals(csv.getLemmaProperties(), arrayOf(
-                LemmaProperty(lemmaId = "word1", categoryId = "title", value = "WORD"),
-                LemmaProperty(lemmaId = "word1", categoryId = "wordnet", value = "-"),
-                LemmaProperty(lemmaId = "word2", categoryId = "title", value = "WORD"),
-                LemmaProperty(lemmaId = "word2", categoryId = "wordnet", value = "-"),
-                LemmaProperty(lemmaId = "word3", categoryId = "title", value = "WORD"),
-                LemmaProperty(lemmaId = "word3", categoryId = "wordnet", value = "-")
-        ))
-    }
-
-    @Test
     fun `Correctly parses lexemes`() {
         assertArrayEquals(csv.getLexemes(), arrayOf(
-                Lexeme(lemmaId = "word1", lexeme = "word11"),
-                Lexeme(lemmaId = "word2", lexeme = "word21"),
-                Lexeme(lemmaId = "word3", lexeme = "word31")
+                Lexeme(id = "word1"),
+                Lexeme(id = "word2"),
+                Lexeme(id = "word3")
+        ))
+    }
+
+    @Test
+    fun `Correctly parses lexeme properties`() {
+        assertArrayEquals(csv.getLexemeProperties(), arrayOf(
+                LexemeProperty(id = 0, lexemeId = "word1", categoryId = "title", value = "WORD"),
+                LexemeProperty(id = 0, lexemeId = "word1", categoryId = "wordnet", value = "-"),
+                LexemeProperty(id = 0, lexemeId = "word2", categoryId = "title", value = "WORD"),
+                LexemeProperty(id = 0, lexemeId = "word2", categoryId = "wordnet", value = "-"),
+                LexemeProperty(id = 0, lexemeId = "word3", categoryId = "title", value = "WORD"),
+                LexemeProperty(id = 0, lexemeId = "word3", categoryId = "wordnet", value = "-"),
+                LexemeProperty(id = 0, lexemeId = "word1", categoryId = "wordnet", value = "https://example.org")
+        ))
+    }
+
+    @Test
+    fun `Correctly parses full forms`() {
+        assertArrayEquals(csv.getFullForms(), arrayOf(
+                FullForm(id = 0, lexemeId = "word1", fullForm = "word11"),
+                FullForm(id = 0, lexemeId = "word2", fullForm = "word21"),
+                FullForm(id = 0, lexemeId = "word3", fullForm = "word31")
         ))
     }
 

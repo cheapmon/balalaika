@@ -1,22 +1,19 @@
 package com.github.cheapmon.balalaika.db
 
-import androidx.lifecycle.LiveData
-import androidx.paging.DataSource
 import androidx.room.*
 
-@Entity(primaryKeys = ["lemma_id", "lexeme"], indices = [Index(value = ["lemma_id"])])
+@Entity
 data class Lexeme(
-        @ColumnInfo(name = "lemma_id") val lemmaId: String,
-        @ColumnInfo(name = "lexeme") val lexeme: String
+        @PrimaryKey val id: String
 )
 
 @Dao
 interface LexemeDao {
     @Query("SELECT * FROM lexeme")
-    fun getAll(): DataSource.Factory<Int, Lexeme>
+    fun getAll(): List<Lexeme>
 
-    @Query("SELECT * FROM lexeme WHERE lemma_id = (:lemmaId)")
-    fun getLexemes(lemmaId: String): List<Lexeme>
+    @Query("SELECT * FROM lexeme WHERE id = (:id) LIMIT 1")
+    fun findById(id: String): Lexeme?
 
     @Query("SELECT count(*) FROM lexeme")
     fun count(): Int

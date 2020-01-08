@@ -22,7 +22,7 @@ abstract class Widget {
     companion object {
         private val WIDGET_CODES = mapOf(
                 "plain" to PlainWidget,
-                "lemma" to LemmaWidget,
+                "lexeme" to LexemeWidget,
                 "text_url" to TextUrlWidget
         )
 
@@ -33,14 +33,14 @@ abstract class Widget {
     }
 }
 
-object LemmaWidget : Widget() {
+object LexemeWidget : Widget() {
     override fun create(scope: CoroutineScope, group: ViewGroup, line: PropertyLine): View {
         val view = super.inflate(group, R.layout.lexeme_widget_title)
-        view.findViewById<TextView>(R.id.title).text = line.lexeme.lexeme
-        if (line.lexeme.lexeme != line.property.value) {
-            view.findViewById<TextView>(R.id.lemma).text = line.property.value
+        view.findViewById<TextView>(R.id.title).text = line.fullForm.fullForm
+        if (line.fullForm.fullForm != line.property.value) {
+            view.findViewById<TextView>(R.id.lexeme).text = line.property.value
         } else {
-            view.findViewById<TextView>(R.id.lemma).text = ""
+            view.findViewById<TextView>(R.id.lexeme).text = ""
         }
         return view
     }

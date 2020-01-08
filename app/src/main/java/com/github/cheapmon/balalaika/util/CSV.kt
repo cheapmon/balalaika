@@ -1,9 +1,9 @@
 package com.github.cheapmon.balalaika.util
 
 import com.github.cheapmon.balalaika.db.Category
-import com.github.cheapmon.balalaika.db.Lemma
-import com.github.cheapmon.balalaika.db.LemmaProperty
 import com.github.cheapmon.balalaika.db.Lexeme
+import com.github.cheapmon.balalaika.db.LexemeProperty
+import com.github.cheapmon.balalaika.db.FullForm
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVRecord
 import java.io.InputStreamReader
@@ -22,28 +22,39 @@ class CSV(private val res: ResourceLoader) {
         }.toTypedArray()
     }
 
-    public fun getLemmata(): Array<Lemma> {
-        return this.read(this.res.defaultLemmataID).map {
-            Lemma(id = it["id"])
+    public fun getLexemes(): Array<Lexeme> {
+        return this.read(this.res.defaultLexemesID).map {
+            Lexeme(id = it["id"])
         }.toTypedArray()
     }
 
-    public fun getLemmaProperties(): Array<LemmaProperty> {
-        return this.read(this.res.defaultLemmataID).flatMap { record ->
+    public fun getLexemeProperties(): Array<LexemeProperty> {
+        val fromLemma = this.read(this.res.defaultLexemesID).flatMap { record ->
             record.toMap().filterNot { (key, _) -> key == "id" }
                     .map { (key, value) ->
-                        LemmaProperty(
-                                lemmaId = record["id"],
+                        LexemeProperty(
+                                id = 0,
+                                lexemeId = record["id"],
                                 categoryId = key,
                                 value = if(value.isEmpty()) null else value
                         )
                     }
-        }.toTypedArray()
+        }
+        val fromProperty = this.read(this.res.defaultPropertiesID).map { record ->
+            val value = record["value"].let { if(it.isEmpty()) null else it }
+            LexemeProperty(
+                    id = 0,
+                    lexemeId = record["lexeme"],
+                    categoryId = record["category"],
+                    value = value
+            )
+        }
+        return (fromLemma + fromProperty).toTypedArray()
     }
 
-    public fun getLexemes(): Array<Lexeme> {
-        return this.read(this.res.defaultLexemesID).map {
-            Lexeme(lemmaId = it["lemma"], lexeme = it["lexeme"])
+    public fun getFullForms(): Array<FullForm> {
+        return this.read(this.res.defaultFullFormsID).map {
+            FullForm(id = 0, lexemeId = it["lexeme"], fullForm = it["full_form"])
         }.toTypedArray()
     }
 

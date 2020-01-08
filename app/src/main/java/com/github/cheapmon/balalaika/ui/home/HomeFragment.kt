@@ -41,7 +41,7 @@ class HomeFragment : Fragment() {
     class HomeAdapter(private val scope: CoroutineScope) : PagedListAdapter<DictionaryEntry, HomeAdapter.HomeViewHolder>(
             object : DiffUtil.ItemCallback<DictionaryEntry>() {
                 override fun areContentsTheSame(oldItem: DictionaryEntry, newItem: DictionaryEntry): Boolean {
-                    return oldItem.lexeme.lexeme == newItem.lexeme.lexeme
+                    return oldItem.fullForm.fullForm == newItem.fullForm.fullForm
                 }
 
                 override fun areItemsTheSame(oldItem: DictionaryEntry, newItem: DictionaryEntry): Boolean {

@@ -11,19 +11,18 @@ import com.github.cheapmon.balalaika.util.AndroidResourceLoader
 import com.github.cheapmon.balalaika.util.CSV
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.util.concurrent.Executors
 
 @Database(entities = [
     Category::class,
-    Lemma::class,
-    LemmaProperty::class,
-    Lexeme::class
+    Lexeme::class,
+    LexemeProperty::class,
+    FullForm::class
 ], version = 1, exportSchema = false)
 abstract class BalalaikaDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
-    abstract fun lemmaDao(): LemmaDao
-    abstract fun lemmaPropertyDao(): LemmaPropertyDao
     abstract fun lexemeDao(): LexemeDao
+    abstract fun lexemePropertyDao(): LexemePropertyDao
+    abstract fun fullFormDao(): FullFormDao
 
     companion object {
         lateinit var instance: BalalaikaDatabase
@@ -57,13 +56,13 @@ abstract class BalalaikaDatabase : RoomDatabase() {
         private fun populate(csv: CSV) {
             instance.clearAllTables()
             instance.categoryDao().insertAll(*csv.getCategories())
-            instance.lemmaDao().insertAll(*csv.getLemmata())
-            instance.lemmaPropertyDao().insertAll(*csv.getLemmaProperties())
             instance.lexemeDao().insertAll(*csv.getLexemes())
+            instance.lexemePropertyDao().insertAll(*csv.getLexemeProperties())
+            instance.fullFormDao().insertAll(*csv.getFullForms())
             Log.i(this::class.java.name, "Inserted ${instance.categoryDao().count()} categories")
-            Log.i(this::class.java.name, "Inserted ${instance.lemmaDao().count()} lemmata")
-            Log.i(this::class.java.name, "Inserted ${instance.lemmaPropertyDao().count()} lemma properties")
             Log.i(this::class.java.name, "Inserted ${instance.lexemeDao().count()} lexemes")
+            Log.i(this::class.java.name, "Inserted ${instance.lexemePropertyDao().count()} lexeme properties")
+            Log.i(this::class.java.name, "Inserted ${instance.fullFormDao().count()} full forms")
         }
     }
 }

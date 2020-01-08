@@ -1,3 +1,1 @@
-lemma,lexeme
-word_happy,happiness
-word_unhappy,unhappiness
+id,lexeme,wordclass,morphology
