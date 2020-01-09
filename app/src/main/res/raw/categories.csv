@@ -1,5 +1,5 @@
 id,name,widget
 lexeme,Lexeme,lexeme
-morphology,Morphology,plain
+morphology,Morphology,key_value
 wordclass,Wordclass,plain
 trans_en,English Translation,text_url
