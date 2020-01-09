@@ -18,7 +18,10 @@ class CSV(private val res: ResourceLoader) {
 
     public fun getCategories(): Array<Category> {
         return this.read(this.res.defaultCategoriesID).map {
-            Category(id = it["id"], name = it["name"], widget = it["widget"])
+            Category(id = it["id"],
+                    name = it["name"],
+                    widget = it["widget"],
+                    sequence = it["sequence"].toInt())
         }.toTypedArray()
     }
 
@@ -36,12 +39,12 @@ class CSV(private val res: ResourceLoader) {
                                 id = 0,
                                 lexemeId = record["id"],
                                 categoryId = key,
-                                value = if(value.isEmpty()) null else value
+                                value = if (value.isEmpty()) null else value
                         )
                     }
         }
         val fromProperty = this.read(this.res.defaultPropertiesID).map { record ->
-            val value = record["value"].let { if(it.isEmpty()) null else it }
+            val value = record["value"].let { if (it.isEmpty()) null else it }
             LexemeProperty(
                     id = 0,
                     lexemeId = record["lexeme"],

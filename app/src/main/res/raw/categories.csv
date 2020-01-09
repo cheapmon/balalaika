@@ -1,5 +1,5 @@
-id,name,widget
-lexeme,Lexeme,lexeme
-morphology,Morphology,key_value
-wordclass,Wordclass,plain
-trans_en,English Translation,text_url
+id,name,widget,sequence
+lexeme,Lexeme,lexeme,1
+morphology,Morphology,key_value,4
+wordclass,Wordclass,plain,3
+trans_en,English Translation,text_url,2

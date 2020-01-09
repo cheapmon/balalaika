@@ -3,11 +3,12 @@ package com.github.cheapmon.balalaika.db
 import androidx.lifecycle.LiveData
 import androidx.room.*
 
-@Entity
+@Entity(indices = [Index(value = ["sequence"], unique = true)])
 data class Category(
         @PrimaryKey val id: String,
         @ColumnInfo(name = "name") val name: String,
-        @ColumnInfo(name = "widget") val widget: String
+        @ColumnInfo(name = "widget") val widget: String,
+        @ColumnInfo(name = "sequence") val sequence: Int
 )
 
 @Dao

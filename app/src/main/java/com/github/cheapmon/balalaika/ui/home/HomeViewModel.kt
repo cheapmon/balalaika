@@ -19,6 +19,8 @@ class HomeViewModel() : ViewModel() {
             val lines = BalalaikaDatabase.instance.lexemePropertyDao()
                     .findByFullForm(lexeme.id)
                     .groupBy { it.categoryId }
+                    .toList()
+                    .sortedBy { BalalaikaDatabase.instance.categoryDao().findById(it.first)?.sequence }
                     .map { (categoryId, properties) ->
                         val category = BalalaikaDatabase.instance.categoryDao().findById(categoryId)
                         val widget = category?.widget ?: "plain"
