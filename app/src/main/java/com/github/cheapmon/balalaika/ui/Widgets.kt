@@ -22,12 +22,13 @@ abstract class Widget {
     companion object {
         private val WIDGET_CODES = mapOf(
                 "plain" to PlainWidget,
+                "key_value" to KeyValueWidget,
                 "lexeme" to LexemeWidget,
                 "text_url" to TextUrlWidget
         )
 
         fun get(scope: CoroutineScope, group: ViewGroup, line: PropertyLine): View {
-            val widgetClass: Widget = WIDGET_CODES.getOrElse(line.widget) { PlainWidget }
+            val widgetClass: Widget = WIDGET_CODES.getOrElse(line.widget) { KeyValueWidget }
             return widgetClass.create(scope, group, line)
         }
     }
@@ -48,7 +49,15 @@ object LexemeWidget : Widget() {
 
 object PlainWidget : Widget() {
     override fun create(scope: CoroutineScope, group: ViewGroup, line: PropertyLine): View {
-        val view = super.inflate(group, R.layout.lexeme_widget_plain)
+        return super.inflate(group, R.layout.lexeme_widget_plain).apply {
+            this.findViewById<TextView>(R.id.value).text = line.property.value
+        }
+    }
+}
+
+object KeyValueWidget : Widget() {
+    override fun create(scope: CoroutineScope, group: ViewGroup, line: PropertyLine): View {
+        val view = super.inflate(group, R.layout.lexeme_widget_key_value)
         view.findViewById<TextView>(R.id.name).text = line.category
         view.findViewById<TextView>(R.id.value).text = line.property.value
         return view
