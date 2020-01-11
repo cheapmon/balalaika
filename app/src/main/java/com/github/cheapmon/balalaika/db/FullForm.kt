@@ -12,7 +12,7 @@ data class FullForm(
 
 @Dao
 interface FullFormDao {
-    @Query("SELECT * FROM full_form")
+    @Query("SELECT * FROM full_form ORDER BY full_form ASC")
     fun getAll(): DataSource.Factory<Int, FullForm>
 
     @Query("SELECT * FROM full_form WHERE lexeme_id = (:lexemeId)")
