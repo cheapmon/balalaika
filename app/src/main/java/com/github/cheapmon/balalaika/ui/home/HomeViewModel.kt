@@ -25,7 +25,7 @@ class HomeViewModel() : ViewModel() {
                         val category = BalalaikaDatabase.instance.categoryDao().findById(categoryId)
                         val widget = category?.widget ?: "plain"
                         val categoryName = category?.name ?: ""
-                        PropertyLine(widget, lexeme, categoryName, properties)
+                        PropertyLine(widget, lexeme, categoryName, properties.filter { it.value != null })
                     }
             DictionaryEntry(lexeme, lines)
         }

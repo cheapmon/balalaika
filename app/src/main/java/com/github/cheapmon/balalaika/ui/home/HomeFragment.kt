@@ -57,8 +57,10 @@ class HomeFragment : Fragment() {
             if (entry != null) {
                 container.removeAllViews()
                 for (line in entry.lines) {
-                    val widget = Widget.get(scope, container, line)
-                    container.addView(widget)
+                    if (line.properties.isNotEmpty()) {
+                        val widget = Widget.get(scope, container, line)
+                        container.addView(widget)
+                    }
                 }
             }
         }
