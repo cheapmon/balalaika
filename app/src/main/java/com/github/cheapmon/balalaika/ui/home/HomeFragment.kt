@@ -15,10 +15,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.ui.Widget
+import com.github.cheapmon.balalaika.ui.widgets.Widget
 import kotlinx.coroutines.CoroutineScope
 
 class HomeFragment : Fragment() {
+    private var recyclerView: RecyclerView? = null
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -27,18 +29,21 @@ class HomeFragment : Fragment() {
         super.onCreateView(inflater, container, savedInstanceState)
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         val viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
-        val recyclerView = view.findViewById<RecyclerView>(R.id.home)
-        val adapter = HomeAdapter(viewLifecycleOwner.lifecycleScope)
+        recyclerView = view.findViewById<RecyclerView>(R.id.home)
+        val adapter = HomeAdapter(viewLifecycleOwner.lifecycleScope, recyclerView)
         viewModel.lexemes.observe(this, Observer {
             adapter.submitList(it)
         })
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(view.context)
-        recyclerView.setHasFixedSize(true)
+        recyclerView?.adapter = adapter
+        recyclerView?.layoutManager = LinearLayoutManager(view.context)
+        recyclerView?.setHasFixedSize(true)
         return view
     }
 
-    class HomeAdapter(private val scope: CoroutineScope) : PagedListAdapter<DictionaryEntry, HomeAdapter.HomeViewHolder>(
+    class HomeAdapter(
+            private val scope: CoroutineScope,
+            val recyclerView: RecyclerView?
+    ) : PagedListAdapter<DictionaryEntry, HomeAdapter.HomeViewHolder>(
             object : DiffUtil.ItemCallback<DictionaryEntry>() {
                 override fun areContentsTheSame(oldItem: DictionaryEntry, newItem: DictionaryEntry): Boolean {
                     return oldItem.fullForm.fullForm == newItem.fullForm.fullForm
@@ -52,16 +57,18 @@ class HomeFragment : Fragment() {
         class HomeViewHolder(val cardView: CardView) : RecyclerView.ViewHolder(cardView)
 
         override fun onBindViewHolder(holder: HomeViewHolder, position: Int) {
-            val container = holder.cardView.findViewById<LinearLayoutCompat>(R.id.container)
+            val cardView = holder.cardView
+            val container = cardView.findViewById<LinearLayoutCompat>(R.id.container)
             val entry: DictionaryEntry? = getItem(position)
             if (entry != null) {
                 container.removeAllViews()
                 for (line in entry.lines) {
                     if (line.properties.isNotEmpty()) {
-                        val widget = Widget.get(scope, container, line)
+                        val widget = Widget.get(this, scope, container, line)
                         container.addView(widget)
                     }
                 }
+                cardView.minimumHeight = 0
             }
         }
 

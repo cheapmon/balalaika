@@ -57,7 +57,7 @@ class CSV(private val res: ResourceLoader) {
 
     public fun getFullForms(): Array<FullForm> {
         return this.read(this.res.defaultFullFormsID).map {
-            FullForm(id = 0, lexemeId = it["lexeme"], fullForm = it["full_form"])
+            FullForm(id = it["id"], lexemeId = it["lexeme"], fullForm = it["full_form"])
         }.toTypedArray()
     }
 

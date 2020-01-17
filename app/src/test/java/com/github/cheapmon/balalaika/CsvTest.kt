@@ -23,9 +23,9 @@ class CsvTest {
         override fun openCSV(resourceID: Int): InputStream {
             return when (resourceID) {
                 this.defaultCategoriesID -> ByteArrayInputStream("""
-                    id,name,widget
-                    title,Title,plain
-                    wordnet,Wordnet,url
+                    id,name,widget,sequence
+                    title,Title,plain,1
+                    wordnet,Wordnet,url,2
                 """.trimIndent().toByteArray())
                 this.defaultLexemesID -> ByteArrayInputStream("""
                     id,title,wordnet
@@ -34,10 +34,10 @@ class CsvTest {
                     word3,WORD,-
                     """.trimIndent().toByteArray())
                 this.defaultFullFormsID -> ByteArrayInputStream("""
-                    lexeme,full_form
-                    word1,word11
-                    word2,word21
-                    word3,word31
+                    id,lexeme,full_form
+                    full_form_1,word1,word11
+                    full_form_2,word2,word21
+                    full_form_3,word3,word31
                 """.trimIndent().toByteArray())
                 this.defaultVersionID -> ByteArrayInputStream("""
                     key,value
@@ -57,8 +57,8 @@ class CsvTest {
     @Test
     fun `Correctly parses categories`() {
         assertArrayEquals(csv.getCategories(), arrayOf(
-                Category(id = "title", name = "Title", widget = "plain"),
-                Category(id = "wordnet", name = "Wordnet", widget = "url")
+                Category(id = "title", name = "Title", widget = "plain", sequence = 1),
+                Category(id = "wordnet", name = "Wordnet", widget = "url", sequence = 2)
         ))
     }
 
@@ -86,11 +86,11 @@ class CsvTest {
 
     @Test
     fun `Correctly parses full forms`() {
-        assertArrayEquals(csv.getFullForms(), arrayOf(
-                FullForm(id = 0, lexemeId = "word1", fullForm = "word11"),
-                FullForm(id = 0, lexemeId = "word2", fullForm = "word21"),
-                FullForm(id = 0, lexemeId = "word3", fullForm = "word31")
-        ))
+        assertArrayEquals(arrayOf(
+                FullForm(id = "full_form_1", lexemeId = "word1", fullForm = "word11"),
+                FullForm(id = "full_form_2", lexemeId = "word2", fullForm = "word21"),
+                FullForm(id = "full_form_3", lexemeId = "word3", fullForm = "word31")
+        ), csv.getFullForms())
     }
 
     @Test

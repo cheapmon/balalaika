@@ -10,6 +10,7 @@
     android:layout_marginRight="12dp"
     android:layout_marginBottom="0dp"
     android:foreground="?android:attr/selectableItemBackground"
+    android:minHeight="300dp"
     app:cardElevation="8dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
