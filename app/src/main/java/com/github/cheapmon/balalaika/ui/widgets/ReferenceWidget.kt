@@ -59,4 +59,6 @@ object ReferenceWidget : Widget() {
             adapter.recyclerView?.scrollToPosition(pos)
         }
     }
+
+    override val menuEntries: List<ContextMenuEntry> = listOf()
 }

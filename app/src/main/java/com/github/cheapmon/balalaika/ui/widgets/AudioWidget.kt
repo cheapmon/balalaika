@@ -46,4 +46,6 @@ object AudioWidget : Widget() {
         }
         return widgetView
     }
+
+    override val menuEntries: List<ContextMenuEntry> = listOf()
 }

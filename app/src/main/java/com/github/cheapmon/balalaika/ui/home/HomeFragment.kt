@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -30,7 +31,7 @@ class HomeFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         val viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         recyclerView = view.findViewById<RecyclerView>(R.id.home)
-        val adapter = HomeAdapter(viewLifecycleOwner.lifecycleScope, recyclerView)
+        val adapter = HomeAdapter(viewLifecycleOwner.lifecycleScope, recyclerView, fragmentManager)
         viewModel.lexemes.observe(this, Observer {
             adapter.submitList(it)
         })
@@ -42,7 +43,8 @@ class HomeFragment : Fragment() {
 
     class HomeAdapter(
             private val scope: CoroutineScope,
-            val recyclerView: RecyclerView?
+            val recyclerView: RecyclerView?,
+            val fragmentManager: FragmentManager?
     ) : PagedListAdapter<DictionaryEntry, HomeAdapter.HomeViewHolder>(
             object : DiffUtil.ItemCallback<DictionaryEntry>() {
                 override fun areContentsTheSame(oldItem: DictionaryEntry, newItem: DictionaryEntry): Boolean {
@@ -64,7 +66,7 @@ class HomeFragment : Fragment() {
                 container.removeAllViews()
                 for (line in entry.lines) {
                     if (line.properties.isNotEmpty()) {
-                        val widget = Widget.get(this, scope, container, line)
+                        val widget = Widget.get(fragmentManager, this, scope, container, line)
                         container.addView(widget)
                     }
                 }

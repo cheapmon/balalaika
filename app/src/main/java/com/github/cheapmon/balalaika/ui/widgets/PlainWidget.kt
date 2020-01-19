@@ -31,4 +31,6 @@ object PlainWidget : Widget() {
         }
         return container
     }
+
+    override val menuEntries: List<ContextMenuEntry> = listOf()
 }

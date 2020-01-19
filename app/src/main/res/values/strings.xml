@@ -7,4 +7,5 @@
     <string name="icon_src">The Balalaika icon was made by https://www.flaticon.com/authors/freepik</string>
     <string name="add_to_bookmarks">Add to bookmarks</string>
     <string name="go_to_source">Go to source</string>
+    <string name="cancel">Cancel</string>
 </resources>

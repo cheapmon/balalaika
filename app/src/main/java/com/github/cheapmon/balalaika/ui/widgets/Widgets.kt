@@ -3,14 +3,16 @@ package com.github.cheapmon.balalaika.ui.widgets
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Adapter
-import androidx.paging.PagedListAdapter
-import androidx.recyclerview.widget.RecyclerView
-import com.github.cheapmon.balalaika.ui.home.DictionaryEntry
+import androidx.fragment.app.FragmentManager
+import com.github.cheapmon.balalaika.ui.home.DictionaryDialog
 import com.github.cheapmon.balalaika.ui.home.HomeFragment
 import com.github.cheapmon.balalaika.ui.home.PropertyLine
 import kotlinx.coroutines.CoroutineScope
 
+data class ContextMenuEntry(
+        val text: String,
+        val action: () -> Unit
+)
 
 abstract class Widget {
     abstract fun create(
@@ -19,8 +21,17 @@ abstract class Widget {
             group: ViewGroup,
             line: PropertyLine
     ): View
-    fun inflate(group: ViewGroup, id: Int): View {
+
+    abstract val menuEntries: List<ContextMenuEntry>
+
+    protected fun inflate(group: ViewGroup, id: Int): View {
         return LayoutInflater.from(group.context).inflate(id, group, false)
+    }
+
+    private fun createContextMenu(fragmentManager: FragmentManager?, group: ViewGroup, line: PropertyLine) {
+        if (menuEntries.isEmpty()) return
+        val dialog = DictionaryDialog(line.fullForm.fullForm, menuEntries)
+        if (fragmentManager != null) dialog.show(fragmentManager, line.widget)
     }
 
     companion object {
@@ -33,13 +44,19 @@ abstract class Widget {
         )
 
         fun get(
+                fragmentManager: FragmentManager?,
                 adapter: HomeFragment.HomeAdapter,
                 scope: CoroutineScope,
                 group: ViewGroup,
                 line: PropertyLine
         ): View {
             val widgetClass: Widget = WIDGET_CODES.getOrElse(line.widget) { KeyValueWidget }
-            return widgetClass.create(adapter, scope, group, line)
+            val view = widgetClass.create(adapter, scope, group, line)
+            view.setOnLongClickListener {
+                widgetClass.createContextMenu(fragmentManager, group, line)
+                true
+            }
+            return view
         }
     }
 }

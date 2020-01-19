@@ -35,4 +35,6 @@ object LexemeWidget : Widget() {
         }
         return container
     }
+
+    override val menuEntries: List<ContextMenuEntry> = listOf()
 }

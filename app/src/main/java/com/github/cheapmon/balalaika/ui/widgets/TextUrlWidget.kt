@@ -44,4 +44,6 @@ object TextUrlWidget : Widget() {
         }
         return widgetView
     }
+
+    override val menuEntries: List<ContextMenuEntry> = listOf()
 }
