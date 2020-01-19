@@ -3,3 +3,4 @@ lexeme,Lexeme,lexeme,1
 morphology,Morphology,key_value,4
 wordclass,Wordclass,plain,3
 trans_en,English Translation,text_url,2
+pronounciation,Pronounciation,audio,5
