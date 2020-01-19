@@ -21,7 +21,6 @@ abstract class Widget {
             group: ViewGroup,
             line: PropertyLine
     ): View
-
     abstract val menuEntries: List<ContextMenuEntry>
 
     protected fun inflate(group: ViewGroup, id: Int): View {
@@ -40,7 +39,8 @@ abstract class Widget {
                 "key_value" to KeyValueWidget,
                 "lexeme" to LexemeWidget,
                 "text_url" to TextUrlWidget,
-                "reference" to ReferenceWidget
+                "reference" to ReferenceWidget,
+                "audio" to AudioWidget
         )
 
         fun get(
