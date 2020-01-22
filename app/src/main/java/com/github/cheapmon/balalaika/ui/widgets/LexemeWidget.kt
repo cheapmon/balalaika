@@ -4,18 +4,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.fragment.app.FragmentManager
+import com.github.cheapmon.balalaika.PropertyLine
 import com.github.cheapmon.balalaika.R
+import com.github.cheapmon.balalaika.ui.home.DictionaryDialog
 import com.github.cheapmon.balalaika.ui.home.HomeFragment
-import com.github.cheapmon.balalaika.ui.home.PropertyLine
 import kotlinx.coroutines.CoroutineScope
 
-object LexemeWidget : Widget() {
-    override fun create(
-            adapter: HomeFragment.HomeAdapter,
-            scope: CoroutineScope,
-            group: ViewGroup,
-            line: PropertyLine
-    ): View {
+class LexemeWidget(
+        private val group: ViewGroup,
+        private val line: PropertyLine
+) : Widget {
+    override fun createView(): View {
         val container = LinearLayoutCompat(group.context).apply {
             orientation = LinearLayoutCompat.VERTICAL
             layoutParams = LinearLayoutCompat.LayoutParams(
@@ -24,7 +24,7 @@ object LexemeWidget : Widget() {
             )
         }
         line.properties.forEach { property ->
-            val view = super.inflate(group, R.layout.lexeme_widget_title)
+            val view = WidgetHelper.inflate(group, R.layout.lexeme_widget_title)
             view.findViewById<TextView>(R.id.title).text = line.fullForm.fullForm
             if (line.fullForm.fullForm != property.value) {
                 view.findViewById<TextView>(R.id.lexeme).text = property.value
@@ -36,5 +36,18 @@ object LexemeWidget : Widget() {
         return container
     }
 
-    override val menuEntries: List<ContextMenuEntry> = listOf()
+    override fun createContextMenu(fragmentManager: FragmentManager?): DictionaryDialog {
+        TODO("not implemented")
+    }
+}
+
+object LexemeWidgetBuilder : WidgetBuilder {
+    override fun create(
+            adapter: HomeFragment.HomeAdapter,
+            scope: CoroutineScope,
+            group: ViewGroup,
+            line: PropertyLine
+    ): Widget {
+        return LexemeWidget(group, line)
+    }
 }

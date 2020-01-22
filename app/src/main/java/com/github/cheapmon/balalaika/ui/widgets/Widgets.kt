@@ -4,56 +4,58 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
-import com.github.cheapmon.balalaika.ContextMenuEntry
 import com.github.cheapmon.balalaika.PropertyLine
 import com.github.cheapmon.balalaika.ui.home.DictionaryDialog
 import com.github.cheapmon.balalaika.ui.home.HomeFragment
 import kotlinx.coroutines.CoroutineScope
 
-abstract class Widget {
-    abstract fun create(
+interface Widget {
+    fun createView(): View
+    fun createContextMenu(fragmentManager: FragmentManager?): DictionaryDialog?
+}
+
+interface WidgetBuilder {
+    fun create(
             adapter: HomeFragment.HomeAdapter,
             scope: CoroutineScope,
             group: ViewGroup,
             line: PropertyLine
-    ): View
-    abstract val menuEntries: List<ContextMenuEntry>
+    ): Widget
+}
 
-    protected fun inflate(group: ViewGroup, id: Int): View {
-        return LayoutInflater.from(group.context).inflate(id, group, false)
+object WidgetHelper {
+    fun inflate(group: ViewGroup, layoutId: Int): View {
+        return LayoutInflater
+                .from(group.context)
+                .inflate(layoutId, group, false)
     }
+}
 
-    private fun createContextMenu(fragmentManager: FragmentManager?, group: ViewGroup, line: PropertyLine) {
-        if (menuEntries.isEmpty()) return
-        val dialog = DictionaryDialog(line.fullForm.fullForm, menuEntries)
-        if (fragmentManager != null) dialog.show(fragmentManager, line.widget)
-    }
+object Widgets {
+    private val WIDGET_CODES = mapOf(
+            "plain" to PlainWidgetBuilder,
+            "key_value" to KeyValueWidgetBuilder,
+            "lexeme" to LexemeWidgetBuilder,
+            "text_url" to TextUrlWidgetBuilder,
+            "reference" to ReferenceWidgetBuilder,
+            "audio" to AudioWidgetBuilder
+    )
 
-    companion object {
-        private val WIDGET_CODES = mapOf(
-                "plain" to PlainWidget,
-                "key_value" to KeyValueWidget,
-                "lexeme" to LexemeWidget,
-                "text_url" to TextUrlWidget,
-                "reference" to ReferenceWidget,
-                "audio" to AudioWidget
-        )
-
-        fun get(
-                fragmentManager: FragmentManager?,
-                adapter: HomeFragment.HomeAdapter,
-                scope: CoroutineScope,
-                group: ViewGroup,
-                line: PropertyLine
-        ): View {
-            val widgetClass: Widget = WIDGET_CODES.getOrElse(line.widget) { KeyValueWidget }
-            val view = widgetClass.create(adapter, scope, group, line)
-            view.setOnLongClickListener {
-                widgetClass.createContextMenu(fragmentManager, group, line)
-                true
-            }
-            return view
+    fun get(
+            fragmentManager: FragmentManager?,
+            adapter: HomeFragment.HomeAdapter,
+            scope: CoroutineScope,
+            group: ViewGroup,
+            line: PropertyLine
+    ): View {
+        val builder: WidgetBuilder = WIDGET_CODES.getOrElse(line.widget) { KeyValueWidgetBuilder }
+        val widget = builder.create(adapter, scope, group, line)
+        val view = widget.createView()
+        view.setOnLongClickListener {
+            widget.createContextMenu(fragmentManager)
+            true
         }
+        return view
     }
 }
 

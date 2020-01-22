@@ -15,8 +15,9 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.github.cheapmon.balalaika.DictionaryEntry
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.ui.widgets.Widget
+import com.github.cheapmon.balalaika.ui.widgets.Widgets
 import kotlinx.coroutines.CoroutineScope
 
 class HomeFragment : Fragment() {
@@ -44,7 +45,7 @@ class HomeFragment : Fragment() {
     class HomeAdapter(
             private val scope: CoroutineScope,
             val recyclerView: RecyclerView?,
-            val fragmentManager: FragmentManager?
+            private val fragmentManager: FragmentManager?
     ) : PagedListAdapter<DictionaryEntry, HomeAdapter.HomeViewHolder>(
             object : DiffUtil.ItemCallback<DictionaryEntry>() {
                 override fun areContentsTheSame(oldItem: DictionaryEntry, newItem: DictionaryEntry): Boolean {
@@ -66,7 +67,7 @@ class HomeFragment : Fragment() {
                 container.removeAllViews()
                 for (line in entry.lines) {
                     if (line.properties.isNotEmpty()) {
-                        val widget = Widget.get(fragmentManager, this, scope, container, line)
+                        val widget = Widgets.get(fragmentManager, this, scope, container, line)
                         container.addView(widget)
                     }
                 }

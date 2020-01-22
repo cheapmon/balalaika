@@ -4,8 +4,8 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import com.github.cheapmon.balalaika.ContextMenuEntry
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.ui.widgets.ContextMenuEntry
 
 class DictionaryDialog(
         private val title: String,
