@@ -4,12 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
+import com.github.cheapmon.balalaika.DictionaryEntry
+import com.github.cheapmon.balalaika.PropertyLine
 import com.github.cheapmon.balalaika.db.BalalaikaDatabase
-import com.github.cheapmon.balalaika.db.FullForm
-import com.github.cheapmon.balalaika.db.LexemeProperty
-
-data class PropertyLine(val widget: String, val fullForm: FullForm, val category: String, val properties: List<LexemeProperty>)
-data class DictionaryEntry(val fullForm: FullForm, val lines: List<PropertyLine>)
 
 class HomeViewModel() : ViewModel() {
     val lexemes: LiveData<PagedList<DictionaryEntry>>

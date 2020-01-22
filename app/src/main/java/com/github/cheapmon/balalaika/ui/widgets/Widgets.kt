@@ -4,15 +4,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
+import com.github.cheapmon.balalaika.ContextMenuEntry
+import com.github.cheapmon.balalaika.PropertyLine
 import com.github.cheapmon.balalaika.ui.home.DictionaryDialog
 import com.github.cheapmon.balalaika.ui.home.HomeFragment
-import com.github.cheapmon.balalaika.ui.home.PropertyLine
 import kotlinx.coroutines.CoroutineScope
-
-data class ContextMenuEntry(
-        val text: String,
-        val action: () -> Unit
-)
 
 abstract class Widget {
     abstract fun create(
