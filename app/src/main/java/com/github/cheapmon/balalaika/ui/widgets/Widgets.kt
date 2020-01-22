@@ -11,7 +11,7 @@ import kotlinx.coroutines.CoroutineScope
 
 interface Widget {
     fun createView(): View
-    fun createContextMenu(fragmentManager: FragmentManager?): DictionaryDialog?
+    fun createContextMenu(): DictionaryDialog?
 }
 
 interface WidgetBuilder {
@@ -52,8 +52,11 @@ object Widgets {
         val widget = builder.create(adapter, scope, group, line)
         val view = widget.createView()
         view.setOnLongClickListener {
-            widget.createContextMenu(fragmentManager)
-            true
+            val dialog = widget.createContextMenu()
+            if (dialog != null && fragmentManager != null) {
+                dialog.show(fragmentManager, line.widget)
+            }
+            dialog?.showsDialog ?: false
         }
         return view
     }

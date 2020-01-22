@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.fragment.app.FragmentManager
+import com.github.cheapmon.balalaika.ContextMenuEntry
 import com.github.cheapmon.balalaika.PropertyLine
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.db.BalalaikaDatabase
@@ -48,8 +48,17 @@ class ReferenceWidget(
         return widgetView
     }
 
-    override fun createContextMenu(fragmentManager: FragmentManager?): DictionaryDialog? {
-        TODO("not implemented")
+    override fun createContextMenu(): DictionaryDialog? {
+        val links = line.properties.mapNotNull {
+            val value = it.value?.split(Regex(";;;"))?.first()
+            val link = it.value?.split(Regex(";;;"))?.getOrNull(1)
+            if (link != null && value != null) Pair(value, link)
+            else null
+        }
+        val entries = links.map {
+            ContextMenuEntry("Go to ${it.first}") { scrollToReference(it.second) }
+        }
+        return DictionaryDialog(line.fullForm.fullForm, entries)
     }
 
     private fun scrollToReference(link: String) {

@@ -4,7 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.fragment.app.FragmentManager
+import com.github.cheapmon.balalaika.ContextMenuEntry
 import com.github.cheapmon.balalaika.PropertyLine
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.ui.home.DictionaryDialog
@@ -36,8 +36,12 @@ class LexemeWidget(
         return container
     }
 
-    override fun createContextMenu(fragmentManager: FragmentManager?): DictionaryDialog {
-        TODO("not implemented")
+    override fun createContextMenu(): DictionaryDialog {
+        val lexemes = line.properties.mapNotNull { it.value }
+        val entries = lexemes.map {
+            ContextMenuEntry("Search dictionary for $it") {}
+        }
+        return DictionaryDialog(line.fullForm.fullForm, entries)
     }
 }
 

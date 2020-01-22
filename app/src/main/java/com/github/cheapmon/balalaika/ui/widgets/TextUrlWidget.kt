@@ -8,7 +8,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.FragmentManager
+import com.github.cheapmon.balalaika.ContextMenuEntry
 import com.github.cheapmon.balalaika.PropertyLine
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.ui.home.DictionaryDialog
@@ -30,7 +30,7 @@ class TextUrlWidget(
             if (link != null) {
                 view.findViewById<TextView>(R.id.value_with_link).text = value
                 view.findViewById<ImageButton>(R.id.link_btn).setOnClickListener {
-                    ContextCompat.startActivity(view.context, Intent(Intent.ACTION_VIEW, Uri.parse(link)), null)
+                    openLink(link)
                 }
             } else {
                 view.findViewById<TextView>(R.id.value).apply {
@@ -45,8 +45,21 @@ class TextUrlWidget(
         return widgetView
     }
 
-    override fun createContextMenu(fragmentManager: FragmentManager?): DictionaryDialog? {
-        TODO("not implemented")
+    override fun createContextMenu(): DictionaryDialog? {
+        val links = line.properties.mapNotNull {
+            val value = it.value?.split(Regex(";;;"))?.first()
+            val link = it.value?.split(Regex(";;;"))?.getOrNull(1)
+            if (link != null && value != null) Pair(value, link)
+            else null
+        }
+        val entries = links.map {
+            ContextMenuEntry("Open link ${it.first}") { openLink(it.second) }
+        }
+        return DictionaryDialog(line.fullForm.fullForm, entries)
+    }
+
+    private fun openLink(link: String) {
+        ContextCompat.startActivity(group.context, Intent(Intent.ACTION_VIEW, Uri.parse(link)), null)
     }
 }
 

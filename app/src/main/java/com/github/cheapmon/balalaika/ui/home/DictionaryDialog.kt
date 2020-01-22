@@ -17,7 +17,7 @@ class DictionaryDialog(
             builder.setNegativeButton(R.string.cancel, null)
                     .setTitle(title)
                     .setItems(entries.map { e -> e.text }.toTypedArray()) { _, which ->
-                        entries[which]
+                        entries[which].action()
                     }
                     .create()
         } ?: throw IllegalStateException("Activity can't be null")
