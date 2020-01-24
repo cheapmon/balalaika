@@ -1,7 +1,8 @@
 package com.github.cheapmon.balalaika.db
 
+import android.content.ContentValues
 import android.content.Context
-import android.util.Log
+import android.database.sqlite.SQLiteDatabase
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -9,8 +10,6 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.util.AndroidResourceLoader
 import com.github.cheapmon.balalaika.util.CSV
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 @Database(entities = [
     Category::class,
@@ -37,32 +36,31 @@ abstract class BalalaikaDatabase : RoomDatabase() {
     private class Callback(private val context: Context) : RoomDatabase.Callback() {
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
-            GlobalScope.launch {
-                init()
+            val csv = CSV(AndroidResourceLoader(context))
+            if (shouldUpdate(csv)) {
+                clearTables(db, arrayOf("category", "lexeme", "lexeme_property", "full_form"))
+                insert(db, "category", csv.getCategories())
+                insert(db, "lexeme", csv.getLexemes())
+                insert(db, "lexeme_property", csv.getLexemeProperties())
+                insert(db, "full_form", csv.getFullForms())
             }
         }
 
-        private fun init() {
+        private fun clearTables(db: SupportSQLiteDatabase, tables: Array<String>) {
+            tables.forEach { db.execSQL("DELETE FROM $it") }
+        }
+
+        private fun insert(db: SupportSQLiteDatabase, table: String, values: List<ContentValues>) {
+            values.forEach { db.insert(table, SQLiteDatabase.CONFLICT_ABORT, it) }
+        }
+
+        private fun shouldUpdate(csv: CSV): Boolean {
             val preferencesFile = context.resources.getString(R.string.preferences)
             val preferences = context.getSharedPreferences(preferencesFile, Context.MODE_PRIVATE)
-            val csv = CSV(AndroidResourceLoader(context))
-            if (csv.getVersion() > preferences.getInt("db_version", -1)) {
-                populate(csv)
+            return if (csv.getVersion() > preferences.getInt("db_version", -1)) {
                 preferences.edit().putInt("db_version", csv.getVersion()).apply()
-            }
-            Log.i(this::class.java.name, "Initialized Database version ${preferences.getInt("db_version", -1)}")
-        }
-
-        private fun populate(csv: CSV) {
-            instance.clearAllTables()
-            instance.categoryDao().insertAll(*csv.getCategories())
-            instance.lexemeDao().insertAll(*csv.getLexemes())
-            instance.lexemePropertyDao().insertAll(*csv.getLexemeProperties())
-            instance.fullFormDao().insertAll(*csv.getFullForms())
-            Log.i(this::class.java.name, "Inserted ${instance.categoryDao().count()} categories")
-            Log.i(this::class.java.name, "Inserted ${instance.lexemeDao().count()} lexemes")
-            Log.i(this::class.java.name, "Inserted ${instance.lexemePropertyDao().count()} lexeme properties")
-            Log.i(this::class.java.name, "Inserted ${instance.fullFormDao().count()} full forms")
+                true
+            } else false
         }
     }
 }
