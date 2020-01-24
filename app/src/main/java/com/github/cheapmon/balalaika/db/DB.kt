@@ -15,13 +15,15 @@ import com.github.cheapmon.balalaika.util.CSV
     Category::class,
     Lexeme::class,
     LexemeProperty::class,
-    FullForm::class
+    FullForm::class,
+    DictionaryView::class
 ], version = 1, exportSchema = false)
 abstract class BalalaikaDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
     abstract fun lexemeDao(): LexemeDao
     abstract fun lexemePropertyDao(): LexemePropertyDao
     abstract fun fullFormDao(): FullFormDao
+    abstract fun dictionaryViewDao(): DictionaryViewDao
 
     companion object {
         lateinit var instance: BalalaikaDatabase
@@ -38,11 +40,12 @@ abstract class BalalaikaDatabase : RoomDatabase() {
             super.onCreate(db)
             val csv = CSV(AndroidResourceLoader(context))
             if (shouldUpdate(csv)) {
-                clearTables(db, arrayOf("category", "lexeme", "lexeme_property", "full_form"))
+                clearTables(db, arrayOf("category", "lexeme", "lexeme_property", "full_form", "dictionary_view"))
                 insert(db, "category", csv.getCategories())
                 insert(db, "lexeme", csv.getLexemes())
                 insert(db, "lexeme_property", csv.getLexemeProperties())
                 insert(db, "full_form", csv.getFullForms())
+                insert(db, "dictionary_view", csv.getDictionaryViews())
             }
         }
 

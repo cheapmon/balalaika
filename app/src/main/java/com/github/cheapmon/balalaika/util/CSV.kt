@@ -68,6 +68,19 @@ class CSV(private val res: ResourceLoader) {
         }
     }
 
+    fun getDictionaryViews(): List<ContentValues> {
+        return this.read(this.res.defaultViewsID).flatMap {
+            it.toMap().filterNot { (key, _) -> key == "id" }.mapNotNull { (key, value) ->
+                if (value != "0") {
+                    ContentValues().apply {
+                        put("view_id", it["id"])
+                        put("category_id", key)
+                    }
+                } else null
+            }
+        }
+    }
+
     private fun read(resourceID: Int): Iterable<CSVRecord> {
         val input = this.res.openCSV(resourceID)
         val reader = InputStreamReader(input)
