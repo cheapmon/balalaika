@@ -69,7 +69,13 @@ class CSV(private val res: ResourceLoader) {
     }
 
     fun getDictionaryViews(): List<ContentValues> {
-        return this.read(this.res.defaultViewsID).flatMap {
+        val defaultView = this.read(this.res.defaultCategoriesID).map {
+            ContentValues().apply {
+                put("view_id", "all")
+                put("category_id", it["id"])
+            }
+        }
+        return defaultView + this.read(this.res.defaultViewsID).flatMap {
             it.toMap().filterNot { (key, _) -> key == "id" }.mapNotNull { (key, value) ->
                 if (value != "0") {
                     ContentValues().apply {
