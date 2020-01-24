@@ -15,11 +15,12 @@ class CSV(private val res: ResourceLoader) {
 
     fun getCategories(): List<ContentValues> {
         return this.read(this.res.defaultCategoriesID).map {
-            ContentValues(4).apply {
+            ContentValues(5).apply {
                 put("id", it["id"])
                 put("name", it["name"])
                 put("widget", it["widget"])
                 put("sequence", it["sequence"])
+                put("hidden", it["hidden"])
             }
         }
     }

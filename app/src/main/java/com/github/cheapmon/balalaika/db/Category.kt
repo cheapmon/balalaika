@@ -8,7 +8,8 @@ data class Category(
         @PrimaryKey val id: String,
         @ColumnInfo(name = "name") val name: String,
         @ColumnInfo(name = "widget") val widget: String,
-        @ColumnInfo(name = "sequence") val sequence: Int
+        @ColumnInfo(name = "sequence") val sequence: Int,
+        @ColumnInfo(name = "hidden") val hidden: Boolean
 )
 
 @Dao
