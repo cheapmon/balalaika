@@ -1,0 +1,15 @@
+<PreferenceScreen
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ListPreference
+        app:key="default_view"
+        app:title="Set default dictionary view"
+        app:summary="Choose your preferred data presentation"
+        app:dialogTitle="DictionaryView"
+        app:dialogIcon="@drawable/ic_baseline_view_quilt_24"
+        app:icon="@drawable/ic_baseline_view_quilt_24"
+        app:entries="@array/preferences_default_view"
+        app:entryValues="@array/preferences_default_view"
+        app:defaultValue="all" />
+
+</PreferenceScreen>

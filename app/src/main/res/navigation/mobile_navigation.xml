@@ -16,5 +16,9 @@
         android:name="com.github.cheapmon.balalaika.ui.info.InfoFragment"
         android:label="@string/menu_info"
         tools:layout="@layout/fragment_info"/>
+    <fragment
+        android:id="@+id/nav_preferences"
+        android:name="com.github.cheapmon.balalaika.ui.preferences.PreferencesFragment"
+        android:label="@string/menu_preferences" />
 
 </navigation>

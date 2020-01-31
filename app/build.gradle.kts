@@ -93,7 +93,7 @@ dependencies {
             name = "navigation-ui-ktx",
             version = "2.1.0"
     )
-    implementation("androidx.paging:paging-runtime-ktx:2.1.0")
+    implementation("androidx.paging:paging-runtime-ktx:2.1.1")
     testImplementation(
             group = "junit",
             name = "junit",
@@ -119,7 +119,10 @@ dependencies {
     kapt(group = "androidx.room", name = "room-compiler", version = roomVersion)
     implementation("androidx.room:room-ktx:$roomVersion")
     testImplementation("androidx.room:room-testing:$roomVersion")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-rc03")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.2.0-rc03")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.2.0-rc03")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.2.0")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.2.0")
+    val preferenceVersion by extra { "1.1.0" }
+    implementation("androidx.preference:preference:$preferenceVersion")
+    implementation("androidx.preference:preference-ktx:$preferenceVersion")
 }
