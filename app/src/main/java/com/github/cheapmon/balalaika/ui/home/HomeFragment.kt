@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.PagedListAdapter
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -31,6 +32,8 @@ class HomeFragment : Fragment() {
         super.onCreateView(inflater, container, savedInstanceState)
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         val viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+        viewModel.setView(PreferenceManager.getDefaultSharedPreferences(view.context).getString("default_view", "all")
+                ?: "all")
         recyclerView = view.findViewById<RecyclerView>(R.id.home)
         val adapter = HomeAdapter(viewLifecycleOwner.lifecycleScope, recyclerView, fragmentManager)
         viewModel.lexemes.observe(this, Observer {

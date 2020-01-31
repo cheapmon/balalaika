@@ -31,6 +31,7 @@ interface LexemePropertyDao {
     @Query("""SELECT lexeme_property.id, lexeme_property.lexeme_id, lexeme_property.category_id, lexeme_property.value
                     FROM lexeme_property LEFT JOIN full_form ON lexeme_property.lexeme_id = full_form.lexeme_id
                     LEFT JOIN category ON category.id = lexeme_property.category_id
-                    WHERE full_form.id = (:fullFormId) AND category.hidden = 0""")
-    fun findByFullForm(fullFormId: String): List<LexemeProperty>
+                    WHERE full_form.id = (:fullFormId)
+                    AND category.hidden = 0 AND category.id IN (:categories)""")
+    fun findByFullForm(fullFormId: String, categories: List<String>): List<LexemeProperty>
 }
