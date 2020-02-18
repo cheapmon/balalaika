@@ -22,7 +22,7 @@ class SearchItemFragment : Fragment() {
     }
 
     private fun showSearchInput() {
-        activity?.toolbar?.findViewById<EditText>(R.id.search_input)?.visibility = View.VISIBLE
+        activity?.search_input?.visibility = View.VISIBLE
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

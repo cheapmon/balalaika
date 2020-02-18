@@ -37,7 +37,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun hideSearchInput() {
-        activity?.toolbar?.findViewById<EditText>(R.id.search_input)?.visibility = View.GONE
+        activity?.search_input?.visibility = View.GONE
     }
 
     override fun onCreateView(
