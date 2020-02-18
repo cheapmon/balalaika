@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
@@ -19,10 +20,25 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.DictionaryEntry
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.ui.widgets.Widgets
+import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.coroutines.CoroutineScope
 
 class HomeFragment : Fragment() {
     private var recyclerView: RecyclerView? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        hideSearchInput()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        hideSearchInput()
+    }
+
+    private fun hideSearchInput() {
+        activity?.toolbar?.findViewById<EditText>(R.id.search_input)?.visibility = View.GONE
+    }
 
     override fun onCreateView(
             inflater: LayoutInflater,

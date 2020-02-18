@@ -94,6 +94,7 @@ dependencies {
             version = "2.1.0"
     )
     implementation("androidx.paging:paging-runtime-ktx:2.1.1")
+    implementation("androidx.recyclerview:recyclerview:1.1.0")
     testImplementation(
             group = "junit",
             name = "junit",
