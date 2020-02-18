@@ -35,7 +35,7 @@
         android:label="fragment_search_items"
         tools:layout="@layout/fragment_search_items" >
         <action
-            android:id="@+id/action_searchItemFragment_to_nav_home2"
+            android:id="@+id/action_search_to_home"
             app:destination="@id/nav_home" />
         <argument
             android:name="search_text"

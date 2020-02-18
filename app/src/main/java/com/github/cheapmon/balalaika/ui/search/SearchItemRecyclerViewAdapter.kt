@@ -30,7 +30,7 @@ class SearchItemRecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.contentView.text = values[position].fullForm
         holder.view.setOnClickListener {
-            val direction = SearchItemFragmentDirections.actionSearchItemFragmentToNavHome2(values[position].id)
+            val direction = SearchItemFragmentDirections.actionSearchToHome(values[position].id)
             navController.navigate(direction)
         }
     }
@@ -52,6 +52,10 @@ class SearchItemRecyclerViewAdapter(
                 if (text != searchFor) return@launch
                 withContext(Dispatchers.IO) {
                     viewModel.searchText = text
+                }
+                if(viewModel.items.size == 1) {
+                    val direction = SearchItemFragmentDirections.actionSearchToHome(viewModel.items.first().id)
+                    navController.navigate(direction)
                 }
                 values.clear()
                 values.addAll(viewModel.items)
