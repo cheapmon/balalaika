@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
+import androidx.navigation.NavController
 import com.github.cheapmon.balalaika.PropertyLine
 import com.github.cheapmon.balalaika.ui.home.DictionaryDialog
 import com.github.cheapmon.balalaika.ui.home.HomeFragment
@@ -18,6 +19,7 @@ interface WidgetBuilder {
     fun create(
             adapter: HomeFragment.HomeAdapter,
             scope: CoroutineScope,
+            navController: NavController,
             group: ViewGroup,
             line: PropertyLine
     ): Widget
@@ -45,11 +47,12 @@ object Widgets {
             fragmentManager: FragmentManager?,
             adapter: HomeFragment.HomeAdapter,
             scope: CoroutineScope,
+            navController: NavController,
             group: ViewGroup,
             line: PropertyLine
     ): View {
         val builder: WidgetBuilder = WIDGET_CODES.getOrElse(line.widget) { KeyValueWidgetBuilder }
-        val widget = builder.create(adapter, scope, group, line)
+        val widget = builder.create(adapter, scope, navController, group, line)
         val view = widget.createView()
         view.setOnLongClickListener {
             val dialog = widget.createContextMenu()

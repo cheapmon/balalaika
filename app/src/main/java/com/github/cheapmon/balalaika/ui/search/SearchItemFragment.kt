@@ -5,12 +5,15 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.R
 import kotlinx.android.synthetic.main.app_bar_main.*
 
 class SearchItemFragment : Fragment() {
+    private val args: SearchItemFragmentArgs by navArgs()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         showSearchInput()
@@ -23,6 +26,7 @@ class SearchItemFragment : Fragment() {
 
     private fun showSearchInput() {
         activity?.search_input?.visibility = View.VISIBLE
+        activity?.search_input?.setText(args.searchText ?: "")
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

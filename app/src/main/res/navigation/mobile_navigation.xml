@@ -37,6 +37,11 @@
         <action
             android:id="@+id/action_searchItemFragment_to_nav_home2"
             app:destination="@id/nav_home" />
+        <argument
+            android:name="search_text"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
 
 </navigation>

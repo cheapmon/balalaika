@@ -16,11 +16,8 @@ class SearchItemViewModel : ViewModel() {
 
     private fun refresh() {
         items.clear()
-        // Find any matching full form first
         val forms = BalalaikaDatabase.instance.fullFormDao().getAllLike("%$searchText%")
-        // Then, find all matching properties
         val props = BalalaikaDatabase.instance.lexemePropertyDao().findPropertiesLike("%$searchText%")
-        // Get forms from ids
         (forms + props).distinct().chunked(100).forEach {
             items.addAll(BalalaikaDatabase.instance.fullFormDao().getAllById(it))
         }

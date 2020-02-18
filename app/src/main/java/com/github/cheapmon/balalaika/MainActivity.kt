@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
         val id: Int = item.itemId
         if (id == R.id.search_button) {
             val navController = findNavController(R.id.nav_host_fragment)
-            navController.navigate(HomeFragmentDirections.actionNavHomeToSearchItemFragment())
+            navController.navigate(HomeFragmentDirections.actionNavHomeToSearchItemFragment(null))
         }
         return super.onOptionsItemSelected(item)
     }

@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.navigation.NavController
 import com.github.cheapmon.balalaika.ContextMenuEntry
 import com.github.cheapmon.balalaika.PropertyLine
 import com.github.cheapmon.balalaika.R
@@ -55,6 +56,7 @@ class ReferenceWidget(
             if (link != null && value != null) Pair(value, link)
             else null
         }
+        if(links.isEmpty()) return null
         val entries = links.map {
             ContextMenuEntry("Go to ${it.first}") { scrollToReference(it.second) }
         }
@@ -76,6 +78,7 @@ object ReferenceWidgetBuilder : WidgetBuilder {
     override fun create(
             adapter: HomeFragment.HomeAdapter,
             scope: CoroutineScope,
+            navController: NavController,
             group: ViewGroup,
             line: PropertyLine
     ): Widget {

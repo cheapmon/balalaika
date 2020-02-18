@@ -29,7 +29,7 @@ class SearchItemRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.contentView.text = values[position].fullForm
-        holder.contentView.setOnClickListener {
+        holder.view.setOnClickListener {
             val direction = SearchItemFragmentDirections.actionSearchItemFragmentToNavHome2(values[position].id)
             navController.navigate(direction)
         }

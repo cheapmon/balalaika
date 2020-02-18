@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.navigation.NavController
 import com.github.cheapmon.balalaika.PropertyLine
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.ui.home.DictionaryDialog
@@ -51,6 +52,7 @@ object AudioWidgetBuilder : WidgetBuilder {
     override fun create(
             adapter: HomeFragment.HomeAdapter,
             scope: CoroutineScope,
+            navController: NavController,
             group: ViewGroup,
             line: PropertyLine
     ): Widget {

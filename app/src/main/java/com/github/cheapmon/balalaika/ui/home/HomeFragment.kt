@@ -11,6 +11,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.paging.PagedList
 import androidx.paging.PagedListAdapter
@@ -27,7 +29,7 @@ import kotlinx.coroutines.*
 
 class HomeFragment : Fragment() {
     private var recyclerView: RecyclerView? = null
-    val args: HomeFragmentArgs by navArgs()
+    private val args: HomeFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +56,7 @@ class HomeFragment : Fragment() {
         viewModel.setView(PreferenceManager.getDefaultSharedPreferences(view.context).getString("default_view", "all")
                 ?: "all")
         recyclerView = view.findViewById<RecyclerView>(R.id.home)
-        val adapter = HomeAdapter(viewLifecycleOwner.lifecycleScope, recyclerView, fragmentManager)
+        val adapter = HomeAdapter(viewLifecycleOwner.lifecycleScope, findNavController(), recyclerView, fragmentManager)
         viewModel.lexemes.observe(this, Observer {
             adapter.submitList(it)
         })
@@ -85,6 +87,7 @@ class HomeFragment : Fragment() {
 
     class HomeAdapter(
             private val scope: CoroutineScope,
+            private val navController: NavController,
             val recyclerView: RecyclerView?,
             private val fragmentManager: FragmentManager?
     ) : PagedListAdapter<DictionaryEntry, HomeAdapter.HomeViewHolder>(
@@ -108,7 +111,7 @@ class HomeFragment : Fragment() {
                 container.removeAllViews()
                 for (line in entry.lines) {
                     if (line.properties.isNotEmpty()) {
-                        val widget = Widgets.get(fragmentManager, this, scope, container, line)
+                        val widget = Widgets.get(fragmentManager, this, scope, navController, container, line)
                         container.addView(widget)
                     }
                 }
