@@ -2,9 +2,8 @@ package com.github.cheapmon.balalaika.ui.search
 
 import android.os.Bundle
 import android.view.*
-import android.widget.EditText
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.R
@@ -31,9 +30,11 @@ class SearchItemFragment : Fragment() {
         setHasOptionsMenu(true)
 
         if (view is RecyclerView) {
+            val viewModel = ViewModelProvider(this).get(SearchItemViewModel::class.java)
             with(view) {
                 layoutManager = LinearLayoutManager(context)
-                adapter = SearchItemRecyclerViewAdapter(listOf("A", "B", "C"))
+                adapter = SearchItemRecyclerViewAdapter(arrayListOf(), viewModel)
+                activity?.search_input?.addTextChangedListener((adapter as SearchItemRecyclerViewAdapter).watcher)
             }
         }
         return view
