@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.db.FullForm
@@ -14,8 +15,10 @@ import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
 class SearchItemRecyclerViewAdapter(
-        private val values: ArrayList<FullForm>, viewModel: SearchItemViewModel)
-    : RecyclerView.Adapter<SearchItemRecyclerViewAdapter.ViewHolder>(), CoroutineScope {
+        private val values: ArrayList<FullForm>,
+        private val viewModel: SearchItemViewModel,
+        private val navController: NavController
+) : RecyclerView.Adapter<SearchItemRecyclerViewAdapter.ViewHolder>(), CoroutineScope {
     var job: Job = Job()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -26,7 +29,10 @@ class SearchItemRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.contentView.text = values[position].fullForm
-        // TODO: Goto full form on click
+        holder.contentView.setOnClickListener {
+            val direction = SearchItemFragmentDirections.actionSearchItemFragmentToNavHome2(values[position].id)
+            navController.navigate(direction)
+        }
     }
 
     override fun getItemCount(): Int = values.size

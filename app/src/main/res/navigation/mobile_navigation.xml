@@ -13,6 +13,11 @@
         <action
             android:id="@+id/action_nav_home_to_searchItemFragment"
             app:destination="@id/searchItemFragment" />
+        <argument
+            android:name="full_form_id"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
 
     <fragment

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.R
@@ -31,9 +32,10 @@ class SearchItemFragment : Fragment() {
 
         if (view is RecyclerView) {
             val viewModel = ViewModelProvider(this).get(SearchItemViewModel::class.java)
+            val navController = findNavController()
             with(view) {
                 layoutManager = LinearLayoutManager(context)
-                adapter = SearchItemRecyclerViewAdapter(arrayListOf(), viewModel)
+                adapter = SearchItemRecyclerViewAdapter(arrayListOf(), viewModel, navController)
                 activity?.search_input?.addTextChangedListener((adapter as SearchItemRecyclerViewAdapter).watcher)
             }
         }

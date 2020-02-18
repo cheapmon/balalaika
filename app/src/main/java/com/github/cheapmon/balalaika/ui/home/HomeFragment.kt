@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
@@ -12,6 +11,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
+import androidx.paging.PagedList
 import androidx.paging.PagedListAdapter
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.DiffUtil
@@ -19,12 +20,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.DictionaryEntry
 import com.github.cheapmon.balalaika.R
+import com.github.cheapmon.balalaika.db.BalalaikaDatabase
 import com.github.cheapmon.balalaika.ui.widgets.Widgets
 import kotlinx.android.synthetic.main.app_bar_main.*
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.*
 
 class HomeFragment : Fragment() {
     private var recyclerView: RecyclerView? = null
+    val args: HomeFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +61,26 @@ class HomeFragment : Fragment() {
         recyclerView?.adapter = adapter
         recyclerView?.layoutManager = LinearLayoutManager(view.context)
         recyclerView?.setHasFixedSize(true)
+        checkArgs(viewModel.lexemes.value)
         return view
+    }
+
+    private fun checkArgs(list: PagedList<DictionaryEntry>?) {
+        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+            val id = args.fullFormId
+            if (id != null) {
+                viewLifecycleOwner.lifecycleScope.launch {
+                    delay(1000)
+                    val pos = withContext(Dispatchers.IO) {
+                        val form = BalalaikaDatabase.instance.fullFormDao().getById(id)?.fullForm
+                                ?: ""
+                        BalalaikaDatabase.instance.fullFormDao().getPositionOf(form)
+                    }
+                    list?.loadAround(pos)
+                    recyclerView?.scrollToPosition(pos)
+                }
+            }
+        }
     }
 
     class HomeAdapter(

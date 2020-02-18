@@ -1,6 +1,5 @@
 package com.github.cheapmon.balalaika.ui.search
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.github.cheapmon.balalaika.db.BalalaikaDatabase
 import com.github.cheapmon.balalaika.db.FullForm
@@ -22,6 +21,8 @@ class SearchItemViewModel : ViewModel() {
         // Then, find all matching properties
         val props = BalalaikaDatabase.instance.lexemePropertyDao().findPropertiesLike("%$searchText%")
         // Get forms from ids
-        items.addAll(BalalaikaDatabase.instance.fullFormDao().getAllById(forms))
+        (forms + props).distinct().chunked(100).forEach {
+            items.addAll(BalalaikaDatabase.instance.fullFormDao().getAllById(it))
+        }
     }
 }
