@@ -36,8 +36,8 @@ interface LexemePropertyDao {
     fun findByFullForm(fullFormId: String, categories: List<String>): List<LexemeProperty>
 
     @Transaction
-    @Query("""SELECT full_form.*
+    @Query("""SELECT DISTINCT full_form.id
                     FROM lexeme_property LEFT JOIN full_form ON lexeme_property.lexeme_id = full_form.lexeme_id
                     WHERE lexeme_property.value LIKE (:text)""")
-    fun findPropertiesLike(text: String): List<FullForm>
+    fun findPropertiesLike(text: String): List<String>
 }

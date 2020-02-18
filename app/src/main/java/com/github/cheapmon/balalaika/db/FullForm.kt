@@ -21,8 +21,11 @@ interface FullFormDao {
     @Query("SELECT * FROM full_form WHERE id = (:fullFormId) LIMIT 1")
     fun getById(fullFormId: String): FullForm?
 
-    @Query("SELECT * FROM full_form WHERE full_form LIKE (:text)")
-    fun getAllLike(text: String): List<FullForm>
+    @Query("SELECT DISTINCT * FROM full_form WHERE id IN (:forms)")
+    fun getAllById(forms: List<String>): List<FullForm>
+
+    @Query("""SELECT DISTINCT id FROM full_form WHERE full_form LIKE (:text)""")
+    fun getAllLike(text: String): List<String>
 
     @Query("SELECT COUNT(*) FROM full_form WHERE full_form < (:fullForm)")
     fun getPositionOf(fullForm: String): Int
