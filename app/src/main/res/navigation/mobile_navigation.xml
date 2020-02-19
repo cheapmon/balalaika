@@ -12,7 +12,7 @@
         tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_nav_home_to_searchItemFragment"
-            app:destination="@id/searchItemFragment" />
+            app:destination="@id/nav_search" />
         <argument
             android:name="full_form_id"
             app:argType="string"
@@ -30,9 +30,9 @@
         android:name="com.github.cheapmon.balalaika.ui.preferences.PreferencesFragment"
         android:label="@string/menu_preferences" />
     <fragment
-        android:id="@+id/searchItemFragment"
+        android:id="@+id/nav_search"
         android:name="com.github.cheapmon.balalaika.ui.search.SearchItemFragment"
-        android:label="fragment_search_items"
+        android:label="@string/menu_search"
         tools:layout="@layout/fragment_search_items" >
         <action
             android:id="@+id/action_search_to_home"
@@ -42,6 +42,15 @@
             app:argType="string"
             app:nullable="true"
             android:defaultValue="@null" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_history"
+        android:name="com.github.cheapmon.balalaika.ui.search.SearchHistoryFragment"
+        android:label="@string/menu_history"
+        tools:layout="@layout/fragment_search_history" >
+        <action
+            android:id="@+id/action_nav_history_to_nav_search"
+            app:destination="@id/nav_search" />
     </fragment>
 
 </navigation>

@@ -3,6 +3,8 @@
     <string name="menu_home">Home</string>
     <string name="menu_info">Information</string>
     <string name="menu_preferences">Preferences</string>
+    <string name="menu_search">Search…</string>
+    <string name="menu_history">Search History</string>
     <string name="search">Search</string>
     <string-array name="preferences_default_view" />
     <string name="nav_header_description">Navigation</string>
