@@ -3,27 +3,41 @@ package com.github.cheapmon.balalaika.db
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
-import androidx.room.Database
-import androidx.room.Room
-import androidx.room.RoomDatabase
+import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.util.AndroidResourceLoader
 import com.github.cheapmon.balalaika.util.CSV
+import java.util.*
+
+class Converters {
+    @TypeConverter
+    fun fromTimestamp(value: Long?): Date? {
+        return value?.let { Date(it) }
+    }
+
+    @TypeConverter
+    fun toTimestamp(date: Date?): Long? {
+        return date?.time?.toLong()
+    }
+}
 
 @Database(entities = [
     Category::class,
     Lexeme::class,
     LexemeProperty::class,
     FullForm::class,
-    DictionaryView::class
+    DictionaryView::class,
+    SearchHistoryEntry::class
 ], version = 1, exportSchema = false)
+@TypeConverters(Converters::class)
 abstract class BalalaikaDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
     abstract fun lexemeDao(): LexemeDao
     abstract fun lexemePropertyDao(): LexemePropertyDao
     abstract fun fullFormDao(): FullFormDao
     abstract fun dictionaryViewDao(): DictionaryViewDao
+    abstract fun searchHistoryDao(): SearchHistoryDao
 
     companion object {
         lateinit var instance: BalalaikaDatabase

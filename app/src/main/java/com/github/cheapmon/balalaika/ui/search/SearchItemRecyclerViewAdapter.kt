@@ -9,9 +9,12 @@ import android.widget.TextView
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.R
+import com.github.cheapmon.balalaika.db.BalalaikaDatabase
 import com.github.cheapmon.balalaika.db.FullForm
+import com.github.cheapmon.balalaika.db.SearchHistoryEntry
 import kotlinx.android.synthetic.main.fragment_search_item.view.*
 import kotlinx.coroutines.*
+import java.util.*
 import kotlin.coroutines.CoroutineContext
 
 class SearchItemRecyclerViewAdapter(
@@ -19,7 +22,8 @@ class SearchItemRecyclerViewAdapter(
         private val viewModel: SearchItemViewModel,
         private val navController: NavController
 ) : RecyclerView.Adapter<SearchItemRecyclerViewAdapter.ViewHolder>(), CoroutineScope {
-    var job: Job = Job()
+    private var job: Job = Job()
+    private var searchText: String = ""
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -30,8 +34,7 @@ class SearchItemRecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.contentView.text = values[position].fullForm
         holder.view.setOnClickListener {
-            val direction = SearchItemFragmentDirections.actionSearchToHome(values[position].id)
-            navController.navigate(direction)
+            navigateHome(values[position].id)
         }
     }
 
@@ -52,16 +55,27 @@ class SearchItemRecyclerViewAdapter(
                 if (text != searchFor) return@launch
                 withContext(Dispatchers.IO) {
                     viewModel.searchText = text
+                    searchText = text
                 }
-                if(viewModel.items.size == 1) {
-                    val direction = SearchItemFragmentDirections.actionSearchToHome(viewModel.items.first().id)
-                    navController.navigate(direction)
+                if (viewModel.items.size == 1) {
+                    navigateHome(viewModel.items.first().id)
                 }
                 values.clear()
                 values.addAll(viewModel.items)
                 notifyDataSetChanged()
             }
         }
+    }
+
+    private fun navigateHome(fullFormId: String) {
+        launch {
+            withContext(Dispatchers.IO) {
+                val entry = SearchHistoryEntry(id = 0, query = searchText, date = Date())
+                BalalaikaDatabase.instance.searchHistoryDao().insert(entry)
+            }
+        }
+        val direction = SearchItemFragmentDirections.actionSearchToHome(fullFormId)
+        navController.navigate(direction)
     }
 
     inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
