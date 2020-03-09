@@ -8,6 +8,8 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -15,11 +17,15 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.github.cheapmon.balalaika.db.BalalaikaDatabase
 import com.github.cheapmon.balalaika.ui.home.HomeFragmentDirections
+import com.github.cheapmon.balalaika.ui.home.OrderByDialog
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OrderByDialog.OrderByDialogListener {
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,7 +64,19 @@ class MainActivity : AppCompatActivity() {
         if (id == R.id.search_button) {
             val navController = findNavController(R.id.nav_host_fragment)
             navController.navigate(HomeFragmentDirections.actionNavHomeToSearchItemFragment(null))
+        } else if(id == R.id.order_button) {
+            lifecycleScope.launch {
+                withContext(Dispatchers.IO) {
+                    val categories = BalalaikaDatabase.instance.categoryDao().getOrdered().map {
+                        it.name
+                    }.toTypedArray()
+                    OrderByDialog(categories).show(supportFragmentManager, "OrderByDialog")
+                }
+            }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onDialogItemClick(dialog: DialogFragment, category: String) {
     }
 }

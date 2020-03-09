@@ -18,6 +18,9 @@ interface CategoryDao {
     @Query("SELECT * FROM category")
     fun getAll(): List<Category>
 
+    @Query("SELECT * FROM category WHERE order_by = 1")
+    fun getOrdered(): List<Category>
+
     @Query("SELECT * FROM category WHERE id = (:id) LIMIT 1")
     fun findById(id: String): Category?
 
