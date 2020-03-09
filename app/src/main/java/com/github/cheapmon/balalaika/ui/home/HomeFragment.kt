@@ -53,8 +53,9 @@ class HomeFragment : Fragment() {
         super.onCreateView(inflater, container, savedInstanceState)
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         val viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
-        viewModel.setView(PreferenceManager.getDefaultSharedPreferences(view.context).getString("default_view", "all")
-                ?: "all")
+        val preferences = PreferenceManager.getDefaultSharedPreferences(view.context)
+        viewModel.setView(preferences.getString("default_view", "all") ?: "all")
+        viewModel.setCategory(preferences.getString("order_by", "default") ?: "default")
         recyclerView = view.findViewById<RecyclerView>(R.id.home)
         val adapter = HomeAdapter(viewLifecycleOwner.lifecycleScope, findNavController(), recyclerView, fragmentManager)
         viewModel.lexemes.observe(this, Observer {

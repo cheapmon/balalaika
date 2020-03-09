@@ -31,7 +31,7 @@ interface FullFormDao {
                     LEFT JOIN full_form ON lexeme_property.lexeme_id = full_form.lexeme_id
                     WHERE lexeme_property.category_id = (:category)
                     ORDER BY value ASC""")
-    fun getAllOrderedBy(category: String): List<FullForm>
+    fun getAllOrderedBy(category: String): DataSource.Factory<Int, FullForm>
 
     @Query("SELECT COUNT(*) FROM full_form WHERE full_form < (:fullForm)")
     fun getPositionOf(fullForm: String): Int

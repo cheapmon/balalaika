@@ -2,22 +2,35 @@ package com.github.cheapmon.balalaika.ui.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.github.cheapmon.balalaika.DictionaryEntry
 import com.github.cheapmon.balalaika.PropertyLine
 import com.github.cheapmon.balalaika.db.BalalaikaDatabase
+import com.github.cheapmon.balalaika.db.FullForm
 
 class HomeViewModel : ViewModel() {
-    val lexemes: LiveData<PagedList<DictionaryEntry>>
+    lateinit var lexemes: LiveData<PagedList<DictionaryEntry>>
     private var viewId: String = "all"
+    private var categoryId: String = "default"
 
     fun setView(viewId: String) {
         this.viewId = viewId
     }
 
-    init {
-        val factory = BalalaikaDatabase.instance.fullFormDao().getAll().map { lexeme ->
+    fun setCategory(categoryId: String) {
+        this.categoryId = categoryId
+        init()
+    }
+
+    private fun init() {
+        val source: DataSource.Factory<Int, FullForm> = if(categoryId == "default") {
+            BalalaikaDatabase.instance.fullFormDao().getAll()
+        } else {
+            BalalaikaDatabase.instance.fullFormDao().getAllOrderedBy(categoryId)
+        }
+        val factory = source.map { lexeme ->
             val categories = BalalaikaDatabase.instance.dictionaryViewDao().findCategoryIdsForView(viewId)
             val lines = BalalaikaDatabase.instance.lexemePropertyDao()
                     .findByFullForm(lexeme.id, categories)
