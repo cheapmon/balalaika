@@ -5,11 +5,22 @@
         app:key="default_view"
         app:title="Set default dictionary view"
         app:summary="Choose your preferred data presentation"
-        app:dialogTitle="DictionaryView"
+        app:dialogTitle="Dictionary View"
         app:dialogIcon="@drawable/ic_baseline_view_quilt_24"
         app:icon="@drawable/ic_baseline_view_quilt_24"
         app:entries="@array/preferences_default_view"
         app:entryValues="@array/preferences_default_view"
         app:defaultValue="all" />
+
+    <ListPreference
+        app:key="order_by"
+        app:title="Set default ordering of entries"
+        app:summary="Choose your preferred data ordering"
+        app:dialogTitle="Order by"
+        app:dialogIcon="@drawable/ic_baseline_reorder_24"
+        app:icon="@drawable/ic_baseline_reorder_24"
+        app:entries="@array/preferences_default_view"
+        app:entryValues="@array/preferences_default_view"
+        app:defaultValue="default" />
 
 </PreferenceScreen>

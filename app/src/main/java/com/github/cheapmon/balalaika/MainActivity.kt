@@ -3,8 +3,6 @@ package com.github.cheapmon.balalaika
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
@@ -15,11 +13,12 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.preference.PreferenceManager
 import com.github.cheapmon.balalaika.db.BalalaikaDatabase
+import com.github.cheapmon.balalaika.db.Category
 import com.github.cheapmon.balalaika.ui.home.HomeFragmentDirections
 import com.github.cheapmon.balalaika.ui.home.OrderByDialog
 import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -66,17 +65,17 @@ class MainActivity : AppCompatActivity(), OrderByDialog.OrderByDialogListener {
             navController.navigate(HomeFragmentDirections.actionNavHomeToSearchItemFragment(null))
         } else if(id == R.id.order_button) {
             lifecycleScope.launch {
-                withContext(Dispatchers.IO) {
-                    val categories = BalalaikaDatabase.instance.categoryDao().getOrdered().map {
-                        it.name
-                    }.toTypedArray()
-                    OrderByDialog(categories).show(supportFragmentManager, "OrderByDialog")
-                }
+                val categories = withContext(Dispatchers.IO) {
+                    BalalaikaDatabase.instance.categoryDao().getOrdered().toTypedArray()
+                } + arrayOf(Category("default", "Default", "", 0, hidden = true, orderBy = true))
+                OrderByDialog(categories).show(supportFragmentManager, "OrderByDialog")
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onDialogItemClick(dialog: DialogFragment, category: String) {
+    override fun onDialogItemClick(dialog: DialogFragment, category: Category) {
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .edit().putString("order_by", category.id).apply()
     }
 }

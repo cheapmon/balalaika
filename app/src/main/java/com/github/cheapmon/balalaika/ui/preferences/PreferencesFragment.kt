@@ -29,6 +29,15 @@ class PreferencesFragment : PreferenceFragmentCompat() {
                 entryValues = ids.toTypedArray()
             }
         }
+        findPreference<ListPreference>("order_by")?.apply {
+            viewLifecycleOwner.lifecycleScope.launch {
+                val categories = withContext(Dispatchers.IO) {
+                    BalalaikaDatabase.instance.categoryDao().getOrdered().map { it.id to it.name }
+                } + listOf("default" to "Default")
+                entries = categories.map { it.second }.toTypedArray()
+                entryValues = categories.map { it.first }.toTypedArray()
+            }
+        }
         return view
     }
 }
