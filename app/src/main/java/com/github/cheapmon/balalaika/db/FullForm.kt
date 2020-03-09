@@ -27,6 +27,12 @@ interface FullFormDao {
     @Query("""SELECT DISTINCT id FROM full_form WHERE full_form LIKE (:text)""")
     fun getAllLike(text: String): List<String>
 
+    @Query("""SELECT DISTINCT full_form.* FROM lexeme_property
+                    LEFT JOIN full_form ON lexeme_property.lexeme_id = full_form.lexeme_id
+                    WHERE lexeme_property.category_id = (:category)
+                    ORDER BY value ASC""")
+    fun getAllOrderedBy(category: String): List<FullForm>
+
     @Query("SELECT COUNT(*) FROM full_form WHERE full_form < (:fullForm)")
     fun getPositionOf(fullForm: String): Int
 
