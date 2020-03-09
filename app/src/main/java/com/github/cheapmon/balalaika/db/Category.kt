@@ -9,7 +9,8 @@ data class Category(
         @ColumnInfo(name = "name") val name: String,
         @ColumnInfo(name = "widget") val widget: String,
         @ColumnInfo(name = "sequence") val sequence: Int,
-        @ColumnInfo(name = "hidden") val hidden: Boolean
+        @ColumnInfo(name = "hidden") val hidden: Boolean,
+        @ColumnInfo(name = "order_by") val orderBy: Boolean
 )
 
 @Dao

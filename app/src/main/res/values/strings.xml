@@ -6,6 +6,7 @@
     <string name="menu_search">Search…</string>
     <string name="menu_history">Search History</string>
     <string name="search">Search</string>
+    <string name="order_by">Order by</string>
     <string-array name="preferences_default_view" />
     <string name="nav_header_description">Navigation</string>
     <string name="preferences">com.github.cheapmon.preferences</string>

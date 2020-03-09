@@ -21,6 +21,7 @@ class CSV(private val res: ResourceLoader) {
                 put("widget", it["widget"])
                 put("sequence", it["sequence"])
                 put("hidden", it["hidden"])
+                put("order_by", it["order_by"])
             }
         }
     }
