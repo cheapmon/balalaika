@@ -13,6 +13,7 @@ import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.ui.home.DictionaryDialog
 import com.github.cheapmon.balalaika.ui.home.HomeFragment
 import com.github.cheapmon.balalaika.ui.home.HomeFragmentDirections
+import com.github.cheapmon.balalaika.ui.search.SearchRestriction
 import kotlinx.coroutines.CoroutineScope
 
 class KeyValueWidget(
@@ -35,9 +36,9 @@ class KeyValueWidget(
 
     override fun createContextMenu(): DictionaryDialog {
         val entries = line.properties.mapNotNull {
-            val text = "Search dictionary for ${it.value}"
+            val text = "Search dictionary for entries matching ${it.value}"
             if (it.value != null) ContextMenuEntry(text) {
-                navController.navigate(HomeFragmentDirections.actionNavHomeToSearchItemFragment(it.value))
+                navController.navigate(HomeFragmentDirections.actionNavHomeToSearchItemFragment("", SearchRestriction(line.category, it.value)))
             }
             else null
         }

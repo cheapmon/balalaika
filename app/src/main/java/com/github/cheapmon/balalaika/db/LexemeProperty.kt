@@ -1,5 +1,6 @@
 package com.github.cheapmon.balalaika.db
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 
 @Entity(foreignKeys = [
@@ -39,5 +40,13 @@ interface LexemePropertyDao {
     @Query("""SELECT DISTINCT full_form.id
                     FROM lexeme_property JOIN full_form ON lexeme_property.lexeme_id = full_form.lexeme_id
                     WHERE lexeme_property.value LIKE (:text)""")
-    fun findPropertiesLike(text: String): List<String>
+    fun findPropertiesLike(text: String): LiveData<List<String>>
+
+    @Transaction
+    @Query("""SELECT DISTINCT id
+                    FROM (SELECT value, full_form.id FROM lexeme_property 
+                    JOIN full_form ON lexeme_property.lexeme_id = full_form.lexeme_id
+                    WHERE category_id = (:category) AND value = (:value))
+                    WHERE value LIKE (:text)""")
+    fun findPropertiesLikeRestricted(text: String, category: String, value: String): LiveData<List<String>>
 }

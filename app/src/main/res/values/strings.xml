@@ -7,6 +7,7 @@
     <string name="menu_history">Search History</string>
     <string name="search">Search</string>
     <string name="order_by">Order by</string>
+    <string name="restriction">Restriction</string>
     <string-array name="preferences_default_view" />
     <string name="nav_header_description">Navigation</string>
     <string name="preferences">com.github.cheapmon.preferences</string>
@@ -14,4 +15,5 @@
     <string name="add_to_bookmarks">Add to bookmarks</string>
     <string name="go_to_source">Go to source</string>
     <string name="cancel">Cancel</string>
+    <string name="cancel_x">X</string>
 </resources>

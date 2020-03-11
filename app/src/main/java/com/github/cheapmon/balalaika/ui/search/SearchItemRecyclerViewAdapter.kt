@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.lifecycle.switchMap
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.R
@@ -34,7 +35,7 @@ class SearchItemRecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.contentView.text = values[position].fullForm
         holder.view.setOnClickListener {
-            navigateHome(values[position].id)
+            navigateHome(values[position].id, viewModel.restriction?.category, viewModel.restriction?.restriction)
         }
     }
 
@@ -53,24 +54,32 @@ class SearchItemRecyclerViewAdapter(
             job = launch {
                 delay(300)
                 if (text != searchFor) return@launch
-                withContext(Dispatchers.IO) {
-                    viewModel.searchText = text
-                    searchText = text
-                }
-                if (viewModel.items.size == 1) {
-                    navigateHome(viewModel.items.first().id)
-                }
+                viewModel.searchText = text
+                searchText = text
                 values.clear()
-                values.addAll(viewModel.items)
-                notifyDataSetChanged()
+                viewModel.forms.switchMap { BalalaikaDatabase.instance.fullFormDao().getAllById(it) }.observeForever {
+                    if (it.size == 1) {
+                        navigateHome(it.first().id, viewModel.restriction?.category, viewModel.restriction?.restriction)
+                    }
+                    values.addAll(it)
+                    notifyDataSetChanged()
+                }
+                viewModel.props.switchMap { BalalaikaDatabase.instance.fullFormDao().getAllById(it) }.observeForever {
+                    values.addAll(it.filter { form -> values.find { f -> f.id == form.id } == null })
+                    notifyDataSetChanged()
+                }
             }
         }
     }
 
-    private fun navigateHome(fullFormId: String) {
+    private fun navigateHome(fullFormId: String, category: String? = null, restriction: String? = null) {
         launch {
             withContext(Dispatchers.IO) {
-                val entry = SearchHistoryEntry(id = 0, query = searchText, date = Date())
+                val id = if (category != null) {
+                    BalalaikaDatabase.instance.categoryDao().findByName(category).value?.id
+                } else null
+                val entry = SearchHistoryEntry(id = 0, query = searchText, date = Date(),
+                        categoryId = id, value = restriction)
                 BalalaikaDatabase.instance.searchHistoryDao().insert(entry)
             }
         }

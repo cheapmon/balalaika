@@ -11,6 +11,7 @@ import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.ui.home.DictionaryDialog
 import com.github.cheapmon.balalaika.ui.home.HomeFragment
 import com.github.cheapmon.balalaika.ui.home.HomeFragmentDirections
+import com.github.cheapmon.balalaika.ui.search.SearchRestriction
 import kotlinx.coroutines.CoroutineScope
 
 class LexemeWidget(

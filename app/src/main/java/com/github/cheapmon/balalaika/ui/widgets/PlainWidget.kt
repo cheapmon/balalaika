@@ -11,6 +11,7 @@ import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.ui.home.DictionaryDialog
 import com.github.cheapmon.balalaika.ui.home.HomeFragment
 import com.github.cheapmon.balalaika.ui.home.HomeFragmentDirections
+import com.github.cheapmon.balalaika.ui.search.SearchRestriction
 import kotlinx.coroutines.CoroutineScope
 
 class PlainWidget(
@@ -37,8 +38,8 @@ class PlainWidget(
 
     override fun createContextMenu(): DictionaryDialog {
         val values = line.properties.mapNotNull { it.value }
-        val entries = values.map { ContextMenuEntry("Search dictionary for $it") {
-            navController.navigate(HomeFragmentDirections.actionNavHomeToSearchItemFragment(it))
+        val entries = values.map { ContextMenuEntry("Search dictionary for entries matching $it") {
+            navController.navigate(HomeFragmentDirections.actionNavHomeToSearchItemFragment("", SearchRestriction(line.category, it)))
         } }
         return DictionaryDialog(line.fullForm.fullForm, entries)
     }

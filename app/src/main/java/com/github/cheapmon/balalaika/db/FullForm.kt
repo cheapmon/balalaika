@@ -1,5 +1,6 @@
 package com.github.cheapmon.balalaika.db
 
+import androidx.lifecycle.LiveData
 import androidx.paging.DataSource
 import androidx.room.*
 
@@ -22,10 +23,17 @@ interface FullFormDao {
     fun getById(fullFormId: String): FullForm?
 
     @Query("SELECT DISTINCT * FROM full_form WHERE id IN (:forms)")
-    fun getAllById(forms: List<String>): List<FullForm>
+    fun getAllById(forms: List<String>): LiveData<List<FullForm>>
 
     @Query("""SELECT DISTINCT id FROM full_form WHERE full_form LIKE (:text)""")
-    fun getAllLike(text: String): List<String>
+    fun getAllLike(text: String): LiveData<List<String>>
+
+    @Transaction
+    @Query("""SELECT DISTINCT full_form.id FROM lexeme_property
+                    JOIN full_form ON lexeme_property.lexeme_id = full_form.lexeme_id
+                    WHERE full_form LIKE (:text) 
+                    AND category_id = (:category) AND value = (:restriction)""")
+    fun getAllLikeRestricted(text: String, category: String, restriction: String): LiveData<List<String>>
 
     @Transaction
     @Query("""SELECT DISTINCT full_form.* FROM lexeme_property

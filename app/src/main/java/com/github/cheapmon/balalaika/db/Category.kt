@@ -24,6 +24,9 @@ interface CategoryDao {
     @Query("SELECT * FROM category WHERE id = (:id) LIMIT 1")
     fun findById(id: String): Category?
 
+    @Query("SELECT * FROM category WHERE name = (:name) LIMIT 1")
+    fun findByName(name: String): LiveData<Category?>
+
     @Query("SELECT count(*) FROM category")
     fun count(): Int
 

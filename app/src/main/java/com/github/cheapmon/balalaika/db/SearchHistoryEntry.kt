@@ -7,6 +7,8 @@ import java.util.*
 data class SearchHistoryEntry(
         @PrimaryKey(autoGenerate = true) val id: Int,
         @ColumnInfo(name = "query") val query: String,
+        @ColumnInfo(name = "category_id") val categoryId: String?,
+        @ColumnInfo(name = "value") val value: String?,
         @ColumnInfo(name = "date") val date: Date?
 )
 

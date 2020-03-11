@@ -45,6 +45,14 @@
             app:argType="string"
             app:nullable="true"
             android:defaultValue="@null" />
+        <argument
+            android:name="restriction"
+            app:argType="com.github.cheapmon.balalaika.ui.search.SearchRestriction"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <action
+            android:id="@+id/action_nav_search_to_self"
+            app:destination="@id/nav_search" />
     </fragment>
     <fragment
         android:id="@+id/nav_history"

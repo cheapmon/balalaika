@@ -12,7 +12,12 @@ class SearchHistoryViewModel : ViewModel() {
     init {
         entries = BalalaikaDatabase.instance.searchHistoryDao().getAll().map {
             it to {
-                navController.navigate(SearchHistoryFragmentDirections.actionNavHistoryToNavSearch(it.query))
+                val restriction = if(it.categoryId != null && it.value != null) {
+                    SearchRestriction(BalalaikaDatabase.instance.categoryDao().findById(it.categoryId)?.name, it.value)
+                } else {
+                    null
+                }
+                navController.navigate(SearchHistoryFragmentDirections.actionNavHistoryToNavSearch(it.query, restriction))
             }
         }
     }
