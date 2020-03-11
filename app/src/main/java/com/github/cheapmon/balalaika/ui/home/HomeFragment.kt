@@ -64,12 +64,12 @@ class HomeFragment : Fragment() {
             recyclerView?.adapter = adapter
             recyclerView?.layoutManager = LinearLayoutManager(view.context)
             recyclerView?.setHasFixedSize(true)
-            checkArgs(viewModel.lexemes.value)
+            checkArgs()
         })
         return view
     }
 
-    private fun checkArgs(list: PagedList<DictionaryEntry>?) {
+    private fun checkArgs() {
         viewLifecycleOwner.lifecycleScope.launchWhenCreated {
             val id = args.fullFormId
             if (id != null) {

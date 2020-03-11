@@ -77,5 +77,7 @@ class MainActivity : AppCompatActivity(), OrderByDialog.OrderByDialogListener {
     override fun onDialogItemClick(dialog: DialogFragment, category: Category) {
         PreferenceManager.getDefaultSharedPreferences(this)
                 .edit().putString("order_by", category.id).apply()
+        val navController = findNavController(R.id.nav_host_fragment)
+        navController.navigate(HomeFragmentDirections.actionNavHomeSelf())
     }
 }
