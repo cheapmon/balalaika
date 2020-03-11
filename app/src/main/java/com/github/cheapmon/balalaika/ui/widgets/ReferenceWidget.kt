@@ -64,13 +64,7 @@ class ReferenceWidget(
     }
 
     private fun scrollToReference(link: String) {
-        scope.launch {
-            val pos = withContext(Dispatchers.IO) {
-                val form = BalalaikaDatabase.instance.fullFormDao().getById(link)?.fullForm ?: ""
-                BalalaikaDatabase.instance.fullFormDao().getPositionOf(form)
-            }
-            adapter.recyclerView?.scrollToPosition(pos)
-        }
+        adapter.scrollToId(link)
     }
 }
 

@@ -57,14 +57,15 @@ class HomeFragment : Fragment() {
         viewModel.setView(preferences.getString("default_view", "all") ?: "all")
         viewModel.setCategory(preferences.getString("order_by", "default") ?: "default")
         recyclerView = view.findViewById<RecyclerView>(R.id.home)
-        val adapter = HomeAdapter(viewLifecycleOwner.lifecycleScope, findNavController(), recyclerView, fragmentManager)
         viewModel.lexemes.observe(this, Observer {
+            val category = preferences.getString("order_by", "default") ?: "default"
+            val adapter = HomeAdapter(viewLifecycleOwner.lifecycleScope, findNavController(), recyclerView, fragmentManager, category, it)
             adapter.submitList(it)
+            recyclerView?.adapter = adapter
+            recyclerView?.layoutManager = LinearLayoutManager(view.context)
+            recyclerView?.setHasFixedSize(true)
+            checkArgs(viewModel.lexemes.value)
         })
-        recyclerView?.adapter = adapter
-        recyclerView?.layoutManager = LinearLayoutManager(view.context)
-        recyclerView?.setHasFixedSize(true)
-        checkArgs(viewModel.lexemes.value)
         return view
     }
 
@@ -72,16 +73,7 @@ class HomeFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launchWhenCreated {
             val id = args.fullFormId
             if (id != null) {
-                viewLifecycleOwner.lifecycleScope.launch {
-                    delay(1000)
-                    val pos = withContext(Dispatchers.IO) {
-                        val form = BalalaikaDatabase.instance.fullFormDao().getById(id)?.fullForm
-                                ?: ""
-                        BalalaikaDatabase.instance.fullFormDao().getPositionOf(form)
-                    }
-                    list?.loadAround(pos)
-                    recyclerView?.scrollToPosition(pos)
-                }
+                (recyclerView?.adapter as? HomeAdapter)?.scrollToId(id)
             }
         }
     }
@@ -89,8 +81,10 @@ class HomeFragment : Fragment() {
     class HomeAdapter(
             private val scope: CoroutineScope,
             private val navController: NavController,
-            val recyclerView: RecyclerView?,
-            private val fragmentManager: FragmentManager?
+            private val recyclerView: RecyclerView?,
+            private val fragmentManager: FragmentManager?,
+            private val category: String,
+            private val list: PagedList<DictionaryEntry>
     ) : PagedListAdapter<DictionaryEntry, HomeAdapter.HomeViewHolder>(
             object : DiffUtil.ItemCallback<DictionaryEntry>() {
                 override fun areContentsTheSame(oldItem: DictionaryEntry, newItem: DictionaryEntry): Boolean {
@@ -124,6 +118,23 @@ class HomeFragment : Fragment() {
             val cardView = LayoutInflater.from(parent.context)
                     .inflate(R.layout.lexeme_card, parent, false) as CardView
             return HomeViewHolder(cardView)
+        }
+
+        fun scrollToId(id: String) {
+            scope.launch {
+                delay(1000)
+                val pos = withContext(Dispatchers.IO) {
+                    if (category == "default") {
+                        val form = BalalaikaDatabase.instance.fullFormDao().getById(id)?.fullForm
+                                ?: ""
+                        BalalaikaDatabase.instance.fullFormDao().getPositionOf(form)
+                    } else {
+                        BalalaikaDatabase.instance.fullFormDao().getIdsOrderedBy(category).indexOf(id)
+                    }
+                }
+                list.loadAround(pos)
+                recyclerView?.scrollToPosition(pos)
+            }
         }
     }
 }
