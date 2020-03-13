@@ -1,4 +1,4 @@
-package com.github.cheapmon.balalaika.dictionary
+package com.github.cheapmon.balalaika.ui.dictionary
 
 import androidx.fragment.app.Fragment
 
