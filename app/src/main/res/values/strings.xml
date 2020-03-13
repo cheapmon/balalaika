@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Balalaika</string>
+
+    <!-- Navigation drawer -->
+    <string name="nav_header_desc">Navigation header</string>
+
+    <!-- Menus -->
+    <string name="menu_dictionary">Dictionary</string>
+</resources>
