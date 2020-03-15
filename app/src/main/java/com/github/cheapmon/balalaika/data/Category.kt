@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
     ]
 )
 data class Category(
-    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") val categoryId: Long,
+    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") val categoryId: Long = 0,
     @ColumnInfo(name = "external_id") val externalId: String,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "widget") val widget: WidgetType,
@@ -25,8 +25,8 @@ interface CategoryDao {
     fun getAll(): Flow<List<Category>>
 
     @Query("SELECT COUNT(*) FROM category")
-    fun count(): Int
+    fun count(): Flow<Int>
 
     @Insert
-    fun insertAll(vararg categories: Category)
+    suspend fun insertAll(vararg categories: Category)
 }
