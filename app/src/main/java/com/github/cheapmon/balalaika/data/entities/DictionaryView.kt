@@ -1,4 +1,4 @@
-package com.github.cheapmon.balalaika.data
+package com.github.cheapmon.balalaika.data.entities
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
