@@ -5,7 +5,13 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
 @Database(
-    entities = [Category::class, Lexeme::class, Property::class],
+    entities = [
+        Category::class,
+        Lexeme::class,
+        Property::class,
+        DictionaryView::class,
+        DictionaryViewToCategory::class
+    ],
     version = 1,
     exportSchema = false
 )
@@ -14,4 +20,5 @@ abstract class DB : RoomDatabase() {
     abstract fun categories(): CategoryDao
     abstract fun lexemes(): LexemeDao
     abstract fun properties(): PropertyDao
+    abstract fun dictionaryViews(): DictionaryViewDao
 }
