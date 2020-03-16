@@ -21,9 +21,10 @@ data class Property(
     @ColumnInfo(name = "value") val value: String
 )
 
-data class PropertyWithCategory(
+data class PropertyWithRelations(
     @Embedded val property: Property,
-    @Relation(parentColumn = "category_id", entityColumn = "id") val category: Category
+    @Relation(parentColumn = "category_id", entityColumn = "id") val category: Category,
+    @Relation(parentColumn = "lexeme_id", entityColumn = "id") val lexeme: Lexeme
 )
 
 @Dao
@@ -33,7 +34,7 @@ interface PropertyDao {
 
     @Transaction
     @Query("SELECT * FROM property")
-    fun getAllWithCategories(): Flow<List<PropertyWithCategory>>
+    fun getAllWithRelations(): Flow<List<PropertyWithRelations>>
 
     @Query("SELECT COUNT(*) FROM property")
     fun count(): Flow<Int>
