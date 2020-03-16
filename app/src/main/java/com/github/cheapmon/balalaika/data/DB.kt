@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
 @Database(
-    entities = [Category::class, Lexeme::class],
+    entities = [Category::class, Lexeme::class, Property::class],
     version = 1,
     exportSchema = false
 )
@@ -13,4 +13,5 @@ import androidx.room.TypeConverters
 abstract class DB : RoomDatabase() {
     abstract fun categories(): CategoryDao
     abstract fun lexemes(): LexemeDao
+    abstract fun properties(): PropertyDao
 }
