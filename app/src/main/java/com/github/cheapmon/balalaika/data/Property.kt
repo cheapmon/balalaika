@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
         ),
         ForeignKey(entity = Lexeme::class, parentColumns = ["id"], childColumns = ["lexeme_id"])
     ],
-    indices = [Index(value = ["category_id", "lexeme_id"])]
+    indices = [Index(value = ["category_id"]), Index(value = ["lexeme_id"])]
 )
 data class Property(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") val propertyId: Long = 0,
