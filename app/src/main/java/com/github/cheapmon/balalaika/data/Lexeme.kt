@@ -9,10 +9,19 @@ data class Lexeme(
     val form: String
 )
 
+data class LexemeWithProperties(
+    @Embedded val lexeme: Lexeme,
+    @Relation(parentColumn = "id", entityColumn = "lexeme_id") val properties: List<Property>
+)
+
 @Dao
 interface LexemeDao {
     @Query("SELECT * FROM lexeme")
     fun getAll(): Flow<List<Lexeme>>
+
+    @Transaction
+    @Query("SELECT * FROM lexeme")
+    fun getAllWithProperties(): Flow<List<LexemeWithProperties>>
 
     @Query("SELECT COUNT(*) FROM lexeme")
     fun count(): Flow<Int>
