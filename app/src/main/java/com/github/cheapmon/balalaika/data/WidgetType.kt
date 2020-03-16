@@ -8,7 +8,6 @@ enum class WidgetType {
     KEY_VALUE,
     PLAIN,
     REFERENCE,
-    TITLE,
     URL
 }
 

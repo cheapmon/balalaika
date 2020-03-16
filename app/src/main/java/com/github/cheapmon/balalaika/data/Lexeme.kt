@@ -5,13 +5,14 @@ import kotlinx.coroutines.flow.Flow
 
 @Entity
 data class Lexeme(
-    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") val lexemeId: Long = 0,
-    val form: String
+        @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") val lexemeId: Long = 0,
+        @ColumnInfo(name = "form") val form: String,
+        @ColumnInfo(name = "base_id") val baseId: Long?
 )
 
 data class LexemeWithProperties(
-    @Embedded val lexeme: Lexeme,
-    @Relation(parentColumn = "id", entityColumn = "lexeme_id") val properties: List<Property>
+        @Embedded val lexeme: Lexeme,
+        @Relation(parentColumn = "id", entityColumn = "lexeme_id") val properties: List<Property>
 )
 
 @Dao
