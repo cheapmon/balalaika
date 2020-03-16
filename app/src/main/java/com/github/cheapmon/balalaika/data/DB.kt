@@ -1,6 +1,8 @@
 package com.github.cheapmon.balalaika.data
 
+import android.content.Context
 import androidx.room.Database
+import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
@@ -23,4 +25,15 @@ abstract class DB : RoomDatabase() {
     abstract fun properties(): PropertyDao
     abstract fun dictionaryViews(): DictionaryViewDao
     abstract fun historyEntries(): HistoryEntryDao
+
+    companion object {
+        @Volatile
+        private var instance: DB? = null
+
+        fun getInstance(context: Context): DB {
+            return instance ?: synchronized(this) {
+                Room.databaseBuilder(context, DB::class.java, "balalaika").build()
+            }
+        }
+    }
 }
