@@ -10,7 +10,8 @@ import androidx.room.TypeConverters
         Lexeme::class,
         Property::class,
         DictionaryView::class,
-        DictionaryViewToCategory::class
+        DictionaryViewToCategory::class,
+        HistoryEntry::class
     ],
     version = 1,
     exportSchema = false
@@ -21,4 +22,5 @@ abstract class DB : RoomDatabase() {
     abstract fun lexemes(): LexemeDao
     abstract fun properties(): PropertyDao
     abstract fun dictionaryViews(): DictionaryViewDao
+    abstract fun historyEntries(): HistoryEntryDao
 }
