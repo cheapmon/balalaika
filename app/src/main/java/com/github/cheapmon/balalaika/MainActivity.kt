@@ -22,7 +22,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val activityBinding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        val activityBinding: ActivityMainBinding =
+            DataBindingUtil.setContentView(this, R.layout.activity_main)
         val barBinding: AppBarMainBinding = activityBinding.appBarMain
 
         setSupportActionBar(barBinding.toolbar)
@@ -30,7 +31,10 @@ class MainActivity : AppCompatActivity() {
         val navView: NavigationView = activityBinding.navView
 
         navController = findNavController(R.id.nav_host_fragment)
-        appBarConfiguration = AppBarConfiguration(setOf(R.id.nav_home), drawerLayout)
+        appBarConfiguration = AppBarConfiguration(
+            topLevelDestinationIds = setOf(R.id.nav_home, R.id.nav_history),
+            drawerLayout = drawerLayout
+        )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
     }
