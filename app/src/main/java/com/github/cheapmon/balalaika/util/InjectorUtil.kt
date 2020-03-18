@@ -3,7 +3,9 @@ package com.github.cheapmon.balalaika.util
 import android.content.Context
 import com.github.cheapmon.balalaika.data.DB
 import com.github.cheapmon.balalaika.data.repositories.DictionaryRepository
+import com.github.cheapmon.balalaika.data.repositories.SearchRepository
 import com.github.cheapmon.balalaika.ui.dictionary.DictionaryViewModelFactory
+import com.github.cheapmon.balalaika.ui.search.SearchViewModelFactory
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 
@@ -20,8 +22,18 @@ object InjectorUtil {
         )
     }
 
+    private fun provideSearchRepository(context: Context): SearchRepository {
+        val db = DB.getInstance(context.applicationContext)
+        return SearchRepository.getInstance(db.lexemes(), db.properties())
+    }
+
     fun provideDictionaryViewModelFactory(context: Context): DictionaryViewModelFactory {
         val repository = provideDictionaryRepository(context)
         return DictionaryViewModelFactory(repository)
+    }
+
+    fun provideSearchViewModelFactory(context: Context): SearchViewModelFactory {
+        val repository = provideSearchRepository(context)
+        return SearchViewModelFactory(repository)
     }
 }

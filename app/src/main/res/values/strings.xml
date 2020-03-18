@@ -6,4 +6,5 @@
 
     <!-- Menus -->
     <string name="menu_dictionary">Dictionary</string>
+    <string name="menu_search">Search Dictionary</string>
 </resources>
