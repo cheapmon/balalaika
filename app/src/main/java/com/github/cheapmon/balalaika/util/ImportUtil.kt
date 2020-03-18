@@ -153,7 +153,7 @@ class ImportUtil<T>(private val res: ResourceLoader<T>) {
 
     private fun readConfig(): Config {
         val config: Map<String, Int> = Yaml().load(res.read(res.configId))
-        return Config(config["version"] ?: 0)
+        return Config(config[YAML_VERSION_KEY] ?: 0)
     }
 
     private fun records(id: T) =
@@ -161,6 +161,7 @@ class ImportUtil<T>(private val res: ResourceLoader<T>) {
 
     companion object {
         const val DB_VERSION_KEY = "db_version"
+        const val YAML_VERSION_KEY = "version"
     }
 }
 
