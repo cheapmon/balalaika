@@ -7,4 +7,5 @@
     <!-- Menus -->
     <string name="menu_dictionary">Dictionary</string>
     <string name="menu_search">Search Dictionary</string>
+    <string name="menu_history">Search History</string>
 </resources>

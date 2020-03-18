@@ -15,5 +15,10 @@
         android:name="com.github.cheapmon.balalaika.ui.search.SearchFragment"
         android:label="@string/menu_dictionary"
         tools:layout="@layout/fragment_search" />
+    <fragment
+        android:id="@+id/nav_history"
+        android:name="com.github.cheapmon.balalaika.ui.history.HistoryFragment"
+        android:label="@string/menu_history"
+        tools:layout="@layout/fragment_history" />
 
 </navigation>
