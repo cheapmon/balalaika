@@ -1,9 +1,9 @@
-package com.github.cheapmon.balalaika.data.util
+package com.github.cheapmon.balalaika.util
 
 import android.content.Context
 import com.github.cheapmon.balalaika.data.DB
 import com.github.cheapmon.balalaika.data.repositories.DictionaryRepository
-import com.github.cheapmon.balalaika.data.repositories.DictionaryViewModelFactory
+import com.github.cheapmon.balalaika.ui.dictionary.DictionaryViewModelFactory
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 
