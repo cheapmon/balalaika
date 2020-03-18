@@ -35,6 +35,9 @@ interface HistoryEntryDao {
     @Query("SELECT * FROM search_history")
     fun getAllWithCategory(): Flow<List<HistoryEntryWithCategory>>
 
+    @Query("DELETE FROM search_history")
+    suspend fun clear()
+
     @Query("SELECT COUNT(*) FROM search_history")
     fun count(): Flow<Int>
 
