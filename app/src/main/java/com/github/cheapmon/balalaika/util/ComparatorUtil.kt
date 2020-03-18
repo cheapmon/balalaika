@@ -1,4 +1,4 @@
-package com.github.cheapmon.balalaika.data.util
+package com.github.cheapmon.balalaika.util
 
 import com.github.cheapmon.balalaika.data.entities.DictionaryEntry
 

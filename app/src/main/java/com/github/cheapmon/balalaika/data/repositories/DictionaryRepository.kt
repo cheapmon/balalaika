@@ -1,8 +1,8 @@
 package com.github.cheapmon.balalaika.data.repositories
 
 import com.github.cheapmon.balalaika.data.entities.*
-import com.github.cheapmon.balalaika.data.util.ComparatorMap
-import com.github.cheapmon.balalaika.data.util.ComparatorUtil
+import com.github.cheapmon.balalaika.util.ComparatorMap
+import com.github.cheapmon.balalaika.util.ComparatorUtil
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel

@@ -6,10 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.asFlow
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.data.repositories.DictionaryViewModel
-import com.github.cheapmon.balalaika.data.util.InjectorUtil
+import com.github.cheapmon.balalaika.util.InjectorUtil
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 

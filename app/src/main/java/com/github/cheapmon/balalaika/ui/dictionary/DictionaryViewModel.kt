@@ -1,8 +1,9 @@
-package com.github.cheapmon.balalaika.data.repositories
+package com.github.cheapmon.balalaika.ui.dictionary
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.github.cheapmon.balalaika.data.repositories.DictionaryRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.map
