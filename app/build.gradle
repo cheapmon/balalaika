@@ -63,6 +63,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.2.1'
     implementation 'androidx.navigation:navigation-ui-ktx:2.2.1'
+    implementation "androidx.preference:preference:1.1.0"
 
     // Material Design components
     implementation 'com.google.android.material:material:1.1.0'
@@ -80,6 +81,10 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
     kapt "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
     testImplementation "androidx.arch.core:core-testing:$arch_version"
+
+    // Import
+    implementation "org.apache.commons:commons-csv:1.7"
+    implementation "org.yaml:snakeyaml:1.26"
 
     // Testing
     testImplementation 'junit:junit:4.12'
