@@ -36,6 +36,20 @@ interface PropertyDao {
     @Query("SELECT * FROM property")
     fun getAllWithRelations(): Flow<List<PropertyWithRelations>>
 
+    @Transaction
+    @Query("""SELECT property.id, property.category_id, property.lexeme_id, property.value 
+                    FROM property JOIN category ON property.category_id = category.id
+                    JOIN lexeme ON property.lexeme_id = lexeme.id
+                    WHERE category.id IN (:categoryIds) AND category.hidden = 0""")
+    fun getAllFiltered(categoryIds: List<Long>): Flow<List<PropertyWithRelations>>
+
+    @Transaction
+    @Query("""SELECT property.id, property.category_id, property.lexeme_id, property.value
+                    FROM property JOIN category ON property.category_id = category.id
+                    JOIN lexeme ON property.lexeme_id = lexeme.id
+                    WHERE category.hidden = 0""")
+    fun getAllVisible(): Flow<List<PropertyWithRelations>>
+
     @Query("SELECT COUNT(*) FROM property")
     fun count(): Flow<Int>
 

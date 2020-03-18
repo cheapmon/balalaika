@@ -25,6 +25,12 @@ data class LexemeWithRelations(
     @Relation(parentColumn = "id", entityColumn = "lexeme_id") val properties: List<Property>
 )
 
+data class DictionaryEntry(
+    val lexeme: Lexeme,
+    val base: Lexeme?,
+    val properties: List<PropertyWithRelations>
+)
+
 @Dao
 interface LexemeDao {
     @Query("SELECT * FROM lexeme")
@@ -33,6 +39,9 @@ interface LexemeDao {
     @Transaction
     @Query("SELECT * FROM lexeme")
     fun getAllWithRelations(): Flow<List<LexemeWithRelations>>
+
+    @Query("SELECT * FROM lexeme WHERE id = (:id) LIMIT 1")
+    fun findById(id: Long): Flow<Lexeme?>
 
     @Query("SELECT COUNT(*) FROM lexeme")
     fun count(): Flow<Int>

@@ -51,6 +51,10 @@ interface DictionaryViewDao {
     @Query("SELECT * FROM dictionary_view")
     fun getAllWithCategories(): Flow<List<DictionaryViewWithCategories>>
 
+    @Transaction
+    @Query("SELECT * FROM dictionary_view WHERE id = (:id) LIMIT 1")
+    fun findByIdWithCategories(id: Long): Flow<DictionaryViewWithCategories?>
+
     @Query("SELECT COUNT(*) FROM dictionary_view")
     fun count(): Flow<Int>
 
