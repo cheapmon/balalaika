@@ -10,5 +10,10 @@
         android:name="com.github.cheapmon.balalaika.ui.dictionary.DictionaryFragment"
         android:label="@string/app_name"
         tools:layout="@layout/fragment_dictionary" />
+    <fragment
+        android:id="@+id/nav_search"
+        android:name="com.github.cheapmon.balalaika.ui.search.SearchFragment"
+        android:label="@string/menu_dictionary"
+        tools:layout="@layout/fragment_search" />
 
 </navigation>
