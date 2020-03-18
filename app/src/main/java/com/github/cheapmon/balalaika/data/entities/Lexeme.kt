@@ -43,6 +43,9 @@ interface LexemeDao {
     @Query("SELECT * FROM lexeme WHERE id = (:id) LIMIT 1")
     fun findById(id: Long): Flow<Lexeme?>
 
+    @Query("SELECT * FROM lexeme WHERE form LIKE '%' || (:query) || '%'")
+    fun findByForm(query: String): Flow<List<Lexeme>>
+
     @Query("SELECT COUNT(*) FROM lexeme")
     fun count(): Flow<Int>
 
