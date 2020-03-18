@@ -5,6 +5,7 @@ import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -13,6 +14,8 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.github.cheapmon.balalaika.databinding.ActivityMainBinding
 import com.github.cheapmon.balalaika.databinding.AppBarMainBinding
+import com.github.cheapmon.balalaika.util.AndroidResourceLoader
+import com.github.cheapmon.balalaika.util.ImportUtil
 import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -37,6 +40,10 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        lifecycleScope.launchWhenCreated {
+            ImportUtil(AndroidResourceLoader(applicationContext)).import(applicationContext)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
