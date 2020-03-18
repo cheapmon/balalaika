@@ -50,6 +50,22 @@ interface PropertyDao {
                     WHERE category.hidden = 0""")
     fun getAllVisible(): Flow<List<PropertyWithRelations>>
 
+    @Transaction
+    @Query("SELECT * FROM property WHERE value LIKE '%' || (:query) || '%'")
+    fun findByValue(query: String): Flow<List<PropertyWithRelations>>
+
+    @Transaction
+    @Query("""SELECT property.id, property.category_id, property.lexeme_id, property.value
+                    FROM property JOIN lexeme ON property.lexeme_id = lexeme.id
+                    WHERE lexeme_id IN (SELECT DISTINCT lexeme_id FROM property 
+                    WHERE category_id = (:categoryId) AND value = (:restriction))
+                    AND (value LIKE '%' || (:query) || '%' OR form LIKE '%' || (:query) || '%')""")
+    fun findByValueRestricted(
+        query: String,
+        categoryId: Long,
+        restriction: String
+    ): Flow<List<PropertyWithRelations>>
+
     @Query("SELECT COUNT(*) FROM property")
     fun count(): Flow<Int>
 
