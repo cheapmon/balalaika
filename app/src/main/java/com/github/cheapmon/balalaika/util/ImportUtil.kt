@@ -110,7 +110,7 @@ class ImportUtil<T>(private val res: ResourceLoader<T>) {
             .map { record ->
                 Property(
                     categoryId = categoryIdCache[record["category"]] ?: -1,
-                    lexemeId = lexemeIdCache[record["lexeme"]] ?: -1,
+                    lexemeId = lexemeIdCache[record["id"]] ?: -1,
                     value = record["value"]
                 )
             }
