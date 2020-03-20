@@ -9,8 +9,8 @@ class HistoryRepository(
 ) {
     val historyEntries = historyEntryDao.getAllWithCategory().map { it.reversed() }
 
-    suspend fun addEntry(query: String, categoryId: Long, restriction: String) {
-        historyEntryDao.insertAll(HistoryEntry(0, categoryId, restriction, query))
+    suspend fun removeEntry(historyEntry: HistoryEntry) {
+        historyEntryDao.removeAll(historyEntry)
     }
 
     suspend fun clearHistory() {
