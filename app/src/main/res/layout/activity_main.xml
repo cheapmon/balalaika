@@ -23,6 +23,7 @@
             android:layout_gravity="start"
             android:fitsSystemWindows="true"
             app:headerLayout="@layout/nav_header_main"
+            app:itemTextAppearance="@style/TextAppearance.MaterialComponents.Body2"
             app:menu="@menu/activity_main_drawer" />
     </androidx.drawerlayout.widget.DrawerLayout>
 </layout>
