@@ -8,4 +8,19 @@
     <string name="menu_dictionary">Dictionary</string>
     <string name="menu_search">Search Dictionary</string>
     <string name="menu_history">Search History</string>
+
+    <!-- Descriptions for accessibility -->
+    <string name="desc_history_item_icon">History entry</string>
+    <string name="desc_history_item_redo_button">Search again</string>
+    <string name="desc_history_item_delete_button">Remove entry</string>
+
+    <!-- History fragment -->
+    <string name="no_restriction">No additional restriction</string>
+    <string name="history_entry_removed">History entry was removed</string>
+    <string name="history_empty">History is empty</string>
+    <string name="history_clear">Clear</string>
+    <string name="history_clear_title">Clear History?</string>
+    <string name="history_clear_affirm">OK</string>
+    <string name="history_clear_cancel">Cancel</string>
+    <string name="history_clear_done">History was cleared</string>
 </resources>
