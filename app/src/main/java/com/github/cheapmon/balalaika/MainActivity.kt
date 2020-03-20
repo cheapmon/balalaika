@@ -1,7 +1,6 @@
 package com.github.cheapmon.balalaika
 
 import android.os.Bundle
-import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
@@ -44,11 +43,6 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launchWhenCreated {
             ImportUtil(AndroidResourceLoader(applicationContext)).import(applicationContext)
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.main, menu)
-        return true
     }
 
     override fun onSupportNavigateUp(): Boolean {
