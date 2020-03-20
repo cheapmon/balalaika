@@ -84,7 +84,7 @@ dependencies {
 
     // Import
     implementation "org.apache.commons:commons-csv:1.7"
-    implementation "org.yaml:snakeyaml:1.26"
+    implementation "org.yaml:snakeyaml:1.26:android"
 
     // Testing
     testImplementation 'junit:junit:4.12'
