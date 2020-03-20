@@ -31,7 +31,7 @@ object InjectorUtil {
 
     private fun provideHistoryRepository(context: Context): HistoryRepository {
         val db = DB.getInstance(context.applicationContext)
-        return HistoryRepository(db.historyEntries())
+        return HistoryRepository.getInstance(db.historyEntries())
     }
 
     fun provideDictionaryViewModelFactory(context: Context): DictionaryViewModelFactory {
@@ -40,8 +40,9 @@ object InjectorUtil {
     }
 
     fun provideSearchViewModelFactory(context: Context): SearchViewModelFactory {
-        val repository = provideSearchRepository(context)
-        return SearchViewModelFactory(repository)
+        val searchRepository = provideSearchRepository(context)
+        val historyRepository = provideHistoryRepository(context)
+        return SearchViewModelFactory(searchRepository, historyRepository)
     }
 
     fun provideHistoryViewModelFactory(context: Context): HistoryViewModelFactory {
