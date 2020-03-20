@@ -43,4 +43,7 @@ interface HistoryEntryDao {
 
     @Insert
     suspend fun insertAll(vararg historyEntries: HistoryEntry)
+
+    @Delete
+    suspend fun removeAll(vararg historyEntries: HistoryEntry)
 }
