@@ -9,6 +9,10 @@
             android:icon="@drawable/ic_menu_book"
             android:title="@string/menu_dictionary" />
         <item
+            android:icon="@drawable/ic_search"
+            android:id="@+id/nav_search"
+            android:title="@string/menu_search" />
+        <item
             android:id="@+id/nav_history"
             android:icon="@drawable/ic_menu_history"
             android:title="@string/menu_history" />

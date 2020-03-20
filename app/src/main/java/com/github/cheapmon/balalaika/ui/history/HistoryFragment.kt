@@ -6,12 +6,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.data.entities.HistoryEntryWithCategory
 import com.github.cheapmon.balalaika.databinding.FragmentHistoryBinding
+import com.github.cheapmon.balalaika.ui.search.SearchFragment
 import com.github.cheapmon.balalaika.util.InjectorUtil
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -95,7 +97,19 @@ class HistoryFragment : Fragment() {
         }
 
         override fun onClickRedoButton(historyEntry: HistoryEntryWithCategory) {
-            Snackbar.make(binding.root, "Not implemented yet", Snackbar.LENGTH_SHORT).show()
+            val restriction = if (historyEntry.category == null) {
+                null
+            } else {
+                SearchFragment.Restriction(
+                    historyEntry.category,
+                    historyEntry.historyEntry.restriction
+                )
+            }
+            val directions = HistoryFragmentDirections.actionNavHistoryToNavSearch(
+                historyEntry.historyEntry.query,
+                restriction
+            )
+            findNavController().navigate(directions)
         }
     }
 }

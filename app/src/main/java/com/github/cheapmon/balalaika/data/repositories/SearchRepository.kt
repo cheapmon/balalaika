@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.*
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-class SearchRepository(
+class SearchRepository private constructor(
     private val lexemeDao: LexemeDao,
     private val propertyDao: PropertyDao
 ) {
@@ -27,14 +27,26 @@ class SearchRepository(
             if (id != null && restriction != null)
                 findLexemesMatchingRestricted(q, id, restriction).first()
             else findLexemesMatching(q).first()
-        }
+        }.map { it.sortedBy { lexeme -> lexeme.form } }
+
+    fun getQuery(): String? {
+        return queryChannel.valueOrNull
+    }
 
     fun setQuery(query: String) {
         queryChannel.offer(query)
     }
 
+    fun getRestriction(): Pair<Long?, String?>? {
+        return restrictionChannel.valueOrNull
+    }
+
     fun setRestriction(categoryId: Long, restriction: String) {
         restrictionChannel.offer(categoryId to restriction)
+    }
+
+    fun clearRestriction() {
+        restrictionChannel.offer(null to null)
     }
 
     private fun findLexemesMatching(query: String): Flow<List<Lexeme>> {
