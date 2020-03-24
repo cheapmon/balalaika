@@ -14,6 +14,11 @@
     <string name="desc_history_item_redo_button">Search again</string>
     <string name="desc_history_item_delete_button">Remove entry</string>
     <string name="desc_search_item_icon">Result</string>
+    <string name="desc_dictionary_item_icon">Dictionary entry</string>
+    <string name="desc_dictionary_item_collapse_button">Collapse entry</string>
+    <string name="desc_dictionary_item_bookmark_button">Add to bookmarks</string>
+    <string name="desc_widget_key_value_icon">Widget Icon</string>
+    <string name="desc_widget_url_button">Follow URL</string>
 
     <!-- Search fragment -->
     <string name="search_query">Query</string>
