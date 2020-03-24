@@ -2,6 +2,7 @@ package com.github.cheapmon.balalaika.data.entities
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
+import java.io.Serializable
 
 @Entity(
     tableName = "search_history",
@@ -16,14 +17,27 @@ import kotlinx.coroutines.flow.Flow
 )
 data class HistoryEntry(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") val historyEntryId: Long = 0,
-    @ColumnInfo(name = "category_id") val categoryId: Long?,
-    @ColumnInfo(name = "restriction") val restriction: String,
+    @ColumnInfo(name = "category_id") val categoryId: Long? = null,
+    @ColumnInfo(name = "restriction") val restriction: String? = null,
     @ColumnInfo(name = "query") val query: String
 )
 
 data class HistoryEntryWithCategory(
     @Embedded val historyEntry: HistoryEntry,
     @Relation(parentColumn = "category_id", entityColumn = "id") val category: Category?
+)
+
+sealed class SearchRestriction : Serializable {
+    object None : SearchRestriction()
+    data class Some(
+        val category: Category,
+        val restriction: String
+    ) : SearchRestriction()
+}
+
+data class HistoryEntryWithRestriction(
+    @Embedded val historyEntry: HistoryEntry,
+    @Ignore val restriction: SearchRestriction
 )
 
 @Dao
@@ -43,6 +57,9 @@ interface HistoryEntryDao {
 
     @Insert
     suspend fun insertAll(vararg historyEntries: HistoryEntry)
+
+    @Query("DELETE FROM search_history WHERE `query` = (:query)")
+    suspend fun removeSimilar(query: String)
 
     @Delete
     suspend fun removeAll(vararg historyEntries: HistoryEntry)

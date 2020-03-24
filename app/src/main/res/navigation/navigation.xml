@@ -16,25 +16,24 @@
         android:label="@string/menu_search"
         tools:layout="@layout/fragment_search">
         <argument
+            android:name="restriction"
+            app:argType="com.github.cheapmon.balalaika.data.entities.SearchRestriction"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
             android:name="query"
             android:defaultValue="@null"
             app:argType="string"
             app:nullable="true" />
-        <argument
-            android:name="restriction"
-            app:argType="com.github.cheapmon.balalaika.ui.search.SearchFragment$Restriction"
-            app:nullable="true"
-            android:defaultValue="@null" />
     </fragment>
     <fragment
         android:id="@+id/nav_history"
         android:name="com.github.cheapmon.balalaika.ui.history.HistoryFragment"
         android:label="@string/menu_history"
-        tools:layout="@layout/fragment_history" >
+        tools:layout="@layout/fragment_history">
         <action
             android:id="@+id/action_nav_history_to_nav_search"
-            app:destination="@id/nav_search"
-            app:enterAnim="@android:anim/slide_in_left" />
+            app:destination="@id/nav_search" />
     </fragment>
 
 </navigation>
