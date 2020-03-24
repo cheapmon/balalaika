@@ -11,9 +11,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.data.entities.HistoryEntryWithCategory
+import com.github.cheapmon.balalaika.data.entities.HistoryEntryWithRestriction
 import com.github.cheapmon.balalaika.databinding.FragmentHistoryBinding
-import com.github.cheapmon.balalaika.ui.search.SearchFragment
 import com.github.cheapmon.balalaika.util.InjectorUtil
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -90,24 +89,16 @@ class HistoryFragment : Fragment() {
     }
 
     inner class Listener : HistoryAdapter.HistoryAdapterListener {
-        override fun onClickDeleteButton(historyEntry: HistoryEntryWithCategory) {
+        override fun onClickDeleteButton(historyEntry: HistoryEntryWithRestriction) {
             viewModel.removeEntry(historyEntry.historyEntry)
             Snackbar.make(binding.root, R.string.history_entry_removed, Snackbar.LENGTH_SHORT)
                 .show()
         }
 
-        override fun onClickRedoButton(historyEntry: HistoryEntryWithCategory) {
-            val restriction = if (historyEntry.category == null) {
-                null
-            } else {
-                SearchFragment.Restriction(
-                    historyEntry.category,
-                    historyEntry.historyEntry.restriction
-                )
-            }
+        override fun onClickRedoButton(historyEntry: HistoryEntryWithRestriction) {
             val directions = HistoryFragmentDirections.actionNavHistoryToNavSearch(
-                historyEntry.historyEntry.query,
-                restriction
+                query = historyEntry.historyEntry.query,
+                restriction = historyEntry.restriction
             )
             findNavController().navigate(directions)
         }

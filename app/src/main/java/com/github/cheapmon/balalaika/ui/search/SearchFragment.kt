@@ -14,14 +14,13 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.data.entities.Category
 import com.github.cheapmon.balalaika.data.entities.Lexeme
+import com.github.cheapmon.balalaika.data.entities.SearchRestriction
 import com.github.cheapmon.balalaika.databinding.FragmentSearchBinding
 import com.github.cheapmon.balalaika.util.InjectorUtil
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import java.io.Serializable
 
 @FlowPreview
 @ExperimentalCoroutinesApi
@@ -54,36 +53,22 @@ class SearchFragment : Fragment() {
             binding.searchRestriction.visibility = View.GONE
         }
         handleArgs()
-        submitData()
+        bindUi()
         return binding.root
     }
 
     private fun handleArgs() {
-        if (args.query == null) {
-            if (viewModel.getQuery() == null) {
-                viewModel.setQuery("")
-                binding.query = ""
-            } else {
-                binding.query = viewModel.getQuery()
-            }
-        } else {
-            binding.query = args.query
-        }
+        val query = args.query
         val restriction = args.restriction
-        if (restriction != null) {
-            viewModel.setRestriction(restriction.category.categoryId, restriction.restriction)
-            binding.restriction = getString(
-                R.string.search_restriction,
-                restriction.category.name, restriction.restriction
-            )
-            binding.searchRestriction.visibility = View.VISIBLE
+        if (query != null) {
+            viewModel.setQuery(query)
         } else {
-            viewModel.clearRestriction()
-            binding.searchRestriction.visibility = View.GONE
+            viewModel.setQuery("")
         }
+        if (restriction != null) viewModel.setRestriction(restriction)
     }
 
-    private fun submitData() {
+    private fun bindUi() {
         viewModel.lexemes.observe(viewLifecycleOwner, Observer {
             searchAdapter.submitList(it)
             binding.inProgress = false
@@ -95,22 +80,30 @@ class SearchFragment : Fragment() {
                 binding.searchEmptyText.visibility = View.GONE
             }
         })
+        viewModel.query.observe(viewLifecycleOwner, Observer {
+            binding.query = it
+        })
+        viewModel.restriction.observe(viewLifecycleOwner, Observer {
+            when (it) {
+                is SearchRestriction.None -> {
+                    binding.restriction = ""
+                    binding.searchRestriction.visibility = View.GONE
+                }
+                is SearchRestriction.Some -> {
+                    binding.restriction = getString(
+                        R.string.search_restriction,
+                        it.category.name, it.restriction
+                    )
+                    binding.searchRestriction.visibility = View.VISIBLE
+                }
+            }
+        })
     }
 
     inner class Listener : SearchAdapter.SearchAdapterListener {
         override fun onClickItem(lexeme: Lexeme) {
-            saveSearch()
+            viewModel.addToHistory()
             Snackbar.make(binding.root, "Not implemented yet", Snackbar.LENGTH_SHORT).show()
-        }
-
-        private fun saveSearch() {
-            val query = viewModel.getQuery() ?: return
-            val restriction = viewModel.getRestriction()
-            if (restriction != null) {
-                viewModel.addToHistory(query, restriction.first, restriction.second ?: "")
-            } else {
-                viewModel.addToHistory(query)
-            }
         }
     }
 
@@ -123,9 +116,4 @@ class SearchFragment : Fragment() {
             viewModel.setQuery(s.toString().trim())
         }
     }
-
-    data class Restriction(
-        val category: Category,
-        val restriction: String
-    ) : Serializable
 }
