@@ -20,6 +20,7 @@ class SearchRepository private constructor(
         ConflatedBroadcastChannel()
 
     init {
+        queryChannel.offer("")
         restrictionChannel.offer(SearchRestriction.None)
     }
 

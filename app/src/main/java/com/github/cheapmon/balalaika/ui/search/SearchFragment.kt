@@ -52,6 +52,7 @@ class SearchFragment : Fragment() {
             viewModel.clearRestriction()
             binding.searchRestriction.visibility = View.GONE
         }
+        binding.inProgress = true
         handleArgs()
         bindUi()
         return binding.root
@@ -62,8 +63,6 @@ class SearchFragment : Fragment() {
         val restriction = args.restriction
         if (query != null) {
             viewModel.setQuery(query)
-        } else {
-            viewModel.setQuery("")
         }
         if (restriction != null) viewModel.setRestriction(restriction)
     }

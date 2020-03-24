@@ -9,7 +9,11 @@
         android:id="@+id/nav_home"
         android:name="com.github.cheapmon.balalaika.ui.dictionary.DictionaryFragment"
         android:label="@string/app_name"
-        tools:layout="@layout/fragment_dictionary" />
+        tools:layout="@layout/fragment_dictionary" >
+        <action
+            android:id="@+id/action_nav_home_to_nav_search"
+            app:destination="@id/nav_search" />
+    </fragment>
     <fragment
         android:id="@+id/nav_search"
         android:name="com.github.cheapmon.balalaika.ui.search.SearchFragment"
