@@ -33,13 +33,10 @@ class DictionaryRepository private constructor(
         .flatMapLatest {
             if (it == null) propertyDao.getAllVisible() else propertyDao.getAllFiltered(it)
         }.combine(orderingChannel.asFlow().distinctUntilChanged()) { props, order ->
-            val result = props.groupBy { it.lexeme }.toEntries()
-            if (order == null) result
-            else result.sortedWith(order)
+            val entries = props.groupBy { it.lexeme }.toEntries()
+            if (order == null) entries else entries.sortedWith(order)
         }
-
     val comparators = comparatorsChannel.asFlow()
-
     val dictionaryViews = dictionaryDao.getAll()
 
     fun setOrdering(comparatorName: String) {
@@ -56,7 +53,7 @@ class DictionaryRepository private constructor(
 
     suspend fun addComparators() {
         categoryDao.getAll().first().forEach {
-            ComparatorUtil.addPropertyComparator(it.name, it.categoryId)
+            if (it.orderBy) ComparatorUtil.addPropertyComparator(it.name, it.categoryId)
         }
         comparatorsChannel.offer(ComparatorUtil.comparators)
     }
