@@ -50,6 +50,7 @@ class ImportUtil<T>(private val res: ResourceLoader<T>) {
                 externalId = it["id"],
                 name = it["name"],
                 widget = WidgetType.valueOf(it["widget"].toUpperCase(Locale.ROOT)),
+                iconId = it["icon"],
                 sequence = it["sequence"].toInt(),
                 hidden = it["hidden"] == "1",
                 orderBy = it["order_by"] == "1"

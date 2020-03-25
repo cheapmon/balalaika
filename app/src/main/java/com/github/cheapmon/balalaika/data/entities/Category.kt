@@ -14,6 +14,7 @@ data class Category(
     @ColumnInfo(name = "external_id") val externalId: String,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "widget") val widget: WidgetType,
+    @ColumnInfo(name = "icon_id") val iconId: String,
     @ColumnInfo(name = "sequence") val sequence: Int,
     @ColumnInfo(name = "hidden") val hidden: Boolean,
     @ColumnInfo(name = "order_by") val orderBy: Boolean
