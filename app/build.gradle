@@ -85,6 +85,9 @@ dependencies {
     kapt "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
     testImplementation "androidx.arch.core:core-testing:$arch_version"
 
+    // Paging support
+    implementation "androidx.paging:paging-runtime-ktx:$paging_version"
+
     // Import
     implementation "org.apache.commons:commons-csv:1.7"
     implementation "org.yaml:snakeyaml:1.26:android"
