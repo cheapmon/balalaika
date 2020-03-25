@@ -22,13 +22,13 @@
             android:text="@{value}"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/helper_text_button"
+            app:layout_constraintEnd_toStartOf="@+id/helper_button"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Value" />
 
         <ImageButton
-            android:id="@+id/helper_text_button"
+            android:id="@+id/helper_button"
             style="@style/Balalaika.ImageButton"
             android:layout_width="16dp"
             android:layout_height="16dp"

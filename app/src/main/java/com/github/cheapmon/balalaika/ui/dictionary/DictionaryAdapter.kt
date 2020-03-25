@@ -9,9 +9,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.data.entities.DictionaryEntry
 import com.github.cheapmon.balalaika.databinding.FragmentDictionaryItemBinding
+import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetListener
+import com.github.cheapmon.balalaika.ui.dictionary.widgets.Widgets
 
 class DictionaryAdapter(
-    private val listener: DictionaryAdapterListener
+    private val listener: DictionaryAdapterListener,
+    private val widgetListener: WidgetListener
 ) : ListAdapter<DictionaryEntry, DictionaryAdapter.ViewHolder>(DictionaryDiff) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -36,7 +39,18 @@ class DictionaryAdapter(
         holder.binding.entryBookmarkButton.setOnClickListener {
             listener.onClickBookmarkButton(dictionaryEntry)
         }
-        // TODO: Insert props
+        holder.binding.entryProperties.removeAllViews()
+        dictionaryEntry.properties.groupBy { it.category }
+            .toSortedMap(Comparator { o1, o2 -> o1.sequence.compareTo(o2.sequence) })
+            .forEach { (category, properties) ->
+                val widget = Widgets.get(
+                    holder.binding.entryProperties,
+                    widgetListener,
+                    category,
+                    properties
+                )
+                holder.binding.entryProperties.addView(widget.create())
+            }
     }
 
     class ViewHolder(val binding: FragmentDictionaryItemBinding) :

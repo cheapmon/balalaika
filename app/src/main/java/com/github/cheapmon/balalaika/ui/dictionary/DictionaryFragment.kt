@@ -11,7 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.data.entities.DictionaryEntry
+import com.github.cheapmon.balalaika.data.entities.SearchRestriction
 import com.github.cheapmon.balalaika.databinding.FragmentDictionaryBinding
+import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetListener
 import com.github.cheapmon.balalaika.util.InjectorUtil
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -35,7 +37,7 @@ class DictionaryFragment : Fragment() {
     ): View? {
         setHasOptionsMenu(true)
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_dictionary, container, false)
-        dictionaryAdapter = DictionaryAdapter(Listener())
+        dictionaryAdapter = DictionaryAdapter(Listener(), WListener())
         recyclerView = binding.entryList.apply {
             layoutManager = LinearLayoutManager(this@DictionaryFragment.context)
             adapter = dictionaryAdapter
@@ -73,5 +75,12 @@ class DictionaryFragment : Fragment() {
         override fun onClickBookmarkButton(dictionaryEntry: DictionaryEntry) {
             Snackbar.make(binding.root, "Not implemented yet", Snackbar.LENGTH_SHORT).show()
         }
+    }
+
+    inner class WListener : WidgetListener {
+        override fun onClickAudioButton(resId: Int) = TODO()
+        override fun onClickSearchButton(query: String, restriction: SearchRestriction) = TODO()
+        override fun onClickScrollButton(externalId: String) = TODO()
+        override fun onClickLinkButton(link: String) = TODO()
     }
 }
