@@ -1,5 +1,7 @@
 package com.github.cheapmon.balalaika.ui.dictionary
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
@@ -79,8 +81,17 @@ class DictionaryFragment : Fragment() {
 
     inner class WListener : WidgetListener {
         override fun onClickAudioButton(resId: Int) = TODO()
-        override fun onClickSearchButton(query: String, restriction: SearchRestriction) = TODO()
+
+        override fun onClickSearchButton(query: String, restriction: SearchRestriction) {
+            val directions =
+                DictionaryFragmentDirections.actionNavHomeToNavSearch(restriction, query)
+            findNavController().navigate(directions)
+        }
+
         override fun onClickScrollButton(externalId: String) = TODO()
-        override fun onClickLinkButton(link: String) = TODO()
+
+        override fun onClickLinkButton(link: String) {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(link)))
+        }
     }
 }

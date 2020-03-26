@@ -34,4 +34,7 @@
     <string name="history_clear_affirm">OK</string>
     <string name="history_clear_cancel">Cancel</string>
     <string name="history_clear_done">History was cleared</string>
+
+    <!-- Dictionary fragment -->
+    <string name="dictionary_item_cancel">Cancel</string>
 </resources>

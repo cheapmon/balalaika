@@ -1,8 +1,8 @@
 package com.github.cheapmon.balalaika.ui.dictionary.widgets
 
-import android.app.AlertDialog
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import com.github.cheapmon.balalaika.data.entities.Category
 import com.github.cheapmon.balalaika.data.entities.PropertyWithRelations
 import com.github.cheapmon.balalaika.data.entities.SearchRestriction
@@ -47,7 +47,7 @@ object Widgets {
             WidgetType.KEY_VALUE -> KeyValueWidget(parent, listener, category, properties)
             WidgetType.PLAIN -> KeyValueWidget(parent, listener, category, properties)
             WidgetType.REFERENCE -> KeyValueWidget(parent, listener, category, properties)
-            WidgetType.URL -> KeyValueWidget(parent, listener, category, properties)
+            WidgetType.URL -> UrlWidget(parent, listener, category, properties)
         }
     }
 }

@@ -1,18 +1,20 @@
 package com.github.cheapmon.balalaika.ui.dictionary.widgets
 
-import android.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.data.entities.Category
 import com.github.cheapmon.balalaika.data.entities.PropertyWithRelations
+import com.github.cheapmon.balalaika.data.entities.SearchRestriction
 import com.github.cheapmon.balalaika.databinding.HelperButtonBinding
 import com.github.cheapmon.balalaika.databinding.WidgetTemplateBinding
 import com.github.cheapmon.balalaika.util.IconUtil
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-class KeyValueWidget(
+open class KeyValueWidget(
     private val parent: ViewGroup,
     private val listener: WidgetListener,
     private val category: Category,
@@ -38,18 +40,30 @@ class KeyValueWidget(
                 val icon = actionIcon(property.property.value)
                 if (icon != null) helperButton.setImageResource(icon)
                 else helperButton.visibility = View.GONE
-                helperButton.setOnClickListener(onClickActionButtonListener)
+                helperButton.setOnClickListener { onClickActionButtonListener(property.property.value) }
             }
             binding.widgetTemplateContent.addView(propertyBinding.root)
         }
         return binding.root
     }
 
-    override fun createContextMenu(): AlertDialog? = null
+    override fun createContextMenu(): AlertDialog? = MaterialAlertDialogBuilder(parent.context)
+        .setTitle(category.name)
+        .setIcon(categoryIcon)
+        .setNegativeButton(R.string.dictionary_item_cancel, null)
+        .setItems(menuItems) { _, which -> menuActions[which]() }
+        .show()
 
-    fun displayValue(value: String) = value
-    fun actionIcon(value: String): Int? = null
+    open fun displayValue(value: String) = value
+    open fun actionIcon(value: String): Int? = null
+    open fun onClickActionButtonListener(value: String): Unit = Unit
 
-    val categoryIcon = IconUtil.getIdentifier(parent.context, category.iconId)
-    val onClickActionButtonListener: View.OnClickListener? = null
+    open val categoryIcon = IconUtil.getIdentifier(parent.context, category.iconId)
+    open val menuItems = properties.map {
+        "Search for dictionary entries matching ${it.property.value}"
+    }.toTypedArray()
+    open val menuActions: List<() -> Unit> = properties.map {
+        val restriction = SearchRestriction.Some(category, it.property.value)
+        return@map { listener.onClickSearchButton("", restriction) }
+    }
 }
