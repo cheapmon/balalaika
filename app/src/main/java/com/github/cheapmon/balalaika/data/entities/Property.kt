@@ -58,7 +58,7 @@ interface PropertyDao {
     @Query("""SELECT property.id, property.category_id, property.lexeme_id, property.value
                     FROM property JOIN lexeme ON property.lexeme_id = lexeme.id
                     WHERE lexeme_id IN (SELECT DISTINCT lexeme_id FROM property 
-                    WHERE category_id = (:categoryId) AND value = (:restriction))
+                    WHERE category_id = (:categoryId) AND value LIKE '%' || (:restriction) || '%')
                     AND (value LIKE '%' || (:query) || '%' OR form LIKE '%' || (:query) || '%')""")
     fun findByValueRestricted(
         query: String,

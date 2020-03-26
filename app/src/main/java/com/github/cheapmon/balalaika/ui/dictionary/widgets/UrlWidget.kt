@@ -4,7 +4,6 @@ import android.view.ViewGroup
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.data.entities.Category
 import com.github.cheapmon.balalaika.data.entities.PropertyWithRelations
-import com.github.cheapmon.balalaika.data.entities.SearchRestriction
 
 class UrlWidget(
     parent: ViewGroup,
@@ -24,9 +23,5 @@ class UrlWidget(
     override fun onClickActionButtonListener(value: String) {
         val link = value.split(Regex(";;;")).getOrNull(1) ?: return
         listener.onClickLinkButton(link)
-    }
-
-    override val menuActions: List<() -> Unit> = properties.map {
-        { listener.onClickSearchButton(displayValue(it.property.value), SearchRestriction.None) }
     }
 }

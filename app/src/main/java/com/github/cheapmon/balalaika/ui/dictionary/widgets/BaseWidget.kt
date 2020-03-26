@@ -69,8 +69,10 @@ open class BaseWidget(
     open val menuItems = properties.map {
         displayValue(it.property.value)
     }.toTypedArray()
-    open val menuActions: List<() -> Unit> = properties.map {
-        val restriction = SearchRestriction.Some(category, displayValue(it.property.value))
-        return@map { listener.onClickSearchButton("", restriction) }
+    open val menuActions: List<() -> Unit> by lazy {
+        menuItems.map {
+            val restriction = SearchRestriction.Some(category, displayValue(it))
+            return@map { listener.onClickSearchButton("", restriction) }
+        }
     }
 }
