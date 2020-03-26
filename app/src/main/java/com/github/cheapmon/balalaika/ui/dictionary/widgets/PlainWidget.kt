@@ -10,7 +10,7 @@ import com.github.cheapmon.balalaika.data.entities.PropertyWithRelations
 import com.github.cheapmon.balalaika.databinding.HelperItalicBinding
 import com.github.cheapmon.balalaika.databinding.WidgetPlainBinding
 
-class PlainWidget(
+open class PlainWidget(
     parent: ViewGroup,
     listener: WidgetListener,
     category: Category,

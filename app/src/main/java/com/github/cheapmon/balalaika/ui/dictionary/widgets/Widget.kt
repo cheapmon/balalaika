@@ -43,7 +43,7 @@ object Widgets {
     ): Widget {
         return when (category.widget) {
             WidgetType.AUDIO -> AudioWidget(parent, listener, category, properties)
-            WidgetType.EXAMPLE -> BaseWidget(parent, listener, category, properties)
+            WidgetType.EXAMPLE -> ExampleWidget(parent, listener, category, properties)
             WidgetType.KEY_VALUE -> BaseWidget(parent, listener, category, properties)
             WidgetType.MORPHOLOGY -> MorphologyWidget(parent, listener, category, properties)
             WidgetType.PLAIN -> PlainWidget(parent, listener, category, properties)
