@@ -29,13 +29,14 @@ class DictionaryRepository private constructor(
         comparatorsChannel.offer(ComparatorUtil.comparators)
     }
 
-    val lexemes = categoryIdsChannel.asFlow().distinctUntilChanged()
-        .flatMapLatest {
-            if (it == null) propertyDao.getAllVisible() else propertyDao.getAllFiltered(it)
-        }.combine(orderingChannel.asFlow().distinctUntilChanged()) { props, order ->
-            val entries = props.groupBy { it.lexeme }.toEntries()
-            if (order == null) entries else entries.sortedWith(order)
-        }
+    val lexemes = propertyDao.count().flatMapLatest {
+        categoryIdsChannel.asFlow().distinctUntilChanged()
+    }.flatMapLatest {
+        if (it == null) propertyDao.getAllVisible() else propertyDao.getAllFiltered(it)
+    }.combine(orderingChannel.asFlow().distinctUntilChanged()) { props, order ->
+        val entries = props.groupBy { it.lexeme }.toEntries()
+        if (order == null) entries else entries.sortedWith(order)
+    }
     val comparators = comparatorsChannel.asFlow()
     val dictionaryViews = dictionaryDao.getAll()
 

@@ -1,7 +1,6 @@
 package com.github.cheapmon.balalaika
 
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
@@ -43,7 +42,6 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launchWhenCreated {
             ImportUtil(AndroidResourceLoader(applicationContext)).import(applicationContext)
-            activityBinding.progress.visibility = View.GONE
         }
     }
 
