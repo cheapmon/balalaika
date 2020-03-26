@@ -45,6 +45,7 @@ object Widgets {
             WidgetType.AUDIO -> AudioWidget(parent, listener, category, properties)
             WidgetType.EXAMPLE -> BaseWidget(parent, listener, category, properties)
             WidgetType.KEY_VALUE -> BaseWidget(parent, listener, category, properties)
+            WidgetType.MORPHOLOGY -> MorphologyWidget(parent, listener, category, properties)
             WidgetType.PLAIN -> BaseWidget(parent, listener, category, properties)
             WidgetType.REFERENCE -> BaseWidget(parent, listener, category, properties)
             WidgetType.URL -> UrlWidget(parent, listener, category, properties)

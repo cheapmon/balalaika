@@ -6,6 +6,7 @@ enum class WidgetType {
     AUDIO,
     EXAMPLE,
     KEY_VALUE,
+    MORPHOLOGY,
     PLAIN,
     REFERENCE,
     URL
