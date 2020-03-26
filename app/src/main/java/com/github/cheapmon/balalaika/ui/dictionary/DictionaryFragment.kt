@@ -1,6 +1,7 @@
 package com.github.cheapmon.balalaika.ui.dictionary
 
 import android.content.Intent
+import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.view.*
@@ -84,7 +85,20 @@ class DictionaryFragment : Fragment() {
     }
 
     inner class WListener : WidgetListener {
-        override fun onClickAudioButton(resId: Int) = TODO()
+        override fun onClickAudioButton(resId: Int) {
+            try {
+                MediaPlayer.create(context, resId).apply {
+                    start()
+                    setOnCompletionListener { release() }
+                }
+            } catch (ex: Exception) {
+                Snackbar.make(
+                    binding.root,
+                    "Playback failed",
+                    Snackbar.LENGTH_SHORT
+                ).show()
+            }
+        }
 
         override fun onClickSearchButton(query: String, restriction: SearchRestriction) {
             val directions =

@@ -42,7 +42,7 @@ object Widgets {
         properties: List<PropertyWithRelations>
     ): Widget {
         return when (category.widget) {
-            WidgetType.AUDIO -> KeyValueWidget(parent, listener, category, properties)
+            WidgetType.AUDIO -> AudioWidget(parent, listener, category, properties)
             WidgetType.EXAMPLE -> KeyValueWidget(parent, listener, category, properties)
             WidgetType.KEY_VALUE -> KeyValueWidget(parent, listener, category, properties)
             WidgetType.PLAIN -> KeyValueWidget(parent, listener, category, properties)

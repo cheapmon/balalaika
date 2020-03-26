@@ -11,7 +11,7 @@ import com.github.cheapmon.balalaika.data.entities.PropertyWithRelations
 import com.github.cheapmon.balalaika.data.entities.SearchRestriction
 import com.github.cheapmon.balalaika.databinding.HelperButtonBinding
 import com.github.cheapmon.balalaika.databinding.WidgetTemplateBinding
-import com.github.cheapmon.balalaika.util.IconUtil
+import com.github.cheapmon.balalaika.util.ResourceUtil
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 open class KeyValueWidget(
@@ -58,7 +58,7 @@ open class KeyValueWidget(
     open fun actionIcon(value: String): Int? = null
     open fun onClickActionButtonListener(value: String): Unit = Unit
 
-    open val categoryIcon = IconUtil.getIdentifier(parent.context, category.iconId)
+    open val categoryIcon = ResourceUtil.drawable(parent.context, category.iconId)
     open val menuItems = properties.map {
         "Search for dictionary entries matching ${it.property.value}"
     }.toTypedArray()
