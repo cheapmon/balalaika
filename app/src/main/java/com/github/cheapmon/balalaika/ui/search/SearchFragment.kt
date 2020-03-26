@@ -60,11 +60,6 @@ class SearchFragment : Fragment() {
         return binding.root
     }
 
-    override fun onPause() {
-        super.onPause()
-        viewModel.addToHistory()
-    }
-
     private fun handleArgs() {
         val query = args.query
         val restriction = args.restriction
