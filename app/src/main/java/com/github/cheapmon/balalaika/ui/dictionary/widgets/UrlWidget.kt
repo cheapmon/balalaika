@@ -7,11 +7,11 @@ import com.github.cheapmon.balalaika.data.entities.PropertyWithRelations
 import com.github.cheapmon.balalaika.data.entities.SearchRestriction
 
 class UrlWidget(
-    private val parent: ViewGroup,
-    private val listener: WidgetListener,
-    private val category: Category,
-    private val properties: List<PropertyWithRelations>
-) : KeyValueWidget(parent, listener, category, properties) {
+    parent: ViewGroup,
+    listener: WidgetListener,
+    category: Category,
+    properties: List<PropertyWithRelations>
+) : BaseWidget(parent, listener, category, properties) {
     override fun displayValue(value: String): String {
         return value.split(Regex(";;;")).firstOrNull() ?: ""
     }
@@ -25,10 +25,6 @@ class UrlWidget(
         val link = value.split(Regex(";;;")).getOrNull(1) ?: return
         listener.onClickLinkButton(link)
     }
-
-    override val menuItems: Array<String> = properties.map {
-        "Search dictionary entries matching ${displayValue(it.property.value)}"
-    }.toTypedArray()
 
     override val menuActions: List<() -> Unit> = properties.map {
         { listener.onClickSearchButton(displayValue(it.property.value), SearchRestriction.None) }

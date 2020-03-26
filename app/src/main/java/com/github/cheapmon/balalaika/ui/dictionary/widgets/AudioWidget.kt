@@ -8,11 +8,11 @@ import com.github.cheapmon.balalaika.data.entities.PropertyWithRelations
 import com.github.cheapmon.balalaika.util.ResourceUtil
 
 class AudioWidget(
-    private val parent: ViewGroup,
-    private val listener: WidgetListener,
-    private val category: Category,
-    private val properties: List<PropertyWithRelations>
-) : KeyValueWidget(parent, listener, category, properties) {
+    parent: ViewGroup,
+    listener: WidgetListener,
+    category: Category,
+    properties: List<PropertyWithRelations>
+) : BaseWidget(parent, listener, category, properties) {
     override fun displayValue(value: String): String {
         return value.split(Regex(";;;")).firstOrNull() ?: ""
     }

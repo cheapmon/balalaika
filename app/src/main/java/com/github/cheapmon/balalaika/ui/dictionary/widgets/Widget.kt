@@ -43,10 +43,10 @@ object Widgets {
     ): Widget {
         return when (category.widget) {
             WidgetType.AUDIO -> AudioWidget(parent, listener, category, properties)
-            WidgetType.EXAMPLE -> KeyValueWidget(parent, listener, category, properties)
-            WidgetType.KEY_VALUE -> KeyValueWidget(parent, listener, category, properties)
-            WidgetType.PLAIN -> KeyValueWidget(parent, listener, category, properties)
-            WidgetType.REFERENCE -> KeyValueWidget(parent, listener, category, properties)
+            WidgetType.EXAMPLE -> BaseWidget(parent, listener, category, properties)
+            WidgetType.KEY_VALUE -> BaseWidget(parent, listener, category, properties)
+            WidgetType.PLAIN -> BaseWidget(parent, listener, category, properties)
+            WidgetType.REFERENCE -> BaseWidget(parent, listener, category, properties)
             WidgetType.URL -> UrlWidget(parent, listener, category, properties)
         }
     }
