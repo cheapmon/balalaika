@@ -1,5 +1,7 @@
 <resources>
+    <!-- Application -->
     <string name="app_name">Balalaika</string>
+    <string name="cancel">Cancel</string>
 
     <!-- Navigation drawer -->
     <string name="nav_header_desc">Navigation header</string>
@@ -8,6 +10,8 @@
     <string name="menu_dictionary">Dictionary</string>
     <string name="menu_search">Search Dictionary</string>
     <string name="menu_history">Search History</string>
+    <string name="menu_order_by">Order by</string>
+    <string name="menu_setup_view">Setup View</string>
 
     <!-- Descriptions for accessibility -->
     <string name="desc_history_item_icon">History entry</string>

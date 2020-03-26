@@ -3,6 +3,7 @@ package com.github.cheapmon.balalaika.ui.dictionary
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.github.cheapmon.balalaika.data.entities.DictionaryView
 import com.github.cheapmon.balalaika.data.repositories.DictionaryRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -14,9 +15,7 @@ import kotlinx.coroutines.launch
 class DictionaryViewModel(
     private val repository: DictionaryRepository
 ) : ViewModel() {
-
     val lexemes = repository.lexemes.asLiveData()
-    val dictionaryViews = repository.dictionaryViews.asLiveData()
 
     init {
         viewModelScope.launch { repository.addComparators() }
@@ -34,4 +33,7 @@ class DictionaryViewModel(
         return repository.comparators.first().keys.toList()
     }
 
+    suspend fun getDictionaryViews(): List<DictionaryView> {
+        return repository.dictionaryViews.first()
+    }
 }
