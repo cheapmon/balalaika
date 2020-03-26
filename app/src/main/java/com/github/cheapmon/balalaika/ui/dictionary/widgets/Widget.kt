@@ -46,7 +46,7 @@ object Widgets {
             WidgetType.EXAMPLE -> BaseWidget(parent, listener, category, properties)
             WidgetType.KEY_VALUE -> BaseWidget(parent, listener, category, properties)
             WidgetType.MORPHOLOGY -> MorphologyWidget(parent, listener, category, properties)
-            WidgetType.PLAIN -> BaseWidget(parent, listener, category, properties)
+            WidgetType.PLAIN -> PlainWidget(parent, listener, category, properties)
             WidgetType.REFERENCE -> ReferenceWidget(parent, listener, category, properties)
             WidgetType.URL -> UrlWidget(parent, listener, category, properties)
         }

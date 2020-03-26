@@ -20,19 +20,14 @@ open class BaseWidget(
     val category: Category,
     val properties: List<PropertyWithRelations>
 ) : Widget(parent, listener, category, properties) {
-    private lateinit var binding: WidgetTemplateBinding
-
     override fun createView(): View {
         val layoutInflater = LayoutInflater.from(parent.context)
-        binding = DataBindingUtil.inflate(layoutInflater, R.layout.widget_template, parent, false)
-        binding.title = category.name
-        binding.widgetTemplateIcon.setImageResource(categoryIcon)
-        val inflater = LayoutInflater.from(binding.widgetTemplateContent.context)
+        val (root, contentView) = createContainer(layoutInflater)
         properties.forEach { property ->
-            val propertyView = createPropertyView(inflater, property)
-            binding.widgetTemplateContent.addView(propertyView)
+            val propertyView = createPropertyView(layoutInflater, contentView, property)
+            contentView.addView(propertyView)
         }
-        return binding.root
+        return root
     }
 
     override fun createContextMenu(): AlertDialog? = MaterialAlertDialogBuilder(parent.context)
@@ -42,14 +37,24 @@ open class BaseWidget(
         .setItems(menuItems) { _, which -> menuActions[which]() }
         .show()
 
-    open fun createPropertyView(inflater: LayoutInflater, property: PropertyWithRelations): View {
-        val propertyBinding: HelperButtonBinding = DataBindingUtil.inflate(
-            inflater,
-            R.layout.helper_button,
-            binding.widgetTemplateContent,
-            false
-        )
-        propertyBinding.apply {
+    open fun createContainer(inflater: LayoutInflater): Pair<View, ViewGroup> {
+        val binding: WidgetTemplateBinding =
+            DataBindingUtil.inflate(inflater, R.layout.widget_template, parent, false)
+        with(binding) {
+            title = category.name
+            widgetTemplateIcon.setImageResource(categoryIcon)
+        }
+        return Pair(binding.root, binding.widgetTemplateContent)
+    }
+
+    open fun createPropertyView(
+        inflater: LayoutInflater,
+        contentView: ViewGroup,
+        property: PropertyWithRelations
+    ): View {
+        val propertyBinding: HelperButtonBinding =
+            DataBindingUtil.inflate(inflater, R.layout.helper_button, contentView, false)
+        with(propertyBinding) {
             value = displayValue(property.property.value)
             val icon = actionIcon(property.property.value)
             if (icon != null) helperButton.setImageResource(icon)
