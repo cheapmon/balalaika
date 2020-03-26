@@ -36,6 +36,9 @@ class DictionaryAdapter(
                 holder.binding.entryCollapseButton.setImageResource(R.drawable.ic_arrow_down)
             }
         }
+        holder.binding.entryBaseButton.setOnClickListener {
+            listener.onClickBaseButton(dictionaryEntry)
+        }
         holder.binding.entryBookmarkButton.setOnClickListener {
             listener.onClickBookmarkButton(dictionaryEntry)
         }
@@ -71,5 +74,6 @@ class DictionaryAdapter(
 
     interface DictionaryAdapterListener {
         fun onClickBookmarkButton(dictionaryEntry: DictionaryEntry)
+        fun onClickBaseButton(dictionaryEntry: DictionaryEntry)
     }
 }

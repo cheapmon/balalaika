@@ -77,6 +77,10 @@ class DictionaryFragment : Fragment() {
         override fun onClickBookmarkButton(dictionaryEntry: DictionaryEntry) {
             Snackbar.make(binding.root, "Not implemented yet", Snackbar.LENGTH_SHORT).show()
         }
+
+        override fun onClickBaseButton(dictionaryEntry: DictionaryEntry) {
+            Snackbar.make(binding.root, "Not implemented yet", Snackbar.LENGTH_SHORT).show()
+        }
     }
 
     inner class WListener : WidgetListener {
