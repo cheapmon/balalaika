@@ -25,7 +25,10 @@ class HistoryAdapter(
             title = entry.historyEntry.query
             restriction = when (entry.restriction) {
                 is SearchRestriction.None -> holder.itemView.context.getString(R.string.no_restriction)
-                is SearchRestriction.Some -> "${entry.restriction.category.name}: ${entry.restriction.restriction}"
+                is SearchRestriction.Some -> root.resources.getString(
+                    R.string.search_restriction,
+                    entry.restriction.category.name, entry.restriction.restriction
+                )
             }
             historyItemDeleteButton.setOnClickListener { listener.onClickDeleteButton(entry) }
             historyItemRedoButton.setOnClickListener { listener.onClickRedoButton(entry) }

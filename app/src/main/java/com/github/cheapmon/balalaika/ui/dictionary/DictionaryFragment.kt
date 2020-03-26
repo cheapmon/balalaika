@@ -96,7 +96,7 @@ class DictionaryFragment : Fragment() {
             } catch (ex: Exception) {
                 Snackbar.make(
                     binding.root,
-                    "Playback failed",
+                    R.string.dictionary_playback_failed,
                     Snackbar.LENGTH_SHORT
                 ).show()
             }

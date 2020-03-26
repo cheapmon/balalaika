@@ -38,4 +38,5 @@
     <!-- Dictionary fragment -->
     <string name="dictionary_item_cancel">Cancel</string>
     <string name="dictionary_menu_message">Search by %1$s</string>
+    <string name="dictionary_playback_failed">Playback failed</string>
 </resources>
