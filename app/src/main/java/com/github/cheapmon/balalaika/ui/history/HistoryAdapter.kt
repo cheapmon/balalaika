@@ -21,16 +21,14 @@ class HistoryAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val entry = getItem(position)
-        holder.binding.title = entry.historyEntry.query
-        holder.binding.restriction = when (entry.restriction) {
-            is SearchRestriction.None -> holder.itemView.context.getString(R.string.no_restriction)
-            is SearchRestriction.Some -> "${entry.restriction.category.name}: ${entry.restriction.restriction}"
-        }
-        holder.binding.historyItemDeleteButton.setOnClickListener {
-            listener.onClickDeleteButton(entry)
-        }
-        holder.binding.historyItemRedoButton.setOnClickListener {
-            listener.onClickRedoButton(entry)
+        with(holder.binding) {
+            title = entry.historyEntry.query
+            restriction = when (entry.restriction) {
+                is SearchRestriction.None -> holder.itemView.context.getString(R.string.no_restriction)
+                is SearchRestriction.Some -> "${entry.restriction.category.name}: ${entry.restriction.restriction}"
+            }
+            historyItemDeleteButton.setOnClickListener { listener.onClickDeleteButton(entry) }
+            historyItemRedoButton.setOnClickListener { listener.onClickRedoButton(entry) }
         }
     }
 

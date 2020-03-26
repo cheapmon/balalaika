@@ -42,17 +42,19 @@ class SearchFragment : Fragment() {
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false)
         searchAdapter = SearchAdapter(Listener())
-        recyclerView = binding.searchList.apply {
-            layoutManager = LinearLayoutManager(this@SearchFragment.context)
-            adapter = searchAdapter
-            setHasFixedSize(true)
+        with(binding) {
+            recyclerView = searchList.apply {
+                layoutManager = LinearLayoutManager(this@SearchFragment.context)
+                adapter = searchAdapter
+                setHasFixedSize(true)
+            }
+            searchInput.addTextChangedListener(Watcher())
+            searchRestriction.setOnCloseIconClickListener {
+                viewModel.clearRestriction()
+                searchRestriction.visibility = View.GONE
+            }
+            inProgress = true
         }
-        binding.searchInput.addTextChangedListener(Watcher())
-        binding.searchRestriction.setOnCloseIconClickListener {
-            viewModel.clearRestriction()
-            binding.searchRestriction.visibility = View.GONE
-        }
-        binding.inProgress = true
         handleArgs()
         bindUi()
         return binding.root

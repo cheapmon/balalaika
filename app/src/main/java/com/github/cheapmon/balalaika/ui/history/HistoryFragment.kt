@@ -60,14 +60,8 @@ class HistoryFragment : Fragment() {
             R.id.history_clear -> {
                 MaterialAlertDialogBuilder(context)
                     .setTitle(R.string.history_clear_title)
-                    .setPositiveButton(R.string.history_clear_affirm) { _, _ ->
-                        viewModel.clearHistory()
-                        Snackbar.make(
-                            binding.root,
-                            R.string.history_clear_done,
-                            Snackbar.LENGTH_SHORT
-                        ).show()
-                    }.setNegativeButton(R.string.history_clear_cancel, null)
+                    .setPositiveButton(R.string.history_clear_affirm) { _, _ -> clearHistory() }
+                    .setNegativeButton(R.string.history_clear_cancel, null)
                     .show()
                 true
             }
@@ -86,6 +80,11 @@ class HistoryFragment : Fragment() {
                 binding.historyEmptyText.visibility = View.GONE
             }
         })
+    }
+
+    private fun clearHistory() {
+        viewModel.clearHistory()
+        Snackbar.make(binding.root, R.string.history_clear_done, Snackbar.LENGTH_SHORT).show()
     }
 
     inner class Listener : HistoryAdapter.HistoryAdapterListener {

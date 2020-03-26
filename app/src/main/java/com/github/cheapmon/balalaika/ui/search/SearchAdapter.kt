@@ -19,8 +19,10 @@ class SearchAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val lexeme = getItem(position)
-        holder.binding.name = lexeme.form
-        holder.binding.root.setOnClickListener { listener.onClickItem(lexeme) }
+        with(holder.binding) {
+            name = lexeme.form
+            root.setOnClickListener { listener.onClickItem(lexeme) }
+        }
     }
 
     class ViewHolder(val binding: FragmentSearchItemBinding) : RecyclerView.ViewHolder(binding.root)

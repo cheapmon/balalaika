@@ -41,12 +41,14 @@ class DictionaryFragment : Fragment() {
         setHasOptionsMenu(true)
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_dictionary, container, false)
         dictionaryAdapter = DictionaryAdapter(Listener(), WListener())
-        recyclerView = binding.entryList.apply {
-            layoutManager = LinearLayoutManager(this@DictionaryFragment.context)
-            adapter = dictionaryAdapter
-            setHasFixedSize(true)
+        with(binding) {
+            recyclerView = entryList.apply {
+                layoutManager = LinearLayoutManager(this@DictionaryFragment.context)
+                adapter = dictionaryAdapter
+                setHasFixedSize(true)
+            }
+            inProgress = true
         }
-        binding.inProgress = true
         bindUi()
         return binding.root
     }

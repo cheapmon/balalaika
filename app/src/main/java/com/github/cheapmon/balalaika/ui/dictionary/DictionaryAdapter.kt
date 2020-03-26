@@ -25,35 +25,32 @@ class DictionaryAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val dictionaryEntry = getItem(position)
-        holder.binding.lexeme = dictionaryEntry.lexeme
-        holder.binding.base = dictionaryEntry.base
-        holder.binding.entryCollapseButton.setOnClickListener {
-            if (holder.binding.entryProperties.visibility == View.GONE) {
-                holder.binding.entryProperties.visibility = View.VISIBLE
-                holder.binding.entryCollapseButton.setImageResource(R.drawable.ic_arrow_up)
-            } else {
-                holder.binding.entryProperties.visibility = View.GONE
-                holder.binding.entryCollapseButton.setImageResource(R.drawable.ic_arrow_down)
+        with(holder.binding) {
+            lexeme = dictionaryEntry.lexeme
+            base = dictionaryEntry.base
+            entryCollapseButton.setOnClickListener {
+                if (entryProperties.visibility == View.GONE) {
+                    entryProperties.visibility = View.VISIBLE
+                    entryCollapseButton.setImageResource(R.drawable.ic_arrow_up)
+                } else {
+                    entryProperties.visibility = View.GONE
+                    entryCollapseButton.setImageResource(R.drawable.ic_arrow_down)
+                }
             }
-        }
-        holder.binding.entryBaseButton.setOnClickListener {
-            listener.onClickBaseButton(dictionaryEntry)
-        }
-        holder.binding.entryBookmarkButton.setOnClickListener {
-            listener.onClickBookmarkButton(dictionaryEntry)
-        }
-        holder.binding.entryProperties.removeAllViews()
-        dictionaryEntry.properties.groupBy { it.category }
-            .toSortedMap(Comparator { o1, o2 -> o1.sequence.compareTo(o2.sequence) })
-            .forEach { (category, properties) ->
-                val widget = Widgets.get(
-                    holder.binding.entryProperties,
-                    widgetListener,
-                    category,
-                    properties
-                )
-                holder.binding.entryProperties.addView(widget.create())
+            entryBaseButton.setOnClickListener {
+                listener.onClickBaseButton(dictionaryEntry)
             }
+            entryBookmarkButton.setOnClickListener {
+                listener.onClickBookmarkButton(dictionaryEntry)
+            }
+            entryProperties.removeAllViews()
+            dictionaryEntry.properties.groupBy { it.category }
+                .toSortedMap(Comparator { o1, o2 -> o1.sequence.compareTo(o2.sequence) })
+                .forEach { (category, properties) ->
+                    val widget = Widgets.get(entryProperties, widgetListener, category, properties)
+                    entryProperties.addView(widget.create())
+                }
+        }
     }
 
     class ViewHolder(val binding: FragmentDictionaryItemBinding) :
