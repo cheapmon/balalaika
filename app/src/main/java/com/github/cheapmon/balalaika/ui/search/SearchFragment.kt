@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,7 +19,6 @@ import com.github.cheapmon.balalaika.data.entities.Lexeme
 import com.github.cheapmon.balalaika.data.entities.SearchRestriction
 import com.github.cheapmon.balalaika.databinding.FragmentSearchBinding
 import com.github.cheapmon.balalaika.util.InjectorUtil
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 
@@ -104,7 +104,8 @@ class SearchFragment : Fragment() {
     inner class Listener : SearchAdapter.SearchAdapterListener {
         override fun onClickItem(lexeme: Lexeme) {
             viewModel.addToHistory()
-            Snackbar.make(binding.root, "Not implemented yet", Snackbar.LENGTH_SHORT).show()
+            val directions = SearchFragmentDirections.actionNavSearchToNavHome(lexeme.externalId)
+            findNavController().navigate(directions)
         }
     }
 

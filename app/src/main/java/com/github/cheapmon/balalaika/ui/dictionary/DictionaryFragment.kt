@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.R
@@ -32,8 +33,11 @@ class DictionaryFragment : Fragment() {
         InjectorUtil.provideDictionaryViewModelFactory(requireContext())
     }
 
+    private val args: DictionaryFragmentArgs by navArgs()
+
     private lateinit var binding: FragmentDictionaryBinding
     private lateinit var recyclerView: RecyclerView
+    private lateinit var dictionaryLayoutManager: LinearLayoutManager
     private lateinit var dictionaryAdapter: DictionaryAdapter
 
     override fun onCreateView(
@@ -43,16 +47,18 @@ class DictionaryFragment : Fragment() {
     ): View? {
         setHasOptionsMenu(true)
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_dictionary, container, false)
+        dictionaryLayoutManager = LinearLayoutManager(context)
         dictionaryAdapter = DictionaryAdapter(Listener(), WListener())
         with(binding) {
             recyclerView = entryList.apply {
-                layoutManager = LinearLayoutManager(this@DictionaryFragment.context)
+                layoutManager = dictionaryLayoutManager
                 adapter = dictionaryAdapter
                 setHasFixedSize(true)
             }
             inProgress = true
         }
         bindUi()
+        handleArgs()
         return binding.root
     }
 
@@ -108,6 +114,22 @@ class DictionaryFragment : Fragment() {
         })
     }
 
+    private fun handleArgs() {
+        val externalId = args.externalId
+        if (externalId != null) {
+            scrollTo(externalId)
+        }
+    }
+
+    private fun scrollTo(externalId: String) {
+        lifecycleScope.launch {
+            val position = viewModel.getPositionOf(externalId)
+            recyclerView.post {
+                dictionaryLayoutManager.scrollToPositionWithOffset(position, 0)
+            }
+        }
+    }
+
     inner class Listener : DictionaryAdapter.DictionaryAdapterListener {
         override fun onClickBookmarkButton(dictionaryEntry: DictionaryEntry) {
             viewModel.toggleBookmark(dictionaryEntry.lexeme.lexemeId)
@@ -120,7 +142,7 @@ class DictionaryFragment : Fragment() {
         }
 
         override fun onClickBaseButton(dictionaryEntry: DictionaryEntry) {
-            Snackbar.make(binding.root, "Not implemented yet", Snackbar.LENGTH_SHORT).show()
+            if (dictionaryEntry.base != null) scrollTo(dictionaryEntry.base.externalId)
         }
     }
 
@@ -146,7 +168,9 @@ class DictionaryFragment : Fragment() {
             findNavController().navigate(directions)
         }
 
-        override fun onClickScrollButton(externalId: String) = TODO()
+        override fun onClickScrollButton(externalId: String) {
+            scrollTo(externalId)
+        }
 
         override fun onClickLinkButton(link: String) {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(link)))

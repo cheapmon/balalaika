@@ -6,6 +6,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -94,8 +95,9 @@ class BookmarksFragment : Fragment() {
         }
 
         override fun onClickRedoButton(lexeme: Lexeme) {
-            Snackbar.make(binding.root, "Not implemented yet", Snackbar.LENGTH_SHORT)
-                .show()
+            val directions =
+                BookmarksFragmentDirections.actionNavBookmarksToNavHome(lexeme.externalId)
+            findNavController().navigate(directions)
         }
     }
 }
