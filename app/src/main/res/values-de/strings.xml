@@ -1,0 +1,77 @@
+<resources>
+    <!-- Application -->
+    <string name="app_name">Balalaika</string>
+    <string name="cancel">Abbrechen</string>
+
+    <!-- Navigation drawer -->
+    <string name="nav_header_desc">Navigation</string>
+
+    <!-- Menus -->
+    <string name="menu_dictionary">Wörterbuch</string>
+    <string name="menu_bookmarks">Lesezeichen</string>
+    <string name="menu_search">Wörterbuch durchsuchen</string>
+    <string name="menu_history">Suchhistorie</string>
+    <string name="menu_preferences">Einstellungen</string>
+    <string name="menu_sources">Quellen</string>
+    <string name="menu_order_by">Sortieren</string>
+    <string name="menu_setup_view">Sicht einstellen</string>
+
+    <!-- Descriptions for accessibility -->
+    <string name="desc_history_item_icon">Verlaufseintrag</string>
+    <string name="desc_history_item_redo_button">Erneut suchen</string>
+    <string name="desc_history_item_delete_button">Eintrag entfernen</string>
+    <string name="desc_search_item_icon">Ergebnis</string>
+    <string name="desc_dictionary_item_icon">Wörterbucheintrag</string>
+    <string name="desc_dictionary_item_collapse_button">Eintrag einklappen</string>
+    <string name="desc_dictionary_item_bookmark_button">Zu Lesezeichen hinzufügen</string>
+    <string name="desc_widget_key_value_icon">Widget Icon</string>
+    <string name="desc_widget_action_button">Widget Aktion</string>
+
+    <!-- Search fragment -->
+    <string name="search_query">Suchanfrage</string>
+    <string name="search_no_results">Keine Ergebnisse</string>
+    <string name="search_restriction">%1$s: %2$s</string>
+
+    <!-- History fragment -->
+    <string name="no_restriction">Keine weitere Einschränkung</string>
+    <string name="history_entry_removed">Verlaufseintrag gelöscht</string>
+    <string name="history_empty">Verlauf ist leer</string>
+    <string name="history_clear">Löschen</string>
+    <string name="history_clear_title">Suchhistorie löschen?</string>
+    <string name="history_clear_affirm">OK</string>
+    <string name="history_clear_cancel">Abbrechen</string>
+    <string name="history_clear_done">Verlauf gelöscht</string>
+
+    <!-- Dictionary fragment -->
+    <string name="dictionary_item_cancel">Abbrechen</string>
+    <string name="dictionary_menu_message">Anhand %1$s suchen</string>
+    <string name="dictionary_playback_failed">Wiedergabe fehlgeschlagen</string>
+    <string name="dictionary_bookmark_add">%1$s zu Lesezeichen hinzugefügt</string>
+    <string name="dictionary_bookmark_remove">%1$s aus Lesezeichen entfernt</string>
+
+    <!-- Bookmarks fragment -->
+    <string name="bookmarks_item_removed">Lesezeichen entfernt</string>
+    <string name="bookmarks_empty">Keine Lesezeichen</string>
+    <string name="bookmarks_clear">Löschen</string>
+    <string name="bookmarks_clear_title">Alle Lesezeichen entfernen?</string>
+    <string name="bookmarks_clear_affirm">OK</string>
+    <string name="bookmarks_clear_cancel">Abbrechen</string>
+    <string name="bookmarks_clear_done">Lesezeichen gelöscht</string>
+
+    <!-- Preferences -->
+    <string name="preferences_dictionary">Wörterbuch-Einstellungen</string>
+    <string name="preferences_order_by_title">Reihenfolge</string>
+    <string name="preferences_order_by_summary">Bevorzugte Sortierung auswählen</string>
+    <string name="preferences_order_by_dialog">Sortieren nach</string>
+    <string name="preferences_view_title">Sicht</string>
+    <string name="preferences_view_summary">Bevorzugte Eigenschaften darstellen lassen</string>
+    <string name="preferences_view_dialog">Sicht auswählen</string>
+    <string name="preferences_about">Über</string>
+    <string name="preferences_sources_title">Quellen</string>
+    <string name="preferences_author_title">Autor</string>
+    <string name="preferences_license_title">Lizenz</string>
+    <string name="preferences_contents">Inhalte</string>
+    <string name="preferences_source_open">Lizenz öffnen</string>
+    <string name="preferences_media">Medien</string>
+    <string name="preferences_icon_title">Balalaika Icon erstellt von</string>
+</resources>
