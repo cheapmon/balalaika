@@ -1,9 +1,13 @@
 package com.github.cheapmon.balalaika.ui.preferences
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.preference.ListPreference
+import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.util.InjectorUtil
@@ -41,6 +45,27 @@ class PreferencesFragment : PreferenceFragmentCompat() {
             }
             setOnPreferenceChangeListener { _, value ->
                 viewModel.setDictionaryView((value as String).toLong())
+                true
+            }
+        }
+        findPreference<Preference>("sources")?.apply {
+            setOnPreferenceClickListener {
+                val directions = PreferencesFragmentDirections.actionNavPreferencesToNavSources()
+                findNavController().navigate(directions)
+                true
+            }
+        }
+        findPreference<Preference>("author")?.apply {
+            setOnPreferenceClickListener {
+                val uri = Uri.parse(getString(R.string.preferences_author_url))
+                startActivity(Intent(Intent.ACTION_VIEW, uri))
+                true
+            }
+        }
+        findPreference<Preference>("license")?.apply {
+            setOnPreferenceClickListener {
+                val uri = Uri.parse(getString(R.string.preferences_license_url))
+                startActivity(Intent(Intent.ACTION_VIEW, uri))
                 true
             }
         }

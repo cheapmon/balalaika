@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="@string/preferences_dictionary">
+    <PreferenceCategory
+        android:icon="@drawable/ic_menu_book"
+        android:title="@string/preferences_dictionary">
         <ListPreference
             android:dialogIcon="@drawable/ic_sort"
             android:dialogTitle="@string/preferences_order_by_dialog"
@@ -15,5 +17,23 @@
             android:key="@string/preferences_key_view"
             android:summary="@string/preferences_view_summary"
             android:title="@string/preferences_view_title" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:icon="@drawable/ic_info"
+        android:title="@string/preferences_about">
+        <Preference
+            android:icon="@drawable/ic_source"
+            android:key="sources"
+            android:title="@string/preferences_sources_title" />
+        <Preference
+            android:icon="@drawable/ic_person"
+            android:key="author"
+            android:summary="@string/preferences_author_name"
+            android:title="@string/preferences_author_title" />
+        <Preference
+            android:icon="@drawable/ic_gavel"
+            android:key="license"
+            android:summary="@string/preferences_license_name"
+            android:title="@string/preferences_license_title" />
     </PreferenceCategory>
 </PreferenceScreen>

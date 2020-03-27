@@ -10,6 +10,7 @@ import com.github.cheapmon.balalaika.data.DB
 import com.github.cheapmon.balalaika.data.entities.*
 import org.apache.commons.csv.CSVFormat
 import org.yaml.snakeyaml.Yaml
+import org.yaml.snakeyaml.constructor.Constructor
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.util.*
@@ -24,7 +25,7 @@ class ImportUtil<T>(private val res: ResourceLoader<T>) {
         val db = DB.getInstance(context.applicationContext)
         val preferences = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
         val currentVersion = preferences.getInt(DB_VERSION_KEY, 0)
-        if (config.dbVersion > currentVersion) {
+        if (config.version > currentVersion) {
             try {
                 db.withTransaction {
                     db.clearAllTables()
@@ -34,7 +35,7 @@ class ImportUtil<T>(private val res: ResourceLoader<T>) {
                     readDictionaryViews().forEach { db.dictionaryViews().insertAll(it) }
                     readDictionaryViewToCategories().forEach { db.dictionaryViews().insertAll(it) }
                 }
-                preferences.edit().putInt(DB_VERSION_KEY, config.dbVersion).apply()
+                preferences.edit().putInt(DB_VERSION_KEY, config.version).apply()
             } catch (ex: SQLiteException) {
                 Log.e(this::class.java.name, "Updating the database failed!", ex)
             }
@@ -152,9 +153,9 @@ class ImportUtil<T>(private val res: ResourceLoader<T>) {
         }.filterNot { it.dictionaryViewId == -1L || it.categoryId == -1L }
     }
 
-    private fun readConfig(): Config {
-        val config: Map<String, Int> = Yaml().load(res.read(res.configId))
-        return Config(config[YAML_VERSION_KEY] ?: 0)
+    fun readConfig(): Config {
+        val yaml = Yaml(Constructor(Config::class.java))
+        return yaml.load(res.read(res.configId))
     }
 
     private fun records(id: T) =
@@ -189,5 +190,13 @@ class AndroidResourceLoader(private val context: Context) : ResourceLoader<Int> 
 }
 
 data class Config(
-    val dbVersion: Int
+    val version: Int = -1,
+    val sources: List<Source> = listOf()
+)
+
+data class Source(
+    val name: String? = null,
+    val authors: String? = null,
+    val summary: String? = null,
+    val url: String? = null
 )

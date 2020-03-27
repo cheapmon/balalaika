@@ -3,4 +3,12 @@
     <!-- Preference keys -->
     <string name="preferences_key_order">order</string>
     <string name="preferences_key_view">view</string>
+
+    <!-- About -->
+    <string name="preferences_author_name">Simon Kaleschke</string>
+    <string name="preferences_author_url">https://twitter.com/cheapmon</string>
+    <string name="preferences_license_name">Apache License 2.0</string>
+    <string name="preferences_license_url">https://github.com/cheapmon/balalaika/blob/master/LICENSE.md</string>
+    <string name="preferences_icon_author">Freepik</string>
+    <string name="preferences_icon_url">https://www.flaticon.com/authors/freepik</string>
 </resources>

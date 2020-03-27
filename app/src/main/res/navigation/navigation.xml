@@ -59,6 +59,14 @@
     <fragment
         android:id="@+id/nav_preferences"
         android:name="com.github.cheapmon.balalaika.ui.preferences.PreferencesFragment"
-        android:label="@string/menu_preferences" />
+        android:label="@string/menu_preferences" >
+        <action
+            android:id="@+id/action_nav_preferences_to_nav_sources"
+            app:destination="@id/nav_sources" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_sources"
+        android:name="com.github.cheapmon.balalaika.ui.preferences.SourcesFragment"
+        android:label="@string/menu_sources" />
 
 </navigation>
