@@ -8,6 +8,7 @@
 
     <!-- Menus -->
     <string name="menu_dictionary">Dictionary</string>
+    <string name="menu_bookmarks">Bookmarks</string>
     <string name="menu_search">Search Dictionary</string>
     <string name="menu_history">Search History</string>
     <string name="menu_order_by">Order by</string>
@@ -43,4 +44,15 @@
     <string name="dictionary_item_cancel">Cancel</string>
     <string name="dictionary_menu_message">Search by %1$s</string>
     <string name="dictionary_playback_failed">Playback failed</string>
+    <string name="dictionary_bookmark_add">%1$s was added to bookmarks</string>
+    <string name="dictionary_bookmark_remove">%1$s was removed from bookmarks</string>
+
+    <!-- Bookmarks fragment -->
+    <string name="bookmarks_item_removed">Bookmark was removed</string>
+    <string name="bookmarks_empty">You have no bookmarks</string>
+    <string name="bookmarks_clear">Clear</string>
+    <string name="bookmarks_clear_title">Remove all bookmarks?</string>
+    <string name="bookmarks_clear_affirm">OK</string>
+    <string name="bookmarks_clear_cancel">Cancel</string>
+    <string name="bookmarks_clear_done">Bookmarks were cleared</string>
 </resources>

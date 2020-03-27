@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
 
         navController = findNavController(R.id.nav_host_fragment)
         appBarConfiguration = AppBarConfiguration(
-            topLevelDestinationIds = setOf(R.id.nav_home, R.id.nav_history),
+            topLevelDestinationIds = setOf(R.id.nav_home, R.id.nav_history, R.id.nav_bookmarks),
             drawerLayout = drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)

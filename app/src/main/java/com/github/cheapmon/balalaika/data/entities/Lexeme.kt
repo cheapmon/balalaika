@@ -16,7 +16,8 @@ data class Lexeme(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") val lexemeId: Long = 0,
     @ColumnInfo(name = "external_id") val externalId: String,
     @ColumnInfo(name = "form") val form: String,
-    @ColumnInfo(name = "base_id") val baseId: Long?
+    @ColumnInfo(name = "base_id") val baseId: Long?,
+    @ColumnInfo(name = "is_bookmark") val isBookmark: Boolean = false
 )
 
 data class LexemeWithRelations(
@@ -40,6 +41,9 @@ interface LexemeDao {
     @Query("SELECT * FROM lexeme")
     fun getAllWithRelations(): Flow<List<LexemeWithRelations>>
 
+    @Query("SELECT * FROM lexeme WHERE is_bookmark = 1")
+    fun getBookmarks(): Flow<List<Lexeme>>
+
     @Query("SELECT * FROM lexeme WHERE id = (:id) LIMIT 1")
     fun findById(id: Long): Flow<Lexeme?>
 
@@ -48,6 +52,12 @@ interface LexemeDao {
 
     @Query("SELECT COUNT(*) FROM lexeme")
     fun count(): Flow<Int>
+
+    @Query("UPDATE lexeme SET is_bookmark = NOT is_bookmark WHERE id = (:id)")
+    suspend fun toggleBookmark(id: Long)
+
+    @Query("UPDATE lexeme SET is_bookmark = 0 WHERE is_bookmark = 1")
+    suspend fun clearBookmarks()
 
     @Insert
     suspend fun insertAll(vararg lexemes: Lexeme)

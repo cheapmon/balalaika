@@ -39,6 +39,7 @@ class DictionaryRepository private constructor(
     }
     val comparators = comparatorsChannel.asFlow()
     val dictionaryViews = dictionaryDao.getAll()
+    val bookmarks = lexemeDao.getBookmarks()
 
     fun setOrdering(comparatorName: String) {
         val key = if (ComparatorUtil.comparators.containsKey(comparatorName)) comparatorName
@@ -57,6 +58,14 @@ class DictionaryRepository private constructor(
             if (it.orderBy) ComparatorUtil.addPropertyComparator(it.name, it.categoryId)
         }
         comparatorsChannel.offer(ComparatorUtil.comparators)
+    }
+
+    suspend fun toggleBookmark(lexemeId: Long) {
+        lexemeDao.toggleBookmark(lexemeId)
+    }
+
+    suspend fun clearBookmarks() {
+        lexemeDao.clearBookmarks()
     }
 
     private suspend fun Map<Lexeme, List<PropertyWithRelations>>.toEntries(): List<DictionaryEntry> {

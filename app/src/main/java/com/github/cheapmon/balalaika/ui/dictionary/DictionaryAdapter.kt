@@ -40,6 +40,11 @@ class DictionaryAdapter(
             entryBaseButton.setOnClickListener {
                 listener.onClickBaseButton(dictionaryEntry)
             }
+            if (dictionaryEntry.lexeme.isBookmark) {
+                entryBookmarkButton.setImageResource(R.drawable.ic_bookmark)
+            } else {
+                entryBookmarkButton.setImageResource(R.drawable.ic_bookmark_border)
+            }
             entryBookmarkButton.setOnClickListener {
                 listener.onClickBookmarkButton(dictionaryEntry)
             }

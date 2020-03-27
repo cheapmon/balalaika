@@ -29,6 +29,10 @@ class DictionaryViewModel(
         viewModelScope.launch { repository.setDictionaryView(dictionaryViewId) }
     }
 
+    fun toggleBookmark(lexemeId: Long) {
+        viewModelScope.launch { repository.toggleBookmark(lexemeId) }
+    }
+
     suspend fun getComparators(): List<String> {
         return repository.comparators.first().keys.toList()
     }

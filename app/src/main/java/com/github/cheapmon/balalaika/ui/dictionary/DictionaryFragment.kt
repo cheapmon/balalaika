@@ -110,7 +110,13 @@ class DictionaryFragment : Fragment() {
 
     inner class Listener : DictionaryAdapter.DictionaryAdapterListener {
         override fun onClickBookmarkButton(dictionaryEntry: DictionaryEntry) {
-            Snackbar.make(binding.root, "Not implemented yet", Snackbar.LENGTH_SHORT).show()
+            viewModel.toggleBookmark(dictionaryEntry.lexeme.lexemeId)
+            val message = if (dictionaryEntry.lexeme.isBookmark) {
+                getString(R.string.dictionary_bookmark_remove, dictionaryEntry.lexeme.form)
+            } else {
+                getString(R.string.dictionary_bookmark_add, dictionaryEntry.lexeme.form)
+            }
+            Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
         }
 
         override fun onClickBaseButton(dictionaryEntry: DictionaryEntry) {

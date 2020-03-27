@@ -5,6 +5,7 @@ import com.github.cheapmon.balalaika.data.DB
 import com.github.cheapmon.balalaika.data.repositories.DictionaryRepository
 import com.github.cheapmon.balalaika.data.repositories.HistoryRepository
 import com.github.cheapmon.balalaika.data.repositories.SearchRepository
+import com.github.cheapmon.balalaika.ui.bookmarks.BookmarksViewModelFactory
 import com.github.cheapmon.balalaika.ui.dictionary.DictionaryViewModelFactory
 import com.github.cheapmon.balalaika.ui.history.HistoryViewModelFactory
 import com.github.cheapmon.balalaika.ui.search.SearchViewModelFactory
@@ -37,6 +38,11 @@ object InjectorUtil {
     fun provideDictionaryViewModelFactory(context: Context): DictionaryViewModelFactory {
         val repository = provideDictionaryRepository(context)
         return DictionaryViewModelFactory(repository)
+    }
+
+    fun provideBookmarksViewModelFactory(context: Context): BookmarksViewModelFactory {
+        val repository = provideDictionaryRepository(context)
+        return BookmarksViewModelFactory(repository)
     }
 
     fun provideSearchViewModelFactory(context: Context): SearchViewModelFactory {
