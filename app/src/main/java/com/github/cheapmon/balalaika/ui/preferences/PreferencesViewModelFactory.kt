@@ -1,4 +1,4 @@
-package com.github.cheapmon.balalaika.ui.dictionary
+package com.github.cheapmon.balalaika.ui.preferences
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -8,18 +8,14 @@ import kotlinx.coroutines.FlowPreview
 
 @ExperimentalCoroutinesApi
 @FlowPreview
-class DictionaryViewModelFactory(
-    private val repository: DictionaryRepository,
-    private val comparatorName: String?,
-    private val dictionaryViewId: Long?
+class PreferencesViewModelFactory(
+    private val repository: DictionaryRepository
 ) : ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return DictionaryViewModel(
-            repository,
-            comparatorName,
-            dictionaryViewId
+        return PreferencesViewModel(
+            repository
         ) as T
     }
 }

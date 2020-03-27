@@ -3,7 +3,7 @@ package com.github.cheapmon.balalaika.ui.dictionary
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.github.cheapmon.balalaika.data.entities.DictionaryView
+import com.github.cheapmon.balalaika.data.entities.DictionaryViewWithCategories
 import com.github.cheapmon.balalaika.data.repositories.DictionaryRepository
 import com.github.cheapmon.balalaika.util.ComparatorUtil
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -15,14 +15,17 @@ import kotlinx.coroutines.launch
 @ExperimentalCoroutinesApi
 @FlowPreview
 class DictionaryViewModel(
-    private val repository: DictionaryRepository
+    private val repository: DictionaryRepository,
+    comparatorName: String?,
+    dictionaryViewId: Long?
 ) : ViewModel() {
     val lexemes = repository.lexemes.asLiveData()
 
     init {
         viewModelScope.launch {
             repository.addComparators()
-            repository.setOrdering(ComparatorUtil.DEFAULT_KEY)
+            repository.setOrdering(comparatorName ?: ComparatorUtil.DEFAULT_KEY)
+            if (dictionaryViewId != null) repository.setDictionaryView(dictionaryViewId)
         }
     }
 
@@ -44,11 +47,11 @@ class DictionaryViewModel(
         }.first()
     }
 
-    suspend fun getComparators(): List<String> {
-        return repository.comparators.first().keys.toList()
+    fun getComparators(): List<String> {
+        return repository.comparators.keys.toList()
     }
 
-    suspend fun getDictionaryViews(): List<DictionaryView> {
+    suspend fun getDictionaryViews(): List<DictionaryViewWithCategories> {
         return repository.dictionaryViews.first()
     }
 }

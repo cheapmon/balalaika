@@ -5,6 +5,7 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.view.*
+import androidx.core.content.edit
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -12,6 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.R
@@ -68,33 +70,41 @@ class DictionaryFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
         return when (item.itemId) {
             R.id.action_order_by -> {
-                lifecycleScope.launch {
-                    val comparators = viewModel.getComparators().toTypedArray()
-                    MaterialAlertDialogBuilder(requireContext())
-                            .setIcon(R.drawable.ic_sort)
-                            .setTitle(R.string.menu_order_by)
-                            .setNegativeButton(R.string.cancel, null)
-                            .setItems(comparators) { _, which ->
-                                viewModel.setOrdering(comparators[which])
-                                binding.inProgress = true
-                            }.show()
-                }
+                val comparators = viewModel.getComparators().toTypedArray()
+                MaterialAlertDialogBuilder(requireContext())
+                    .setIcon(R.drawable.ic_sort)
+                    .setTitle(R.string.menu_order_by)
+                    .setNegativeButton(R.string.cancel, null)
+                    .setItems(comparators) { _, which ->
+                        preferences.edit(commit = true) {
+                            val key = getString(R.string.preferences_key_order)
+                            putString(key, comparators[which])
+                        }
+                        viewModel.setOrdering(comparators[which])
+                        binding.inProgress = true
+                    }.show()
                 true
             }
             R.id.action_setup_view -> {
                 lifecycleScope.launch {
                     val dictionaryViews = viewModel.getDictionaryViews()
-                    val names = dictionaryViews.map { it.name }.toTypedArray()
+                    val names = dictionaryViews.map { it.dictionaryView.name }.toTypedArray()
                     MaterialAlertDialogBuilder(requireContext())
-                            .setIcon(R.drawable.ic_view)
-                            .setTitle(R.string.menu_setup_view)
-                            .setNegativeButton(R.string.cancel, null)
-                            .setItems(names) { _, which ->
-                                viewModel.setDictionaryView(dictionaryViews[which].dictionaryViewId)
-                                binding.inProgress = true
-                            }.show()
+                        .setIcon(R.drawable.ic_view)
+                        .setTitle(R.string.menu_setup_view)
+                        .setNegativeButton(R.string.cancel, null)
+                        .setItems(names) { _, which ->
+                            val id = dictionaryViews[which].dictionaryView.dictionaryViewId
+                            preferences.edit(commit = true) {
+                                val key = getString(R.string.preferences_key_view)
+                                putString(key, id.toString())
+                            }
+                            viewModel.setDictionaryView(id)
+                            binding.inProgress = true
+                        }.show()
                 }
                 true
             }

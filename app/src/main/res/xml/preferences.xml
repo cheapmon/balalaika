@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/preferences_dictionary">
+        <ListPreference
+            android:dialogIcon="@drawable/ic_sort"
+            android:dialogTitle="@string/preferences_order_by_dialog"
+            android:icon="@drawable/ic_sort"
+            android:key="@string/preferences_key_order"
+            android:summary="@string/preferences_order_by_summary"
+            android:title="@string/preferences_order_by_title" />
+        <ListPreference
+            android:dialogIcon="@drawable/ic_view"
+            android:dialogTitle="@string/preferences_view_dialog"
+            android:icon="@drawable/ic_view"
+            android:key="@string/preferences_key_view"
+            android:summary="@string/preferences_view_summary"
+            android:title="@string/preferences_view_title" />
+    </PreferenceCategory>
+</PreferenceScreen>

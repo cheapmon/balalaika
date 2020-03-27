@@ -11,6 +11,7 @@
     <string name="menu_bookmarks">Bookmarks</string>
     <string name="menu_search">Search Dictionary</string>
     <string name="menu_history">Search History</string>
+    <string name="menu_preferences">Preferences</string>
     <string name="menu_order_by">Order by</string>
     <string name="menu_setup_view">Setup View</string>
 
@@ -55,4 +56,13 @@
     <string name="bookmarks_clear_affirm">OK</string>
     <string name="bookmarks_clear_cancel">Cancel</string>
     <string name="bookmarks_clear_done">Bookmarks were cleared</string>
+
+    <!-- Preferences -->
+    <string name="preferences_dictionary">Dictionary Preferences</string>
+    <string name="preferences_order_by_title">Dictionary order</string>
+    <string name="preferences_order_by_summary">Set up your preferred order</string>
+    <string name="preferences_order_by_dialog">Order by</string>
+    <string name="preferences_view_title">Dictionary view</string>
+    <string name="preferences_view_summary">Set up your preferred properties to display</string>
+    <string name="preferences_view_dialog">Setup view</string>
 </resources>

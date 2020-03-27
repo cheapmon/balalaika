@@ -1,6 +1,8 @@
 package com.github.cheapmon.balalaika.util
 
 import android.content.Context
+import androidx.preference.PreferenceManager
+import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.data.DB
 import com.github.cheapmon.balalaika.data.repositories.DictionaryRepository
 import com.github.cheapmon.balalaika.data.repositories.HistoryRepository
@@ -8,6 +10,7 @@ import com.github.cheapmon.balalaika.data.repositories.SearchRepository
 import com.github.cheapmon.balalaika.ui.bookmarks.BookmarksViewModelFactory
 import com.github.cheapmon.balalaika.ui.dictionary.DictionaryViewModelFactory
 import com.github.cheapmon.balalaika.ui.history.HistoryViewModelFactory
+import com.github.cheapmon.balalaika.ui.preferences.PreferencesViewModelFactory
 import com.github.cheapmon.balalaika.ui.search.SearchViewModelFactory
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -37,7 +40,12 @@ object InjectorUtil {
 
     fun provideDictionaryViewModelFactory(context: Context): DictionaryViewModelFactory {
         val repository = provideDictionaryRepository(context)
-        return DictionaryViewModelFactory(repository)
+        val preferences = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
+        val comparatorName =
+            preferences.getString(context.getString(R.string.preferences_key_order), null)
+        val dictionaryViewId =
+            preferences.getString(context.getString(R.string.preferences_key_view), null)?.toLong()
+        return DictionaryViewModelFactory(repository, comparatorName, dictionaryViewId)
     }
 
     fun provideBookmarksViewModelFactory(context: Context): BookmarksViewModelFactory {
@@ -54,5 +62,10 @@ object InjectorUtil {
     fun provideHistoryViewModelFactory(context: Context): HistoryViewModelFactory {
         val repository = provideHistoryRepository(context)
         return HistoryViewModelFactory(repository)
+    }
+
+    fun providePreferencesViewModelFactory(context: Context): PreferencesViewModelFactory {
+        val repository = provideDictionaryRepository(context)
+        return PreferencesViewModelFactory(repository)
     }
 }

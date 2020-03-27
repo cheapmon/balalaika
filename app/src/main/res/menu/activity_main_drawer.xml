@@ -27,4 +27,9 @@
             android:icon="@drawable/ic_menu_history"
             android:title="@string/menu_history" />
     </group>
+    <group android:id="@+id/group_preferences">
+        <item android:id="@+id/nav_preferences"
+            android:icon="@drawable/ic_preferences"
+            android:title="@string/menu_preferences" />
+    </group>
 </menu>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Preference keys -->
+    <string name="preferences_key_order">order</string>
+    <string name="preferences_key_view">view</string>
+</resources>
