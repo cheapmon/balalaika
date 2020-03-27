@@ -1,43 +1,73 @@
 package com.github.cheapmon.balalaika.ui.preferences
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.preference.ListPreference
+import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.db.BalalaikaDatabase
-import kotlinx.coroutines.Dispatchers
+import com.github.cheapmon.balalaika.util.InjectorUtil
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
+@FlowPreview
+@ExperimentalCoroutinesApi
 class PreferencesFragment : PreferenceFragmentCompat() {
-    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        setPreferencesFromResource(R.xml.preferences, rootKey)
+    private val viewModel: PreferencesViewModel by viewModels {
+        InjectorUtil.providePreferencesViewModelFactory(requireContext())
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = super.onCreateView(inflater, container, savedInstanceState)
-        findPreference<ListPreference>("default_view")?.apply {
-            viewLifecycleOwner.lifecycleScope.launch {
-                val ids = withContext(Dispatchers.IO) {
-                    BalalaikaDatabase.instance.dictionaryViewDao().getAll().map { it.viewId }.distinct()
-                }
-                entries = ids.map { it.capitalize() }.toTypedArray()
-                entryValues = ids.toTypedArray()
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        setPreferencesFromResource(R.xml.preferences, rootKey)
+        findPreference<ListPreference>(getString(R.string.preferences_key_order))?.apply {
+            val comparators = viewModel.getComparators()
+            entries = comparators
+            entryValues = comparators
+            setOnPreferenceChangeListener { _, value ->
+                viewModel.setOrdering(value as String)
+                true
             }
         }
-        findPreference<ListPreference>("order_by")?.apply {
-            viewLifecycleOwner.lifecycleScope.launch {
-                val categories = withContext(Dispatchers.IO) {
-                    BalalaikaDatabase.instance.categoryDao().getOrdered().map { it.id to it.name }
-                } + listOf("default" to "Default")
-                entries = categories.map { it.second }.toTypedArray()
-                entryValues = categories.map { it.first }.toTypedArray()
+        findPreference<ListPreference>(getString(R.string.preferences_key_view))?.apply {
+            entries = arrayOf()
+            entryValues = arrayOf()
+            lifecycleScope.launch {
+                val views = viewModel.getDictionaryViews()
+                val names = views.map { it.dictionaryView.name }.toTypedArray()
+                val ids = views.map { it.dictionaryView.dictionaryViewId.toString() }.toTypedArray()
+                entries = names
+                entryValues = ids
+            }
+            setOnPreferenceChangeListener { _, value ->
+                viewModel.setDictionaryView((value as String).toLong())
+                true
             }
         }
-        return view
+        findPreference<Preference>("sources")?.apply {
+            setOnPreferenceClickListener {
+                val directions = PreferencesFragmentDirections.actionNavPreferencesToNavSources()
+                findNavController().navigate(directions)
+                true
+            }
+        }
+        findPreference<Preference>("author")?.apply {
+            setOnPreferenceClickListener {
+                val uri = Uri.parse(getString(R.string.preferences_author_url))
+                startActivity(Intent(Intent.ACTION_VIEW, uri))
+                true
+            }
+        }
+        findPreference<Preference>("license")?.apply {
+            setOnPreferenceClickListener {
+                val uri = Uri.parse(getString(R.string.preferences_license_url))
+                startActivity(Intent(Intent.ACTION_VIEW, uri))
+                true
+            }
+        }
     }
 }

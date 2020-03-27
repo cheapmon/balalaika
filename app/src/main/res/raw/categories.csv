@@ -1,6 +1,1 @@
-id,name,widget,sequence,hidden,order_by
-lexeme,Lexeme,lexeme,1,0,1
-morphology,Morphology,key_value,4,0,0
-wordclass,Wordclass,plain,3,0,1
-trans_en,English Translation,text_url,2,0,0
-pronounciation,Pronounciation,audio,5,0,0
+id,name,widget,icon,sequence,hidden,order_by

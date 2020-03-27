@@ -1,19 +1,77 @@
 <resources>
+    <!-- Application -->
     <string name="app_name">Balalaika</string>
-    <string name="menu_home">Home</string>
-    <string name="menu_info">Information</string>
-    <string name="menu_preferences">Preferences</string>
-    <string name="menu_search">Search…</string>
-    <string name="menu_history">Search History</string>
-    <string name="search">Search</string>
-    <string name="order_by">Order by</string>
-    <string name="restriction">Restriction</string>
-    <string-array name="preferences_default_view" />
-    <string name="nav_header_description">Navigation</string>
-    <string name="preferences">com.github.cheapmon.preferences</string>
-    <string name="icon_src">The Balalaika icon was made by https://www.flaticon.com/authors/freepik</string>
-    <string name="add_to_bookmarks">Add to bookmarks</string>
-    <string name="go_to_source">Go to source</string>
     <string name="cancel">Cancel</string>
-    <string name="cancel_x">X</string>
+
+    <!-- Navigation drawer -->
+    <string name="nav_header_desc">Navigation header</string>
+
+    <!-- Menus -->
+    <string name="menu_dictionary">Dictionary</string>
+    <string name="menu_bookmarks">Bookmarks</string>
+    <string name="menu_search">Search Dictionary</string>
+    <string name="menu_history">Search History</string>
+    <string name="menu_preferences">Preferences</string>
+    <string name="menu_sources">Sources</string>
+    <string name="menu_order_by">Order by</string>
+    <string name="menu_setup_view">Setup View</string>
+
+    <!-- Descriptions for accessibility -->
+    <string name="desc_history_item_icon">History entry</string>
+    <string name="desc_history_item_redo_button">Search again</string>
+    <string name="desc_history_item_delete_button">Remove entry</string>
+    <string name="desc_search_item_icon">Result</string>
+    <string name="desc_dictionary_item_icon">Dictionary entry</string>
+    <string name="desc_dictionary_item_collapse_button">Collapse entry</string>
+    <string name="desc_dictionary_item_bookmark_button">Add to bookmarks</string>
+    <string name="desc_widget_key_value_icon">Widget Icon</string>
+    <string name="desc_widget_action_button">Widget Action</string>
+
+    <!-- Search fragment -->
+    <string name="search_query">Query</string>
+    <string name="search_no_results">Found no results</string>
+    <string name="search_restriction">%1$s: %2$s</string>
+
+    <!-- History fragment -->
+    <string name="no_restriction">No additional restriction</string>
+    <string name="history_entry_removed">History entry was removed</string>
+    <string name="history_empty">History is empty</string>
+    <string name="history_clear">Clear</string>
+    <string name="history_clear_title">Clear History?</string>
+    <string name="history_clear_affirm">OK</string>
+    <string name="history_clear_cancel">Cancel</string>
+    <string name="history_clear_done">History was cleared</string>
+
+    <!-- Dictionary fragment -->
+    <string name="dictionary_item_cancel">Cancel</string>
+    <string name="dictionary_menu_message">Search by %1$s</string>
+    <string name="dictionary_playback_failed">Playback failed</string>
+    <string name="dictionary_bookmark_add">%1$s was added to bookmarks</string>
+    <string name="dictionary_bookmark_remove">%1$s was removed from bookmarks</string>
+
+    <!-- Bookmarks fragment -->
+    <string name="bookmarks_item_removed">Bookmark was removed</string>
+    <string name="bookmarks_empty">You have no bookmarks</string>
+    <string name="bookmarks_clear">Clear</string>
+    <string name="bookmarks_clear_title">Remove all bookmarks?</string>
+    <string name="bookmarks_clear_affirm">OK</string>
+    <string name="bookmarks_clear_cancel">Cancel</string>
+    <string name="bookmarks_clear_done">Bookmarks were cleared</string>
+
+    <!-- Preferences -->
+    <string name="preferences_dictionary">Dictionary Preferences</string>
+    <string name="preferences_order_by_title">Dictionary order</string>
+    <string name="preferences_order_by_summary">Set up your preferred order</string>
+    <string name="preferences_order_by_dialog">Order by</string>
+    <string name="preferences_view_title">Dictionary view</string>
+    <string name="preferences_view_summary">Set up your preferred properties to display</string>
+    <string name="preferences_view_dialog">Setup view</string>
+    <string name="preferences_about">About</string>
+    <string name="preferences_sources_title">Sources</string>
+    <string name="preferences_author_title">Created by</string>
+    <string name="preferences_license_title">License</string>
+    <string name="preferences_contents">Contents</string>
+    <string name="preferences_source_open">Open License</string>
+    <string name="preferences_media">Media</string>
+    <string name="preferences_icon_title">Balalaika icon created by</string>
 </resources>
