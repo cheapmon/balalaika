@@ -43,6 +43,7 @@ class DictionaryAdapter(
             entryBookmarkButton.setOnClickListener {
                 listener.onClickBookmarkButton(dictionaryEntry)
             }
+            entryProperties.visibility = View.VISIBLE
             entryProperties.removeAllViews()
             dictionaryEntry.properties.groupBy { it.category }
                 .toSortedMap(Comparator { o1, o2 -> o1.sequence.compareTo(o2.sequence) })
