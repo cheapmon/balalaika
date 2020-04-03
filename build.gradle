@@ -5,6 +5,7 @@ buildscript {
     ext.arch_version = "2.1.0"
     ext.nav_version = "2.3.0-alpha04"
     ext.paging_version = "2.1.2"
+    ext.dagger_version = "2.27"
     repositories {
         google()
         jcenter()
