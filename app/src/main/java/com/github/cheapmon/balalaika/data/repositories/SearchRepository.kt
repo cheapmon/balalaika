@@ -8,10 +8,11 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.*
+import javax.inject.Inject
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-class SearchRepository private constructor(
+class SearchRepository @Inject constructor(
     private val lexemeDao: LexemeDao,
     private val propertyDao: PropertyDao
 ) {
@@ -64,23 +65,6 @@ class SearchRepository private constructor(
     ): Flow<List<Lexeme>> {
         return propertyDao.findByValueRestricted(query, categoryId, restriction).map {
             it.map { prop -> prop.lexeme }.distinct()
-        }
-    }
-
-    companion object {
-        @Volatile
-        private var instance: SearchRepository? = null
-
-        fun getInstance(
-            lexemeDao: LexemeDao,
-            propertyDao: PropertyDao
-        ): SearchRepository {
-            return instance ?: synchronized(this) {
-                instance ?: SearchRepository(
-                    lexemeDao,
-                    propertyDao
-                ).also { instance = it }
-            }
         }
     }
 }

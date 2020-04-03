@@ -1,5 +1,6 @@
 package com.github.cheapmon.balalaika.ui.search
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,26 +9,25 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.github.cheapmon.balalaika.Application
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.data.entities.Lexeme
 import com.github.cheapmon.balalaika.data.entities.SearchRestriction
 import com.github.cheapmon.balalaika.databinding.FragmentSearchBinding
-import com.github.cheapmon.balalaika.util.InjectorUtil
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import javax.inject.Inject
 
 @FlowPreview
 @ExperimentalCoroutinesApi
 class SearchFragment : Fragment() {
-    private val viewModel: SearchViewModel by viewModels {
-        InjectorUtil.provideSearchViewModelFactory(requireContext())
-    }
+    @Inject
+    lateinit var viewModel: SearchViewModel
 
     private val args: SearchFragmentArgs by navArgs()
 
@@ -58,6 +58,12 @@ class SearchFragment : Fragment() {
         handleArgs()
         bindUi()
         return binding.root
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        (requireActivity().application as Application).appComponent.inject(this)
     }
 
     private fun handleArgs() {

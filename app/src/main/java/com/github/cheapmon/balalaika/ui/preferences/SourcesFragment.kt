@@ -1,5 +1,6 @@
 package com.github.cheapmon.balalaika.ui.preferences
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -7,19 +8,24 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.get
+import com.github.cheapmon.balalaika.Application
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.util.AndroidResourceLoader
 import com.github.cheapmon.balalaika.util.ImportUtil
 import com.github.cheapmon.balalaika.util.Source
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import javax.inject.Inject
 
 class SourcesFragment : PreferenceFragmentCompat() {
+    @Inject
+    lateinit var importUtil: ImportUtil
+
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.sources, rootKey)
         val category: PreferenceCategory? = preferenceScreen["contents"]
         preferenceScreen.addPreference(category)
-        ImportUtil(AndroidResourceLoader(requireContext())).readConfig().sources.forEach { source ->
+        importUtil.readConfig().sources.forEach { source ->
             val preference = Preference(context).apply {
                 title = source.name
                 summary = source.authors
@@ -37,6 +43,12 @@ class SourcesFragment : PreferenceFragmentCompat() {
                 true
             }
         }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        (requireActivity().application as Application).appComponent.inject(this)
     }
 
     private fun showSourceDialog(source: Source) {

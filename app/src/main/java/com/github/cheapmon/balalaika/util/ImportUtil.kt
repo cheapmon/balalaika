@@ -6,34 +6,41 @@ import android.util.Log
 import androidx.preference.PreferenceManager
 import androidx.room.withTransaction
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.data.DB
+import com.github.cheapmon.balalaika.data.AppDatabase
 import com.github.cheapmon.balalaika.data.entities.*
+import com.github.cheapmon.balalaika.di.ActivityScope
 import org.apache.commons.csv.CSVFormat
 import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.constructor.Constructor
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.util.*
+import javax.inject.Inject
 
-class ImportUtil<T>(private val res: ResourceLoader<T>) {
+class ImportUtil @Inject constructor(
+    private val res: ResourceLoader,
+    private val appDatabase: AppDatabase,
+    private val context: Context
+) {
     private val categoryIdCache: HashMap<String, Long> = hashMapOf()
     private val lexemeIdCache: HashMap<String, Long> = hashMapOf()
     private val dictionaryViewIdCache: HashMap<String, Long> = hashMapOf()
 
-    suspend fun import(context: Context) {
+    suspend fun import() {
         val config = readConfig()
-        val db = DB.getInstance(context.applicationContext)
-        val preferences = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
+        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
         val currentVersion = preferences.getInt(DB_VERSION_KEY, 0)
         if (config.version > currentVersion) {
             try {
-                db.withTransaction {
-                    db.clearAllTables()
-                    readCategories().forEach { db.categories().insertAll(it) }
-                    readLexemes().forEach { db.lexemes().insertAll(it) }
-                    readProperties().forEach { db.properties().insertAll(it) }
-                    readDictionaryViews().forEach { db.dictionaryViews().insertAll(it) }
-                    readDictionaryViewToCategories().forEach { db.dictionaryViews().insertAll(it) }
+                appDatabase.withTransaction {
+                    appDatabase.clearAllTables()
+                    readCategories().forEach { appDatabase.categories().insertAll(it) }
+                    readLexemes().forEach { appDatabase.lexemes().insertAll(it) }
+                    readProperties().forEach { appDatabase.properties().insertAll(it) }
+                    readDictionaryViews().forEach { appDatabase.dictionaryViews().insertAll(it) }
+                    readDictionaryViewToCategories().forEach {
+                        appDatabase.dictionaryViews().insertAll(it)
+                    }
                 }
                 preferences.edit().putInt(DB_VERSION_KEY, config.version).apply()
             } catch (ex: SQLiteException) {
@@ -158,27 +165,27 @@ class ImportUtil<T>(private val res: ResourceLoader<T>) {
         return yaml.load(res.read(res.configId))
     }
 
-    private fun records(id: T) =
+    private fun records(id: Int) =
         CSVFormat.RFC4180.withFirstRecordAsHeader().parse(InputStreamReader(res.read(id)))
 
     companion object {
         const val DB_VERSION_KEY = "db_version"
-        const val YAML_VERSION_KEY = "version"
     }
 }
 
-interface ResourceLoader<T> {
-    val categoriesId: T
-    val lexemesId: T
-    val fullFormsId: T
-    val propertiesId: T
-    val dictionaryViewsId: T
-    val configId: T
+@ActivityScope
+interface ResourceLoader {
+    val categoriesId: Int
+    val lexemesId: Int
+    val fullFormsId: Int
+    val propertiesId: Int
+    val dictionaryViewsId: Int
+    val configId: Int
 
-    fun read(id: T): InputStream
+    fun read(id: Int): InputStream
 }
 
-class AndroidResourceLoader(private val context: Context) : ResourceLoader<Int> {
+class AndroidResourceLoader @Inject constructor(private val context: Context) : ResourceLoader {
     override val categoriesId: Int = R.raw.categories
     override val lexemesId: Int = R.raw.lexemes
     override val fullFormsId: Int = R.raw.full_forms

@@ -1,26 +1,26 @@
 package com.github.cheapmon.balalaika.ui.preferences
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import com.github.cheapmon.balalaika.Application
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.util.InjectorUtil
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @FlowPreview
 @ExperimentalCoroutinesApi
 class PreferencesFragment : PreferenceFragmentCompat() {
-    private val viewModel: PreferencesViewModel by viewModels {
-        InjectorUtil.providePreferencesViewModelFactory(requireContext())
-    }
+    @Inject
+    lateinit var viewModel: PreferencesViewModel
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
@@ -69,5 +69,11 @@ class PreferencesFragment : PreferenceFragmentCompat() {
                 true
             }
         }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        (requireActivity().application as Application).appComponent.inject(this)
     }
 }

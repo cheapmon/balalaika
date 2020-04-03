@@ -1,5 +1,6 @@
 package com.github.cheapmon.balalaika.ui.dictionary
 
+import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
 import android.net.Uri
@@ -8,7 +9,6 @@ import android.view.*
 import androidx.core.content.edit
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -16,24 +16,24 @@ import androidx.navigation.fragment.navArgs
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.github.cheapmon.balalaika.Application
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.data.entities.DictionaryEntry
 import com.github.cheapmon.balalaika.data.entities.SearchRestriction
 import com.github.cheapmon.balalaika.databinding.FragmentDictionaryBinding
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetListener
-import com.github.cheapmon.balalaika.util.InjectorUtil
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @FlowPreview
 @ExperimentalCoroutinesApi
 class DictionaryFragment : Fragment() {
-    private val viewModel: DictionaryViewModel by viewModels {
-        InjectorUtil.provideDictionaryViewModelFactory(requireContext())
-    }
+    @Inject
+    lateinit var viewModel: DictionaryViewModel
 
     private val args: DictionaryFragmentArgs by navArgs()
 
@@ -62,6 +62,12 @@ class DictionaryFragment : Fragment() {
         bindUi()
         handleArgs()
         return binding.root
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        (requireActivity().application as Application).appComponent.inject(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

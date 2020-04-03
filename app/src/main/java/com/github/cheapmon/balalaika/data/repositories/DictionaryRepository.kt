@@ -6,10 +6,11 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.*
+import javax.inject.Inject
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-class DictionaryRepository private constructor(
+class DictionaryRepository @Inject constructor(
     private val categoryDao: CategoryDao,
     private val lexemeDao: LexemeDao,
     private val propertyDao: PropertyDao,
@@ -63,27 +64,6 @@ class DictionaryRepository private constructor(
             val baseId = lexeme.baseId
             val base = if (baseId != null) lexemeDao.findById(baseId).first() else null
             DictionaryEntry(lexeme, base, props)
-        }
-    }
-
-    companion object {
-        @Volatile
-        private var instance: DictionaryRepository? = null
-
-        fun getInstance(
-            categoryDao: CategoryDao,
-            lexemeDao: LexemeDao,
-            propertyDao: PropertyDao,
-            dictionaryViewDao: DictionaryViewDao
-        ): DictionaryRepository {
-            return instance ?: synchronized(this) {
-                instance ?: DictionaryRepository(
-                    categoryDao,
-                    lexemeDao,
-                    propertyDao,
-                    dictionaryViewDao
-                ).also { instance = it }
-            }
         }
     }
 }

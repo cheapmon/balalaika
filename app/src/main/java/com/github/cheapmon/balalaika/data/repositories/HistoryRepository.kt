@@ -6,8 +6,9 @@ import com.github.cheapmon.balalaika.data.entities.HistoryEntryWithRestriction
 import com.github.cheapmon.balalaika.data.entities.SearchRestriction
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class HistoryRepository private constructor(
+class HistoryRepository @Inject constructor(
     private val historyEntryDao: HistoryEntryDao
 ) {
     val historyEntries: Flow<List<HistoryEntryWithRestriction>> =
@@ -38,20 +39,5 @@ class HistoryRepository private constructor(
 
     suspend fun clearHistory() {
         historyEntryDao.clear()
-    }
-
-    companion object {
-        @Volatile
-        private var instance: HistoryRepository? = null
-
-        fun getInstance(
-            historyEntryDao: HistoryEntryDao
-        ): HistoryRepository {
-            return instance ?: synchronized(this) {
-                instance ?: HistoryRepository(
-                    historyEntryDao
-                ).also { instance = it }
-            }
-        }
     }
 }

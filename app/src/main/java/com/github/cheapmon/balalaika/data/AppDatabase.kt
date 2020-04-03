@@ -20,21 +20,10 @@ import com.github.cheapmon.balalaika.data.entities.*
     exportSchema = false
 )
 @TypeConverters(Converters::class)
-abstract class DB : RoomDatabase() {
+abstract class AppDatabase : RoomDatabase() {
     abstract fun categories(): CategoryDao
     abstract fun lexemes(): LexemeDao
     abstract fun properties(): PropertyDao
     abstract fun dictionaryViews(): DictionaryViewDao
     abstract fun historyEntries(): HistoryEntryDao
-
-    companion object {
-        @Volatile
-        private var instance: DB? = null
-
-        fun getInstance(context: Context): DB {
-            return instance ?: synchronized(this) {
-                Room.databaseBuilder(context, DB::class.java, "balalaika").build()
-            }
-        }
-    }
 }

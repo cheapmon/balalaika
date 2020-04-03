@@ -1,30 +1,30 @@
 package com.github.cheapmon.balalaika.ui.history
 
+import android.content.Context
 import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.github.cheapmon.balalaika.Application
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.data.entities.HistoryEntryWithRestriction
 import com.github.cheapmon.balalaika.databinding.FragmentHistoryBinding
-import com.github.cheapmon.balalaika.util.InjectorUtil
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import javax.inject.Inject
 
 @FlowPreview
 @ExperimentalCoroutinesApi
 class HistoryFragment : Fragment() {
-    private val viewModel: HistoryViewModel by viewModels {
-        InjectorUtil.provideHistoryViewModelFactory(requireContext())
-    }
+    @Inject
+    lateinit var viewModel: HistoryViewModel
 
     private lateinit var binding: FragmentHistoryBinding
     private lateinit var recyclerView: RecyclerView
@@ -48,6 +48,12 @@ class HistoryFragment : Fragment() {
         setHasOptionsMenu(true)
         submitData()
         return binding.root
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        (requireActivity().application as Application).appComponent.inject(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

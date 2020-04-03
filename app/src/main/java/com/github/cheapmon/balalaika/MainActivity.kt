@@ -16,12 +16,18 @@ import com.github.cheapmon.balalaika.databinding.AppBarMainBinding
 import com.github.cheapmon.balalaika.util.AndroidResourceLoader
 import com.github.cheapmon.balalaika.util.ImportUtil
 import com.google.android.material.navigation.NavigationView
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var navController: NavController
 
+    @Inject
+    lateinit var importUtil: ImportUtil
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        (application as Application).appComponent.inject(this)
+
         super.onCreate(savedInstanceState)
 
         val activityBinding: ActivityMainBinding =
@@ -43,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         lifecycleScope.launchWhenCreated {
-            ImportUtil(AndroidResourceLoader(applicationContext)).import(applicationContext)
+            importUtil.import()
         }
     }
 
