@@ -20,6 +20,7 @@ cd balalaika
 * Add your files under `app/src/main/res/raw` (Will be documented in the future)
 * Install and run the app to your device or emulator
 ```
+gradle wrapper
 ./gradlew app:assembleDebug
 adb install -t ./app/build/outputs/apk/debug/app-debug.apk
 ```
