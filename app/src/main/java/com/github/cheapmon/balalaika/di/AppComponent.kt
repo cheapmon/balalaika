@@ -8,7 +8,6 @@ import com.github.cheapmon.balalaika.ui.history.HistoryFragment
 import com.github.cheapmon.balalaika.ui.preferences.PreferencesFragment
 import com.github.cheapmon.balalaika.ui.preferences.SourcesFragment
 import com.github.cheapmon.balalaika.ui.search.SearchFragment
-import com.github.cheapmon.balalaika.util.ImportUtil
 import dagger.BindsInstance
 import dagger.Component
 

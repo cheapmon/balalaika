@@ -1,4 +1,4 @@
-package com.github.cheapmon.balalaika.util
+package com.github.cheapmon.balalaika.data.import
 
 import android.content.Context
 import android.database.sqlite.SQLiteException
@@ -185,7 +185,8 @@ interface ResourceLoader {
     fun read(id: Int): InputStream
 }
 
-class AndroidResourceLoader @Inject constructor(private val context: Context) : ResourceLoader {
+class AndroidResourceLoader @Inject constructor(private val context: Context) :
+    ResourceLoader {
     override val categoriesId: Int = R.raw.categories
     override val lexemesId: Int = R.raw.lexemes
     override val fullFormsId: Int = R.raw.full_forms

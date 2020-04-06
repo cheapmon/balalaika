@@ -10,9 +10,8 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.get
 import com.github.cheapmon.balalaika.Application
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.util.AndroidResourceLoader
-import com.github.cheapmon.balalaika.util.ImportUtil
-import com.github.cheapmon.balalaika.util.Source
+import com.github.cheapmon.balalaika.data.import.ImportUtil
+import com.github.cheapmon.balalaika.data.import.Source
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import javax.inject.Inject
