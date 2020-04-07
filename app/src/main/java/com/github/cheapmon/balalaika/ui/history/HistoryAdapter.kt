@@ -11,7 +11,7 @@ import com.github.cheapmon.balalaika.data.entities.SearchRestriction
 import com.github.cheapmon.balalaika.databinding.FragmentHistoryItemBinding
 
 class HistoryAdapter(
-    private val listener: HistoryAdapterListener
+    private val listener: Listener
 ) : ListAdapter<HistoryEntryWithRestriction, HistoryAdapter.ViewHolder>(HistoryDiff) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -55,7 +55,7 @@ class HistoryAdapter(
         }
     }
 
-    interface HistoryAdapterListener {
+    interface Listener {
         fun onClickDeleteButton(historyEntry: HistoryEntryWithRestriction)
         fun onClickRedoButton(historyEntry: HistoryEntryWithRestriction)
     }

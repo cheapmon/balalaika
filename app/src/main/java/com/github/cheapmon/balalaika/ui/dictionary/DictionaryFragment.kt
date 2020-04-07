@@ -27,7 +27,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class DictionaryFragment : Fragment() {
+class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListener {
     @Inject
     lateinit var viewModel: DictionaryViewModel
 
@@ -46,7 +46,7 @@ class DictionaryFragment : Fragment() {
         setHasOptionsMenu(true)
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_dictionary, container, false)
         dictionaryLayoutManager = LinearLayoutManager(context)
-        dictionaryAdapter = DictionaryAdapter(Listener(), WListener())
+        dictionaryAdapter = DictionaryAdapter(this, this)
         with(binding) {
             recyclerView = entryList.apply {
                 layoutManager = dictionaryLayoutManager
@@ -142,50 +142,46 @@ class DictionaryFragment : Fragment() {
         }
     }
 
-    inner class Listener : DictionaryAdapter.DictionaryAdapterListener {
-        override fun onClickBookmarkButton(dictionaryEntry: DictionaryEntry) {
-            viewModel.toggleBookmark(dictionaryEntry.lexeme.lexemeId)
-            val message = if (dictionaryEntry.lexeme.isBookmark) {
-                getString(R.string.dictionary_bookmark_remove, dictionaryEntry.lexeme.form)
-            } else {
-                getString(R.string.dictionary_bookmark_add, dictionaryEntry.lexeme.form)
-            }
-            Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+    override fun onClickBookmarkButton(dictionaryEntry: DictionaryEntry) {
+        viewModel.toggleBookmark(dictionaryEntry.lexeme.lexemeId)
+        val message = if (dictionaryEntry.lexeme.isBookmark) {
+            getString(R.string.dictionary_bookmark_remove, dictionaryEntry.lexeme.form)
+        } else {
+            getString(R.string.dictionary_bookmark_add, dictionaryEntry.lexeme.form)
         }
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+    }
 
-        override fun onClickBaseButton(dictionaryEntry: DictionaryEntry) {
-            if (dictionaryEntry.base != null) scrollTo(dictionaryEntry.base.externalId)
+    override fun onClickBaseButton(dictionaryEntry: DictionaryEntry) {
+        if (dictionaryEntry.base != null) scrollTo(dictionaryEntry.base.externalId)
+    }
+
+    override fun onClickAudioButton(resId: Int) {
+        try {
+            MediaPlayer.create(context, resId).apply {
+                start()
+                setOnCompletionListener { release() }
+            }
+        } catch (ex: Exception) {
+            Snackbar.make(
+                binding.root,
+                R.string.dictionary_playback_failed,
+                Snackbar.LENGTH_SHORT
+            ).show()
         }
     }
 
-    inner class WListener : WidgetListener {
-        override fun onClickAudioButton(resId: Int) {
-            try {
-                MediaPlayer.create(context, resId).apply {
-                    start()
-                    setOnCompletionListener { release() }
-                }
-            } catch (ex: Exception) {
-                Snackbar.make(
-                    binding.root,
-                    R.string.dictionary_playback_failed,
-                    Snackbar.LENGTH_SHORT
-                ).show()
-            }
-        }
+    override fun onClickSearchButton(query: String, restriction: SearchRestriction) {
+        val directions =
+            DictionaryFragmentDirections.actionNavHomeToNavSearch(restriction, query)
+        findNavController().navigate(directions)
+    }
 
-        override fun onClickSearchButton(query: String, restriction: SearchRestriction) {
-            val directions =
-                DictionaryFragmentDirections.actionNavHomeToNavSearch(restriction, query)
-            findNavController().navigate(directions)
-        }
+    override fun onClickScrollButton(externalId: String) {
+        scrollTo(externalId)
+    }
 
-        override fun onClickScrollButton(externalId: String) {
-            scrollTo(externalId)
-        }
-
-        override fun onClickLinkButton(link: String) {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(link)))
-        }
+    override fun onClickLinkButton(link: String) {
+        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(link)))
     }
 }

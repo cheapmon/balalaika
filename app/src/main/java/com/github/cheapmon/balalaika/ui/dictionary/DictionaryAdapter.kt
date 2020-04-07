@@ -13,7 +13,7 @@ import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetListener
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.Widgets
 
 class DictionaryAdapter(
-    private val listener: DictionaryAdapterListener,
+    private val listener: Listener,
     private val widgetListener: WidgetListener
 ) : ListAdapter<DictionaryEntry, DictionaryAdapter.ViewHolder>(DictionaryDiff) {
 
@@ -75,7 +75,7 @@ class DictionaryAdapter(
         }
     }
 
-    interface DictionaryAdapterListener {
+    interface Listener {
         fun onClickBookmarkButton(dictionaryEntry: DictionaryEntry)
         fun onClickBaseButton(dictionaryEntry: DictionaryEntry)
     }

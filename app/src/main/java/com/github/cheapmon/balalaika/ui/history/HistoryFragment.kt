@@ -18,7 +18,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import javax.inject.Inject
 
-class HistoryFragment : Fragment() {
+class HistoryFragment : Fragment(), HistoryAdapter.Listener {
     @Inject
     lateinit var viewModel: HistoryViewModel
 
@@ -34,7 +34,7 @@ class HistoryFragment : Fragment() {
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_history, container, false)
         historyLayoutManager = LinearLayoutManager(context)
-        historyAdapter = HistoryAdapter(Listener())
+        historyAdapter = HistoryAdapter(this)
         recyclerView = binding.historyList.apply {
             layoutManager = historyLayoutManager
             adapter = historyAdapter
@@ -89,19 +89,17 @@ class HistoryFragment : Fragment() {
         Snackbar.make(binding.root, R.string.history_clear_done, Snackbar.LENGTH_SHORT).show()
     }
 
-    inner class Listener : HistoryAdapter.HistoryAdapterListener {
-        override fun onClickDeleteButton(historyEntry: HistoryEntryWithRestriction) {
-            viewModel.removeEntry(historyEntry.historyEntry)
-            Snackbar.make(binding.root, R.string.history_entry_removed, Snackbar.LENGTH_SHORT)
-                .show()
-        }
+    override fun onClickDeleteButton(historyEntry: HistoryEntryWithRestriction) {
+        viewModel.removeEntry(historyEntry.historyEntry)
+        Snackbar.make(binding.root, R.string.history_entry_removed, Snackbar.LENGTH_SHORT)
+            .show()
+    }
 
-        override fun onClickRedoButton(historyEntry: HistoryEntryWithRestriction) {
-            val directions = HistoryFragmentDirections.actionNavHistoryToNavSearch(
-                query = historyEntry.historyEntry.query,
-                restriction = historyEntry.restriction
-            )
-            findNavController().navigate(directions)
-        }
+    override fun onClickRedoButton(historyEntry: HistoryEntryWithRestriction) {
+        val directions = HistoryFragmentDirections.actionNavHistoryToNavSearch(
+            query = historyEntry.historyEntry.query,
+            restriction = historyEntry.restriction
+        )
+        findNavController().navigate(directions)
     }
 }

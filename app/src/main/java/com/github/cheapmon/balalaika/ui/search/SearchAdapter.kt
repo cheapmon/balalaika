@@ -9,7 +9,7 @@ import com.github.cheapmon.balalaika.data.entities.Lexeme
 import com.github.cheapmon.balalaika.databinding.FragmentSearchItemBinding
 
 class SearchAdapter(
-    private val listener: SearchAdapterListener
+    private val listener: Listener
 ) : ListAdapter<Lexeme, SearchAdapter.ViewHolder>(SearchDiff) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -37,7 +37,7 @@ class SearchAdapter(
         }
     }
 
-    interface SearchAdapterListener {
+    interface Listener {
         fun onClickItem(lexeme: Lexeme)
     }
 }

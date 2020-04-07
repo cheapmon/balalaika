@@ -21,7 +21,7 @@ import com.github.cheapmon.balalaika.data.entities.SearchRestriction
 import com.github.cheapmon.balalaika.databinding.FragmentSearchBinding
 import javax.inject.Inject
 
-class SearchFragment : Fragment() {
+class SearchFragment : Fragment(), SearchAdapter.Listener {
     @Inject
     lateinit var viewModel: SearchViewModel
 
@@ -37,7 +37,7 @@ class SearchFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false)
-        searchAdapter = SearchAdapter(Listener())
+        searchAdapter = SearchAdapter(this)
         with(binding) {
             recyclerView = searchList.apply {
                 layoutManager = LinearLayoutManager(this@SearchFragment.context)
@@ -103,12 +103,10 @@ class SearchFragment : Fragment() {
         })
     }
 
-    inner class Listener : SearchAdapter.SearchAdapterListener {
-        override fun onClickItem(lexeme: Lexeme) {
-            viewModel.addToHistory()
-            val directions = SearchFragmentDirections.actionNavSearchToNavHome(lexeme.externalId)
-            findNavController().navigate(directions)
-        }
+    override fun onClickItem(lexeme: Lexeme) {
+        viewModel.addToHistory()
+        val directions = SearchFragmentDirections.actionNavSearchToNavHome(lexeme.externalId)
+        findNavController().navigate(directions)
     }
 
     inner class Watcher : TextWatcher {

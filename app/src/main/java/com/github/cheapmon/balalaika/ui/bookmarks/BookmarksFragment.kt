@@ -18,7 +18,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import javax.inject.Inject
 
-class BookmarksFragment : Fragment() {
+class BookmarksFragment : Fragment(), BookmarksAdapter.Listener {
     @Inject
     lateinit var viewModel: BookmarksViewModel
 
@@ -34,7 +34,7 @@ class BookmarksFragment : Fragment() {
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_bookmarks, container, false)
         bookmarksLayoutManager = LinearLayoutManager(context)
-        bookmarksAdapter = BookmarksAdapter(Listener())
+        bookmarksAdapter = BookmarksAdapter(this)
         recyclerView = binding.bookmarksList.apply {
             layoutManager = bookmarksLayoutManager
             adapter = bookmarksAdapter
@@ -89,17 +89,15 @@ class BookmarksFragment : Fragment() {
         Snackbar.make(binding.root, R.string.bookmarks_clear_done, Snackbar.LENGTH_SHORT).show()
     }
 
-    inner class Listener : BookmarksAdapter.BookmarksAdapterListener {
-        override fun onClickDeleteButton(lexeme: Lexeme) {
-            viewModel.removeBookmark(lexeme.lexemeId)
-            Snackbar.make(binding.root, R.string.bookmarks_item_removed, Snackbar.LENGTH_SHORT)
-                .show()
-        }
+    override fun onClickDeleteButton(lexeme: Lexeme) {
+        viewModel.removeBookmark(lexeme.lexemeId)
+        Snackbar.make(binding.root, R.string.bookmarks_item_removed, Snackbar.LENGTH_SHORT)
+            .show()
+    }
 
-        override fun onClickRedoButton(lexeme: Lexeme) {
-            val directions =
-                BookmarksFragmentDirections.actionNavBookmarksToNavHome(lexeme.externalId)
-            findNavController().navigate(directions)
-        }
+    override fun onClickRedoButton(lexeme: Lexeme) {
+        val directions =
+            BookmarksFragmentDirections.actionNavBookmarksToNavHome(lexeme.externalId)
+        findNavController().navigate(directions)
     }
 }

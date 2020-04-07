@@ -9,7 +9,7 @@ import com.github.cheapmon.balalaika.data.entities.Lexeme
 import com.github.cheapmon.balalaika.databinding.FragmentBookmarksItemBinding
 
 class BookmarksAdapter(
-    private val listener: BookmarksAdapterListener
+    private val listener: Listener
 ) : ListAdapter<Lexeme, BookmarksAdapter.ViewHolder>(BookmarksDiff) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -46,7 +46,7 @@ class BookmarksAdapter(
         }
     }
 
-    interface BookmarksAdapterListener {
+    interface Listener {
         fun onClickDeleteButton(lexeme: Lexeme)
         fun onClickRedoButton(lexeme: Lexeme)
     }
