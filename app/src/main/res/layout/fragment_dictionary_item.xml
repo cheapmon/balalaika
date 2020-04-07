@@ -49,7 +49,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/entry_icon"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:text="Word" />
+                    tools:text="Very long word" />
 
                 <ImageView
                     android:id="@+id/entry_icon"
@@ -72,44 +72,6 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_arrow_up" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <LinearLayout
-                android:id="@+id/entry_properties"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginVertical="@dimen/activity_vertical_margin"
-                android:showDividers="middle"
-                android:divider="@drawable/divider"
-                android:orientation="vertical"
-                android:paddingHorizontal="4dp"
-                android:paddingVertical="4dp"
-                tools:minHeight="100dp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginVertical="@dimen/activity_vertical_margin"
-                android:background="?android:attr/listDivider" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/entry_actions"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <Button
-                    android:id="@+id/entry_base_button"
-                    style="?attr/borderlessButtonStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text='@{base == null ? "" : base.form}'
-                    android:visibility="@{base == null ? View.GONE : View.VISIBLE}"
-                    app:icon="@drawable/ic_forward"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="Base" />
-
                 <ImageButton
                     android:id="@+id/entry_bookmark_button"
                     style="@style/Balalaika.ImageButton"
@@ -118,10 +80,37 @@
                     android:contentDescription="@string/desc_dictionary_item_bookmark_button"
                     android:tint="@color/colorPrimary"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/entry_collapse_button"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_bookmark_border" />
+
+                <ImageButton
+                    android:id="@+id/entry_base_button"
+                    style="@style/Balalaika.ImageButton"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:contentDescription="@string/desc_dictionary_item_base_button"
+                    android:tint="@color/colorPrimary"
+                    android:visibility="@{base == null ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/entry_bookmark_button"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_forward" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:id="@+id/entry_properties"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginVertical="@dimen/activity_vertical_margin"
+                android:divider="@drawable/divider"
+                android:orientation="vertical"
+                android:paddingHorizontal="4dp"
+                android:paddingVertical="4dp"
+                android:showDividers="middle"
+                tools:minHeight="100dp" />
+
         </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>

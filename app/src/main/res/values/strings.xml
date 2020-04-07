@@ -24,6 +24,7 @@
     <string name="desc_dictionary_item_icon">Dictionary entry</string>
     <string name="desc_dictionary_item_collapse_button">Collapse entry</string>
     <string name="desc_dictionary_item_bookmark_button">Add to bookmarks</string>
+    <string name="desc_dictionary_item_base_button">Go to base</string>
     <string name="desc_widget_key_value_icon">Widget Icon</string>
     <string name="desc_widget_action_button">Widget Action</string>
 
