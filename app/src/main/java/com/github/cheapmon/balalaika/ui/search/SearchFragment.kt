@@ -19,8 +19,6 @@ import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.data.entities.Lexeme
 import com.github.cheapmon.balalaika.data.entities.SearchRestriction
 import com.github.cheapmon.balalaika.databinding.FragmentSearchBinding
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 
 class SearchFragment : Fragment() {

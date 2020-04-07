@@ -2,12 +2,10 @@ package com.github.cheapmon.balalaika.data.resources
 
 import android.content.Context
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.data.resources.ResourceLoader
 import java.io.InputStream
 import javax.inject.Inject
 
-class AndroidResourceLoader @Inject constructor(private val context: Context) :
-    ResourceLoader {
+class AndroidResourceLoader @Inject constructor(private val context: Context) : ResourceLoader {
     override val categoriesId: Int = R.raw.categories
     override val lexemesId: Int = R.raw.lexemes
     override val fullFormsId: Int = R.raw.full_forms

@@ -4,8 +4,6 @@ import com.github.cheapmon.balalaika.data.entities.Lexeme
 import com.github.cheapmon.balalaika.data.entities.LexemeDao
 import com.github.cheapmon.balalaika.data.entities.PropertyDao
 import com.github.cheapmon.balalaika.data.entities.SearchRestriction
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject

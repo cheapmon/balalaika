@@ -16,8 +16,6 @@ import com.github.cheapmon.balalaika.data.entities.HistoryEntryWithRestriction
 import com.github.cheapmon.balalaika.databinding.FragmentHistoryBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 
 class HistoryFragment : Fragment() {

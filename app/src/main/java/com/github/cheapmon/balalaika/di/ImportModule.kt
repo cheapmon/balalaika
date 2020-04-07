@@ -2,7 +2,8 @@ package com.github.cheapmon.balalaika.di
 
 import com.github.cheapmon.balalaika.data.config.ConfigLoader
 import com.github.cheapmon.balalaika.data.config.YamlConfigLoader
-import com.github.cheapmon.balalaika.data.insert.*
+import com.github.cheapmon.balalaika.data.insert.CsvEntityImporter
+import com.github.cheapmon.balalaika.data.insert.EntityImporter
 import com.github.cheapmon.balalaika.data.resources.AndroidResourceLoader
 import com.github.cheapmon.balalaika.data.resources.ResourceLoader
 import com.github.cheapmon.balalaika.data.storage.PreferenceStorage
