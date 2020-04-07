@@ -7,8 +7,6 @@ import com.github.cheapmon.balalaika.data.repositories.SearchRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 
-@ExperimentalCoroutinesApi
-@FlowPreview
 class SearchViewModelFactory(
     private val searchRepository: SearchRepository,
     private val historyRepository: HistoryRepository

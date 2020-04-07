@@ -6,8 +6,6 @@ import com.github.cheapmon.balalaika.data.repositories.HistoryRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 
-@ExperimentalCoroutinesApi
-@FlowPreview
 class HistoryViewModelFactory(
     private val repository: HistoryRepository
 ) : ViewModelProvider.NewInstanceFactory() {

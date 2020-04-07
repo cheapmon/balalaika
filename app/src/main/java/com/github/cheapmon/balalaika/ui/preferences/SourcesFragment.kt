@@ -10,21 +10,21 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.get
 import com.github.cheapmon.balalaika.Application
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.data.import.ImportUtil
-import com.github.cheapmon.balalaika.data.import.Source
+import com.github.cheapmon.balalaika.data.config.Config
+import com.github.cheapmon.balalaika.data.config.ConfigLoader
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import javax.inject.Inject
 
 class SourcesFragment : PreferenceFragmentCompat() {
     @Inject
-    lateinit var importUtil: ImportUtil
+    lateinit var configLoader: ConfigLoader
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.sources, rootKey)
         val category: PreferenceCategory? = preferenceScreen["contents"]
         preferenceScreen.addPreference(category)
-        importUtil.readConfig().sources.forEach { source ->
+        configLoader.readConfig().sources.forEach { source ->
             val preference = Preference(context).apply {
                 title = source.name
                 summary = source.authors
@@ -50,7 +50,7 @@ class SourcesFragment : PreferenceFragmentCompat() {
         (requireActivity().application as Application).appComponent.inject(this)
     }
 
-    private fun showSourceDialog(source: Source) {
+    private fun showSourceDialog(source: Config.Source) {
         MaterialAlertDialogBuilder(context)
             .setTitle(source.name)
             .setMessage(source.summary)

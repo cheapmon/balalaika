@@ -10,8 +10,7 @@ import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
-@FlowPreview
-@ExperimentalCoroutinesApi
+@Suppress("EXPERIMENTAL_API_USAGE")
 class SearchRepository @Inject constructor(
     private val lexemeDao: LexemeDao,
     private val propertyDao: PropertyDao

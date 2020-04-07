@@ -11,9 +11,9 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.github.cheapmon.balalaika.data.insert.ImportUtil
 import com.github.cheapmon.balalaika.databinding.ActivityMainBinding
 import com.github.cheapmon.balalaika.databinding.AppBarMainBinding
-import com.github.cheapmon.balalaika.data.import.ImportUtil
 import com.google.android.material.navigation.NavigationView
 import javax.inject.Inject
 

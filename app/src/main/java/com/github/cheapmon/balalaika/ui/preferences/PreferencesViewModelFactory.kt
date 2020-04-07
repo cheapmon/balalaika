@@ -6,8 +6,6 @@ import com.github.cheapmon.balalaika.data.repositories.DictionaryRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 
-@ExperimentalCoroutinesApi
-@FlowPreview
 class PreferencesViewModelFactory(
     private val repository: DictionaryRepository
 ) : ViewModelProvider.NewInstanceFactory() {

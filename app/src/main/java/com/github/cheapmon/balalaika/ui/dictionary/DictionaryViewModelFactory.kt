@@ -6,8 +6,6 @@ import com.github.cheapmon.balalaika.data.repositories.DictionaryRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 
-@ExperimentalCoroutinesApi
-@FlowPreview
 class DictionaryViewModelFactory(
     private val repository: DictionaryRepository,
     private val comparatorName: String?,

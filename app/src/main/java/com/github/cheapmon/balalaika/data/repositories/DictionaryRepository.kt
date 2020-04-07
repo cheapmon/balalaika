@@ -8,8 +8,7 @@ import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
-@FlowPreview
-@ExperimentalCoroutinesApi
+@Suppress("EXPERIMENTAL_API_USAGE")
 class DictionaryRepository @Inject constructor(
     private val categoryDao: CategoryDao,
     private val lexemeDao: LexemeDao,

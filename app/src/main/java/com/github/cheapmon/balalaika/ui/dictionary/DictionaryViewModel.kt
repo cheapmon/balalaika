@@ -12,8 +12,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
-@ExperimentalCoroutinesApi
-@FlowPreview
 class DictionaryViewModel(
     private val repository: DictionaryRepository,
     comparatorName: String?,

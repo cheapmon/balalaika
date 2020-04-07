@@ -9,8 +9,6 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-@ExperimentalCoroutinesApi
-@FlowPreview
 class PreferencesViewModel(
     private val repository: DictionaryRepository
 ) : ViewModel() {

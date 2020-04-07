@@ -29,8 +29,6 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@FlowPreview
-@ExperimentalCoroutinesApi
 class DictionaryFragment : Fragment() {
     @Inject
     lateinit var viewModel: DictionaryViewModel

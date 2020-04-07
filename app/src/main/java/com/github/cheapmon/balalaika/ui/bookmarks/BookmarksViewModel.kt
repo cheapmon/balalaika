@@ -8,8 +8,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch
 
-@ExperimentalCoroutinesApi
-@FlowPreview
 class BookmarksViewModel(
     private val repository: DictionaryRepository
 ) : ViewModel() {

@@ -3,9 +3,9 @@ package com.github.cheapmon.balalaika.di
 import android.content.Context
 import androidx.room.Room
 import com.github.cheapmon.balalaika.data.AppDatabase
+import com.github.cheapmon.balalaika.util.Constants
 import dagger.Module
 import dagger.Provides
-import javax.inject.Singleton
 
 @Module
 class DatabaseModule {

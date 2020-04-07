@@ -20,8 +20,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 
-@FlowPreview
-@ExperimentalCoroutinesApi
 class BookmarksFragment : Fragment() {
     @Inject
     lateinit var viewModel: BookmarksViewModel

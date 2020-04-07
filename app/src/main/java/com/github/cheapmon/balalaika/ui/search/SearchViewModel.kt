@@ -12,8 +12,6 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-@ExperimentalCoroutinesApi
-@FlowPreview
 class SearchViewModel(
     private val searchRepository: SearchRepository,
     private val historyRepository: HistoryRepository
