@@ -16,13 +16,12 @@ class DictionaryViewModel(
     dictionaryViewId: Long?
 ) : ViewModel() {
     val lexemes = repository.lexemes.asLiveData()
+    val inProgress = repository.inProgress.asLiveData()
 
     init {
-        viewModelScope.launch {
-            repository.addComparators()
-            repository.setOrdering(comparatorName ?: ComparatorUtil.DEFAULT_KEY)
-            if (dictionaryViewId != null) repository.setDictionaryView(dictionaryViewId)
-        }
+        repository.setOrdering(comparatorName ?: ComparatorUtil.DEFAULT_KEY)
+        if(dictionaryViewId != null) repository.setDictionaryView(dictionaryViewId)
+        viewModelScope.launch { repository.addComparators() }
     }
 
     fun setOrdering(comparatorName: String) {

@@ -15,20 +15,28 @@ class DictionaryRepository @Inject constructor(
 ) {
     private val orderingChannel: ConflatedBroadcastChannel<Comparator<DictionaryEntry>?> =
         ConflatedBroadcastChannel()
-    private val categoryIdsChannel: ConflatedBroadcastChannel<List<Long>?> =
-        ConflatedBroadcastChannel()
+    private val dictionaryViewIdChannel: ConflatedBroadcastChannel<Long?> =
+        ConflatedBroadcastChannel(null)
+    private val inProgressChannel: ConflatedBroadcastChannel<Boolean> =
+        ConflatedBroadcastChannel(true)
 
-    val lexemes = propertyDao.count().flatMapLatest {
-        categoryIdsChannel.asFlow().distinctUntilChanged()
-    }.flatMapLatest {
-        if (it == null) propertyDao.getAllVisible() else propertyDao.getAllFiltered(it)
-    }.combine(orderingChannel.asFlow().distinctUntilChanged()) { props, order ->
-        val entries = props.groupBy { it.lexeme }.toEntries()
-        if (order == null) entries else entries.sortedWith(order)
-    }
+    val lexemes = propertyDao.count()
+        .flatMapLatest { dictionaryViewIdChannel.asFlow().distinctUntilChanged() }
+        .flatMapLatest {
+            if (it != null) dictionaryDao.findCategoriesById(it) else flowOf(null)
+        }.flatMapLatest {
+            if (it == null) propertyDao.getAllVisible() else propertyDao.getAllFiltered(it)
+        }.combine(orderingChannel.asFlow().distinctUntilChanged()) { props, order ->
+            inProgressChannel.offer(true)
+            val entries = props.groupBy { it.lexeme }.toEntries()
+            val result = if (order == null) entries else entries.sortedWith(order)
+            inProgressChannel.offer(false)
+            result
+        }
     val dictionaryViews = dictionaryDao.getAllWithCategories()
     val bookmarks = lexemeDao.getBookmarks()
     val comparators = ComparatorUtil.comparators
+    val inProgress = inProgressChannel.asFlow()
 
     fun setOrdering(comparatorName: String) {
         val key = if (ComparatorUtil.comparators.containsKey(comparatorName)) comparatorName
@@ -36,10 +44,8 @@ class DictionaryRepository @Inject constructor(
         orderingChannel.offer(ComparatorUtil.comparators[key])
     }
 
-    suspend fun setDictionaryView(dictionaryViewId: Long) {
-        dictionaryDao.findByIdWithCategories(dictionaryViewId).first()
-            ?.categories?.map { it.categoryId }
-            .also { categoryIdsChannel.offer(it) }
+    fun setDictionaryView(dictionaryViewId: Long) {
+        dictionaryViewIdChannel.offer(dictionaryViewId)
     }
 
     suspend fun addComparators() {

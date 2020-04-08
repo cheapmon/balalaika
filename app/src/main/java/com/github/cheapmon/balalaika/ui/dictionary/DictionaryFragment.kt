@@ -6,20 +6,19 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.view.*
-import androidx.core.content.edit
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.Application
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.data.entities.DictionaryEntry
 import com.github.cheapmon.balalaika.data.entities.SearchRestriction
+import com.github.cheapmon.balalaika.data.storage.Storage
 import com.github.cheapmon.balalaika.databinding.FragmentDictionaryBinding
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetListener
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -30,6 +29,9 @@ import javax.inject.Inject
 class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListener {
     @Inject
     lateinit var viewModel: DictionaryViewModel
+
+    @Inject
+    lateinit var storage: Storage
 
     private val args: DictionaryFragmentArgs by navArgs()
 
@@ -72,41 +74,39 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+        val orderKey = getString(R.string.preferences_key_order)
+        val viewKey = getString(R.string.preferences_key_view)
         return when (item.itemId) {
             R.id.action_order_by -> {
                 val comparators = viewModel.getComparators().toTypedArray()
+                val selected = comparators.indexOfFirst { it == storage.getString(orderKey, null) }
                 MaterialAlertDialogBuilder(requireContext())
                     .setIcon(R.drawable.ic_sort)
                     .setTitle(R.string.menu_order_by)
-                    .setNegativeButton(R.string.cancel, null)
-                    .setItems(comparators) { _, which ->
-                        preferences.edit(commit = true) {
-                            val key = getString(R.string.preferences_key_order)
-                            putString(key, comparators[which])
-                        }
+                    .setSingleChoiceItems(comparators, selected) { _, which ->
+                        storage.putString(orderKey, comparators[which])
                         viewModel.setOrdering(comparators[which])
-                        binding.inProgress = true
-                    }.show()
+                    }.setPositiveButton(R.string.affirm, null)
+                    .show()
                 true
             }
             R.id.action_setup_view -> {
                 lifecycleScope.launch {
                     val dictionaryViews = viewModel.getDictionaryViews()
                     val names = dictionaryViews.map { it.dictionaryView.name }.toTypedArray()
+                    val ids = dictionaryViews.map { it.dictionaryView.dictionaryViewId.toString() }
+                    val selected = ids.indexOfFirst {
+                        it == storage.getString(viewKey, null)
+                    }
                     MaterialAlertDialogBuilder(requireContext())
                         .setIcon(R.drawable.ic_view)
                         .setTitle(R.string.menu_setup_view)
-                        .setNegativeButton(R.string.cancel, null)
-                        .setItems(names) { _, which ->
+                        .setSingleChoiceItems(names, selected) { _, which ->
                             val id = dictionaryViews[which].dictionaryView.dictionaryViewId
-                            preferences.edit(commit = true) {
-                                val key = getString(R.string.preferences_key_view)
-                                putString(key, id.toString())
-                            }
+                            storage.putString(viewKey, id.toString())
                             viewModel.setDictionaryView(id)
-                            binding.inProgress = true
-                        }.show()
+                        }.setPositiveButton(R.string.affirm, null)
+                        .show()
                 }
                 true
             }
@@ -122,7 +122,9 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
     private fun bindUi() {
         viewModel.lexemes.observe(viewLifecycleOwner, Observer {
             dictionaryAdapter.submitList(it)
-            binding.inProgress = false
+        })
+        viewModel.inProgress.observe(viewLifecycleOwner, Observer {
+            binding.inProgress = it
         })
     }
 

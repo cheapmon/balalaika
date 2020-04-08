@@ -2,6 +2,7 @@
     <!-- Application -->
     <string name="app_name">Balalaika</string>
     <string name="cancel">Cancel</string>
+    <string name="affirm">OK</string>
 
     <!-- Navigation drawer -->
     <string name="nav_header_desc">Navigation header</string>
