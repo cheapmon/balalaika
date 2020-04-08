@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -28,6 +29,7 @@ import javax.inject.Inject
 
 class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListener {
     @Inject
+    lateinit var viewModelFactory: DictionaryViewModelFactory
     lateinit var viewModel: DictionaryViewModel
 
     @Inject
@@ -66,6 +68,8 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
         super.onAttach(context)
 
         (requireActivity().application as Application).appComponent.inject(this)
+        val model by viewModels<DictionaryViewModel> { viewModelFactory }
+        viewModel = model
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

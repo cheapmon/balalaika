@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.preference.ListPreference
@@ -16,6 +17,7 @@ import javax.inject.Inject
 
 class PreferencesFragment : PreferenceFragmentCompat() {
     @Inject
+    lateinit var viewModelFactory: PreferencesViewModelFactory
     lateinit var viewModel: PreferencesViewModel
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -71,5 +73,7 @@ class PreferencesFragment : PreferenceFragmentCompat() {
         super.onAttach(context)
 
         (requireActivity().application as Application).appComponent.inject(this)
+        val model by viewModels<PreferencesViewModel> { viewModelFactory }
+        viewModel = model
     }
 }
