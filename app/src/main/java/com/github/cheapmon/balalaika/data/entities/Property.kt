@@ -51,6 +51,10 @@ interface PropertyDao {
     fun getAllVisible(): Flow<List<PropertyWithRelations>>
 
     @Transaction
+    @Query("""SELECT * FROM property WHERE property.lexeme_id IN (:lexemeId)""")
+    fun findByLexemeId(lexemeId: List<Long>): Flow<List<PropertyWithRelations>>
+
+    @Transaction
     @Query("SELECT * FROM property WHERE value LIKE '%' || (:query) || '%'")
     fun findByValue(query: String): Flow<List<PropertyWithRelations>>
 

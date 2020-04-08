@@ -8,8 +8,10 @@ class MorphologyWidget(
     parent: ViewGroup,
     listener: WidgetListener,
     category: Category,
-    properties: List<PropertyWithRelations>
-) : BaseWidget(parent, listener, category, properties) {
+    properties: List<PropertyWithRelations>,
+    hasActions: Boolean,
+    searchText: String?
+) : BaseWidget(parent, listener, category, properties, hasActions, searchText) {
     override val menuItems: Array<String> = properties.flatMap {
         displayValue(it.property.value).split(Regex("\\|"))
     }.toTypedArray()

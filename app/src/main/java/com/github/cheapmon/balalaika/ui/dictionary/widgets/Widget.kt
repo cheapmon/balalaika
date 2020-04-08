@@ -12,14 +12,16 @@ abstract class Widget(
     private val parent: ViewGroup,
     private val listener: WidgetListener,
     private val category: Category,
-    private val properties: List<PropertyWithRelations>
+    private val properties: List<PropertyWithRelations>,
+    private val hasActions: Boolean,
+    private val searchText: String?
 ) {
     abstract fun createView(): View
     abstract fun createContextMenu(): AlertDialog?
 
     fun create(): View {
         return createView().apply {
-            this.setOnLongClickListener {
+            if (hasActions) this.setOnLongClickListener {
                 createContextMenu()?.show()
                 true
             }
@@ -39,16 +41,67 @@ object Widgets {
         parent: ViewGroup,
         listener: WidgetListener,
         category: Category,
-        properties: List<PropertyWithRelations>
+        properties: List<PropertyWithRelations>,
+        hasActions: Boolean = true,
+        searchText: String? = null
     ): Widget {
         return when (category.widget) {
-            WidgetType.AUDIO -> AudioWidget(parent, listener, category, properties)
-            WidgetType.EXAMPLE -> ExampleWidget(parent, listener, category, properties)
-            WidgetType.KEY_VALUE -> BaseWidget(parent, listener, category, properties)
-            WidgetType.MORPHOLOGY -> MorphologyWidget(parent, listener, category, properties)
-            WidgetType.PLAIN -> PlainWidget(parent, listener, category, properties)
-            WidgetType.REFERENCE -> ReferenceWidget(parent, listener, category, properties)
-            WidgetType.URL -> UrlWidget(parent, listener, category, properties)
+            WidgetType.AUDIO -> AudioWidget(
+                parent,
+                listener,
+                category,
+                properties,
+                hasActions,
+                searchText
+            )
+            WidgetType.EXAMPLE -> ExampleWidget(
+                parent,
+                listener,
+                category,
+                properties,
+                hasActions,
+                searchText
+            )
+            WidgetType.KEY_VALUE -> BaseWidget(
+                parent,
+                listener,
+                category,
+                properties,
+                hasActions,
+                searchText
+            )
+            WidgetType.MORPHOLOGY -> MorphologyWidget(
+                parent,
+                listener,
+                category,
+                properties,
+                hasActions,
+                searchText
+            )
+            WidgetType.PLAIN -> PlainWidget(
+                parent,
+                listener,
+                category,
+                properties,
+                hasActions,
+                searchText
+            )
+            WidgetType.REFERENCE -> ReferenceWidget(
+                parent,
+                listener,
+                category,
+                properties,
+                hasActions,
+                searchText
+            )
+            WidgetType.URL -> UrlWidget(
+                parent,
+                listener,
+                category,
+                properties,
+                hasActions,
+                searchText
+            )
         }
     }
 }

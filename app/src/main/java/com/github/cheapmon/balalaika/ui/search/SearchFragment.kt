@@ -87,6 +87,7 @@ class SearchFragment : Fragment(), SearchAdapter.Listener {
             }
         })
         viewModel.query.observe(viewLifecycleOwner, Observer {
+            searchAdapter.submitSearchText(it)
             binding.query = it
         })
         viewModel.restriction.observe(viewLifecycleOwner, Observer {

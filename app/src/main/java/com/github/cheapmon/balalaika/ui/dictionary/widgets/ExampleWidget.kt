@@ -14,8 +14,10 @@ class ExampleWidget(
     parent: ViewGroup,
     listener: WidgetListener,
     category: Category,
-    properties: List<PropertyWithRelations>
-) : PlainWidget(parent, listener, category, properties) {
+    properties: List<PropertyWithRelations>,
+    hasActions: Boolean,
+    searchText: String?
+) : PlainWidget(parent, listener, category, properties, hasActions, searchText) {
     override fun createPropertyView(
         inflater: LayoutInflater,
         contentView: ViewGroup,

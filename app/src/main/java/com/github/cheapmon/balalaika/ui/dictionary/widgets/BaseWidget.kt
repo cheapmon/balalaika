@@ -12,14 +12,17 @@ import com.github.cheapmon.balalaika.data.entities.SearchRestriction
 import com.github.cheapmon.balalaika.databinding.HelperButtonBinding
 import com.github.cheapmon.balalaika.databinding.WidgetTemplateBinding
 import com.github.cheapmon.balalaika.util.ResourceUtil
+import com.github.cheapmon.balalaika.util.highlight
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 open class BaseWidget(
     val parent: ViewGroup,
     val listener: WidgetListener,
     val category: Category,
-    val properties: List<PropertyWithRelations>
-) : Widget(parent, listener, category, properties) {
+    val properties: List<PropertyWithRelations>,
+    val hasActions: Boolean,
+    val searchText: String?
+) : Widget(parent, listener, category, properties, hasActions, searchText) {
     override fun createView(): View {
         val layoutInflater = LayoutInflater.from(parent.context)
         val (root, contentView) = createContainer(layoutInflater)
@@ -55,8 +58,9 @@ open class BaseWidget(
         val propertyBinding: HelperButtonBinding =
             DataBindingUtil.inflate(inflater, R.layout.helper_button, contentView, false)
         with(propertyBinding) {
-            value = displayValue(property.property.value)
-            val icon = actionIcon(property.property.value)
+            helperText.text = displayValue(property.property.value)
+                .highlight(searchText, contentView.context)
+            val icon = if (hasActions) actionIcon(property.property.value) else null
             if (icon != null) helperButton.setImageResource(icon)
             else helperButton.visibility = View.GONE
             helperButton.setOnClickListener { onClickActionButtonListener(property.property.value) }

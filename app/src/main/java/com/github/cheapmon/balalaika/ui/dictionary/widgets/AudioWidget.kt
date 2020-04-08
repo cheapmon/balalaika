@@ -11,8 +11,10 @@ class AudioWidget(
     parent: ViewGroup,
     listener: WidgetListener,
     category: Category,
-    properties: List<PropertyWithRelations>
-) : BaseWidget(parent, listener, category, properties) {
+    properties: List<PropertyWithRelations>,
+    hasActions: Boolean,
+    searchText: String?
+) : BaseWidget(parent, listener, category, properties, hasActions, searchText) {
     override fun displayValue(value: String): String {
         return value.split(Regex(";;;")).firstOrNull() ?: ""
     }
