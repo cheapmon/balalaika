@@ -82,16 +82,19 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
         val viewKey = getString(R.string.preferences_key_view)
         return when (item.itemId) {
             R.id.action_order_by -> {
-                val comparators = viewModel.getComparators().toTypedArray()
-                val selected = comparators.indexOfFirst { it == storage.getString(orderKey, null) }
-                MaterialAlertDialogBuilder(requireContext())
-                    .setIcon(R.drawable.ic_sort)
-                    .setTitle(R.string.menu_order_by)
-                    .setSingleChoiceItems(comparators, selected) { _, which ->
-                        storage.putString(orderKey, comparators[which])
-                        viewModel.setOrdering(comparators[which])
-                    }.setPositiveButton(R.string.affirm, null)
-                    .show()
+                lifecycleScope.launch {
+                    val comparators = viewModel.getComparators().toTypedArray()
+                    val selected =
+                        comparators.indexOfFirst { it == storage.getString(orderKey, null) }
+                    MaterialAlertDialogBuilder(requireContext())
+                        .setIcon(R.drawable.ic_sort)
+                        .setTitle(R.string.menu_order_by)
+                        .setSingleChoiceItems(comparators, selected) { _, which ->
+                            storage.putString(orderKey, comparators[which])
+                            viewModel.setOrdering(comparators[which])
+                        }.setPositiveButton(R.string.affirm, null)
+                        .show()
+                }
                 true
             }
             R.id.action_setup_view -> {

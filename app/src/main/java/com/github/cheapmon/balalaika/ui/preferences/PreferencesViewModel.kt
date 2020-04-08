@@ -22,7 +22,7 @@ class PreferencesViewModel(
         return repository.dictionaryViews.first()
     }
 
-    fun getComparators(): Array<String> {
-        return repository.comparators.keys.toTypedArray()
+    suspend fun getComparators(): Array<String> {
+        return repository.comparators.first().keys.toTypedArray()
     }
 }

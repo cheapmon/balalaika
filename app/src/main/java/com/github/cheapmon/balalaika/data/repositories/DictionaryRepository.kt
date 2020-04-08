@@ -1,6 +1,7 @@
 package com.github.cheapmon.balalaika.data.repositories
 
 import com.github.cheapmon.balalaika.data.entities.*
+import com.github.cheapmon.balalaika.util.ComparatorMap
 import com.github.cheapmon.balalaika.util.ComparatorUtil
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.*
@@ -19,6 +20,8 @@ class DictionaryRepository @Inject constructor(
         ConflatedBroadcastChannel(null)
     private val inProgressChannel: ConflatedBroadcastChannel<Boolean> =
         ConflatedBroadcastChannel(true)
+    private val comparatorsChannel: ConflatedBroadcastChannel<ComparatorMap> =
+        ConflatedBroadcastChannel(ComparatorUtil.comparators)
 
     val lexemes = propertyDao.count()
         .flatMapLatest { dictionaryViewIdChannel.asFlow().distinctUntilChanged() }
@@ -35,7 +38,7 @@ class DictionaryRepository @Inject constructor(
         }
     val dictionaryViews = dictionaryDao.getAllWithCategories()
     val bookmarks = lexemeDao.getBookmarks()
-    val comparators = ComparatorUtil.comparators
+    val comparators = comparatorsChannel.asFlow()
     val inProgress = inProgressChannel.asFlow()
 
     fun setOrdering(comparatorName: String) {
@@ -52,6 +55,7 @@ class DictionaryRepository @Inject constructor(
         categoryDao.getAll().first().forEach {
             if (it.orderBy) ComparatorUtil.addPropertyComparator(it.name, it.categoryId)
         }
+        comparatorsChannel.offer(ComparatorUtil.comparators)
     }
 
     suspend fun toggleBookmark(lexemeId: Long) {

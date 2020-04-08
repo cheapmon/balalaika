@@ -20,7 +20,7 @@ class DictionaryViewModel(
 
     init {
         repository.setOrdering(comparatorName ?: ComparatorUtil.DEFAULT_KEY)
-        if(dictionaryViewId != null) repository.setDictionaryView(dictionaryViewId)
+        if (dictionaryViewId != null) repository.setDictionaryView(dictionaryViewId)
         viewModelScope.launch { repository.addComparators() }
     }
 
@@ -42,8 +42,8 @@ class DictionaryViewModel(
         }.first()
     }
 
-    fun getComparators(): List<String> {
-        return repository.comparators.keys.toList()
+    suspend fun getComparators(): List<String> {
+        return repository.comparators.first().keys.toList()
     }
 
     suspend fun getDictionaryViews(): List<DictionaryViewWithCategories> {

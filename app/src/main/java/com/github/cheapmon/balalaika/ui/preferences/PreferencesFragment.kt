@@ -23,9 +23,13 @@ class PreferencesFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
         findPreference<ListPreference>(getString(R.string.preferences_key_order))?.apply {
-            val comparators = viewModel.getComparators()
-            entries = comparators
-            entryValues = comparators
+            entries = arrayOf()
+            entryValues = arrayOf()
+            lifecycleScope.launch {
+                val comparators = viewModel.getComparators()
+                entries = comparators
+                entryValues = comparators
+            }
             setOnPreferenceChangeListener { _, value ->
                 viewModel.setOrdering(value as String)
                 true
