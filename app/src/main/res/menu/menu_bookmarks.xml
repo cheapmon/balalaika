@@ -5,7 +5,7 @@
     tools:context=".ui.bookmarks.BookmarksFragment">
     <item
         android:id="@+id/bookmarks_clear"
-        android:icon="@drawable/ic_clear"
+        android:icon="@drawable/ic_delete"
         android:title="@string/bookmarks_clear"
         app:showAsAction="always" />
 </menu>
