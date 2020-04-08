@@ -19,13 +19,14 @@
 
     <!-- Descriptions for accessibility -->
     <string name="desc_history_item_icon">Verlaufseintrag</string>
-    <string name="desc_history_item_redo_button">Erneut suchen</string>
     <string name="desc_history_item_delete_button">Eintrag entfernen</string>
     <string name="desc_search_item_icon">Ergebnis</string>
     <string name="desc_dictionary_item_icon">Wörterbucheintrag</string>
     <string name="desc_dictionary_item_collapse_button">Eintrag einklappen</string>
     <string name="desc_dictionary_item_bookmark_button">Zu Lesezeichen hinzufügen</string>
     <string name="desc_dictionary_item_base_button">Grundform ansehen</string>
+    <string name="desc_bookmarks_item_delete_button">Lesezeichen löschen</string>
+    <string name="desc_bookmarks_item_icon">Lesezeichen</string>
     <string name="desc_widget_key_value_icon">Widget Icon</string>
     <string name="desc_widget_action_button">Widget Aktion</string>
 

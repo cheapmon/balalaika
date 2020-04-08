@@ -22,7 +22,7 @@ class BookmarksAdapter(
         with(holder.binding) {
             lexeme = entry
             bookmarksItemDeleteButton.setOnClickListener { listener.onClickDeleteButton(entry) }
-            bookmarksItemRedoButton.setOnClickListener { listener.onClickRedoButton(entry) }
+            root.setOnClickListener { listener.onClickRedoButton(entry) }
         }
     }
 

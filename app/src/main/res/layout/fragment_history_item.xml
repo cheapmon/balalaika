@@ -17,6 +17,7 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true">
 
@@ -69,19 +70,9 @@
                 style="@style/Balalaika.ImageButton"
                 android:contentDescription="@string/desc_history_item_delete_button"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/history_item_redo_button"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_delete" />
-
-            <ImageButton
-                android:id="@+id/history_item_redo_button"
-                style="@style/Balalaika.ImageButton"
-                android:contentDescription="@string/desc_history_item_redo_button"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_redo" />
-
+                app:srcCompat="@drawable/ic_delete" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.appcompat.widget.LinearLayoutCompat>

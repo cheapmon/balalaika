@@ -31,7 +31,7 @@ class HistoryAdapter(
                 )
             }
             historyItemDeleteButton.setOnClickListener { listener.onClickDeleteButton(entry) }
-            historyItemRedoButton.setOnClickListener { listener.onClickRedoButton(entry) }
+            root.setOnClickListener { listener.onClickRedoButton(entry) }
         }
     }
 
