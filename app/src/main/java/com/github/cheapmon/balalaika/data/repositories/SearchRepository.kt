@@ -4,10 +4,12 @@ import com.github.cheapmon.balalaika.data.entities.Lexeme
 import com.github.cheapmon.balalaika.data.entities.LexemeDao
 import com.github.cheapmon.balalaika.data.entities.PropertyDao
 import com.github.cheapmon.balalaika.data.entities.SearchRestriction
+import com.github.cheapmon.balalaika.di.ActivityScope
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
+@ActivityScope
 @Suppress("EXPERIMENTAL_API_USAGE")
 class SearchRepository @Inject constructor(
     private val lexemeDao: LexemeDao,
@@ -16,14 +18,16 @@ class SearchRepository @Inject constructor(
     private val queryChannel: ConflatedBroadcastChannel<String> = ConflatedBroadcastChannel()
     private val restrictionChannel: ConflatedBroadcastChannel<SearchRestriction> =
         ConflatedBroadcastChannel()
+    private val inProgressChannel: ConflatedBroadcastChannel<Boolean> =
+        ConflatedBroadcastChannel(false)
 
     init {
-        queryChannel.offer("")
         restrictionChannel.offer(SearchRestriction.None)
     }
 
     val lexemes = queryChannel.asFlow().distinctUntilChanged().debounce(300)
         .combine(restrictionChannel.asFlow().distinctUntilChanged()) { q, restriction ->
+            inProgressChannel.offer(true)
             when (restriction) {
                 is SearchRestriction.None -> findLexemesMatching(q).first()
                 is SearchRestriction.Some ->
@@ -33,9 +37,14 @@ class SearchRepository @Inject constructor(
                         restriction.restriction
                     ).first()
             }
-        }.map { it.sortedBy { lexeme -> lexeme.form } }
+        }.map {
+            val result = it.sortedBy { lexeme -> lexeme.form }
+            inProgressChannel.offer(false)
+            result
+        }
     val query = queryChannel.asFlow()
     val restriction = restrictionChannel.asFlow()
+    val inProgress = inProgressChannel.asFlow()
 
     fun setQuery(query: String) {
         queryChannel.offer(query)

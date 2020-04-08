@@ -78,7 +78,6 @@ class SearchFragment : Fragment(), SearchAdapter.Listener {
     private fun bindUi() {
         viewModel.lexemes.observe(viewLifecycleOwner, Observer {
             searchAdapter.submitList(it)
-            binding.inProgress = false
             if (it.isEmpty()) {
                 binding.searchEmptyIcon.visibility = View.VISIBLE
                 binding.searchEmptyText.visibility = View.VISIBLE
@@ -105,6 +104,9 @@ class SearchFragment : Fragment(), SearchAdapter.Listener {
                 }
             }
         })
+        viewModel.inProgress.observe(viewLifecycleOwner, Observer {
+            binding.inProgress = it
+        })
     }
 
     override fun onClickItem(lexeme: Lexeme) {
@@ -118,8 +120,7 @@ class SearchFragment : Fragment(), SearchAdapter.Listener {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            binding.inProgress = true
-            viewModel.setQuery(s.toString().trim())
+            if(s.toString().length >= 2) viewModel.setQuery(s.toString().trim())
         }
     }
 }

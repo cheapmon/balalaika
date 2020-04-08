@@ -18,6 +18,7 @@ class SearchViewModel(
     val lexemes = searchRepository.lexemes.asLiveData()
     val query = searchRepository.query.asLiveData()
     val restriction = searchRepository.restriction.asLiveData()
+    val inProgress = searchRepository.inProgress.asLiveData()
 
     fun setQuery(query: String) {
         searchRepository.setQuery(query)

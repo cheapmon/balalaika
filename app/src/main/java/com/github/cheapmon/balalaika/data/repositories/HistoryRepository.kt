@@ -4,10 +4,12 @@ import com.github.cheapmon.balalaika.data.entities.HistoryEntry
 import com.github.cheapmon.balalaika.data.entities.HistoryEntryDao
 import com.github.cheapmon.balalaika.data.entities.HistoryEntryWithRestriction
 import com.github.cheapmon.balalaika.data.entities.SearchRestriction
+import com.github.cheapmon.balalaika.di.ActivityScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
+@ActivityScope
 class HistoryRepository @Inject constructor(
     private val historyEntryDao: HistoryEntryDao
 ) {

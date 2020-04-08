@@ -1,12 +1,14 @@
 package com.github.cheapmon.balalaika.data.repositories
 
 import com.github.cheapmon.balalaika.data.entities.*
+import com.github.cheapmon.balalaika.di.ActivityScope
 import com.github.cheapmon.balalaika.util.ComparatorMap
 import com.github.cheapmon.balalaika.util.ComparatorUtil
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
+@ActivityScope
 @Suppress("EXPERIMENTAL_API_USAGE")
 class DictionaryRepository @Inject constructor(
     private val categoryDao: CategoryDao,

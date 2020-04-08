@@ -51,9 +51,10 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/search_input"
-                    android:text="@{query}"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:imeOptions="actionSearch"
+                    android:text="@{query}" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.chip.Chip
