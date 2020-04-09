@@ -13,15 +13,18 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.Application
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.data.entities.entry.GroupedEntry
 import com.github.cheapmon.balalaika.data.entities.history.SearchRestriction
+import com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme
 import com.github.cheapmon.balalaika.data.storage.Storage
 import com.github.cheapmon.balalaika.databinding.FragmentDictionaryBinding
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetListener
+import com.github.cheapmon.balalaika.util.grouped
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.delay
@@ -132,7 +135,7 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
     }
 
     private fun bindUi() {
-        viewModel.entries.observe(viewLifecycleOwner, Observer {
+        viewModel.lexemes.observe(viewLifecycleOwner, Observer {
             dictionaryAdapter.submitList(it)
         })
         viewModel.inProgress.observe(viewLifecycleOwner, Observer {
@@ -157,18 +160,25 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
         }
     }
 
-    override fun onClickBookmarkButton(dictionaryEntry: GroupedEntry) {
-        viewModel.toggleBookmark(dictionaryEntry.lexeme.lexemeId)
-        val message = if (dictionaryEntry.lexeme.isBookmark) {
-            getString(R.string.dictionary_bookmark_remove, dictionaryEntry.lexeme.form)
+    override fun onClickBookmarkButton(entry: GroupedEntry) {
+        viewModel.toggleBookmark(entry.lexeme.lexemeId)
+        val message = if (entry.lexeme.isBookmark) {
+            getString(R.string.dictionary_bookmark_remove, entry.lexeme.form)
         } else {
-            getString(R.string.dictionary_bookmark_add, dictionaryEntry.lexeme.form)
+            getString(R.string.dictionary_bookmark_add, entry.lexeme.form)
         }
         Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
     }
 
-    override fun onClickBaseButton(dictionaryEntry: GroupedEntry) {
-        if (dictionaryEntry.base != null) scrollTo(dictionaryEntry.base.externalId)
+    override fun onClickBaseButton(entry: GroupedEntry) {
+        if (entry.base != null) scrollTo(entry.base.externalId)
+    }
+
+    override fun onLoadLexeme(lexeme: Lexeme, block: (entry: GroupedEntry?) -> Unit) {
+        lifecycleScope.launch {
+            val entry = viewModel.getDictionaryEntriesFor(lexeme.lexemeId).grouped()
+            block(entry)
+        }
     }
 
     override fun onClickAudioButton(resId: Int) {

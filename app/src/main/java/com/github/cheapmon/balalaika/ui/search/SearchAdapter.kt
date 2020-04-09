@@ -16,7 +16,7 @@ import com.github.cheapmon.balalaika.util.highlight
 
 class SearchAdapter(
     private val listener: Listener
-) : PagedListAdapter<GroupedEntry, SearchAdapter.ViewHolder>(SearchDiff) {
+) : PagedListAdapter<Lexeme, SearchAdapter.ViewHolder>(SearchDiff) {
     private var searchText: String = ""
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -26,26 +26,33 @@ class SearchAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val entry = getItem(position) ?: return
-        with(holder.binding) {
-            entryTitle.text = entry.lexeme.form.highlight(searchText, root.context)
-            root.setOnClickListener { listener.onClickItem(entry.lexeme) }
-            entryProperties.removeAllViews()
-            entry.properties
-                .filter { it.property.value.contains(searchText) }
-                .also { entryProperties.visibility = if (it.isEmpty()) View.GONE else View.VISIBLE }
-                .groupBy { it.category }
-                .forEach { (category, properties) ->
-                    val widget = Widgets.get(
-                        entryProperties,
-                        WListener(),
-                        category,
-                        properties,
-                        false,
-                        searchText
-                    )
-                    entryProperties.addView(widget.create())
+        val lex = getItem(position) ?: return
+        listener.onLoadLexeme(lex) { entry ->
+            with(holder.binding) {
+                if (entry == null || entry.properties.isEmpty()) {
+                    entryTitle.text = lex.form.highlight(searchText, root.context)
+                    entryProperties.visibility = View.GONE
+                    return@with
                 }
+                entryTitle.text = entry.lexeme.form.highlight(searchText, root.context)
+                entryProperties.visibility = View.VISIBLE
+                root.setOnClickListener { listener.onClickItem(entry.lexeme) }
+                entryProperties.removeAllViews()
+                entry.properties
+                    .filter { it.property.value.contains(searchText) }
+                    .groupBy { it.category }
+                    .forEach { (category, properties) ->
+                        val widget = Widgets.get(
+                            entryProperties,
+                            WListener(),
+                            category,
+                            properties,
+                            false,
+                            searchText
+                        )
+                        entryProperties.addView(widget.create())
+                    }
+            }
         }
     }
 
@@ -56,17 +63,17 @@ class SearchAdapter(
 
     class ViewHolder(val binding: FragmentSearchItemBinding) : RecyclerView.ViewHolder(binding.root)
 
-    object SearchDiff : DiffUtil.ItemCallback<GroupedEntry>() {
+    object SearchDiff : DiffUtil.ItemCallback<Lexeme>() {
         override fun areItemsTheSame(
-            oldItem: GroupedEntry,
-            newItem: GroupedEntry
+            oldItem: Lexeme,
+            newItem: Lexeme
         ): Boolean {
-            return oldItem.lexeme.lexemeId == newItem.lexeme.lexemeId
+            return oldItem.lexemeId == newItem.lexemeId
         }
 
         override fun areContentsTheSame(
-            oldItem: GroupedEntry,
-            newItem: GroupedEntry
+            oldItem: Lexeme,
+            newItem: Lexeme
         ): Boolean {
             return oldItem == newItem
         }
@@ -81,5 +88,6 @@ class SearchAdapter(
 
     interface Listener {
         fun onClickItem(lexeme: Lexeme)
+        fun onLoadLexeme(lexeme: Lexeme, block: (GroupedEntry?) -> Unit)
     }
 }

@@ -3,6 +3,7 @@ package com.github.cheapmon.balalaika.data.repositories
 import com.github.cheapmon.balalaika.data.entities.category.Category
 import com.github.cheapmon.balalaika.data.entities.category.CategoryDao
 import com.github.cheapmon.balalaika.data.entities.category.WidgetType
+import com.github.cheapmon.balalaika.data.entities.entry.DictionaryEntry
 import com.github.cheapmon.balalaika.data.entities.entry.DictionaryEntryDao
 import com.github.cheapmon.balalaika.data.entities.lexeme.LexemeDao
 import com.github.cheapmon.balalaika.data.entities.view.DictionaryViewDao
@@ -37,11 +38,11 @@ class DictionaryRepository @Inject constructor(
         orderBy = false
     )
 
-    val entries = dictionaryViewIdChannel.asFlow().distinctUntilChanged()
+    val lexemes = dictionaryViewIdChannel.asFlow().distinctUntilChanged()
         .combine(categoryIdChannel.asFlow().distinctUntilChanged()) { d, c ->
             val dictionaryViewId = d ?: 1
-            if (c == null) dictionaryEntryDao.getFiltered(dictionaryViewId)
-            else dictionaryEntryDao.getSorted(dictionaryViewId, c)
+            if (c == null) dictionaryEntryDao.getLexemesFiltered(dictionaryViewId)
+            else dictionaryEntryDao.getLexemesSorted(dictionaryViewId, c)
         }
     val positions = dictionaryViewIdChannel.asFlow().distinctUntilChanged()
         .combine(categoryIdChannel.asFlow().distinctUntilChanged()) { d, c ->
@@ -63,6 +64,16 @@ class DictionaryRepository @Inject constructor(
 
     fun setDictionaryViewId(dictionaryViewId: Long) {
         dictionaryViewIdChannel.offer(dictionaryViewId)
+    }
+
+    suspend fun getDictionaryEntriesFor(lexemeId: Long): List<DictionaryEntry> {
+        inProgressChannel.offer(true)
+        val d = dictionaryViewIdChannel.asFlow().first() ?: 1
+        val c = categoryIdChannel.asFlow().first()
+        val result = if (c == null) dictionaryEntryDao.getFiltered(d, lexemeId)
+        else dictionaryEntryDao.getSorted(d, c, lexemeId)
+        inProgressChannel.offer(false)
+        return result
     }
 
     suspend fun toggleBookmark(lexemeId: Long) {

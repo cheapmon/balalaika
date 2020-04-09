@@ -11,16 +11,19 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.Application
 import com.github.cheapmon.balalaika.R
+import com.github.cheapmon.balalaika.data.entities.entry.GroupedEntry
 import com.github.cheapmon.balalaika.data.entities.history.SearchRestriction
 import com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme
 import com.github.cheapmon.balalaika.databinding.FragmentSearchBinding
 import com.github.cheapmon.balalaika.util.grouped
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SearchFragment : Fragment(), SearchAdapter.Listener {
@@ -115,6 +118,13 @@ class SearchFragment : Fragment(), SearchAdapter.Listener {
         viewModel.addToHistory()
         val directions = SearchFragmentDirections.actionNavSearchToNavHome(lexeme.externalId)
         findNavController().navigate(directions)
+    }
+
+    override fun onLoadLexeme(lexeme: Lexeme, block: (entry: GroupedEntry?) -> Unit) {
+        lifecycleScope.launch {
+            val entry = viewModel.getDictionaryEntriesFor(lexeme.lexemeId).grouped()
+            block(entry)
+        }
     }
 
     inner class Watcher : TextWatcher {

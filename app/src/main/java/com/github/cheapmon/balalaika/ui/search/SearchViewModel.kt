@@ -2,11 +2,11 @@ package com.github.cheapmon.balalaika.ui.search
 
 import androidx.lifecycle.*
 import androidx.paging.toLiveData
+import com.github.cheapmon.balalaika.data.entities.entry.DictionaryEntry
 import com.github.cheapmon.balalaika.data.entities.history.HistoryEntry
 import com.github.cheapmon.balalaika.data.entities.history.SearchRestriction
 import com.github.cheapmon.balalaika.data.repositories.HistoryRepository
 import com.github.cheapmon.balalaika.data.repositories.SearchRepository
-import com.github.cheapmon.balalaika.util.grouped
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -15,8 +15,8 @@ class SearchViewModel(
     private val historyRepository: HistoryRepository
 ) : ViewModel() {
 
-    val entries = searchRepository.entries.asLiveData().switchMap {
-        it.mapByPage { list -> list.grouped() }.toLiveData(10)
+    val entries = searchRepository.lexemes.asLiveData().switchMap {
+        it.toLiveData(10)
     }
     val query = searchRepository.query.asLiveData()
     val restriction = searchRepository.restriction.asLiveData()
@@ -28,6 +28,10 @@ class SearchViewModel(
 
     fun setRestriction(restriction: SearchRestriction) {
         searchRepository.setRestriction(restriction)
+    }
+
+    suspend fun getDictionaryEntriesFor(lexemeId: Long): List<DictionaryEntry> {
+        return searchRepository.getDictionaryEntriesFor(lexemeId)
     }
 
     fun clearRestriction() {

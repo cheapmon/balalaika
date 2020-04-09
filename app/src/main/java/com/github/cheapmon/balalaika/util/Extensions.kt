@@ -25,18 +25,14 @@ fun String.highlight(text: String?, context: Context): SpannedString {
     }
 }
 
-fun List<DictionaryEntry>.grouped(): List<GroupedEntry?> {
-    val result = this.groupBy { entry -> entry.lexeme.lexemeId }
-        .map { (_, entries) ->
-            val lexeme = entries.first().lexeme
-            val base = entries.first().base
-            val props = entries.mapNotNull {
-                if (it.property != null && it.category != null)
-                    PropertyWithRelations(it.property, it.category, it.lexeme)
-                else null
-            }
-            GroupedEntry(lexeme, base, props)
-        }
-    val end = List(this.size - result.size) { null }
-    return result + end
+fun List<DictionaryEntry>.grouped(): GroupedEntry? {
+    if (this.isEmpty()) return null
+    val lexeme = this.first().lexeme
+    val base = this.first().base
+    val props = this.mapNotNull {
+        if (it.property != null && it.category != null)
+            PropertyWithRelations(it.property, it.category, it.lexeme)
+        else null
+    }
+    return GroupedEntry(lexeme, base, props)
 }
