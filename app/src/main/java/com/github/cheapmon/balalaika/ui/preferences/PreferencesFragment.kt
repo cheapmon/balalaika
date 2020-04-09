@@ -26,12 +26,12 @@ class PreferencesFragment : PreferenceFragmentCompat() {
             entries = arrayOf()
             entryValues = arrayOf()
             lifecycleScope.launch {
-                val comparators = viewModel.getComparators()
-                entries = comparators
-                entryValues = comparators
+                val categories = viewModel.getCategories()
+                entries = categories.map { it.name }.toTypedArray()
+                entryValues = categories.map { it.categoryId.toString() }.toTypedArray()
             }
             setOnPreferenceChangeListener { _, value ->
-                viewModel.setOrdering(value as String)
+                viewModel.setCategory((value as String).toLong())
                 true
             }
         }

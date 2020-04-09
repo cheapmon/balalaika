@@ -6,7 +6,7 @@ import com.github.cheapmon.balalaika.data.repositories.DictionaryRepository
 
 class DictionaryViewModelFactory(
     private val repository: DictionaryRepository,
-    private val comparatorName: String?,
+    private val categoryId: Long?,
     private val dictionaryViewId: Long?
 ) : ViewModelProvider.NewInstanceFactory() {
 
@@ -14,7 +14,7 @@ class DictionaryViewModelFactory(
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return DictionaryViewModel(
             repository,
-            comparatorName,
+            categoryId,
             dictionaryViewId
         ) as T
     }

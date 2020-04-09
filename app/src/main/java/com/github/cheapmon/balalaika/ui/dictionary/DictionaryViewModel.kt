@@ -2,34 +2,37 @@ package com.github.cheapmon.balalaika.ui.dictionary
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
+import androidx.paging.toLiveData
+import com.github.cheapmon.balalaika.data.entities.category.Category
 import com.github.cheapmon.balalaika.data.entities.view.DictionaryViewWithCategories
 import com.github.cheapmon.balalaika.data.repositories.DictionaryRepository
-import com.github.cheapmon.balalaika.util.ComparatorUtil
+import com.github.cheapmon.balalaika.util.grouped
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class DictionaryViewModel(
     private val repository: DictionaryRepository,
-    comparatorName: String?,
+    categoryId: Long?,
     dictionaryViewId: Long?
 ) : ViewModel() {
-    val lexemes = repository.lexemes.asLiveData()
+    val entries = repository.entries.asLiveData().switchMap {
+        it.mapByPage { list -> list.grouped() }.toLiveData(10)
+    }
     val inProgress = repository.inProgress.asLiveData()
 
     init {
-        repository.setOrdering(comparatorName ?: ComparatorUtil.DEFAULT_KEY)
-        if (dictionaryViewId != null) repository.setDictionaryView(dictionaryViewId)
-        viewModelScope.launch { repository.addComparators() }
+        if (categoryId != null) repository.setCategoryId(categoryId)
+        if (dictionaryViewId != null) repository.setDictionaryViewId(dictionaryViewId)
     }
 
-    fun setOrdering(comparatorName: String) {
-        repository.setOrdering(comparatorName)
+    fun setCategory(categoryId: Long) {
+        repository.setCategoryId(categoryId)
     }
 
     fun setDictionaryView(dictionaryViewId: Long) {
-        viewModelScope.launch { repository.setDictionaryView(dictionaryViewId) }
+        repository.setDictionaryViewId(dictionaryViewId)
     }
 
     fun toggleBookmark(lexemeId: Long) {
@@ -37,13 +40,11 @@ class DictionaryViewModel(
     }
 
     suspend fun getPositionOf(externalId: String): Int {
-        return repository.lexemes.map {
-            it.indexOfFirst { entry -> entry.lexeme.externalId == externalId }
-        }.first()
+        return repository.positions.first().indexOfFirst { it == externalId }
     }
 
-    suspend fun getComparators(): List<String> {
-        return repository.comparators.first().keys.toList()
+    suspend fun getCategories(): List<Category> {
+        return repository.categories.first()
     }
 
     suspend fun getDictionaryViews(): List<DictionaryViewWithCategories> {

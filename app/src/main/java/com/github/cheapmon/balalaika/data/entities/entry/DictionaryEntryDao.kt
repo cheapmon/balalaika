@@ -3,6 +3,7 @@ package com.github.cheapmon.balalaika.data.entities.entry
 import androidx.paging.DataSource
 import androidx.room.Dao
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface DictionaryEntryDao {
@@ -17,6 +18,15 @@ interface DictionaryEntryDao {
                     ORDER BY form ASC, c_sequence ASC"""
     )
     fun getFiltered(dictionaryViewId: Long): DataSource.Factory<Int, DictionaryEntry>
+
+    @Query(
+        """SELECT external_id FROM DictionaryEntry
+                    WHERE c_id IN (SELECT category_id FROM dictionary_view_to_category
+                    WHERE dictionary_view_id = (:dictionaryViewId))
+                    AND c_hidden = 0
+                    ORDER BY form ASC, c_sequence ASC"""
+    )
+    fun getIdsFiltered(dictionaryViewId: Long): Flow<List<String>>
 
     @Query(
         """SELECT id, external_id, form, base_id, is_bookmark, b_id, b_external_id, b_form,
@@ -34,6 +44,20 @@ interface DictionaryEntryDao {
         dictionaryViewId: Long,
         categoryId: Long
     ): DataSource.Factory<Int, DictionaryEntry>
+
+    @Query(
+        """SELECT external_id FROM DictionaryEntry
+                    JOIN (SELECT id AS o_id, p_value as o_value FROM DictionaryEntry
+                    WHERE c_id = (:categoryId) ORDER BY p_value ASC) AS ids ON o_id = id
+                    WHERE c_id IN (SELECT category_id FROM dictionary_view_to_category
+                    WHERE dictionary_view_id = (:dictionaryViewId))
+                    AND c_hidden = 0
+                    ORDER BY o_value ASC, form ASC, c_sequence ASC"""
+    )
+    fun getIdsSorted(
+        dictionaryViewId: Long,
+        categoryId: Long
+    ): Flow<List<String>>
 
     @Query(
         """SELECT * FROM DictionaryEntry

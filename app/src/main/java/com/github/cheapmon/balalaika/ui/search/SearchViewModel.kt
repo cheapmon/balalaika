@@ -1,12 +1,12 @@
 package com.github.cheapmon.balalaika.ui.search
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import androidx.paging.toLiveData
 import com.github.cheapmon.balalaika.data.entities.history.HistoryEntry
 import com.github.cheapmon.balalaika.data.entities.history.SearchRestriction
 import com.github.cheapmon.balalaika.data.repositories.HistoryRepository
 import com.github.cheapmon.balalaika.data.repositories.SearchRepository
+import com.github.cheapmon.balalaika.util.grouped
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -15,7 +15,9 @@ class SearchViewModel(
     private val historyRepository: HistoryRepository
 ) : ViewModel() {
 
-    val lexemes = searchRepository.lexemes.asLiveData()
+    val entries = searchRepository.entries.asLiveData().switchMap {
+        it.mapByPage { list -> list.grouped() }.toLiveData(10)
+    }
     val query = searchRepository.query.asLiveData()
     val restriction = searchRepository.restriction.asLiveData()
     val inProgress = searchRepository.inProgress.asLiveData()
@@ -36,15 +38,15 @@ class SearchViewModel(
         viewModelScope.launch {
             val query = searchRepository.query.first()
             if (query.isBlank()) return@launch
-            val entry = when (val restriction = searchRepository.restriction.first()) {
-                is SearchRestriction.None -> HistoryEntry(
-                    query = query
-                )
-                is SearchRestriction.Some -> HistoryEntry(
-                    categoryId = restriction.category.categoryId,
-                    restriction = restriction.restriction,
-                    query = query
-                )
+            val entry = when (val r = searchRepository.restriction.first()) {
+                is SearchRestriction.None ->
+                    HistoryEntry(query = query)
+                is SearchRestriction.Some ->
+                    HistoryEntry(
+                        query = query,
+                        categoryId = r.category.categoryId,
+                        restriction = r.restriction
+                    )
             }
             historyRepository.removeSimilarEntries(entry)
             historyRepository.addEntry(entry)

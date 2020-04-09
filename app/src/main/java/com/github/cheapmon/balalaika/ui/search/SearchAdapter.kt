@@ -3,12 +3,12 @@ package com.github.cheapmon.balalaika.ui.search
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.github.cheapmon.balalaika.data.entities.lexeme._DictionaryEntry
-import com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme
+import com.github.cheapmon.balalaika.data.entities.entry.GroupedEntry
 import com.github.cheapmon.balalaika.data.entities.history.SearchRestriction
+import com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme
 import com.github.cheapmon.balalaika.databinding.FragmentSearchItemBinding
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetListener
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.Widgets
@@ -16,7 +16,7 @@ import com.github.cheapmon.balalaika.util.highlight
 
 class SearchAdapter(
     private val listener: Listener
-) : ListAdapter<_DictionaryEntry, SearchAdapter.ViewHolder>(SearchDiff) {
+) : PagedListAdapter<GroupedEntry, SearchAdapter.ViewHolder>(SearchDiff) {
     private var searchText: String = ""
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -26,16 +26,15 @@ class SearchAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val dictionaryEntry = getItem(position)
+        val entry = getItem(position) ?: return
         with(holder.binding) {
-            entryTitle.text = dictionaryEntry.lexeme.form.highlight(searchText, root.context)
-            root.setOnClickListener { listener.onClickItem(dictionaryEntry.lexeme) }
+            entryTitle.text = entry.lexeme.form.highlight(searchText, root.context)
+            root.setOnClickListener { listener.onClickItem(entry.lexeme) }
             entryProperties.removeAllViews()
-            dictionaryEntry.properties
+            entry.properties
                 .filter { it.property.value.contains(searchText) }
                 .also { entryProperties.visibility = if (it.isEmpty()) View.GONE else View.VISIBLE }
                 .groupBy { it.category }
-                .toSortedMap(Comparator { o1, o2 -> o1.sequence.compareTo(o2.sequence) })
                 .forEach { (category, properties) ->
                     val widget = Widgets.get(
                         entryProperties,
@@ -57,17 +56,17 @@ class SearchAdapter(
 
     class ViewHolder(val binding: FragmentSearchItemBinding) : RecyclerView.ViewHolder(binding.root)
 
-    object SearchDiff : DiffUtil.ItemCallback<_DictionaryEntry>() {
+    object SearchDiff : DiffUtil.ItemCallback<GroupedEntry>() {
         override fun areItemsTheSame(
-            oldItem: _DictionaryEntry,
-            newItem: _DictionaryEntry
+            oldItem: GroupedEntry,
+            newItem: GroupedEntry
         ): Boolean {
             return oldItem.lexeme.lexemeId == newItem.lexeme.lexemeId
         }
 
         override fun areContentsTheSame(
-            oldItem: _DictionaryEntry,
-            newItem: _DictionaryEntry
+            oldItem: GroupedEntry,
+            newItem: GroupedEntry
         ): Boolean {
             return oldItem == newItem
         }

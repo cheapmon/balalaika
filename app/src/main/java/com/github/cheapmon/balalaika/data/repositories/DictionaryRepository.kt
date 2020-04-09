@@ -1,15 +1,12 @@
 package com.github.cheapmon.balalaika.data.repositories
 
+import com.github.cheapmon.balalaika.data.entities.category.Category
 import com.github.cheapmon.balalaika.data.entities.category.CategoryDao
-import com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme
+import com.github.cheapmon.balalaika.data.entities.category.WidgetType
+import com.github.cheapmon.balalaika.data.entities.entry.DictionaryEntryDao
 import com.github.cheapmon.balalaika.data.entities.lexeme.LexemeDao
-import com.github.cheapmon.balalaika.data.entities.lexeme._DictionaryEntry
-import com.github.cheapmon.balalaika.data.entities.property.PropertyDao
-import com.github.cheapmon.balalaika.data.entities.property.PropertyWithRelations
 import com.github.cheapmon.balalaika.data.entities.view.DictionaryViewDao
 import com.github.cheapmon.balalaika.di.ActivityScope
-import com.github.cheapmon.balalaika.util.ComparatorMap
-import com.github.cheapmon.balalaika.util.ComparatorUtil
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
@@ -17,53 +14,55 @@ import javax.inject.Inject
 @ActivityScope
 @Suppress("EXPERIMENTAL_API_USAGE")
 class DictionaryRepository @Inject constructor(
-    private val categoryDao: CategoryDao,
+    categoryDao: CategoryDao,
     private val lexemeDao: LexemeDao,
-    private val propertyDao: PropertyDao,
-    private val dictionaryDao: DictionaryViewDao
+    private val dictionaryEntryDao: DictionaryEntryDao,
+    dictionaryDao: DictionaryViewDao
 ) {
-    private val orderingChannel: ConflatedBroadcastChannel<Comparator<_DictionaryEntry>?> =
-        ConflatedBroadcastChannel()
     private val dictionaryViewIdChannel: ConflatedBroadcastChannel<Long?> =
+        ConflatedBroadcastChannel(null)
+    private val categoryIdChannel: ConflatedBroadcastChannel<Long?> =
         ConflatedBroadcastChannel(null)
     private val inProgressChannel: ConflatedBroadcastChannel<Boolean> =
         ConflatedBroadcastChannel(true)
-    private val comparatorsChannel: ConflatedBroadcastChannel<ComparatorMap> =
-        ConflatedBroadcastChannel(ComparatorUtil.comparators)
 
-    val lexemes = propertyDao.count()
-        .flatMapLatest { dictionaryViewIdChannel.asFlow().distinctUntilChanged() }
-        .flatMapLatest {
-            if (it != null) dictionaryDao.findCategoriesById(it) else flowOf(null)
-        }.flatMapLatest {
-            if (it == null) propertyDao.getAllVisible() else propertyDao.getAllFiltered(it)
-        }.combine(orderingChannel.asFlow().distinctUntilChanged()) { props, order ->
-            inProgressChannel.offer(true)
-            val entries = props.groupBy { it.lexeme }.toEntries()
-            val result = if (order == null) entries else entries.sortedWith(order)
-            inProgressChannel.offer(false)
-            result
+    private val defaultCategory = Category(
+        -1,
+        "default",
+        "Default",
+        WidgetType.PLAIN,
+        "",
+        -1,
+        hidden = true,
+        orderBy = false
+    )
+
+    val entries = dictionaryViewIdChannel.asFlow().distinctUntilChanged()
+        .combine(categoryIdChannel.asFlow().distinctUntilChanged()) { d, c ->
+            val dictionaryViewId = d ?: 1
+            if (c == null) dictionaryEntryDao.getFiltered(dictionaryViewId)
+            else dictionaryEntryDao.getSorted(dictionaryViewId, c)
         }
+    val positions = dictionaryViewIdChannel.asFlow().distinctUntilChanged()
+        .combine(categoryIdChannel.asFlow().distinctUntilChanged()) { d, c ->
+            val dictionaryViewId = d ?: 1
+            if (c == null) dictionaryEntryDao.getIdsFiltered(dictionaryViewId)
+            else dictionaryEntryDao.getIdsSorted(dictionaryViewId, c)
+        }.flattenConcat()
     val dictionaryViews = dictionaryDao.getAllWithCategories()
     val bookmarks = lexemeDao.getBookmarks()
-    val comparators = comparatorsChannel.asFlow()
+    val categories = categoryDao.getSortable().map {
+        listOf(defaultCategory) + it
+    }
     val inProgress = inProgressChannel.asFlow()
 
-    fun setOrdering(comparatorName: String) {
-        val key = if (ComparatorUtil.comparators.containsKey(comparatorName)) comparatorName
-        else ComparatorUtil.DEFAULT_KEY
-        orderingChannel.offer(ComparatorUtil.comparators[key])
+    fun setCategoryId(categoryId: Long) {
+        if (categoryId == defaultCategory.categoryId) categoryIdChannel.offer(categoryId)
+        else categoryIdChannel.offer(null)
     }
 
-    fun setDictionaryView(dictionaryViewId: Long) {
+    fun setDictionaryViewId(dictionaryViewId: Long) {
         dictionaryViewIdChannel.offer(dictionaryViewId)
-    }
-
-    suspend fun addComparators() {
-        categoryDao.getSortable().first().forEach {
-            if (it.orderBy) ComparatorUtil.addPropertyComparator(it.name, it.categoryId)
-        }
-        comparatorsChannel.offer(ComparatorUtil.comparators)
     }
 
     suspend fun toggleBookmark(lexemeId: Long) {
@@ -72,17 +71,5 @@ class DictionaryRepository @Inject constructor(
 
     suspend fun clearBookmarks() {
         lexemeDao.clearBookmarks()
-    }
-
-    private suspend fun Map<Lexeme, List<PropertyWithRelations>>.toEntries(): List<_DictionaryEntry> {
-        return this.map { (lexeme, props) ->
-            val baseId = lexeme.baseId
-            val base = if (baseId != null) lexemeDao.findById(baseId).first() else null
-            _DictionaryEntry(
-                lexeme,
-                base,
-                props
-            )
-        }
     }
 }

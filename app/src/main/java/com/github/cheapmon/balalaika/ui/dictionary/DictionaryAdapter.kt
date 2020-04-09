@@ -3,11 +3,11 @@ package com.github.cheapmon.balalaika.ui.dictionary
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.data.entities.lexeme._DictionaryEntry
+import com.github.cheapmon.balalaika.data.entities.entry.GroupedEntry
 import com.github.cheapmon.balalaika.databinding.FragmentDictionaryItemBinding
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetListener
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.Widgets
@@ -15,7 +15,7 @@ import com.github.cheapmon.balalaika.ui.dictionary.widgets.Widgets
 class DictionaryAdapter(
     private val listener: Listener,
     private val widgetListener: WidgetListener
-) : ListAdapter<_DictionaryEntry, DictionaryAdapter.ViewHolder>(DictionaryDiff) {
+) : PagedListAdapter<GroupedEntry, DictionaryAdapter.ViewHolder>(DictionaryDiff) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -24,10 +24,10 @@ class DictionaryAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val dictionaryEntry = getItem(position)
+        val entry = getItem(position) ?: return
         with(holder.binding) {
-            lexeme = dictionaryEntry.lexeme
-            base = dictionaryEntry.base
+            lexeme = entry.lexeme
+            base = entry.base
             entryCollapseButton.setOnClickListener {
                 if (entryProperties.visibility == View.GONE) {
                     entryProperties.visibility = View.VISIBLE
@@ -38,19 +38,19 @@ class DictionaryAdapter(
                 }
             }
             entryBaseButton.setOnClickListener {
-                listener.onClickBaseButton(dictionaryEntry)
+                listener.onClickBaseButton(entry)
             }
-            if (dictionaryEntry.lexeme.isBookmark) {
+            if (entry.lexeme.isBookmark) {
                 entryBookmarkButton.setImageResource(R.drawable.ic_bookmark)
             } else {
                 entryBookmarkButton.setImageResource(R.drawable.ic_bookmark_border)
             }
             entryBookmarkButton.setOnClickListener {
-                listener.onClickBookmarkButton(dictionaryEntry)
+                listener.onClickBookmarkButton(entry)
             }
             entryProperties.visibility = View.VISIBLE
             entryProperties.removeAllViews()
-            dictionaryEntry.properties.groupBy { it.category }
+            entry.properties.groupBy { it.category }
                 .toSortedMap(Comparator { o1, o2 -> o1.sequence.compareTo(o2.sequence) })
                 .forEach { (category, properties) ->
                     val widget = Widgets.get(entryProperties, widgetListener, category, properties)
@@ -62,21 +62,21 @@ class DictionaryAdapter(
     class ViewHolder(val binding: FragmentDictionaryItemBinding) :
         RecyclerView.ViewHolder(binding.root)
 
-    object DictionaryDiff : DiffUtil.ItemCallback<_DictionaryEntry>() {
-        override fun areItemsTheSame(oldItem: _DictionaryEntry, newItem: _DictionaryEntry): Boolean {
+    object DictionaryDiff : DiffUtil.ItemCallback<GroupedEntry>() {
+        override fun areItemsTheSame(oldItem: GroupedEntry, newItem: GroupedEntry): Boolean {
             return oldItem.lexeme.lexemeId == newItem.lexeme.lexemeId
         }
 
         override fun areContentsTheSame(
-            oldItem: _DictionaryEntry,
-            newItem: _DictionaryEntry
+            oldItem: GroupedEntry,
+            newItem: GroupedEntry
         ): Boolean {
             return oldItem == newItem
         }
     }
 
     interface Listener {
-        fun onClickBookmarkButton(dictionaryEntry: _DictionaryEntry)
-        fun onClickBaseButton(dictionaryEntry: _DictionaryEntry)
+        fun onClickBookmarkButton(dictionaryEntry: GroupedEntry)
+        fun onClickBaseButton(dictionaryEntry: GroupedEntry)
     }
 }

@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.Application
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.data.entities.lexeme._DictionaryEntry
+import com.github.cheapmon.balalaika.data.entities.entry.GroupedEntry
 import com.github.cheapmon.balalaika.data.entities.history.SearchRestriction
 import com.github.cheapmon.balalaika.data.storage.Storage
 import com.github.cheapmon.balalaika.databinding.FragmentDictionaryBinding
@@ -84,15 +84,19 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
         return when (item.itemId) {
             R.id.action_order_by -> {
                 lifecycleScope.launch {
-                    val comparators = viewModel.getComparators().toTypedArray()
-                    val selected =
-                        comparators.indexOfFirst { it == storage.getString(orderKey, null) }
+                    val categories = viewModel.getCategories()
+                    val names = categories.map { it.name }.toTypedArray()
+                    val ids = categories.map { it.categoryId.toString() }
+                    val selected = ids.indexOfFirst {
+                        it == storage.getString(orderKey, null)
+                    }
                     MaterialAlertDialogBuilder(requireContext())
                         .setIcon(R.drawable.ic_sort)
                         .setTitle(R.string.menu_order_by)
-                        .setSingleChoiceItems(comparators, selected) { _, which ->
-                            storage.putString(orderKey, comparators[which])
-                            viewModel.setOrdering(comparators[which])
+                        .setSingleChoiceItems(names, selected) { _, which ->
+                            val id = categories[which].categoryId
+                            storage.putString(orderKey, id.toString())
+                            viewModel.setCategory(id)
                         }.setPositiveButton(R.string.affirm, null)
                         .show()
                 }
@@ -128,7 +132,7 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
     }
 
     private fun bindUi() {
-        viewModel.lexemes.observe(viewLifecycleOwner, Observer {
+        viewModel.entries.observe(viewLifecycleOwner, Observer {
             dictionaryAdapter.submitList(it)
         })
         viewModel.inProgress.observe(viewLifecycleOwner, Observer {
@@ -153,7 +157,7 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
         }
     }
 
-    override fun onClickBookmarkButton(dictionaryEntry: _DictionaryEntry) {
+    override fun onClickBookmarkButton(dictionaryEntry: GroupedEntry) {
         viewModel.toggleBookmark(dictionaryEntry.lexeme.lexemeId)
         val message = if (dictionaryEntry.lexeme.isBookmark) {
             getString(R.string.dictionary_bookmark_remove, dictionaryEntry.lexeme.form)
@@ -163,7 +167,7 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
         Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
     }
 
-    override fun onClickBaseButton(dictionaryEntry: _DictionaryEntry) {
+    override fun onClickBaseButton(dictionaryEntry: GroupedEntry) {
         if (dictionaryEntry.base != null) scrollTo(dictionaryEntry.base.externalId)
     }
 

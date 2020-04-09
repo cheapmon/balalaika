@@ -27,6 +27,10 @@ class DatabaseModule {
 
     @ActivityScope
     @Provides
+    fun provideDictionaryEntries(appDatabase: AppDatabase) = appDatabase.dictionaryEntries()
+
+    @ActivityScope
+    @Provides
     fun provideDictionaryViews(appDatabase: AppDatabase) = appDatabase.dictionaryViews()
 
     @ActivityScope

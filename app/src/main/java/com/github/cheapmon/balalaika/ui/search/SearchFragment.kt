@@ -17,9 +17,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.Application
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme
 import com.github.cheapmon.balalaika.data.entities.history.SearchRestriction
+import com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme
 import com.github.cheapmon.balalaika.databinding.FragmentSearchBinding
+import com.github.cheapmon.balalaika.util.grouped
 import javax.inject.Inject
 
 class SearchFragment : Fragment(), SearchAdapter.Listener {
@@ -76,9 +77,9 @@ class SearchFragment : Fragment(), SearchAdapter.Listener {
     }
 
     private fun bindUi() {
-        viewModel.lexemes.observe(viewLifecycleOwner, Observer {
-            searchAdapter.submitList(it)
-            if (it.isEmpty()) {
+        viewModel.entries.observe(viewLifecycleOwner, Observer { list ->
+            searchAdapter.submitList(list)
+            if (list.isEmpty()) {
                 binding.searchEmptyIcon.visibility = View.VISIBLE
                 binding.searchEmptyText.visibility = View.VISIBLE
             } else {
@@ -121,7 +122,7 @@ class SearchFragment : Fragment(), SearchAdapter.Listener {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            if(s.toString().length >= 2) viewModel.setQuery(s.toString().trim())
+            if (s.toString().length >= 2) viewModel.setQuery(s.toString().trim())
         }
     }
 }

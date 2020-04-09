@@ -1,21 +1,19 @@
 package com.github.cheapmon.balalaika.data.repositories
 
+import com.github.cheapmon.balalaika.data.entities.entry.DictionaryEntryDao
 import com.github.cheapmon.balalaika.data.entities.history.SearchRestriction
-import com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme
-import com.github.cheapmon.balalaika.data.entities.lexeme.LexemeDao
-import com.github.cheapmon.balalaika.data.entities.lexeme._DictionaryEntry
-import com.github.cheapmon.balalaika.data.entities.property.PropertyDao
-import com.github.cheapmon.balalaika.data.entities.property.PropertyWithRelations
 import com.github.cheapmon.balalaika.di.ActivityScope
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import javax.inject.Inject
 
 @ActivityScope
 @Suppress("EXPERIMENTAL_API_USAGE")
 class SearchRepository @Inject constructor(
-    private val lexemeDao: LexemeDao,
-    private val propertyDao: PropertyDao
+    private val dictionaryEntryDao: DictionaryEntryDao
 ) {
     private val queryChannel: ConflatedBroadcastChannel<String> = ConflatedBroadcastChannel()
     private val restrictionChannel: ConflatedBroadcastChannel<SearchRestriction> =
@@ -27,22 +25,15 @@ class SearchRepository @Inject constructor(
         restrictionChannel.offer(SearchRestriction.None)
     }
 
-    val lexemes = queryChannel.asFlow().distinctUntilChanged().debounce(300)
-        .combine(restrictionChannel.asFlow().distinctUntilChanged()) { q, restriction ->
+    val entries = queryChannel.asFlow().distinctUntilChanged().debounce(300)
+        .combine(restrictionChannel.asFlow().distinctUntilChanged()) { q, r ->
             inProgressChannel.offer(true)
-            when (restriction) {
-                is SearchRestriction.None -> findLexemesMatching(q).first()
+            val result = when (r) {
+                is SearchRestriction.None ->
+                    dictionaryEntryDao.find(q)
                 is SearchRestriction.Some ->
-                    findLexemesMatchingRestricted(
-                        q,
-                        restriction.category.categoryId,
-                        restriction.restriction
-                    ).first()
+                    dictionaryEntryDao.findWith(q, r.category.categoryId, r.restriction)
             }
-        }.map {
-            val result = it.groupBy { prop -> prop.lexeme }
-                .toEntries()
-                .sortedBy { (lexeme, _) -> lexeme.form }
             inProgressChannel.offer(false)
             result
         }
@@ -60,33 +51,5 @@ class SearchRepository @Inject constructor(
 
     fun clearRestriction() {
         restrictionChannel.offer(SearchRestriction.None)
-    }
-
-    private fun findLexemesMatching(query: String): Flow<List<PropertyWithRelations>> {
-        return lexemeDao.findByForm(query).combine(propertyDao.findByValue(query)) { l, p ->
-            (l.chunked(50).flatMap { lexemes ->
-                propertyDao.findByLexemeId(lexemes.map { it.lexemeId }).first()
-            } + p).distinct()
-        }
-    }
-
-    private fun findLexemesMatchingRestricted(
-        query: String,
-        categoryId: Long,
-        restriction: String
-    ): Flow<List<PropertyWithRelations>> {
-        return propertyDao.findByValueRestricted(query, categoryId, restriction)
-    }
-
-    private suspend fun Map<Lexeme, List<PropertyWithRelations>>.toEntries(): List<_DictionaryEntry> {
-        return this.map { (lexeme, props) ->
-            val baseId = lexeme.baseId
-            val base = if (baseId != null) lexemeDao.findById(baseId).first() else null
-            _DictionaryEntry(
-                lexeme,
-                base,
-                props
-            )
-        }
     }
 }
