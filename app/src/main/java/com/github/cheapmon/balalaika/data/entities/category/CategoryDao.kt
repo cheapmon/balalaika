@@ -7,11 +7,8 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CategoryDao {
-    @Query("SELECT * FROM category")
-    fun getAll(): Flow<List<Category>>
-
-    @Query("SELECT COUNT(*) FROM category")
-    fun count(): Flow<Int>
+    @Query("SELECT * FROM category WHERE order_by = 1")
+    fun getSortable(): Flow<List<Category>>
 
     @Insert
     suspend fun insertAll(vararg categories: Category)

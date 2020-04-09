@@ -8,13 +8,6 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PropertyDao {
-    @Query("SELECT * FROM property")
-    fun getAll(): Flow<List<Property>>
-
-    @Transaction
-    @Query("SELECT * FROM property")
-    fun getAllWithRelations(): Flow<List<PropertyWithRelations>>
-
     @Transaction
     @Query(
         """SELECT property.id, property.category_id, property.lexeme_id, property.value 

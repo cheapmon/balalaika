@@ -60,7 +60,7 @@ class DictionaryRepository @Inject constructor(
     }
 
     suspend fun addComparators() {
-        categoryDao.getAll().first().forEach {
+        categoryDao.getSortable().first().forEach {
             if (it.orderBy) ComparatorUtil.addPropertyComparator(it.name, it.categoryId)
         }
         comparatorsChannel.offer(ComparatorUtil.comparators)

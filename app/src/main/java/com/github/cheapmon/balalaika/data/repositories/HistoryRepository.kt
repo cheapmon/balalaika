@@ -31,7 +31,7 @@ class HistoryRepository @Inject constructor(
         }
 
     suspend fun removeEntry(historyEntry: HistoryEntry) {
-        historyEntryDao.removeAll(historyEntry)
+        historyEntryDao.remove(historyEntry)
     }
 
     suspend fun addEntry(historyEntry: HistoryEntry) {

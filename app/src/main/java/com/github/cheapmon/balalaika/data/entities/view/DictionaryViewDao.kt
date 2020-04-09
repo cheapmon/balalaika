@@ -8,9 +8,6 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface DictionaryViewDao {
-    @Query("SELECT * FROM dictionary_view")
-    fun getAll(): Flow<List<DictionaryView>>
-
     @Transaction
     @Query("SELECT * FROM dictionary_view")
     fun getAllWithCategories(): Flow<List<DictionaryViewWithCategories>>
@@ -20,9 +17,6 @@ interface DictionaryViewDao {
                     WHERE dictionary_view_id = (:id)"""
     )
     fun findCategoriesById(id: Long): Flow<List<Long>>
-
-    @Query("SELECT COUNT(*) FROM dictionary_view")
-    fun count(): Flow<Int>
 
     @Insert
     suspend fun insertAll(vararg dictionaryViews: DictionaryView)
