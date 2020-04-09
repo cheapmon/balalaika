@@ -73,11 +73,11 @@ class SearchRepository @Inject constructor(
         return propertyDao.findByValueRestricted(query, categoryId, restriction)
     }
 
-    private suspend fun Map<Lexeme, List<PropertyWithRelations>>.toEntries(): List<DictionaryEntry> {
+    private suspend fun Map<Lexeme, List<PropertyWithRelations>>.toEntries(): List<_DictionaryEntry> {
         return this.map { (lexeme, props) ->
             val baseId = lexeme.baseId
             val base = if (baseId != null) lexemeDao.findById(baseId).first() else null
-            DictionaryEntry(lexeme, base, props)
+            _DictionaryEntry(lexeme, base, props)
         }
     }
 }

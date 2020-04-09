@@ -16,7 +16,7 @@ class DictionaryRepository @Inject constructor(
     private val propertyDao: PropertyDao,
     private val dictionaryDao: DictionaryViewDao
 ) {
-    private val orderingChannel: ConflatedBroadcastChannel<Comparator<DictionaryEntry>?> =
+    private val orderingChannel: ConflatedBroadcastChannel<Comparator<_DictionaryEntry>?> =
         ConflatedBroadcastChannel()
     private val dictionaryViewIdChannel: ConflatedBroadcastChannel<Long?> =
         ConflatedBroadcastChannel(null)
@@ -68,11 +68,11 @@ class DictionaryRepository @Inject constructor(
         lexemeDao.clearBookmarks()
     }
 
-    private suspend fun Map<Lexeme, List<PropertyWithRelations>>.toEntries(): List<DictionaryEntry> {
+    private suspend fun Map<Lexeme, List<PropertyWithRelations>>.toEntries(): List<_DictionaryEntry> {
         return this.map { (lexeme, props) ->
             val baseId = lexeme.baseId
             val base = if (baseId != null) lexemeDao.findById(baseId).first() else null
-            DictionaryEntry(lexeme, base, props)
+            _DictionaryEntry(lexeme, base, props)
         }
     }
 }

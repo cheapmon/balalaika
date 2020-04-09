@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.github.cheapmon.balalaika.data.entities.DictionaryEntry
+import com.github.cheapmon.balalaika.data.entities._DictionaryEntry
 import com.github.cheapmon.balalaika.data.entities.Lexeme
 import com.github.cheapmon.balalaika.data.entities.SearchRestriction
 import com.github.cheapmon.balalaika.databinding.FragmentSearchItemBinding
@@ -16,7 +16,7 @@ import com.github.cheapmon.balalaika.util.highlight
 
 class SearchAdapter(
     private val listener: Listener
-) : ListAdapter<DictionaryEntry, SearchAdapter.ViewHolder>(SearchDiff) {
+) : ListAdapter<_DictionaryEntry, SearchAdapter.ViewHolder>(SearchDiff) {
     private var searchText: String = ""
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -57,17 +57,17 @@ class SearchAdapter(
 
     class ViewHolder(val binding: FragmentSearchItemBinding) : RecyclerView.ViewHolder(binding.root)
 
-    object SearchDiff : DiffUtil.ItemCallback<DictionaryEntry>() {
+    object SearchDiff : DiffUtil.ItemCallback<_DictionaryEntry>() {
         override fun areItemsTheSame(
-            oldItem: DictionaryEntry,
-            newItem: DictionaryEntry
+            oldItem: _DictionaryEntry,
+            newItem: _DictionaryEntry
         ): Boolean {
             return oldItem.lexeme.lexemeId == newItem.lexeme.lexemeId
         }
 
         override fun areContentsTheSame(
-            oldItem: DictionaryEntry,
-            newItem: DictionaryEntry
+            oldItem: _DictionaryEntry,
+            newItem: _DictionaryEntry
         ): Boolean {
             return oldItem == newItem
         }

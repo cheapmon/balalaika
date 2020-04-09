@@ -1,15 +1,15 @@
 package com.github.cheapmon.balalaika.util
 
-import com.github.cheapmon.balalaika.data.entities.DictionaryEntry
+import com.github.cheapmon.balalaika.data.entities._DictionaryEntry
 
-typealias ComparatorMap = HashMap<String, Comparator<DictionaryEntry>>
+typealias ComparatorMap = HashMap<String, Comparator<_DictionaryEntry>>
 
 object ComparatorUtil {
     const val DEFAULT_KEY = "Default"
     val comparators: ComparatorMap
 
     init {
-        val defaultComparator: Comparator<DictionaryEntry> = Comparator { d1, d2 ->
+        val defaultComparator: Comparator<_DictionaryEntry> = Comparator { d1, d2 ->
             d1.lexeme.form.compareTo(d2.lexeme.form)
         }
         comparators = hashMapOf(DEFAULT_KEY to defaultComparator)

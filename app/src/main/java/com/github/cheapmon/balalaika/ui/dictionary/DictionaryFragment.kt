@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.Application
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.data.entities.DictionaryEntry
+import com.github.cheapmon.balalaika.data.entities._DictionaryEntry
 import com.github.cheapmon.balalaika.data.entities.SearchRestriction
 import com.github.cheapmon.balalaika.data.storage.Storage
 import com.github.cheapmon.balalaika.databinding.FragmentDictionaryBinding
@@ -153,7 +153,7 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
         }
     }
 
-    override fun onClickBookmarkButton(dictionaryEntry: DictionaryEntry) {
+    override fun onClickBookmarkButton(dictionaryEntry: _DictionaryEntry) {
         viewModel.toggleBookmark(dictionaryEntry.lexeme.lexemeId)
         val message = if (dictionaryEntry.lexeme.isBookmark) {
             getString(R.string.dictionary_bookmark_remove, dictionaryEntry.lexeme.form)
@@ -163,7 +163,7 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
         Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
     }
 
-    override fun onClickBaseButton(dictionaryEntry: DictionaryEntry) {
+    override fun onClickBaseButton(dictionaryEntry: _DictionaryEntry) {
         if (dictionaryEntry.base != null) scrollTo(dictionaryEntry.base.externalId)
     }
 

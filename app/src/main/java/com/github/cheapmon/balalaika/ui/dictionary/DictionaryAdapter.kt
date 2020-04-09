@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.data.entities.DictionaryEntry
+import com.github.cheapmon.balalaika.data.entities._DictionaryEntry
 import com.github.cheapmon.balalaika.databinding.FragmentDictionaryItemBinding
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetListener
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.Widgets
@@ -15,7 +15,7 @@ import com.github.cheapmon.balalaika.ui.dictionary.widgets.Widgets
 class DictionaryAdapter(
     private val listener: Listener,
     private val widgetListener: WidgetListener
-) : ListAdapter<DictionaryEntry, DictionaryAdapter.ViewHolder>(DictionaryDiff) {
+) : ListAdapter<_DictionaryEntry, DictionaryAdapter.ViewHolder>(DictionaryDiff) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -62,21 +62,21 @@ class DictionaryAdapter(
     class ViewHolder(val binding: FragmentDictionaryItemBinding) :
         RecyclerView.ViewHolder(binding.root)
 
-    object DictionaryDiff : DiffUtil.ItemCallback<DictionaryEntry>() {
-        override fun areItemsTheSame(oldItem: DictionaryEntry, newItem: DictionaryEntry): Boolean {
+    object DictionaryDiff : DiffUtil.ItemCallback<_DictionaryEntry>() {
+        override fun areItemsTheSame(oldItem: _DictionaryEntry, newItem: _DictionaryEntry): Boolean {
             return oldItem.lexeme.lexemeId == newItem.lexeme.lexemeId
         }
 
         override fun areContentsTheSame(
-            oldItem: DictionaryEntry,
-            newItem: DictionaryEntry
+            oldItem: _DictionaryEntry,
+            newItem: _DictionaryEntry
         ): Boolean {
             return oldItem == newItem
         }
     }
 
     interface Listener {
-        fun onClickBookmarkButton(dictionaryEntry: DictionaryEntry)
-        fun onClickBaseButton(dictionaryEntry: DictionaryEntry)
+        fun onClickBookmarkButton(dictionaryEntry: _DictionaryEntry)
+        fun onClickBaseButton(dictionaryEntry: _DictionaryEntry)
     }
 }

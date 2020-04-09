@@ -26,7 +26,7 @@ data class LexemeWithRelations(
     @Relation(parentColumn = "id", entityColumn = "lexeme_id") val properties: List<Property>
 )
 
-data class DictionaryEntry(
+data class _DictionaryEntry(
     val lexeme: Lexeme,
     val base: Lexeme?,
     val properties: List<PropertyWithRelations>
