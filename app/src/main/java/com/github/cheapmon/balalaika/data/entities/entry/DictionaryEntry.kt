@@ -1,4 +1,4 @@
-package com.github.cheapmon.balalaika.data.entities
+package com.github.cheapmon.balalaika.data.entities.entry
 
 import androidx.room.DatabaseView
 import androidx.room.Embedded
