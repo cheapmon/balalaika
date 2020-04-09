@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.Application
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.data.entities._DictionaryEntry
-import com.github.cheapmon.balalaika.data.entities.SearchRestriction
+import com.github.cheapmon.balalaika.data.entities.lexeme._DictionaryEntry
+import com.github.cheapmon.balalaika.data.entities.history.SearchRestriction
 import com.github.cheapmon.balalaika.data.storage.Storage
 import com.github.cheapmon.balalaika.databinding.FragmentDictionaryBinding
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetListener

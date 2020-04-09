@@ -2,6 +2,9 @@ package com.github.cheapmon.balalaika.data.entities
 
 import androidx.room.DatabaseView
 import androidx.room.Embedded
+import com.github.cheapmon.balalaika.data.entities.category.Category
+import com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme
+import com.github.cheapmon.balalaika.data.entities.property.Property
 
 @DatabaseView(
     """SELECT lexeme.*,

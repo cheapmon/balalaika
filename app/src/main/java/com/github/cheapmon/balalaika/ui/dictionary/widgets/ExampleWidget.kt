@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.data.entities.Category
-import com.github.cheapmon.balalaika.data.entities.PropertyWithRelations
+import com.github.cheapmon.balalaika.data.entities.category.Category
+import com.github.cheapmon.balalaika.data.entities.property.PropertyWithRelations
 import com.github.cheapmon.balalaika.databinding.HelperExampleBinding
 
 class ExampleWidget(

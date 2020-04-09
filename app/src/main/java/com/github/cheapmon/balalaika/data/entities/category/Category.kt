@@ -1,7 +1,9 @@
-package com.github.cheapmon.balalaika.data.entities
+package com.github.cheapmon.balalaika.data.entities.category
 
-import androidx.room.*
-import kotlinx.coroutines.flow.Flow
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.Index
+import androidx.room.PrimaryKey
 
 @Entity(
     indices = [
@@ -19,15 +21,3 @@ data class Category(
     @ColumnInfo(name = "hidden") val hidden: Boolean,
     @ColumnInfo(name = "order_by") val orderBy: Boolean
 )
-
-@Dao
-interface CategoryDao {
-    @Query("SELECT * FROM category")
-    fun getAll(): Flow<List<Category>>
-
-    @Query("SELECT COUNT(*) FROM category")
-    fun count(): Flow<Int>
-
-    @Insert
-    suspend fun insertAll(vararg categories: Category)
-}

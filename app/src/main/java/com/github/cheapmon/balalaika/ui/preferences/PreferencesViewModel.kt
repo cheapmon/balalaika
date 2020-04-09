@@ -2,7 +2,7 @@ package com.github.cheapmon.balalaika.ui.preferences
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.cheapmon.balalaika.data.entities.DictionaryViewWithCategories
+import com.github.cheapmon.balalaika.data.entities.view.DictionaryViewWithCategories
 import com.github.cheapmon.balalaika.data.repositories.DictionaryRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch

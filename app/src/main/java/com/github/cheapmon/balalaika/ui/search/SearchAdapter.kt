@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.github.cheapmon.balalaika.data.entities._DictionaryEntry
-import com.github.cheapmon.balalaika.data.entities.Lexeme
-import com.github.cheapmon.balalaika.data.entities.SearchRestriction
+import com.github.cheapmon.balalaika.data.entities.lexeme._DictionaryEntry
+import com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme
+import com.github.cheapmon.balalaika.data.entities.history.SearchRestriction
 import com.github.cheapmon.balalaika.databinding.FragmentSearchItemBinding
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetListener
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.Widgets

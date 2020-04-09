@@ -3,8 +3,8 @@ package com.github.cheapmon.balalaika.ui.search
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.github.cheapmon.balalaika.data.entities.HistoryEntry
-import com.github.cheapmon.balalaika.data.entities.SearchRestriction
+import com.github.cheapmon.balalaika.data.entities.history.HistoryEntry
+import com.github.cheapmon.balalaika.data.entities.history.SearchRestriction
 import com.github.cheapmon.balalaika.data.repositories.HistoryRepository
 import com.github.cheapmon.balalaika.data.repositories.SearchRepository
 import kotlinx.coroutines.flow.first
@@ -37,7 +37,9 @@ class SearchViewModel(
             val query = searchRepository.query.first()
             if (query.isBlank()) return@launch
             val entry = when (val restriction = searchRepository.restriction.first()) {
-                is SearchRestriction.None -> HistoryEntry(query = query)
+                is SearchRestriction.None -> HistoryEntry(
+                    query = query
+                )
                 is SearchRestriction.Some -> HistoryEntry(
                     categoryId = restriction.category.categoryId,
                     restriction = restriction.restriction,

@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.Application
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.data.entities.HistoryEntryWithRestriction
+import com.github.cheapmon.balalaika.data.entities.history.HistoryEntryWithRestriction
 import com.github.cheapmon.balalaika.databinding.FragmentHistoryBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar

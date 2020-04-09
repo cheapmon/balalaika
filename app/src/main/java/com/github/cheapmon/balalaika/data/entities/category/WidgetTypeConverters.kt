@@ -1,18 +1,8 @@
-package com.github.cheapmon.balalaika.data.entities
+package com.github.cheapmon.balalaika.data.entities.category
 
 import androidx.room.TypeConverter
 
-enum class WidgetType {
-    AUDIO,
-    EXAMPLE,
-    KEY_VALUE,
-    MORPHOLOGY,
-    PLAIN,
-    REFERENCE,
-    URL
-}
-
-class Converters {
+class WidgetTypeConverters {
     @TypeConverter
     fun widgetToString(value: WidgetType) = value.name
 

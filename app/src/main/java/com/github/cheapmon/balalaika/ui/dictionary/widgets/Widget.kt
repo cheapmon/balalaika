@@ -3,10 +3,10 @@ package com.github.cheapmon.balalaika.ui.dictionary.widgets
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import com.github.cheapmon.balalaika.data.entities.Category
-import com.github.cheapmon.balalaika.data.entities.PropertyWithRelations
-import com.github.cheapmon.balalaika.data.entities.SearchRestriction
-import com.github.cheapmon.balalaika.data.entities.WidgetType
+import com.github.cheapmon.balalaika.data.entities.category.Category
+import com.github.cheapmon.balalaika.data.entities.property.PropertyWithRelations
+import com.github.cheapmon.balalaika.data.entities.history.SearchRestriction
+import com.github.cheapmon.balalaika.data.entities.category.WidgetType
 
 abstract class Widget(
     private val parent: ViewGroup,

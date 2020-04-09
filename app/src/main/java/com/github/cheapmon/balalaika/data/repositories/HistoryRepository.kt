@@ -1,9 +1,9 @@
 package com.github.cheapmon.balalaika.data.repositories
 
-import com.github.cheapmon.balalaika.data.entities.HistoryEntry
-import com.github.cheapmon.balalaika.data.entities.HistoryEntryDao
-import com.github.cheapmon.balalaika.data.entities.HistoryEntryWithRestriction
-import com.github.cheapmon.balalaika.data.entities.SearchRestriction
+import com.github.cheapmon.balalaika.data.entities.history.HistoryEntry
+import com.github.cheapmon.balalaika.data.entities.history.HistoryEntryDao
+import com.github.cheapmon.balalaika.data.entities.history.HistoryEntryWithRestriction
+import com.github.cheapmon.balalaika.data.entities.history.SearchRestriction
 import com.github.cheapmon.balalaika.di.ActivityScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -22,7 +22,10 @@ class HistoryRepository @Inject constructor(
                         SearchRestriction.Some(entry.category, entry.historyEntry.restriction)
                     )
                 } else {
-                    HistoryEntryWithRestriction(entry.historyEntry, SearchRestriction.None)
+                    HistoryEntryWithRestriction(
+                        entry.historyEntry,
+                        SearchRestriction.None
+                    )
                 }
             }
         }

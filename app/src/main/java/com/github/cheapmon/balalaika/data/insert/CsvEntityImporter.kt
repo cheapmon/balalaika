@@ -1,6 +1,11 @@
 package com.github.cheapmon.balalaika.data.insert
 
-import com.github.cheapmon.balalaika.data.entities.*
+import com.github.cheapmon.balalaika.data.entities.category.Category
+import com.github.cheapmon.balalaika.data.entities.category.WidgetType
+import com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme
+import com.github.cheapmon.balalaika.data.entities.property.Property
+import com.github.cheapmon.balalaika.data.entities.view.DictionaryView
+import com.github.cheapmon.balalaika.data.entities.view.DictionaryViewToCategory
 import com.github.cheapmon.balalaika.data.resources.ResourceLoader
 import org.apache.commons.csv.CSVFormat
 import java.io.InputStreamReader
@@ -97,11 +102,12 @@ class CsvEntityImporter @Inject constructor(
     override fun readDictionaryViews(): List<DictionaryView> {
         var count = 1L
         dictionaryViewIdCache["all"] = count
-        val default = DictionaryView(
-            dictionaryViewId = count++,
-            externalId = "all",
-            name = "All"
-        )
+        val default =
+            DictionaryView(
+                dictionaryViewId = count++,
+                externalId = "all",
+                name = "All"
+            )
         return listOf(default) + records(res.dictionaryViewsId).map { record ->
             dictionaryViewIdCache[record["id"]] = count
             DictionaryView(

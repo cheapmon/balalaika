@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.github.cheapmon.balalaika.data.entities.HistoryEntry
-import com.github.cheapmon.balalaika.data.entities.HistoryEntryWithRestriction
+import com.github.cheapmon.balalaika.data.entities.history.HistoryEntry
+import com.github.cheapmon.balalaika.data.entities.history.HistoryEntryWithRestriction
 import com.github.cheapmon.balalaika.data.repositories.HistoryRepository
 import kotlinx.coroutines.launch
 

@@ -1,6 +1,6 @@
 package com.github.cheapmon.balalaika.util
 
-import com.github.cheapmon.balalaika.data.entities._DictionaryEntry
+import com.github.cheapmon.balalaika.data.entities.lexeme._DictionaryEntry
 
 typealias ComparatorMap = HashMap<String, Comparator<_DictionaryEntry>>
 

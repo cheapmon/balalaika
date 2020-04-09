@@ -3,7 +3,7 @@ package com.github.cheapmon.balalaika.ui.dictionary
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.github.cheapmon.balalaika.data.entities.DictionaryViewWithCategories
+import com.github.cheapmon.balalaika.data.entities.view.DictionaryViewWithCategories
 import com.github.cheapmon.balalaika.data.repositories.DictionaryRepository
 import com.github.cheapmon.balalaika.util.ComparatorUtil
 import kotlinx.coroutines.flow.first

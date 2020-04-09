@@ -26,9 +26,9 @@
         tools:layout="@layout/fragment_search">
         <argument
             android:name="restriction"
-            android:defaultValue="@null"
-            app:argType="com.github.cheapmon.balalaika.data.entities.SearchRestriction"
-            app:nullable="true" />
+            app:argType="com.github.cheapmon.balalaika.data.entities.history.SearchRestriction"
+            app:nullable="true"
+            android:defaultValue="@null" />
         <argument
             android:name="query"
             android:defaultValue="@null"

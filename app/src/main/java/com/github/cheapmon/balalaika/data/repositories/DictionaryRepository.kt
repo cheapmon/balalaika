@@ -1,6 +1,12 @@
 package com.github.cheapmon.balalaika.data.repositories
 
-import com.github.cheapmon.balalaika.data.entities.*
+import com.github.cheapmon.balalaika.data.entities.category.CategoryDao
+import com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme
+import com.github.cheapmon.balalaika.data.entities.lexeme.LexemeDao
+import com.github.cheapmon.balalaika.data.entities.lexeme._DictionaryEntry
+import com.github.cheapmon.balalaika.data.entities.property.PropertyDao
+import com.github.cheapmon.balalaika.data.entities.property.PropertyWithRelations
+import com.github.cheapmon.balalaika.data.entities.view.DictionaryViewDao
 import com.github.cheapmon.balalaika.di.ActivityScope
 import com.github.cheapmon.balalaika.util.ComparatorMap
 import com.github.cheapmon.balalaika.util.ComparatorUtil
@@ -72,7 +78,11 @@ class DictionaryRepository @Inject constructor(
         return this.map { (lexeme, props) ->
             val baseId = lexeme.baseId
             val base = if (baseId != null) lexemeDao.findById(baseId).first() else null
-            _DictionaryEntry(lexeme, base, props)
+            _DictionaryEntry(
+                lexeme,
+                base,
+                props
+            )
         }
     }
 }
