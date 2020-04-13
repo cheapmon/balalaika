@@ -120,6 +120,7 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
                             val id = dictionaryViews[which].dictionaryView.dictionaryViewId
                             storage.putString(viewKey, id.toString())
                             viewModel.setDictionaryView(id)
+                            dictionaryAdapter.notifyDataSetChanged()
                         }.setPositiveButton(R.string.affirm, null)
                         .show()
                 }

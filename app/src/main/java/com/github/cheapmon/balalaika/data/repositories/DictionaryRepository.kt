@@ -58,8 +58,8 @@ class DictionaryRepository @Inject constructor(
     val inProgress = inProgressChannel.asFlow()
 
     fun setCategoryId(categoryId: Long) {
-        if (categoryId == defaultCategory.categoryId) categoryIdChannel.offer(categoryId)
-        else categoryIdChannel.offer(null)
+        if (categoryId == defaultCategory.categoryId) categoryIdChannel.offer(null)
+        else categoryIdChannel.offer(categoryId)
     }
 
     fun setDictionaryViewId(dictionaryViewId: Long) {
