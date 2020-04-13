@@ -24,6 +24,7 @@ import com.github.cheapmon.balalaika.databinding.FragmentDictionaryBinding
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetListener
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -145,6 +146,7 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
     private fun scrollTo(externalId: String) {
         lifecycleScope.launch {
             val position = viewModel.getPositionOf(externalId)
+            delay(200)
             recyclerView.post {
                 dictionaryLayoutManager.scrollToPositionWithOffset(position, 0)
             }
