@@ -1,0 +1,3 @@
+id,name,cls,ger,syn,cmp,dct,exa
+simple,Simple,1,1,0,0,0,1
+trans,Translation only,0,1,0,0,0,0
