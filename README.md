@@ -17,7 +17,8 @@ For ease of use, utilizing [Android Studio](https://developer.android.com/studio
 git clone https://github.com/cheapmon/balalaika.git
 cd balalaika
 ```
-* Add your files under `app/src/main/res/raw` (Will be documented in the future)
+* Add your files under `app/src/main/res/raw` or copy an example from `example`
+(Will be documented in the future)
 * Install and run the app to your device or emulator
 ```
 gradle wrapper
