@@ -6,4 +6,6 @@ interface Storage {
 
     fun putInt(key: String, value: Int)
     fun putString(key: String, value: String)
+
+    fun contains(key: String): Boolean
 }

@@ -12,6 +12,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.github.cheapmon.balalaika.data.insert.ImportUtil
+import com.github.cheapmon.balalaika.data.storage.Storage
 import com.github.cheapmon.balalaika.databinding.ActivityMainBinding
 import com.github.cheapmon.balalaika.databinding.AppBarMainBinding
 import com.google.android.material.navigation.NavigationView
@@ -23,6 +24,9 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var importUtil: ImportUtil
+
+    @Inject
+    lateinit var storage: Storage
 
     override fun onCreate(savedInstanceState: Bundle?) {
         (application as Application).appComponent.inject(this)
@@ -49,6 +53,10 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launchWhenCreated {
             importUtil.import()
+            val orderKey = getString(R.string.preferences_key_order)
+            val viewKey = getString(R.string.preferences_key_view)
+            if(!storage.contains(orderKey)) storage.putString(orderKey, "-1")
+            if(!storage.contains(viewKey)) storage.putString(viewKey, "1")
         }
     }
 

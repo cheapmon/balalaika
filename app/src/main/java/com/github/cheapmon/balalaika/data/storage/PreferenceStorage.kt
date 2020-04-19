@@ -25,4 +25,6 @@ class PreferenceStorage @Inject constructor(
     override fun putString(key: String, value: String) {
         preferences.edit { putString(key, value) }
     }
+
+    override fun contains(key: String) = preferences.contains(key)
 }
