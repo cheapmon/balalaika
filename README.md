@@ -30,3 +30,12 @@ Without Android Studio, follow these steps:
     ./gradlew app:assembleDebug
     adb install -t ./app/build/outputs/apk/debug/app-debug.apk
     ```
+
+## Screenshots
+<img src="screenshot/xhosa-screen1.png?raw=true" alt="Dictionary" width="250"><img src="screenshot/xhosa-screen2.png?raw=true" alt="Additional functions" width="250"><img src="screenshot/xhosa-screen3.png?raw=true" alt="Preferences" width="250">
+
+## Resources
+Balalaika was conceptualized and implemented as part of my master's thesis and is still in active development.
+For additional information, please refer to the following sources:
+- _Sonja Bosch, Thomas Eckart, Bettina Klimek, Dirk Goldhahn and Uwe Quasthoff (2018): Preparation and Usage of Xhosa Lexicographical Data for a Multilingual, Federated Environment at 11th Edition of the Language Resources and Evaluation Conference LREC 2018, Miyazaki (Japan)._
+- _Thomas Eckart, Sonja Bosch, Uwe Quasthoff, Erik Körner, Dirk Goldhahn, and Simon Kaleschke: Usability and Accessibility of Bantu Language Dictionaries in the Digital Age: Mobile Access in an Open Environment. In: First workshop on Resources for African Indigenous Languages (RAIL) at 12th Edition of Language Resources and Evaluation Conference (LREC 2020)._
