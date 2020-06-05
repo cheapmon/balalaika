@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-android-extensions'
     id 'kotlin-kapt'
     id "androidx.navigation.safeargs.kotlin"
+    id 'org.jetbrains.dokka-android'
 }
 
 android {
@@ -50,6 +51,16 @@ android {
 
     buildFeatures {
         dataBinding = true
+    }
+
+    dokka {
+        moduleName = 'Balalaika'
+
+        outputFormat = 'html'
+        outputDirectory = "$buildDir/javadoc"
+        jdkVersion = 8
+
+        includes = ['packages.md']
     }
 }
 
