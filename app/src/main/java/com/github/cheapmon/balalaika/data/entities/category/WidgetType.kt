@@ -15,12 +15,65 @@
  */
 package com.github.cheapmon.balalaika.data.entities.category
 
+import com.github.cheapmon.balalaika.data.entities.category.WidgetType.*
+import com.github.cheapmon.balalaika.data.entities.property.Property
+import com.github.cheapmon.balalaika.ui.dictionary.widgets.*
+
+/**
+ * Types of Widgets
+ *
+ * Balalaika supports seven different widgets for variable purposes, from simple data presentation
+ * (e.g. [PLAIN] or [KEY_VALUE]) to complex use cases like playback ([AUDIO]).
+ *
+ * @see Widget
+ */
 enum class WidgetType {
+    /**
+     * Widget for audio file playback
+     *
+     * @see AudioWidget
+     */
     AUDIO,
+
+    /**
+     * Widget for example sentences and long pieces of information
+     *
+     * @see ExampleWidget
+     */
     EXAMPLE,
+
+    /**
+     * Widget for displaying a property category ([Category.name]) and value ([Property.value])
+     *
+     * @see BaseWidget
+     */
     KEY_VALUE,
+
+    /**
+     * Widget for displaying morphological information
+     *
+     * @see MorphologyWidget
+     */
     MORPHOLOGY,
+
+    /**
+     * Widget for displaying a single value ([Property.value])
+     *
+     * @see PlainWidget
+     */
     PLAIN,
+
+    /**
+     * Widget for showing references between dictionary entries
+     *
+     * @see ReferenceWidget
+     */
     REFERENCE,
+
+    /**
+     * Widget for enabling external links for additional information
+     *
+     * @see UrlWidget
+     */
     URL
 }

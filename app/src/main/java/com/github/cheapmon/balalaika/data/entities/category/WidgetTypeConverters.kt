@@ -17,10 +17,21 @@ package com.github.cheapmon.balalaika.data.entities.category
 
 import androidx.room.TypeConverter
 
+/**
+ * Serialization and deserialization of [WidgetType] for storage in the application database
+ *
+ * _Example_: [WidgetType.PLAIN] is converted to `PLAIN` and vice versa
+ *
+ * _Note_: The functions are type-safe since we expect input files to be correct.
+ *
+ * @see WidgetType
+ */
 class WidgetTypeConverters {
+    /** Convert [WidgetType] to [String] */
     @TypeConverter
     fun widgetToString(value: WidgetType) = value.name
 
+    /** Convert [String] to [WidgetType] */
     @TypeConverter
     fun stringToWidget(value: String): WidgetType = WidgetType.valueOf(value)
 }

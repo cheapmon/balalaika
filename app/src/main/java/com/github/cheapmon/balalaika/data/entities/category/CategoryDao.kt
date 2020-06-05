@@ -20,11 +20,14 @@ import androidx.room.Insert
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
+/** Database link for [data categories][Category] */
 @Dao
 interface CategoryDao {
+    /** Get all data categories that can be used to order dictionary entries */
     @Query("SELECT * FROM category WHERE order_by = 1")
     fun getSortable(): Flow<List<Category>>
 
+    /** Insert all data categories into the database */
     @Insert
     suspend fun insertAll(vararg categories: Category)
 }
