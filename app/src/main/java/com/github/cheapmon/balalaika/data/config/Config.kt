@@ -15,14 +15,44 @@
  */
 package com.github.cheapmon.balalaika.data.config
 
+import androidx.room.Database
+import com.github.cheapmon.balalaika.data.AppDatabase
+import com.github.cheapmon.balalaika.data.config.Config.Source
+
+/**
+ * Configuration object which holds a version number and information about sources
+ *
+ * The configuration object is strictly read-only and has no additional behaviour.
+ *
+ * _Note_: [Config] and [Source] both define default values for their properties. This forces the
+ * classes to have a default constructor, which is needed for deserialization.
+ */
 data class Config(
+    /**
+     * Version number of input files
+     *
+     * Instead of using the version indicator in [AppDatabase], the version number is given by some
+     * input file.
+     * These version numbers have a different meaning. [Database.version] indicates changes of the
+     * database schema, whereas [version] is simply used for changes in the input files.
+     */
     val version: Int = -1,
+    /**
+     * Sources of input files
+     *
+     * @see Source
+     */
     val sources: List<Source> = listOf()
 ) {
+    /** Input file source (e.g. from a corpus or a webservice) */
     data class Source(
+        /** Name of the source **/
         val name: String? = null,
+        /** List of source authors **/
         val authors: String? = null,
+        /** Short description of the source */
         val summary: String? = null,
+        /** External link to the source or its license */
         val url: String? = null
     )
 }

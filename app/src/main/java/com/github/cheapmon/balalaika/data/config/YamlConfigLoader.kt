@@ -20,9 +20,28 @@ import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.constructor.Constructor
 import javax.inject.Inject
 
+/**
+ * [ConfigLoader] which creates a configuration object from a YAML source file
+ *
+ * The source file is read by the [ResourceLoader] and serialized using [Yaml].
+ * An example configuration source file might look like this:
+ * ```yaml
+ * version: 1
+ * sources:
+ *   - name: "Source name"
+ *     authors: "List of authors"
+ *     summary: "Short description of source"
+ *     url: "example.org/source"
+ * ```
+ *
+ * @see Config
+ * @see ConfigLoader
+ */
 class YamlConfigLoader @Inject constructor(
+    /** Input file loader */
     private val res: ResourceLoader
 ) : ConfigLoader {
+    /** Read YAML source file and deserialize into configuration object */
     override fun readConfig(): Config {
         val yaml = Yaml(Constructor(Config::class.java))
         return yaml.load(res.read(res.configId))

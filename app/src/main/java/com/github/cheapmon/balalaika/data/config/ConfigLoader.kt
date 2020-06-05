@@ -15,6 +15,12 @@
  */
 package com.github.cheapmon.balalaika.data.config
 
+/**
+ * Component which reads some input files and produces a configuration object
+ *
+ * @see Config
+ */
 interface ConfigLoader {
+    /** Create a configuration object from input files */
     fun readConfig(): Config
 }
