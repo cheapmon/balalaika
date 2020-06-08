@@ -18,21 +18,31 @@ package com.github.cheapmon.balalaika.data.entities.history
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 
+/** Database link for [history entries][HistoryEntry] */
 @Dao
 interface HistoryEntryDao {
+    /**
+     * Get all [history entries][HistoryEntry]
+     *
+     * This also retrieves the associated [category][Category] if the search has been restricted
+     */
     @Transaction
     @Query("SELECT * FROM search_history")
     fun getAllWithCategory(): Flow<List<HistoryEntryWithCategory>>
 
+    /** Remove all [history entries][HistoryEntry] from the database */
     @Query("DELETE FROM search_history")
     suspend fun clear()
 
+    /** Insert all [history entries][HistoryEntry] into the database */
     @Insert
     suspend fun insertAll(vararg historyEntries: HistoryEntry)
 
+    /** Remove all [history entries][HistoryEntry] with a similar [query] from the database */
     @Query("DELETE FROM search_history WHERE `query` = (:query)")
     suspend fun removeSimilar(query: String)
 
+    /** Remove a single [history entry][History Entry] from the database */
     @Delete
     suspend fun remove(historyEntry: HistoryEntry)
 }

@@ -18,7 +18,10 @@ package com.github.cheapmon.balalaika.data.entities.history
 import androidx.room.Embedded
 import androidx.room.Ignore
 
+/** [History entry][HistoryEntry] linked with a [search restriction][SearchRestriction] */
 data class HistoryEntryWithRestriction(
+    /** [History entry][HistoryEntry] */
     @Embedded val historyEntry: HistoryEntry,
+    /** [Search restriction][SearchRestriction] */
     @Ignore val restriction: SearchRestriction
 )

@@ -17,7 +17,17 @@ package com.github.cheapmon.balalaika.data.entities.history
 
 import androidx.room.*
 import com.github.cheapmon.balalaika.data.entities.category.Category
+import com.github.cheapmon.balalaika.ui.history.HistoryFragment
 
+/**
+ * Entry in search history
+ *
+ * An entry consists of a [query] and an optional restriction (fields [categoryId] and
+ * [restriction]).
+ *
+ * @see SearchRestriction
+ * @see HistoryFragment
+ */
 @Entity(
     tableName = "search_history",
     foreignKeys = [
@@ -30,8 +40,17 @@ import com.github.cheapmon.balalaika.data.entities.category.Category
     indices = [Index(value = ["category_id"])]
 )
 data class HistoryEntry(
+    /**
+     * Primary key of this history entry
+     *
+     * _Note_: A default value of `0` and `autoGenerate = true` effectively corresponds to
+     * auto increment.
+     */
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") val historyEntryId: Long = 0,
+    /** Optional [category][Category] of this entry if the search has been restricted */
     @ColumnInfo(name = "category_id") val categoryId: Long? = null,
+    /** Optional restriction of this entry */
     @ColumnInfo(name = "restriction") val restriction: String? = null,
+    /** Search query */
     @ColumnInfo(name = "query") val query: String
 )

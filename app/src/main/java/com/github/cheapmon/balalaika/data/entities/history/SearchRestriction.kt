@@ -16,10 +16,23 @@
 package com.github.cheapmon.balalaika.data.entities.history
 
 import com.github.cheapmon.balalaika.data.entities.category.Category
+import com.github.cheapmon.balalaika.ui.history.HistoryFragment
+import com.github.cheapmon.balalaika.ui.search.SearchFragment
 import java.io.Serializable
 
+/**
+ * Optional restriction of a search query
+ *
+ * _Note_: This class is [serializable][Serializable] and can be passed between fragments.
+ *
+ * @see SearchFragment
+ * @see HistoryFragment
+ */
 sealed class SearchRestriction : Serializable {
+    /** No additonal search restriction */
     object None : SearchRestriction()
+
+    /** A search restriction consisting of a [category][Category] and a [restriction] string */
     data class Some(
         val category: Category,
         val restriction: String
