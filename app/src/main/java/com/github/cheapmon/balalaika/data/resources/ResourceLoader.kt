@@ -15,15 +15,33 @@
  */
 package com.github.cheapmon.balalaika.data.resources
 
+import com.github.cheapmon.balalaika.data.config.Config
+import com.github.cheapmon.balalaika.data.entities.category.Category
+import com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme
+import com.github.cheapmon.balalaika.data.entities.property.Property
+import com.github.cheapmon.balalaika.data.entities.view.DictionaryView
 import java.io.InputStream
 
+/** Component which reads application resources */
 interface ResourceLoader {
+    /** [Category] file identifier */
     val categoriesId: Int
+
+    /** [Lexeme] file identifier */
     val lexemesId: Int
+
+    /** Full form file identifier */
     val fullFormsId: Int
+
+    /** [Property] file identifier */
     val propertiesId: Int
+
+    /** [DictionaryView] file identifier */
     val dictionaryViewsId: Int
+
+    /** [Configuration][Config] file identifier */
     val configId: Int
 
+    /** Read input file by identifier */
     fun read(id: Int): InputStream
 }

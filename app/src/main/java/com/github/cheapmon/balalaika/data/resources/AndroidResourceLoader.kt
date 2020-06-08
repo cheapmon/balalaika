@@ -20,6 +20,9 @@ import com.github.cheapmon.balalaika.R
 import java.io.InputStream
 import javax.inject.Inject
 
+/**
+ * [Resource loader][ResourceLoader] which reads Android resource files
+ */
 class AndroidResourceLoader @Inject constructor(private val context: Context) : ResourceLoader {
     override val categoriesId: Int = R.raw.categories
     override val lexemesId: Int = R.raw.lexemes
@@ -28,5 +31,6 @@ class AndroidResourceLoader @Inject constructor(private val context: Context) : 
     override val dictionaryViewsId: Int = R.raw.views
     override val configId: Int = R.raw.config
 
+    /** Read raw Android resource file */
     override fun read(id: Int): InputStream = context.resources.openRawResource(id)
 }
