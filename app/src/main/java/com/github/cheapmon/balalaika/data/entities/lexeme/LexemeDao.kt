@@ -18,26 +18,32 @@ package com.github.cheapmon.balalaika.data.entities.lexeme
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
 
+/** Database link for [lexemes][Lexeme] */
 @Dao
 interface LexemeDao {
+    /** Get all bookmarked [lexemes][Lexeme] */
     @Query("SELECT * FROM lexeme WHERE is_bookmark = 1")
     fun getBookmarks(): Flow<List<Lexeme>>
 
+    /** Find [lexeme][Lexeme] by its primary key */
     @Query("SELECT * FROM lexeme WHERE id = (:id) LIMIT 1")
     fun findById(id: Long): Flow<Lexeme?>
 
+    /** Find [lexemes][Lexeme] where [form][Lexeme.form] is similar to [query] */
     @Query("SELECT * FROM lexeme WHERE form LIKE '%' || (:query) || '%'")
     fun findByForm(query: String): Flow<List<Lexeme>>
 
+    /** Toggle bookmark state for a [lexeme][Lexeme] */
     @Query("UPDATE lexeme SET is_bookmark = NOT is_bookmark WHERE id = (:id)")
     suspend fun toggleBookmark(id: Long)
 
+    /** Remove all bookmarks */
     @Query("UPDATE lexeme SET is_bookmark = 0 WHERE is_bookmark = 1")
     suspend fun clearBookmarks()
 
+    /** Insert all [lexemes][Lexeme] into the database */
     @Insert
     suspend fun insertAll(vararg lexemes: Lexeme)
 }
