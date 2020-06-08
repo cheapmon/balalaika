@@ -20,14 +20,21 @@ import com.github.cheapmon.balalaika.data.entities.history.HistoryEntryDao
 import com.github.cheapmon.balalaika.data.entities.history.HistoryEntryWithRestriction
 import com.github.cheapmon.balalaika.data.entities.history.SearchRestriction
 import com.github.cheapmon.balalaika.di.ActivityScope
+import com.github.cheapmon.balalaika.ui.history.HistoryFragment
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
+/**
+ * Search history data handling
+ *
+ * @see HistoryFragment
+ */
 @ActivityScope
 class HistoryRepository @Inject constructor(
     private val historyEntryDao: HistoryEntryDao
 ) {
+    /** All [search history entries][HistoryEntry] */
     val historyEntries: Flow<List<HistoryEntryWithRestriction>> =
         historyEntryDao.getAllWithCategory().map {
             it.reversed().map { entry ->
@@ -45,18 +52,22 @@ class HistoryRepository @Inject constructor(
             }
         }
 
+    /** Remove [search history entry][HistoryEntry] */
     suspend fun removeEntry(historyEntry: HistoryEntry) {
         historyEntryDao.remove(historyEntry)
     }
 
+    /** Add [search history entry][HistoryEntry] */
     suspend fun addEntry(historyEntry: HistoryEntry) {
         historyEntryDao.insertAll(historyEntry)
     }
 
+    /** Remove all [search history entries][HistoryEntry] with similar queries */
     suspend fun removeSimilarEntries(historyEntry: HistoryEntry) {
         historyEntryDao.removeSimilar(historyEntry.query)
     }
 
+    /** Remove all [search history entries][HistoryEntry] */
     suspend fun clearHistory() {
         historyEntryDao.clear()
     }
