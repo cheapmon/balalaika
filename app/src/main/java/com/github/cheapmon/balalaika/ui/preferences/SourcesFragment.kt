@@ -31,10 +31,13 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import javax.inject.Inject
 
+/** Fragment for displaying data and media sources */
 class SourcesFragment : PreferenceFragmentCompat() {
+    /** @suppress */
     @Inject
     lateinit var configLoader: ConfigLoader
 
+    /** Load data and add callbacks */
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.sources, rootKey)
         val category: PreferenceCategory? = preferenceScreen["contents"]
@@ -59,12 +62,14 @@ class SourcesFragment : PreferenceFragmentCompat() {
         }
     }
 
+    /** Inject view model */
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
         (requireActivity().application as Application).appComponent.inject(this)
     }
 
+    /** Show summary and actions for a single source */
     private fun showSourceDialog(source: Config.Source) {
         MaterialAlertDialogBuilder(context)
             .setTitle(source.name)
@@ -74,6 +79,7 @@ class SourcesFragment : PreferenceFragmentCompat() {
             .show()
     }
 
+    /** Open an external URL */
     private fun openLink(url: String?) {
         try {
             val uri = Uri.parse(url)

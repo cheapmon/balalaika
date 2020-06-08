@@ -23,21 +23,26 @@ import com.github.cheapmon.balalaika.data.repositories.DictionaryRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
+/** View model for [PreferencesFragment] */
 class PreferencesViewModel(
     private val repository: DictionaryRepository
 ) : ViewModel() {
+    /** Select a view for the current dictionary */
     fun setDictionaryView(dictionaryViewId: Long) {
         viewModelScope.launch { repository.setDictionaryViewId(dictionaryViewId) }
     }
 
+    /** Select category to order lexemes by */
     fun setCategory(categoryId: Long) {
         viewModelScope.launch { repository.setCategoryId(categoryId) }
     }
 
+    /** All available dictionary views */
     suspend fun getDictionaryViews(): List<DictionaryViewWithCategories> {
         return repository.dictionaryViews.first()
     }
 
+    /** All available sortable categories */
     suspend fun getCategories(): List<Category> {
         return repository.categories.first()
     }

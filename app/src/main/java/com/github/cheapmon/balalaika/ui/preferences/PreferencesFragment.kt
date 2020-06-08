@@ -30,11 +30,16 @@ import com.github.cheapmon.balalaika.R
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/** Fragment for configuring preferences */
 class PreferencesFragment : PreferenceFragmentCompat() {
+    /** @suppress */
     @Inject
     lateinit var viewModelFactory: PreferencesViewModelFactory
+
+    /** @suppress */
     lateinit var viewModel: PreferencesViewModel
 
+    /** Load data and add callbacks */
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
         findPreference<ListPreference>(getString(R.string.preferences_key_order))?.apply {
@@ -88,6 +93,7 @@ class PreferencesFragment : PreferenceFragmentCompat() {
         }
     }
 
+    /** Inject view model */
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
