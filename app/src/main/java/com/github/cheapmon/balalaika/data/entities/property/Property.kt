@@ -19,6 +19,15 @@ import androidx.room.*
 import com.github.cheapmon.balalaika.data.entities.category.Category
 import com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme
 
+/**
+ * Property of a [lexeme][Lexeme] based on a [data category][Category]
+ *
+ * To keep data categories flexible, properties are not saved on the lexeme itself, but in a
+ * different table. This also enables 1:n-associations.
+ *
+ * For additional information on Balalaika's data model, please refer to the
+ * [Import documentation][com.github.cheapmon.balalaika.data.insert].
+ */
 @Entity(
     foreignKeys = [
         ForeignKey(
@@ -31,8 +40,17 @@ import com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme
     indices = [Index(value = ["category_id"]), Index(value = ["lexeme_id"])]
 )
 data class Property(
+    /**
+     * Primary key of this property
+     *
+     * _Note_: A default value of `0` and `autoGenerate = true` effectively corresponds to
+     * auto increment.
+     */
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") val propertyId: Long = 0,
+    /** [Data category][Category] associated with this property */
     @ColumnInfo(name = "category_id") val categoryId: Long,
+    /** [Lexeme] this property belongs to */
     @ColumnInfo(name = "lexeme_id") val lexemeId: Long,
+    /** Serialized property value */
     @ColumnInfo(name = "value") val value: String
 )

@@ -26,6 +26,9 @@ import com.github.cheapmon.balalaika.ui.dictionary.DictionaryFragment
  * difference is that full forms hold an additional [base][baseId] lexeme they depend on
  * (e.g. _happier_ points to _happy_). This can be applied to most languages.
  *
+ * For additional information on Balalaika's data model, please refer to the
+ * [Import documentation][com.github.cheapmon.balalaika.data.insert].
+ *
  * @see DictionaryFragment
  */
 @Entity(
