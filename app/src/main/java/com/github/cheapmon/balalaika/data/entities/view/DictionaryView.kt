@@ -18,10 +18,35 @@ package com.github.cheapmon.balalaika.data.entities.view
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.github.cheapmon.balalaika.data.entities.category.Category
+import com.github.cheapmon.balalaika.data.entities.entry.DictionaryEntry
 
+/**
+ * Limited view on dictionary entries
+ *
+ * A dictionary view essentially gives a name to a subset of all available
+ * [data categories][Category] with a certain task in mind.
+ * Selecting a dictionary view in the user interface results in only a certain number of properties
+ * being shown.
+ * For example, for certain translation tasks it may suffice to only show the lexeme and the
+ * translation itself.
+ *
+ * For additional information on Balalaika's data model, please refer to the
+ * [Import documentation][com.github.cheapmon.balalaika.data.insert].
+ *
+ * @see DictionaryEntry
+ */
 @Entity(tableName = "dictionary_view")
 data class DictionaryView(
+    /**
+     * Primary key of this dictionary view
+     *
+     * _Note_: A default value of `0` and `autoGenerate = true` effectively corresponds to
+     * auto increment.
+     */
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") val dictionaryViewId: Long = 0,
+    /** Unique identifier of this dictionary view from sources */
     @ColumnInfo(name = "external_id") val externalId: String,
+    /** Name of this dictionary view */
     @ColumnInfo(name = "name") val name: String
 )

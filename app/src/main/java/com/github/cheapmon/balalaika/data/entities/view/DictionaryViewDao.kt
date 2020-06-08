@@ -19,23 +19,31 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
+import com.github.cheapmon.balalaika.data.entities.category.Category
 import kotlinx.coroutines.flow.Flow
 
+/** Database link for [dictionary views][DictionaryView] */
 @Dao
 interface DictionaryViewDao {
+    /**
+     * Get all [dictionary views][DictionaryView] and their associated [data categories][Category]
+     */
     @Transaction
     @Query("SELECT * FROM dictionary_view")
     fun getAllWithCategories(): Flow<List<DictionaryViewWithCategories>>
 
+    /** Find all [data categories][Category] for a [dictionary view][DictionaryView] */
     @Query(
         """SELECT category_id FROM dictionary_view_to_category 
                     WHERE dictionary_view_id = (:id)"""
     )
     fun findCategoriesById(id: Long): Flow<List<Long>>
 
+    /** Insert all [dictionary views][DictionaryView] into the database */
     @Insert
     suspend fun insertAll(vararg dictionaryViews: DictionaryView)
 
+    /** Insert all [dictionary view relations][DictionaryViewToCategory] into the database */
     @Insert
     suspend fun insertAll(vararg dictionaryViewToCategory: DictionaryViewToCategory)
 }

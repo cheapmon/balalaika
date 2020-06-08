@@ -21,6 +21,10 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import com.github.cheapmon.balalaika.data.entities.category.Category
 
+/**
+ * Relation between [dictionary views][DictionaryView] and their associated
+ * [data categories][Category]
+ */
 @Entity(
     tableName = "dictionary_view_to_category",
     primaryKeys = ["dictionary_view_id", "category_id"],
@@ -41,6 +45,8 @@ import com.github.cheapmon.balalaika.data.entities.category.Category
     )]
 )
 data class DictionaryViewToCategory(
+    /** [Dictionary view][DictionaryView] */
     @ColumnInfo(name = "dictionary_view_id") val dictionaryViewId: Long,
+    /** [Category] associated with this dictionary view */
     @ColumnInfo(name = "category_id") val categoryId: Long
 )
