@@ -24,16 +24,20 @@ import com.github.cheapmon.balalaika.data.entities.history.HistoryEntryWithRestr
 import com.github.cheapmon.balalaika.data.repositories.HistoryRepository
 import kotlinx.coroutines.launch
 
+/** View model for [HistoryFragment] */
 class HistoryViewModel(
     private val repository: HistoryRepository
 ) : ViewModel() {
+    /** All search history entries */
     val historyEntries: LiveData<List<HistoryEntryWithRestriction>> =
         repository.historyEntries.asLiveData()
 
+    /** Remove a search history entry */
     fun removeEntry(historyEntry: HistoryEntry) {
         viewModelScope.launch { repository.removeEntry(historyEntry) }
     }
 
+    /** Remove all search history entries */
     fun clearHistory() {
         viewModelScope.launch { repository.clearHistory() }
     }

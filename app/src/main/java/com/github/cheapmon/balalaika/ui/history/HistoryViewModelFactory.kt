@@ -20,10 +20,12 @@ import androidx.lifecycle.ViewModelProvider
 import com.github.cheapmon.balalaika.data.repositories.HistoryRepository
 import javax.inject.Inject
 
+/** Factory for [HistoryViewModel] */
 class HistoryViewModelFactory @Inject constructor(
     private val repository: HistoryRepository
 ) : ViewModelProvider.NewInstanceFactory() {
 
+    /** Create [HistoryViewModel] */
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return HistoryViewModel(

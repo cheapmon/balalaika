@@ -21,19 +21,23 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.R
+import com.github.cheapmon.balalaika.data.entities.history.HistoryEntry
 import com.github.cheapmon.balalaika.data.entities.history.HistoryEntryWithRestriction
 import com.github.cheapmon.balalaika.data.entities.history.SearchRestriction
 import com.github.cheapmon.balalaika.databinding.FragmentHistoryItemBinding
 
+/** Adapter for [HistoryFragment] */
 class HistoryAdapter(
     private val listener: Listener
 ) : ListAdapter<HistoryEntryWithRestriction, HistoryAdapter.ViewHolder>(HistoryDiff) {
+    /** Create view */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = FragmentHistoryItemBinding.inflate(layoutInflater, parent, false)
         return ViewHolder(binding)
     }
 
+    /** Bind item and add listeners */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val entry = getItem(position)
         with(holder.binding) {
@@ -50,10 +54,12 @@ class HistoryAdapter(
         }
     }
 
+    /** @suppress */
     class ViewHolder(
         val binding: FragmentHistoryItemBinding
     ) : RecyclerView.ViewHolder(binding.root)
 
+    /** @suppress */
     object HistoryDiff : DiffUtil.ItemCallback<HistoryEntryWithRestriction>() {
         override fun areContentsTheSame(
             oldItem: HistoryEntryWithRestriction,
@@ -70,8 +76,12 @@ class HistoryAdapter(
         }
     }
 
+    /** Component that handles actions from this adapter */
     interface Listener {
+        /** Callback for whenever deletion of a [history entry][HistoryEntry] is requested */
         fun onClickDeleteButton(historyEntry: HistoryEntryWithRestriction)
+
+        /** Callback for whenever a [history entry][HistoryEntry] is clicked */
         fun onClickRedoButton(historyEntry: HistoryEntryWithRestriction)
     }
 }
