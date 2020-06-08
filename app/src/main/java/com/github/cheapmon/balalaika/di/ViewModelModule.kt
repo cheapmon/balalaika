@@ -23,8 +23,14 @@ import com.github.cheapmon.balalaika.ui.dictionary.DictionaryViewModelFactory
 import dagger.Module
 import dagger.Provides
 
+/**
+ * View model dependency injection module
+ *
+ * This module injects view models and view model factories.
+ */
 @Module
 class ViewModelModule {
+    /** @suppress */
     @Provides
     fun provideDictionaryViewModelFactory(
         context: Context,

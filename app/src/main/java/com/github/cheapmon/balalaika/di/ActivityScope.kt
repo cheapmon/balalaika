@@ -17,6 +17,7 @@ package com.github.cheapmon.balalaika.di
 
 import javax.inject.Scope
 
+/** Scope that lives for the entire activity lifecycle */
 @Scope
 @MustBeDocumented
 @Retention(AnnotationRetention.RUNTIME)

@@ -26,19 +26,38 @@ import com.github.cheapmon.balalaika.ui.search.SearchFragment
 import dagger.BindsInstance
 import dagger.Component
 
+/**
+ * Application dependency injection component
+ *
+ * This component injects the [main activity][MainActivity] and all of its fragments.
+ */
 @ActivityScope
 @Component(modules = [DatabaseModule::class, ViewModelModule::class, ImportModule::class])
 interface AppComponent {
+    /** @suppress */
     @Component.Factory
     interface Factory {
         fun create(@BindsInstance context: Context): AppComponent
     }
 
+    /** @suppress */
     fun inject(activity: MainActivity)
+
+    /** @suppress */
     fun inject(fragment: BookmarksFragment)
+
+    /** @suppress */
     fun inject(fragment: DictionaryFragment)
+
+    /** @suppress */
     fun inject(fragment: HistoryFragment)
+
+    /** @suppress */
     fun inject(fragment: PreferencesFragment)
+
+    /** @suppress */
     fun inject(fragment: SourcesFragment)
+
+    /** @suppress */
     fun inject(fragment: SearchFragment)
 }

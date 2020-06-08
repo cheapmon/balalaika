@@ -21,33 +21,45 @@ import com.github.cheapmon.balalaika.data.AppDatabase
 import dagger.Module
 import dagger.Provides
 
+/**
+ * Database dependency injection module
+ *
+ * This module inject the application database and all of its data access objects.
+ */
 @Module
 class DatabaseModule {
+    /** @suppress */
     @ActivityScope
     @Provides
     fun provideDatabase(context: Context) =
         Room.databaseBuilder(context, AppDatabase::class.java, "balalaika").build()
 
+    /** @suppress */
     @ActivityScope
     @Provides
     fun provideCategories(appDatabase: AppDatabase) = appDatabase.categories()
 
+    /** @suppress */
     @ActivityScope
     @Provides
     fun provideLexemes(appDatabase: AppDatabase) = appDatabase.lexemes()
 
+    /** @suppress */
     @ActivityScope
     @Provides
     fun provideProperties(appDatabase: AppDatabase) = appDatabase.properties()
 
+    /** @suppress */
     @ActivityScope
     @Provides
     fun provideDictionaryEntries(appDatabase: AppDatabase) = appDatabase.dictionaryEntries()
 
+    /** @suppress */
     @ActivityScope
     @Provides
     fun provideDictionaryViews(appDatabase: AppDatabase) = appDatabase.dictionaryViews()
 
+    /** @suppress */
     @ActivityScope
     @Provides
     fun provideHistoryEntries(appDatabase: AppDatabase) = appDatabase.historyEntries()
