@@ -27,7 +27,14 @@ import java.io.InputStreamReader
 import java.util.*
 import javax.inject.Inject
 
+/**
+ * [Importer][EntityImporter] for extracting database entities from `.csv` source files
+ *
+ * @see com.github.cheapmon.balalaika.data.entities
+ * @see com.github.cheapmon.balalaika.data.insert
+ */
 class CsvEntityImporter @Inject constructor(
+    /** Reads files from application resources */
     private val res: ResourceLoader
 ) : EntityImporter {
     private val categoryIdCache: HashMap<String, Long> = hashMapOf()

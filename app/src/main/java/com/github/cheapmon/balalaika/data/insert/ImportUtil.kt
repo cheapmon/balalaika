@@ -24,13 +24,27 @@ import com.github.cheapmon.balalaika.data.storage.Storage
 import com.github.cheapmon.balalaika.util.Constants
 import javax.inject.Inject
 
+/**
+ * Asynchronous import of entities into the [app database][AppDatabase]
+ *
+ * The configuration of input files is checked for a version number. If the version is newer than
+ * the one we currently use, a transaction is started and new data is imported from the sources.
+ * If there are any problems with the sources, rollback is used. After successful import, the new
+ * version number is saved.
+ */
 class ImportUtil @Inject constructor(
+    /** Extracts entities from sources */
     private val entityImporter: EntityImporter,
+    /** Reads configuration from sources */
     private val configLoader: ConfigLoader,
+    /** Reads and writes version number to persistent storage */
     private val storage: Storage,
+    /** Application wide constants */
     private val constants: Constants,
+    /** Database to write to */
     private val appDatabase: AppDatabase
 ) {
+    /** Import entities from sources */
     suspend fun import() {
         val config = configLoader.readConfig()
         val currentVersion = storage.getInt(constants.DB_VERSION_KEY, 0)

@@ -21,10 +21,24 @@ import com.github.cheapmon.balalaika.data.entities.property.Property
 import com.github.cheapmon.balalaika.data.entities.view.DictionaryView
 import com.github.cheapmon.balalaika.data.entities.view.DictionaryViewToCategory
 
+/**
+ * Component which extracts database entities from a source
+ *
+ * @see com.github.cheapmon.balalaika.data.entities
+ */
 interface EntityImporter {
+    /** Extract [categories][Category] from source files */
     fun readCategories(): List<Category>
+
+    /** Extract [lexemes][Lexeme] from source files */
     fun readLexemes(): List<Lexeme>
+
+    /** Extract [properties][Property] from source files */
     fun readProperties(): List<Property>
+
+    /** Extract [dictionary views][DictionaryView] from source files */
     fun readDictionaryViews(): List<DictionaryView>
+
+    /** Extract [dictionary view relations][DictionaryViewToCategory] from source files */
     fun readDictionaryViewToCategories(): List<DictionaryViewToCategory>
 }
