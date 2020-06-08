@@ -18,11 +18,35 @@ package com.github.cheapmon.balalaika.data.entities.entry
 import androidx.paging.DataSource
 import androidx.room.Dao
 import androidx.room.Query
+import com.github.cheapmon.balalaika.data.entities.category.Category
+import com.github.cheapmon.balalaika.data.entities.history.SearchRestriction
 import com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme
+import com.github.cheapmon.balalaika.data.entities.property.Property
+import com.github.cheapmon.balalaika.data.entities.view.DictionaryView
+import com.github.cheapmon.balalaika.ui.bookmarks.BookmarksFragment
+import com.github.cheapmon.balalaika.ui.dictionary.DictionaryFragment
+import com.github.cheapmon.balalaika.ui.search.SearchFragment
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Database link for [dictionary entries][DictionaryEntry]
+ *
+ * Dictionary entry retrieval consists of two steps:
+ * 1. Querying of matching [lexemes][Lexeme] (e.g. [getLexemesFiltered], [getLexemesSorted],
+ * [findLexemes])
+ * 2. Fetching associated dictionary entries on demand (e.g. [getFiltered], [getSorted], [find])
+ *
+ * Using this indirection, we enable
+ * [paging](https://developer.android.com/topic/libraries/architecture/paging)
+ * and ensure that only a small number of entries is loaded at the same time.
+ */
 @Dao
 interface DictionaryEntryDao {
+    /**
+     * Get all [lexemes][Lexeme] which have been bookmarked
+     *
+     * @see BookmarksFragment
+     */
     @Query(
         """SELECT id, external_id, form, base_id, is_bookmark
                     FROM DictionaryEntry
@@ -30,6 +54,20 @@ interface DictionaryEntryDao {
     )
     fun getBookmarked(): DataSource.Factory<Int, Lexeme>
 
+    /**
+     * Get all [dictionary entries][DictionaryEntry] for a single [lexeme][Lexeme], depending on a
+     * certain [dictionary view][DictionaryView]
+     *
+     * This effectively checks for all [categories][Category] that are displayed within the
+     * dictionary view and selects only those entries that match one of those categories and aren't
+     * hidden.
+     *
+     * _Note_: These entries are sorted only by the [form][Lexeme.form] and
+     * [sequence][Category.sequence] fields.
+     * More complex sorting is achieved using [getSorted].
+     *
+     * @see DictionaryFragment
+     */
     @Query(
         """SELECT * FROM DictionaryEntry
                     WHERE id = (:lexemeId)
@@ -40,6 +78,19 @@ interface DictionaryEntryDao {
     )
     suspend fun getFiltered(dictionaryViewId: Long, lexemeId: Long): List<DictionaryEntry>
 
+    /**
+     * Get all [lexemes][Lexeme], depending on a certain [dictionary view][DictionaryView]
+     *
+     * This effectively checks for all [categories][Category] that are displayed within the
+     * dictionary view and selects only those lexemes that match one of those categories and aren't
+     * hidden.
+     *
+     * _Note_: These lexemes are sorted only by the [form][Lexeme.form] and
+     * [sequence][Category.sequence] fields.
+     * More complex sorting is achieved using [getLexemesSorted].
+     *
+     * @see DictionaryFragment
+     */
     @Query(
         """SELECT id, external_id, form, base_id, is_bookmark FROM DictionaryEntry
                     WHERE c_id IN (SELECT category_id FROM dictionary_view_to_category
@@ -50,6 +101,24 @@ interface DictionaryEntryDao {
     )
     fun getLexemesFiltered(dictionaryViewId: Long): DataSource.Factory<Int, Lexeme>
 
+    /**
+     * Get all [external identifiers][Lexeme.externalId] of [lexemes][Lexeme], depending on a
+     * certain [dictioary view][DictionaryView]
+     *
+     * This effectively checks for all [categories][Category] that are displayed within the
+     * dictionary view and selects only those identifiers that match one of those categories and
+     * aren't hidden.
+     *
+     * The result is similar to the result of [getFiltered], expect this function only returns
+     * identifiers of [dictionary entries][DictionaryEntry]. This can be used to determine the
+     * position of a lexeme in the entry list.
+     *
+     * _Note_: These identifiers are sorted only by the [form][Lexeme.form] and
+     * [sequence][Category.sequence] fields.
+     * More complex sorting is achieved using [getIdsSorted].
+     *
+     * @see DictionaryFragment
+     */
     @Query(
         """SELECT external_id FROM DictionaryEntry
                     WHERE c_id IN (SELECT category_id FROM dictionary_view_to_category
@@ -60,6 +129,17 @@ interface DictionaryEntryDao {
     )
     fun getIdsFiltered(dictionaryViewId: Long): Flow<List<String>>
 
+    /**
+     * Get all [dictionary entries][DictionaryEntry] for a single [lexeme][Lexeme], depending on a
+     * certain [dictionary view][DictionaryView] and sorted by a certain [data category][Category]
+     *
+     * This effectively checks for all [categories][Category] that are displayed within the
+     * dictionary view and selects only those entries that match one of those categories, have the
+     * given [lexemeId] and aren't hidden, then sorts the remaining entries based on the given data
+     * category.
+     *
+     * @see DictionaryFragment
+     */
     @Query(
         """SELECT id, external_id, form, base_id, is_bookmark, b_id, b_external_id, b_form,
                     b_base_id, b_is_bookmark, p_id, p_category_id, p_lexeme_id, p_value, c_id,
@@ -79,6 +159,16 @@ interface DictionaryEntryDao {
         lexemeId: Long
     ): List<DictionaryEntry>
 
+    /**
+     * Get all [lexemes][Lexeme], depending on a certain [dictionary view][DictionaryView] and
+     * sorted by a certain [data category][Category]
+     *
+     * This effectively checks for all [categories][Category] that are displayed within the
+     * dictionary view and selects only those lexemes that match one of those categories and aren't
+     * hidden, then sorts the remaining lexemes based on the given data category.
+     *
+     * @see DictionaryFragment
+     */
     @Query(
         """SELECT id, external_id, form, base_id, is_bookmark
                     FROM DictionaryEntry
@@ -95,6 +185,20 @@ interface DictionaryEntryDao {
         categoryId: Long
     ): DataSource.Factory<Int, Lexeme>
 
+    /**
+     * Get all [external identifiers][Lexeme.externalId] of [lexemes][Lexeme], depending on a
+     * certain [dictionary view][DictionaryView] and sorted by a certain [data category][Category]
+     *
+     * This effectively checks for all [categories][Category] that are displayed within the
+     * dictionary view and selects only those identifiers that match one of those categories and
+     * aren't hidden, then sorts the remaining lexemes based on the given data category.
+     *
+     * The result is similar to the result of [getSorted], expect this function only returns
+     * identifiers of [dictionary entries][DictionaryEntry]. This can be used to determine the
+     * position of a lexeme in the entry list.
+     *
+     * @see DictionaryFragment
+     */
     @Query(
         """SELECT external_id FROM DictionaryEntry
                     JOIN (SELECT id AS o_id, p_value as o_value FROM DictionaryEntry
@@ -110,6 +214,12 @@ interface DictionaryEntryDao {
         categoryId: Long
     ): Flow<List<String>>
 
+    /**
+     * Find all [dictionary entries][DictionaryEntry] whose [form][Lexeme.form] or
+     * [property value][Property.value] includes the given [query] string
+     *
+     * @see SearchFragment
+     */
     @Query(
         """SELECT * FROM DictionaryEntry
                     WHERE id = (:lexemeId)
@@ -120,6 +230,12 @@ interface DictionaryEntryDao {
     )
     suspend fun find(query: String, lexemeId: Long): List<DictionaryEntry>
 
+    /**
+     * Find all [lexemes][Lexeme] whose [form][Lexeme.form] or
+     * [property value][Property.value] includes the given [query] string
+     *
+     * @see SearchFragment
+     */
     @Query(
         """SELECT id, external_id, form, base_id, is_bookmark FROM DictionaryEntry
                     WHERE (form LIKE '%' || (:query) || '%'
@@ -130,6 +246,13 @@ interface DictionaryEntryDao {
     )
     fun findLexemes(query: String): DataSource.Factory<Int, Lexeme>
 
+    /**
+     * Find all [dictionary entries][DictionaryEntry] whose [form][Lexeme.form] or
+     * [property value][Property.value] includes the given [query] string and meet a certain
+     * [restriction][SearchRestriction]
+     *
+     * @see SearchFragment
+     */
     @Query(
         """SELECT * FROM DictionaryEntry
                     WHERE id = (:lexemeId)
@@ -147,6 +270,13 @@ interface DictionaryEntryDao {
         lexemeId: Long
     ): List<DictionaryEntry>
 
+    /**
+     * Find all [lexemes][Lexeme] whose [form][Lexeme.form] or
+     * [property value][Property.value] includes the given [query] string and meet a certain
+     * [restriction][SearchRestriction]
+     *
+     * @see SearchFragment
+     */
     @Query(
         """SELECT id, external_id, form, base_id, is_bookmark FROM DictionaryEntry
                     WHERE (form LIKE '%' || (:query) || '%'

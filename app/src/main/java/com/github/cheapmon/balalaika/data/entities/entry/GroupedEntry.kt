@@ -18,8 +18,14 @@ package com.github.cheapmon.balalaika.data.entities.entry
 import com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme
 import com.github.cheapmon.balalaika.data.entities.property.PropertyWithRelations
 
+/**
+ * [Lexeme] grouped with all of its [properties][PropertyWithRelations]
+ */
 data class GroupedEntry(
+    /** [Lexeme] associated with this entry */
     val lexeme: Lexeme,
+    /** Base [lexeme][Lexeme] associated with this entry */
     val base: Lexeme?,
+    /** All [properties][PropertyWithRelations] associated with [lexeme] */
     val properties: List<PropertyWithRelations>
 )
