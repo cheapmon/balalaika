@@ -1,3 +1,5 @@
+import java.nio.file.Paths
+
 /*
  * Copyright 2020 Simon Kaleschke
  *
@@ -43,4 +45,8 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+task clearDocumentation(type: Delete) {
+    delete Paths.get(rootProject.rootDir.toPath().toString(), "app", "build", "javadoc")
 }
