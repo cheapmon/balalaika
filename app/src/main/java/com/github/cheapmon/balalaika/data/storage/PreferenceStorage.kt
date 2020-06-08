@@ -20,6 +20,7 @@ import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import javax.inject.Inject
 
+/** Android preferences [storage][Storage] */
 class PreferenceStorage @Inject constructor(
     context: Context
 ) : Storage {

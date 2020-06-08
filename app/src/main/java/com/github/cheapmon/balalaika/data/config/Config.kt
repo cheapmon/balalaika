@@ -33,7 +33,7 @@ data class Config(
      *
      * Instead of using the version indicator in [AppDatabase], the version number is given by some
      * input file.
-     * These version numbers have a different meaning. [Database.version] indicates changes of the
+     * These version numbers have a different meaning. `Database.version` indicates changes of the
      * database schema, whereas [version] is simply used for changes in the input files.
      */
     val version: Int = -1,

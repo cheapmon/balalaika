@@ -23,7 +23,7 @@ import javax.inject.Inject
 /**
  * [ConfigLoader] which creates a configuration object from a YAML source file
  *
- * The source file is read by the [ResourceLoader] and serialized using [Yaml].
+ * The source file is read by the [ResourceLoader] and deserialized using SnakeYAML.
  * An example configuration source file might look like this:
  * ```yaml
  * version: 1
