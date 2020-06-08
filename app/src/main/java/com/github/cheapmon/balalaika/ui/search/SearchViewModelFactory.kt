@@ -21,11 +21,13 @@ import com.github.cheapmon.balalaika.data.repositories.HistoryRepository
 import com.github.cheapmon.balalaika.data.repositories.SearchRepository
 import javax.inject.Inject
 
+/** Factory for [SearchViewModel] */
 class SearchViewModelFactory @Inject constructor(
     private val searchRepository: SearchRepository,
     private val historyRepository: HistoryRepository
 ) : ViewModelProvider.NewInstanceFactory() {
 
+    /** Create [SearchViewModel] */
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return SearchViewModel(

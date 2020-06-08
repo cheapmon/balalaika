@@ -41,9 +41,20 @@ import com.github.cheapmon.balalaika.util.grouped
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * Fragment for querying the database
+ *
+ * The user can:
+ * - Search for dictionary entries using a query
+ * - Apply restriction to the search query
+ * - Show an entry in the dictionary
+ */
 class SearchFragment : Fragment(), SearchAdapter.Listener {
+    /** @suppress */
     @Inject
     lateinit var viewModelFactory: SearchViewModelFactory
+
+    /** @suppress */
     lateinit var viewModel: SearchViewModel
 
     private val args: SearchFragmentArgs by navArgs()
@@ -52,6 +63,7 @@ class SearchFragment : Fragment(), SearchAdapter.Listener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var searchAdapter: SearchAdapter
 
+    /** Prepare view and load data */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -77,6 +89,7 @@ class SearchFragment : Fragment(), SearchAdapter.Listener {
         return binding.root
     }
 
+    /** Inject view model */
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
@@ -85,6 +98,7 @@ class SearchFragment : Fragment(), SearchAdapter.Listener {
         viewModel = model
     }
 
+    /** Process fragment arguments */
     private fun handleArgs() {
         val query = args.query
         val restriction = args.restriction
@@ -94,6 +108,7 @@ class SearchFragment : Fragment(), SearchAdapter.Listener {
         if (restriction != null) viewModel.setRestriction(restriction)
     }
 
+    /** Bind data */
     private fun bindUi() {
         viewModel.entries.observe(viewLifecycleOwner, Observer { list ->
             searchAdapter.submitList(list)
@@ -129,12 +144,14 @@ class SearchFragment : Fragment(), SearchAdapter.Listener {
         })
     }
 
+    /** Show entry in dictionary */
     override fun onClickItem(lexeme: Lexeme) {
         viewModel.addToHistory()
         val directions = SearchFragmentDirections.actionNavSearchToNavHome(lexeme.externalId)
         findNavController().navigate(directions)
     }
 
+    /** Load all properties for a lexeme */
     override fun onLoadLexeme(lexeme: Lexeme, block: (entry: GroupedEntry?) -> Unit) {
         lifecycleScope.launch {
             val entry = viewModel.getDictionaryEntriesFor(lexeme.lexemeId).grouped()
@@ -142,6 +159,7 @@ class SearchFragment : Fragment(), SearchAdapter.Listener {
         }
     }
 
+    /** @suppress */
     inner class Watcher : TextWatcher {
         override fun afterTextChanged(s: Editable?) = Unit
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit

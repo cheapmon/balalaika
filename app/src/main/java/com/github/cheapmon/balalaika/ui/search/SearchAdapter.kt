@@ -29,17 +29,20 @@ import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetListener
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.Widgets
 import com.github.cheapmon.balalaika.util.highlight
 
+/** Adapter for [SearchFragment] */
 class SearchAdapter(
     private val listener: Listener
 ) : PagedListAdapter<Lexeme, SearchAdapter.ViewHolder>(SearchDiff) {
     private var searchText: String = ""
 
+    /** Create view */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = FragmentSearchItemBinding.inflate(layoutInflater, parent, false)
         return ViewHolder(binding)
     }
 
+    /** Bind item and add listeners */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val lex = getItem(position) ?: return
         listener.onLoadLexeme(lex) { entry ->
@@ -76,8 +79,10 @@ class SearchAdapter(
         notifyDataSetChanged()
     }
 
+    /** @suppress */
     class ViewHolder(val binding: FragmentSearchItemBinding) : RecyclerView.ViewHolder(binding.root)
 
+    /** @suppress */
     object SearchDiff : DiffUtil.ItemCallback<Lexeme>() {
         override fun areItemsTheSame(
             oldItem: Lexeme,
@@ -94,6 +99,7 @@ class SearchAdapter(
         }
     }
 
+    /** Dummy widget listener that ignores all actions */
     private class WListener : WidgetListener {
         override fun onClickAudioButton(resId: Int) = Unit
         override fun onClickSearchButton(query: String, restriction: SearchRestriction) = Unit
@@ -101,8 +107,12 @@ class SearchAdapter(
         override fun onClickLinkButton(link: String) = Unit
     }
 
+    /** Component that handles actions from this adapter */
     interface Listener {
+        /** Callback for whenever a [lexeme][Lexeme] is clicked */
         fun onClickItem(lexeme: Lexeme)
+
+        /** Callback for whenever a [lexeme][Lexeme] is loaded */
         fun onLoadLexeme(lexeme: Lexeme, block: (GroupedEntry?) -> Unit)
     }
 }
