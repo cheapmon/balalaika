@@ -43,7 +43,7 @@ import com.github.cheapmon.balalaika.util.ResourceUtil
  * but not the same [Category]. This kind of differentiation enables a flexible and wide-spread
  * language support, which is one of the main goals of this project.
  *
- * For additonal information on Balalaika's data model, please refer to the
+ * For additional information on Balalaika's data model, please refer to the
  * [Import documentation][com.github.cheapmon.balalaika.data.insert].
  *
  * @see WidgetType
