@@ -18,10 +18,10 @@ package com.github.cheapmon.balalaika.data
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.github.cheapmon.balalaika.data.entities.entry.DictionaryEntry
 import com.github.cheapmon.balalaika.data.entities.category.Category
 import com.github.cheapmon.balalaika.data.entities.category.CategoryDao
 import com.github.cheapmon.balalaika.data.entities.category.WidgetTypeConverters
+import com.github.cheapmon.balalaika.data.entities.entry.DictionaryEntry
 import com.github.cheapmon.balalaika.data.entities.entry.DictionaryEntryDao
 import com.github.cheapmon.balalaika.data.entities.history.HistoryEntry
 import com.github.cheapmon.balalaika.data.entities.history.HistoryEntryDao
@@ -33,6 +33,12 @@ import com.github.cheapmon.balalaika.data.entities.view.DictionaryView
 import com.github.cheapmon.balalaika.data.entities.view.DictionaryViewDao
 import com.github.cheapmon.balalaika.data.entities.view.DictionaryViewToCategory
 
+/**
+ * Application-wide database
+ *
+ * For more information about the application architecture, please refer to the
+ * [Architecture documentation][com.github.cheapmon.balalaika.data].
+ */
 @Database(
     entities = [
         Category::class,
@@ -48,10 +54,21 @@ import com.github.cheapmon.balalaika.data.entities.view.DictionaryViewToCategory
 )
 @TypeConverters(WidgetTypeConverters::class)
 abstract class AppDatabase : RoomDatabase() {
+    /** Database link for [categories][Category] */
     abstract fun categories(): CategoryDao
+
+    /** Database link for [lexemes][Lexeme] */
     abstract fun lexemes(): LexemeDao
+
+    /** Database link for [properties][Property] */
     abstract fun properties(): PropertyDao
+
+    /** Database link for [dictionary entries][DictionaryEntry] */
     abstract fun dictionaryEntries(): DictionaryEntryDao
+
+    /** Database link for [dictionary views][DictionaryView] */
     abstract fun dictionaryViews(): DictionaryViewDao
+
+    /** Database link for [history entries][HistoryEntry] */
     abstract fun historyEntries(): HistoryEntryDao
 }
