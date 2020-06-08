@@ -23,15 +23,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme
 import com.github.cheapmon.balalaika.databinding.FragmentBookmarksItemBinding
 
+/** Adapter for [BookmarksFragment] */
 class BookmarksAdapter(
     private val listener: Listener
 ) : ListAdapter<Lexeme, BookmarksAdapter.ViewHolder>(BookmarksDiff) {
+    /** Create view */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = FragmentBookmarksItemBinding.inflate(layoutInflater, parent, false)
         return ViewHolder(binding)
     }
 
+    /** Bind item and add listeners */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val entry = getItem(position)
         with(holder.binding) {
@@ -41,10 +44,12 @@ class BookmarksAdapter(
         }
     }
 
+    /** @suppress */
     class ViewHolder(
         val binding: FragmentBookmarksItemBinding
     ) : RecyclerView.ViewHolder(binding.root)
 
+    /** @suppress */
     object BookmarksDiff : DiffUtil.ItemCallback<Lexeme>() {
         override fun areContentsTheSame(
             oldItem: Lexeme,
@@ -61,8 +66,12 @@ class BookmarksAdapter(
         }
     }
 
+    /** Component that handles actions from this adapter */
     interface Listener {
+        /** Callback for whenever deletion of a [lexeme][Lexeme] is requested */
         fun onClickDeleteButton(lexeme: Lexeme)
+
+        /** Callback for whenever a [lexeme][Lexeme] is clicked */
         fun onClickRedoButton(lexeme: Lexeme)
     }
 }

@@ -20,10 +20,14 @@ import androidx.lifecycle.ViewModelProvider
 import com.github.cheapmon.balalaika.data.repositories.DictionaryRepository
 import javax.inject.Inject
 
+/**
+ * Factory for [BookmarksViewModel]
+ */
 class BookmarksViewModelFactory @Inject constructor(
     private val repository: DictionaryRepository
 ) : ViewModelProvider.NewInstanceFactory() {
 
+    /** Create [BookmarksViewModel] */
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return BookmarksViewModel(
