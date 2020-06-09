@@ -21,11 +21,19 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.data.entities.category.Category
+import com.github.cheapmon.balalaika.data.entities.category.WidgetType
 import com.github.cheapmon.balalaika.data.entities.property.PropertyWithRelations
 import com.github.cheapmon.balalaika.databinding.HelperItalicBinding
 import com.github.cheapmon.balalaika.databinding.WidgetPlainBinding
 import com.github.cheapmon.balalaika.util.highlight
 
+/**
+ * Simple widget for only displaying a single property value
+ *
+ * Values are displayed as-is, without additional modification.
+ *
+ * @see WidgetType.PLAIN
+ */
 open class PlainWidget(
     parent: ViewGroup,
     listener: WidgetListener,

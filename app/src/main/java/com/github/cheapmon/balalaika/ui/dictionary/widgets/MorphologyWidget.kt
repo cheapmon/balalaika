@@ -17,8 +17,17 @@ package com.github.cheapmon.balalaika.ui.dictionary.widgets
 
 import android.view.ViewGroup
 import com.github.cheapmon.balalaika.data.entities.category.Category
+import com.github.cheapmon.balalaika.data.entities.category.WidgetType
 import com.github.cheapmon.balalaika.data.entities.property.PropertyWithRelations
 
+/**
+ * Widget for morphological information
+ *
+ * Property values are divided by `|` symbols. Each morphological part is displayed
+ * separately in the context menu.
+ *
+ * @see WidgetType.MORPHOLOGY
+ */
 class MorphologyWidget(
     parent: ViewGroup,
     listener: WidgetListener,

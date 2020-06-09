@@ -18,8 +18,18 @@ package com.github.cheapmon.balalaika.ui.dictionary.widgets
 import android.view.ViewGroup
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.data.entities.category.Category
+import com.github.cheapmon.balalaika.data.entities.category.WidgetType
+import com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme
 import com.github.cheapmon.balalaika.data.entities.property.PropertyWithRelations
 
+/**
+ * Widget for in-dictionary references
+ *
+ * Property values are of the form `<description>;;;<reference>`. The description can be arbitrary,
+ * `<reference>` must be a valid [external identifier][Lexeme.externalId] of a [lexeme][Lexeme].
+ *
+ * @see WidgetType.REFERENCE
+ */
 class ReferenceWidget(
     parent: ViewGroup,
     listener: WidgetListener,

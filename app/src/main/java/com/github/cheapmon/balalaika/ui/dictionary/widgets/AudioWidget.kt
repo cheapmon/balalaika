@@ -19,9 +19,19 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.data.entities.category.Category
+import com.github.cheapmon.balalaika.data.entities.category.WidgetType
 import com.github.cheapmon.balalaika.data.entities.property.PropertyWithRelations
 import com.github.cheapmon.balalaika.util.ResourceUtil
 
+/**
+ * Widget for audio playback
+ *
+ * Property values are of the form `<description>;;;<file>`. The description can be arbitrary,
+ * `<file>` must be a valid string identifier of an Android audio resource. For example,
+ * `audio.wav` would have the value `audio`.
+ *
+ * @see WidgetType.AUDIO
+ */
 class AudioWidget(
     parent: ViewGroup,
     listener: WidgetListener,
@@ -35,6 +45,7 @@ class AudioWidget(
     }
 
     override fun actionIcon(value: String): Int? {
+        // Ignore fields with no file reference
         value.split(Regex(";;;")).getOrNull(1) ?: return null
         return R.drawable.ic_audio
     }
@@ -44,6 +55,7 @@ class AudioWidget(
         listener.onClickAudioButton(ResourceUtil.raw(parent.context, res))
     }
 
+    // No meaningful context menu actions
     override fun createContextMenu(): AlertDialog? = null
     override val menuItems: Array<String> = arrayOf()
     override val menuActions: List<() -> Unit> = listOf()

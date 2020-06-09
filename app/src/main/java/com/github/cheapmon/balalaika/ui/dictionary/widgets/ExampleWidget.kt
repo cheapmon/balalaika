@@ -22,9 +22,18 @@ import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.data.entities.category.Category
+import com.github.cheapmon.balalaika.data.entities.category.WidgetType
 import com.github.cheapmon.balalaika.data.entities.property.PropertyWithRelations
 import com.github.cheapmon.balalaika.databinding.HelperExampleBinding
 
+/**
+ * Widget for example sentences and full-text information
+ *
+ * Property values have the form `<first>;;;<second>`. The two parts can be arbitrary and will
+ * be displayed on top of each other.
+ *
+ * @see WidgetType.EXAMPLE
+ */
 class ExampleWidget(
     parent: ViewGroup,
     listener: WidgetListener,
@@ -50,6 +59,7 @@ class ExampleWidget(
         return propertyBinding.root
     }
 
+    // No meaningful context menu actions
     override fun createContextMenu(): AlertDialog? = null
     override val menuItems: Array<String> = arrayOf()
     override val menuActions: List<() -> Unit> = listOf()

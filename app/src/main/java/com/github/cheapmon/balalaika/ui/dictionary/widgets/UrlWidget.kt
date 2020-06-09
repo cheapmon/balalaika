@@ -18,8 +18,17 @@ package com.github.cheapmon.balalaika.ui.dictionary.widgets
 import android.view.ViewGroup
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.data.entities.category.Category
+import com.github.cheapmon.balalaika.data.entities.category.WidgetType
 import com.github.cheapmon.balalaika.data.entities.property.PropertyWithRelations
 
+/**
+ * Widget for external hyperlinks
+ *
+ * Property values are of the form `<description>;;;<url>`. The description can be arbitrary,
+ * `<url>` must be a valid hyperlink.
+ *
+ * @see WidgetType.URL
+ */
 class UrlWidget(
     parent: ViewGroup,
     listener: WidgetListener,
