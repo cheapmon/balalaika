@@ -1,3 +1,18 @@
+/*
+ * Copyright 2020 Simon Kaleschke
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.github.cheapmon.balalaika
 
 import android.os.Bundle
@@ -18,16 +33,20 @@ import com.github.cheapmon.balalaika.databinding.AppBarMainBinding
 import com.google.android.material.navigation.NavigationView
 import javax.inject.Inject
 
+/** Main activity for Balalaika */
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var navController: NavController
 
+    /** @suppress */
     @Inject
     lateinit var importUtil: ImportUtil
 
+    /** @suppress */
     @Inject
     lateinit var storage: Storage
 
+    /** Prepare user interface and check for database updates */
     override fun onCreate(savedInstanceState: Bundle?) {
         (application as Application).appComponent.inject(this)
 
@@ -53,13 +72,15 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launchWhenCreated {
             importUtil.import()
+            // Set default options
             val orderKey = getString(R.string.preferences_key_order)
             val viewKey = getString(R.string.preferences_key_view)
-            if(!storage.contains(orderKey)) storage.putString(orderKey, "-1")
-            if(!storage.contains(viewKey)) storage.putString(viewKey, "1")
+            if (!storage.contains(orderKey)) storage.putString(orderKey, "-1")
+            if (!storage.contains(viewKey)) storage.putString(viewKey, "1")
         }
     }
 
+    /** @suppress */
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }

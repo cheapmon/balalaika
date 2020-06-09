@@ -1,3 +1,18 @@
+/*
+ * Copyright 2020 Simon Kaleschke
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.github.cheapmon.balalaika.ui.bookmarks
 
 import android.content.Context
@@ -19,9 +34,20 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import javax.inject.Inject
 
+/**
+ * Fragment for bookmark organisation
+ *
+ * The user may:
+ * - See existing bookmarks
+ * - Follow a bookmark to its dictionary entry
+ * - Remove one or all bookmarks
+ */
 class BookmarksFragment : Fragment(), BookmarksAdapter.Listener {
+    /** @suppress */
     @Inject
     lateinit var viewModelFactory: BookmarksViewModelFactory
+
+    /** @suppress */
     lateinit var viewModel: BookmarksViewModel
 
     private lateinit var binding: FragmentBookmarksBinding
@@ -29,6 +55,7 @@ class BookmarksFragment : Fragment(), BookmarksAdapter.Listener {
     private lateinit var bookmarksLayoutManager: LinearLayoutManager
     private lateinit var bookmarksAdapter: BookmarksAdapter
 
+    /** Prepare view and load data */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -48,6 +75,7 @@ class BookmarksFragment : Fragment(), BookmarksAdapter.Listener {
         return binding.root
     }
 
+    /** Inject view model */
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
@@ -56,17 +84,23 @@ class BookmarksFragment : Fragment(), BookmarksAdapter.Listener {
         viewModel = model
     }
 
+    /**
+     * Create options menu
+     *
+     * This only consists of one button to remove all bookmarks.
+     */
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_bookmarks, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
+    /** Options menu actions */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.bookmarks_clear -> {
                 MaterialAlertDialogBuilder(context)
                     .setTitle(R.string.bookmarks_clear_title)
-                    .setPositiveButton(R.string.bookmarks_clear_affirm) { _, _ -> clearHistory() }
+                    .setPositiveButton(R.string.bookmarks_clear_affirm) { _, _ -> clearBookmarks() }
                     .setNegativeButton(R.string.bookmarks_clear_cancel, null)
                     .show()
                 true
@@ -75,6 +109,7 @@ class BookmarksFragment : Fragment(), BookmarksAdapter.Listener {
         }
     }
 
+    /** Bind data */
     private fun submitData() {
         viewModel.lexemes.observe(viewLifecycleOwner, Observer {
             bookmarksAdapter.submitList(ArrayList(it))
@@ -88,17 +123,20 @@ class BookmarksFragment : Fragment(), BookmarksAdapter.Listener {
         })
     }
 
-    private fun clearHistory() {
+    /** Remove all bookmarks */
+    private fun clearBookmarks() {
         viewModel.clearBookmarks()
         Snackbar.make(binding.root, R.string.bookmarks_clear_done, Snackbar.LENGTH_SHORT).show()
     }
 
+    /** Remove single bookmark */
     override fun onClickDeleteButton(lexeme: Lexeme) {
         viewModel.removeBookmark(lexeme.lexemeId)
         Snackbar.make(binding.root, R.string.bookmarks_item_removed, Snackbar.LENGTH_SHORT)
             .show()
     }
 
+    /** Show bookmarked entry in dictionary */
     override fun onClickRedoButton(lexeme: Lexeme) {
         val directions =
             BookmarksFragmentDirections.actionNavBookmarksToNavHome(lexeme.externalId)
