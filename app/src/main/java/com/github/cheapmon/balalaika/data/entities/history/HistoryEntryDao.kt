@@ -17,6 +17,7 @@ package com.github.cheapmon.balalaika.data.entities.history
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
+import com.github.cheapmon.balalaika.data.entities.category.Category
 
 /** Database link for [history entries][HistoryEntry] */
 @Dao
@@ -42,7 +43,7 @@ interface HistoryEntryDao {
     @Query("DELETE FROM search_history WHERE `query` = (:query)")
     suspend fun removeSimilar(query: String)
 
-    /** Remove a single [history entry][History Entry] from the database */
+    /** Remove a single [history entry][HistoryEntry] from the database */
     @Delete
     suspend fun remove(historyEntry: HistoryEntry)
 }
