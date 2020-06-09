@@ -24,7 +24,16 @@ import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.data.entities.entry.DictionaryEntry
 import com.github.cheapmon.balalaika.data.entities.entry.GroupedEntry
 import com.github.cheapmon.balalaika.data.entities.property.PropertyWithRelations
+import com.github.cheapmon.balalaika.ui.search.SearchAdapter
 
+/**
+ * Highlight part of a string
+ *
+ * This is used in the user interface to indicate matching [dictionary entries][DictionaryEntry]
+ * for a search query.
+ *
+ * @see SearchAdapter
+ */
 fun String.highlight(text: String?, context: Context): SpannedString {
     val contents = this
     return if (text == null || text == "" || !contents.contains(text)) {
@@ -32,6 +41,7 @@ fun String.highlight(text: String?, context: Context): SpannedString {
     } else {
         val color = ContextCompat.getColor(context, R.color.colorPrimary)
         buildSpannedString {
+            // Split before and after text
             contents.split(Regex("(?<=$text)|(?=$text)")).forEach {
                 if (it == text) color(color) { append(it) }
                 else append(it)
@@ -40,6 +50,7 @@ fun String.highlight(text: String?, context: Context): SpannedString {
     }
 }
 
+/** Group [dictionary entries][DictionaryEntry] into a single entity */
 fun List<DictionaryEntry>.grouped(): GroupedEntry? {
     if (this.isEmpty()) return null
     val lexeme = this.first().lexeme

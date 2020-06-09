@@ -15,9 +15,17 @@
  */
 package com.github.cheapmon.balalaika.util
 
+import com.github.cheapmon.balalaika.data.config.Config
+import com.github.cheapmon.balalaika.data.storage.Storage
 import javax.inject.Inject
 
+/** Application-wide constants */
 @Suppress("PropertyName")
 class Constants @Inject constructor() {
+    /**
+     * Key used in [storage][Storage] to save database version key
+     *
+     * @see Config
+     */
     val DB_VERSION_KEY = "db_version"
 }

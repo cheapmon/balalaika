@@ -17,10 +17,18 @@ package com.github.cheapmon.balalaika.util
 
 import android.content.Context
 
+/**
+ * Fetch Android resource identifiers from their string counterparts
+ *
+ * Also caches results.
+ */
 object ResourceUtil {
     private val idCache = hashMapOf<String, Int>()
 
+    /** Fetch [Int] identifier of drawable resource */
     fun drawable(context: Context, name: String) = getIdentifier(context, name, "drawable")
+
+    /** Fetch [Int] identifier of raw resource */
     fun raw(context: Context, name: String) = getIdentifier(context, name, "raw")
 
     private fun getIdentifier(context: Context, name: String, defType: String): Int {
