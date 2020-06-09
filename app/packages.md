@@ -45,6 +45,10 @@ For additional information, please refer to the following sources:
   12th Edition of Language Resources and Evaluation Conference (LREC 2020)._
 
 
+# Package com.github.cheapmon.balalaika
+Main application classes
+
+
 # Package com.github.cheapmon.balalaika.data
 Models and interfaces for the application database and additional resources
 
@@ -83,6 +87,10 @@ Retrieval of raw Android resources
 
 # Package com.github.cheapmon.balalaika.data.storage
 Local key-value storage
+
+
+# Package com.github.cheapmon.balalaika.di
+Components and models for dependency injection
 
 
 # Package com.github.cheapmon.balalaika.ui
