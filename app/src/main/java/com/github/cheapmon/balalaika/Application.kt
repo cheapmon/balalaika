@@ -18,7 +18,9 @@ package com.github.cheapmon.balalaika
 import android.app.Application
 import com.github.cheapmon.balalaika.di.DaggerAppComponent
 
+/** Application configuration for dependency injection */
 class Application : Application() {
+    /** Application dependency injection component */
     val appComponent by lazy {
         DaggerAppComponent.factory().create(applicationContext)
     }

@@ -33,16 +33,20 @@ import com.github.cheapmon.balalaika.databinding.AppBarMainBinding
 import com.google.android.material.navigation.NavigationView
 import javax.inject.Inject
 
+/** Main activity for Balalaika */
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var navController: NavController
 
+    /** @suppress */
     @Inject
     lateinit var importUtil: ImportUtil
 
+    /** @suppress */
     @Inject
     lateinit var storage: Storage
 
+    /** Prepare user interface and check for database updates */
     override fun onCreate(savedInstanceState: Bundle?) {
         (application as Application).appComponent.inject(this)
 
@@ -68,13 +72,15 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launchWhenCreated {
             importUtil.import()
+            // Set default options
             val orderKey = getString(R.string.preferences_key_order)
             val viewKey = getString(R.string.preferences_key_view)
-            if(!storage.contains(orderKey)) storage.putString(orderKey, "-1")
-            if(!storage.contains(viewKey)) storage.putString(viewKey, "1")
+            if (!storage.contains(orderKey)) storage.putString(orderKey, "-1")
+            if (!storage.contains(viewKey)) storage.putString(viewKey, "1")
         }
     }
 
+    /** @suppress */
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
