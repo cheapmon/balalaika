@@ -29,7 +29,7 @@ import java.io.Serializable
  * @see HistoryFragment
  */
 sealed class SearchRestriction : Serializable {
-    /** No additonal search restriction */
+    /** No additional search restriction */
     object None : SearchRestriction()
 
     /** A search restriction consisting of a [category][Category] and a [restriction] string */

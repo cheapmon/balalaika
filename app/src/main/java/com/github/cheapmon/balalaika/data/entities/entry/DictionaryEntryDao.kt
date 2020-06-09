@@ -103,7 +103,7 @@ interface DictionaryEntryDao {
 
     /**
      * Get all [external identifiers][Lexeme.externalId] of [lexemes][Lexeme], depending on a
-     * certain [dictioary view][DictionaryView]
+     * certain [dictionary view][DictionaryView]
      *
      * This effectively checks for all [categories][Category] that are displayed within the
      * dictionary view and selects only those identifiers that match one of those categories and

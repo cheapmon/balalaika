@@ -81,7 +81,7 @@ interface PropertyDao {
     @Query("SELECT COUNT(*) FROM property")
     fun count(): Flow<Int>
 
-    /** Insert all [propeties][Property] into the database */
+    /** Insert all [properties][Property] into the database */
     @Insert
     suspend fun insertAll(vararg properties: Property)
 }
