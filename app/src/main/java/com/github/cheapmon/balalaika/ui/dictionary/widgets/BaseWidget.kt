@@ -47,7 +47,7 @@ open class BaseWidget(
     /** @suppress */
     val properties: List<PropertyWithRelations>,
     /** @suppress */
-    val hasActions: Boolean,
+    private val hasActions: Boolean,
     /** @suppress */
     val searchText: String?
 ) : Widget(parent, listener, category, properties, hasActions, searchText) {

@@ -30,15 +30,16 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
     // Logging
-    compile 'io.github.microutils:kotlin-logging:1.7.9'
-    compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.30'
+    implementation 'io.github.microutils:kotlin-logging:1.7.9'
+    implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.30'
 
     // Import
-    compile 'org.apache.commons:commons-csv:1.8'
-    compile "org.yaml:snakeyaml:1.26:android"
+    implementation 'org.apache.commons:commons-csv:1.8'
+    implementation "org.yaml:snakeyaml:1.26:android"
 
     // Miscellaneous
-    compile group: 'commons-cli', name: 'commons-cli', version: '1.4'
+    //noinspection GradleDependency
+    implementation group: 'commons-cli', name: 'commons-cli', version: '1.4'
 }
 
 compileKotlin {
@@ -51,10 +52,10 @@ compileTestKotlin {
 
 jar {
     manifest {
-        attributes "Main-Class": "validate"
+        attributes "Main-Class": "Validate"
     }
 
     from {
-        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+        configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }

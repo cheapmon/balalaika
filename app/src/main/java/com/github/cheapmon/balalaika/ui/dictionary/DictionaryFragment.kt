@@ -63,7 +63,7 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
     lateinit var viewModelFactory: DictionaryViewModelFactory
 
     /** @suppress */
-    lateinit var viewModel: DictionaryViewModel
+    private lateinit var viewModel: DictionaryViewModel
 
     /** @suppress */
     @Inject

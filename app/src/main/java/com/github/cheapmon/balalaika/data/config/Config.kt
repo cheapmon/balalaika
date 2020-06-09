@@ -15,7 +15,6 @@
  */
 package com.github.cheapmon.balalaika.data.config
 
-import androidx.room.Database
 import com.github.cheapmon.balalaika.data.AppDatabase
 import com.github.cheapmon.balalaika.data.config.Config.Source
 

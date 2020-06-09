@@ -48,7 +48,7 @@ class BookmarksFragment : Fragment(), BookmarksAdapter.Listener {
     lateinit var viewModelFactory: BookmarksViewModelFactory
 
     /** @suppress */
-    lateinit var viewModel: BookmarksViewModel
+    private lateinit var viewModel: BookmarksViewModel
 
     private lateinit var binding: FragmentBookmarksBinding
     private lateinit var recyclerView: RecyclerView

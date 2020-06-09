@@ -27,14 +27,6 @@ interface LexemeDao {
     @Query("SELECT * FROM lexeme WHERE is_bookmark = 1")
     fun getBookmarks(): Flow<List<Lexeme>>
 
-    /** Find [lexeme][Lexeme] by its primary key */
-    @Query("SELECT * FROM lexeme WHERE id = (:id) LIMIT 1")
-    fun findById(id: Long): Flow<Lexeme?>
-
-    /** Find [lexemes][Lexeme] where [form][Lexeme.form] is similar to [query] */
-    @Query("SELECT * FROM lexeme WHERE form LIKE '%' || (:query) || '%'")
-    fun findByForm(query: String): Flow<List<Lexeme>>
-
     /** Toggle bookmark state for a [lexeme][Lexeme] */
     @Query("UPDATE lexeme SET is_bookmark = NOT is_bookmark WHERE id = (:id)")
     suspend fun toggleBookmark(id: Long)

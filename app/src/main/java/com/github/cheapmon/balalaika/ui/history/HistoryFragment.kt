@@ -48,7 +48,7 @@ class HistoryFragment : Fragment(), HistoryAdapter.Listener {
     lateinit var viewModelFactory: HistoryViewModelFactory
 
     /** @suppress */
-    lateinit var viewModel: HistoryViewModel
+    private lateinit var viewModel: HistoryViewModel
 
     private lateinit var binding: FragmentHistoryBinding
     private lateinit var recyclerView: RecyclerView

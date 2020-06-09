@@ -37,7 +37,7 @@ class PreferencesFragment : PreferenceFragmentCompat() {
     lateinit var viewModelFactory: PreferencesViewModelFactory
 
     /** @suppress */
-    lateinit var viewModel: PreferencesViewModel
+    private lateinit var viewModel: PreferencesViewModel
 
     /** Load data and add callbacks */
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {

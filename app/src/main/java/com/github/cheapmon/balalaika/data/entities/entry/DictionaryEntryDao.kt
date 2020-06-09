@@ -23,7 +23,6 @@ import com.github.cheapmon.balalaika.data.entities.history.SearchRestriction
 import com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme
 import com.github.cheapmon.balalaika.data.entities.property.Property
 import com.github.cheapmon.balalaika.data.entities.view.DictionaryView
-import com.github.cheapmon.balalaika.ui.bookmarks.BookmarksFragment
 import com.github.cheapmon.balalaika.ui.dictionary.DictionaryFragment
 import com.github.cheapmon.balalaika.ui.search.SearchFragment
 import kotlinx.coroutines.flow.Flow
@@ -42,18 +41,6 @@ import kotlinx.coroutines.flow.Flow
  */
 @Dao
 interface DictionaryEntryDao {
-    /**
-     * Get all [lexemes][Lexeme] which have been bookmarked
-     *
-     * @see BookmarksFragment
-     */
-    @Query(
-        """SELECT id, external_id, form, base_id, is_bookmark
-                    FROM DictionaryEntry
-                    WHERE is_bookmark = 1"""
-    )
-    fun getBookmarked(): DataSource.Factory<Int, Lexeme>
-
     /**
      * Get all [dictionary entries][DictionaryEntry] for a single [lexeme][Lexeme], depending on a
      * certain [dictionary view][DictionaryView]
@@ -103,7 +90,7 @@ interface DictionaryEntryDao {
 
     /**
      * Get all [external identifiers][Lexeme.externalId] of [lexemes][Lexeme], depending on a
-     * certain [dictioary view][DictionaryView]
+     * certain [dictionary view][DictionaryView]
      *
      * This effectively checks for all [categories][Category] that are displayed within the
      * dictionary view and selects only those identifiers that match one of those categories and

@@ -32,13 +32,6 @@ interface DictionaryViewDao {
     @Query("SELECT * FROM dictionary_view")
     fun getAllWithCategories(): Flow<List<DictionaryViewWithCategories>>
 
-    /** Find all [data categories][Category] for a [dictionary view][DictionaryView] */
-    @Query(
-        """SELECT category_id FROM dictionary_view_to_category 
-                    WHERE dictionary_view_id = (:id)"""
-    )
-    fun findCategoriesById(id: Long): Flow<List<Long>>
-
     /** Insert all [dictionary views][DictionaryView] into the database */
     @Insert
     suspend fun insertAll(vararg dictionaryViews: DictionaryView)
