@@ -74,6 +74,7 @@ class SearchAdapter(
         }
     }
 
+    /** Update search query */
     fun submitSearchText(text: String) {
         searchText = text
         notifyDataSetChanged()

@@ -34,7 +34,9 @@ sealed class SearchRestriction : Serializable {
 
     /** A search restriction consisting of a [category][Category] and a [restriction] string */
     data class Some(
+        /** [Category] */
         val category: Category,
+        /** Restriction */
         val restriction: String
     ) : SearchRestriction()
 }
