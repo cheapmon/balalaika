@@ -28,7 +28,7 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import kotlin.system.exitProcess
 
-object validate {
+object Validate {
     private val logger = KotlinLogging.logger {}
 
     private lateinit var options: Options
