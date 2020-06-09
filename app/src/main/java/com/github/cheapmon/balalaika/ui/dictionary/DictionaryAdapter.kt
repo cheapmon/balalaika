@@ -28,22 +28,31 @@ import com.github.cheapmon.balalaika.databinding.FragmentDictionaryItemBinding
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetListener
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.Widgets
 
+/** Paging Adapter for [DictionaryFragment] */
 class DictionaryAdapter(
     private val listener: Listener,
     private val widgetListener: WidgetListener
 ) : PagedListAdapter<Lexeme, DictionaryAdapter.ViewHolder>(DictionaryDiff) {
 
+    /** Create view */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = FragmentDictionaryItemBinding.inflate(layoutInflater, parent, false)
         return ViewHolder(binding)
     }
 
+    /**
+     * Bind item and add listeners
+     *
+     * - Collapse entry
+     * - Show bookmark state
+     * - Group entries and pass to widgets
+     */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val lex = getItem(position) ?: return
         listener.onLoadLexeme(lex) { entry ->
             with(holder.binding) {
-                if(entry == null) {
+                if (entry == null) {
                     lexeme = lex
                     base = null
                     entryProperties.visibility = View.GONE
@@ -84,9 +93,11 @@ class DictionaryAdapter(
         }
     }
 
+    /** @suppress */
     class ViewHolder(val binding: FragmentDictionaryItemBinding) :
         RecyclerView.ViewHolder(binding.root)
 
+    /** @suppress */
     object DictionaryDiff : DiffUtil.ItemCallback<Lexeme>() {
         override fun areItemsTheSame(oldItem: Lexeme, newItem: Lexeme): Boolean {
             return oldItem.lexemeId == newItem.lexemeId
@@ -100,9 +111,15 @@ class DictionaryAdapter(
         }
     }
 
+    /** Component that handles actions from this adapter */
     interface Listener {
+        /** Callback for whenever a bookmark button is clicked */
         fun onClickBookmarkButton(entry: GroupedEntry)
+
+        /** Callback for whenever a base button is clicked */
         fun onClickBaseButton(entry: GroupedEntry)
+
+        /** Callback for whenever a lexeme is loaded */
         fun onLoadLexeme(lexeme: Lexeme, block: (entry: GroupedEntry?) -> Unit)
     }
 }

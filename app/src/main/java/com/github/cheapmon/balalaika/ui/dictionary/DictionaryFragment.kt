@@ -28,7 +28,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.Application
@@ -46,11 +45,27 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * Fragment for dictionary usage
+ *
+ * The user may:
+ * - See lexemes and their properties
+ * - Reorder dictionary entries
+ * - Choose a dictionary view
+ * - Go to the base of a lexeme
+ * - Bookmark an entry
+ * - Collapse an entry
+ * - See advanced actions on an entry
+ */
 class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListener {
+    /** @suppress */
     @Inject
     lateinit var viewModelFactory: DictionaryViewModelFactory
+
+    /** @suppress */
     lateinit var viewModel: DictionaryViewModel
 
+    /** @suppress */
     @Inject
     lateinit var storage: Storage
 
@@ -61,6 +76,7 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
     private lateinit var dictionaryLayoutManager: LinearLayoutManager
     private lateinit var dictionaryAdapter: DictionaryAdapter
 
+    /** Prepare view and load data */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -83,6 +99,7 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
         return binding.root
     }
 
+    /** Inject view model */
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
@@ -91,11 +108,19 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
         viewModel = model
     }
 
+    /** Create options menu */
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_dictionary, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
+    /**
+     * Options menu actions
+     *
+     * - Change dictionary ordering
+     * - Change dictionary view
+     * - Navigate to search
+     */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val orderKey = getString(R.string.preferences_key_order)
         val viewKey = getString(R.string.preferences_key_view)
@@ -150,6 +175,7 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
         }
     }
 
+    /** Bind data */
     private fun bindUi() {
         viewModel.lexemes.observe(viewLifecycleOwner, Observer {
             dictionaryAdapter.submitList(it)
@@ -159,6 +185,7 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
         })
     }
 
+    /** Handle fragment arguments */
     private fun handleArgs() {
         val externalId = args.externalId
         if (externalId != null) {
@@ -166,6 +193,7 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
         }
     }
 
+    /** Scroll to a dictionary entry */
     private fun scrollTo(externalId: String) {
         lifecycleScope.launch {
             val position = viewModel.getPositionOf(externalId)
@@ -176,6 +204,7 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
         }
     }
 
+    /** Add or remove an entry to bookmarks */
     override fun onClickBookmarkButton(entry: GroupedEntry) {
         viewModel.toggleBookmark(entry.lexeme.lexemeId)
         val message = if (entry.lexeme.isBookmark) {
@@ -186,10 +215,12 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
         Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
     }
 
+    /** Go to base of a lexeme */
     override fun onClickBaseButton(entry: GroupedEntry) {
         if (entry.base != null) scrollTo(entry.base.externalId)
     }
 
+    /** Load dictionary entries for a lexeme */
     override fun onLoadLexeme(lexeme: Lexeme, block: (entry: GroupedEntry?) -> Unit) {
         lifecycleScope.launch {
             val entry = viewModel.getDictionaryEntriesFor(lexeme.lexemeId).grouped()
@@ -197,6 +228,7 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
         }
     }
 
+    /** Play audio file */
     override fun onClickAudioButton(resId: Int) {
         try {
             MediaPlayer.create(context, resId).apply {
@@ -212,16 +244,19 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
         }
     }
 
+    /** Navigate to search */
     override fun onClickSearchButton(query: String, restriction: SearchRestriction) {
         val directions =
             DictionaryFragmentDirections.actionNavHomeToNavSearch(restriction, query)
         findNavController().navigate(directions)
     }
 
+    /** Scroll to a dictionary entry */
     override fun onClickScrollButton(externalId: String) {
         scrollTo(externalId)
     }
 
+    /** Open link in browser */
     override fun onClickLinkButton(link: String) {
         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(link)))
     }

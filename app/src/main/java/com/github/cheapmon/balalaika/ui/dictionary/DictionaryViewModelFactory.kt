@@ -19,12 +19,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.github.cheapmon.balalaika.data.repositories.DictionaryRepository
 
+/** Factory for [DictionaryViewModel] */
 class DictionaryViewModelFactory(
     private val repository: DictionaryRepository,
     private val categoryId: Long?,
     private val dictionaryViewId: Long?
 ) : ViewModelProvider.NewInstanceFactory() {
 
+    /** Create [DictionaryViewModel] */
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return DictionaryViewModel(

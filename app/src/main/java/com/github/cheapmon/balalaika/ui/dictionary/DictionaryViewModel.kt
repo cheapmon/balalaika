@@ -27,14 +27,18 @@ import com.github.cheapmon.balalaika.data.repositories.DictionaryRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
+/** View model for [DictionaryFragment] */
 class DictionaryViewModel(
     private val repository: DictionaryRepository,
     categoryId: Long?,
     dictionaryViewId: Long?
 ) : ViewModel() {
+    /** Lexemes currently shown, depending on user input */
     val lexemes = repository.lexemes.asLiveData().switchMap {
         it.toLiveData(10)
     }
+
+    /** Current state of computation */
     val inProgress = repository.inProgress.asLiveData()
 
     init {
@@ -42,30 +46,37 @@ class DictionaryViewModel(
         if (dictionaryViewId != null) repository.setDictionaryViewId(dictionaryViewId)
     }
 
+    /** Select category to order lexemes by */
     fun setCategory(categoryId: Long) {
         repository.setCategoryId(categoryId)
     }
 
+    /** Select a view for the current dictionary */
     fun setDictionaryView(dictionaryViewId: Long) {
         repository.setDictionaryViewId(dictionaryViewId)
     }
 
+    /** Toggle bookmark state for a lexeme */
     fun toggleBookmark(lexemeId: Long) {
         viewModelScope.launch { repository.toggleBookmark(lexemeId) }
     }
 
+    /** Get position of a lexeme in the dictionary */
     suspend fun getPositionOf(externalId: String): Int {
         return repository.positions.first().indexOfFirst { it == externalId }
     }
 
+    /** All available sortable categories */
     suspend fun getCategories(): List<Category> {
         return repository.categories.first()
     }
 
+    /** All available dictionary views */
     suspend fun getDictionaryViews(): List<DictionaryViewWithCategories> {
         return repository.dictionaryViews.first()
     }
 
+    /** Get all dictionary entries for a lexeme */
     suspend fun getDictionaryEntriesFor(lexemeId: Long): List<DictionaryEntry> {
         return repository.getDictionaryEntriesFor(lexemeId)
     }
