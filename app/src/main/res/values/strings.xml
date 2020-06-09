@@ -13,7 +13,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Application -->
     <string name="app_name">Balalaika</string>
     <string name="cancel">Cancel</string>
@@ -35,7 +35,7 @@
     <!-- Descriptions for accessibility -->
     <string name="desc_history_item_icon">History entry</string>
     <string name="desc_history_item_delete_button">Remove entry</string>
-    <string name="desc_search_item_icon">Result</string>
+    <string name="desc_search_item_icon" tools:keep="@string/desc_search_item_icon">Result</string>
     <string name="desc_dictionary_item_icon">Dictionary entry</string>
     <string name="desc_dictionary_item_collapse_button">Collapse entry</string>
     <string name="desc_dictionary_item_bookmark_button">Add to bookmarks</string>

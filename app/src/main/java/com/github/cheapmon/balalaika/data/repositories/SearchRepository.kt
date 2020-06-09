@@ -89,8 +89,7 @@ class SearchRepository @Inject constructor(
     suspend fun getDictionaryEntriesFor(lexemeId: Long): List<DictionaryEntry> {
         inProgressChannel.offer(true)
         val q = queryChannel.asFlow().first()
-        val r = restrictionChannel.asFlow().first()
-        val result = when (r) {
+        val result = when (val r = restrictionChannel.asFlow().first()) {
             is SearchRestriction.None ->
                 dictionaryEntryDao.find(q, lexemeId)
             is SearchRestriction.Some ->
