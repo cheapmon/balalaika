@@ -31,6 +31,7 @@
     <string name="menu_sources">Sources</string>
     <string name="menu_order_by">Order by</string>
     <string name="menu_setup_view">Setup View</string>
+    <string name="menu_selection">My Dictionaries</string>
 
     <!-- Descriptions for accessibility -->
     <string name="desc_history_item_icon">History entry</string>
@@ -92,4 +93,7 @@
     <string name="preferences_source_open">Open License</string>
     <string name="preferences_media">Media</string>
     <string name="preferences_icon_title">Balalaika icon created by</string>
+
+    <!-- Dictionary selection fragment -->
+    <string name="selection_empty">You have no saved dictionaries</string>
 </resources>

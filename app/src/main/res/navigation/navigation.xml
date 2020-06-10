@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2020 Simon Kaleschke
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -41,9 +40,9 @@
         tools:layout="@layout/fragment_search">
         <argument
             android:name="restriction"
+            android:defaultValue="@null"
             app:argType="com.github.cheapmon.balalaika.data.entities.history.SearchRestriction"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            app:nullable="true" />
         <argument
             android:name="query"
             android:defaultValue="@null"
@@ -74,7 +73,7 @@
     <fragment
         android:id="@+id/nav_preferences"
         android:name="com.github.cheapmon.balalaika.ui.preferences.PreferencesFragment"
-        android:label="@string/menu_preferences" >
+        android:label="@string/menu_preferences">
         <action
             android:id="@+id/action_nav_preferences_to_nav_sources"
             app:destination="@id/nav_sources" />
@@ -83,5 +82,9 @@
         android:id="@+id/nav_sources"
         android:name="com.github.cheapmon.balalaika.ui.preferences.SourcesFragment"
         android:label="@string/menu_sources" />
+    <fragment
+        android:id="@+id/nav_selection"
+        android:name="com.github.cheapmon.balalaika.ui.selection.SelectionFragment"
+        android:label="@string/menu_selection" />
 
 </navigation>
