@@ -49,7 +49,6 @@ import kotlinx.coroutines.launch
  */
 @AndroidEntryPoint
 class SearchFragment : Fragment(), SearchAdapter.Listener {
-    /** @suppress */
     private val viewModel: SearchViewModel by viewModels()
 
     private val args: SearchFragmentArgs by navArgs()

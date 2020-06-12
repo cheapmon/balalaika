@@ -58,7 +58,6 @@ import javax.inject.Inject
  */
 @AndroidEntryPoint
 class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListener {
-    /** @suppress */
     private val viewModel: DictionaryViewModel by viewModels()
 
     /** @suppress */

@@ -31,7 +31,6 @@ import kotlinx.coroutines.launch
 /** Fragment for configuring preferences */
 @AndroidEntryPoint
 class PreferencesFragment : PreferenceFragmentCompat() {
-    /** @suppress */
     private val viewModel: PreferencesViewModel by viewModels()
 
     /** Load data and add callbacks */

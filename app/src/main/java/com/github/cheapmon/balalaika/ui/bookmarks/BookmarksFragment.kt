@@ -42,7 +42,6 @@ import dagger.hilt.android.AndroidEntryPoint
  */
 @AndroidEntryPoint
 class BookmarksFragment : Fragment(), BookmarksAdapter.Listener {
-    /** @suppress */
     private val viewModel: BookmarksViewModel by viewModels()
 
     private lateinit var binding: FragmentBookmarksBinding

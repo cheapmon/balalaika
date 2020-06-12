@@ -42,7 +42,6 @@ import dagger.hilt.android.AndroidEntryPoint
  */
 @AndroidEntryPoint
 class HistoryFragment : Fragment(), HistoryAdapter.Listener {
-    /** @suppress */
     private val viewModel: HistoryViewModel by viewModels()
 
     private lateinit var binding: FragmentHistoryBinding
