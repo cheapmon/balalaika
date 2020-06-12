@@ -18,11 +18,12 @@ package com.github.cheapmon.balalaika.data.storage
 import android.content.Context
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 /** Android preferences [storage][Storage] */
 class PreferenceStorage @Inject constructor(
-    context: Context
+    @ApplicationContext context: Context
 ) : Storage {
     private val preferences = PreferenceManager.getDefaultSharedPreferences(context)
 

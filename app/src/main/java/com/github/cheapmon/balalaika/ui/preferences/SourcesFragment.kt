@@ -15,7 +15,6 @@
  */
 package com.github.cheapmon.balalaika.ui.preferences
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -23,15 +22,16 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.get
-import com.github.cheapmon.balalaika.Application
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.data.config.Config
 import com.github.cheapmon.balalaika.data.config.ConfigLoader
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /** Fragment for displaying data and media sources */
+@AndroidEntryPoint
 class SourcesFragment : PreferenceFragmentCompat() {
     /** @suppress */
     @Inject
@@ -60,13 +60,6 @@ class SourcesFragment : PreferenceFragmentCompat() {
                 true
             }
         }
-    }
-
-    /** Inject view model */
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-
-        (requireActivity().application as Application).appComponent.inject(this)
     }
 
     /** Show summary and actions for a single source */

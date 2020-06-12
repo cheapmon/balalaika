@@ -84,7 +84,7 @@ class SearchAdapter(
     class ViewHolder(val binding: FragmentSearchItemBinding) : RecyclerView.ViewHolder(binding.root)
 
     /** @suppress */
-    object SearchDiff : DiffUtil.ItemCallback<Lexeme>() {
+    private object SearchDiff : DiffUtil.ItemCallback<Lexeme>() {
         override fun areItemsTheSame(
             oldItem: Lexeme,
             newItem: Lexeme

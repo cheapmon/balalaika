@@ -15,7 +15,6 @@
  */
 package com.github.cheapmon.balalaika.ui.history
 
-import android.content.Context
 import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
@@ -26,13 +25,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.github.cheapmon.balalaika.Application
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.data.entities.history.HistoryEntryWithRestriction
 import com.github.cheapmon.balalaika.databinding.FragmentHistoryBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import javax.inject.Inject
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * Fragment for search history organisation
@@ -42,13 +40,10 @@ import javax.inject.Inject
  * - Repeat a search entry
  * - Remove one or all entries
  */
+@AndroidEntryPoint
 class HistoryFragment : Fragment(), HistoryAdapter.Listener {
     /** @suppress */
-    @Inject
-    lateinit var viewModelFactory: HistoryViewModelFactory
-
-    /** @suppress */
-    private lateinit var viewModel: HistoryViewModel
+    private val viewModel: HistoryViewModel by viewModels()
 
     private lateinit var binding: FragmentHistoryBinding
     private lateinit var recyclerView: RecyclerView
@@ -73,15 +68,6 @@ class HistoryFragment : Fragment(), HistoryAdapter.Listener {
         setHasOptionsMenu(true)
         submitData()
         return binding.root
-    }
-
-    /** Inject view model */
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-
-        (requireActivity().application as Application).appComponent.inject(this)
-        val model by viewModels<HistoryViewModel> { viewModelFactory }
-        viewModel = model
     }
 
     /**

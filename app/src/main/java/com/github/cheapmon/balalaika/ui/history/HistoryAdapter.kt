@@ -60,7 +60,7 @@ class HistoryAdapter(
     ) : RecyclerView.ViewHolder(binding.root)
 
     /** @suppress */
-    object HistoryDiff : DiffUtil.ItemCallback<HistoryEntryWithRestriction>() {
+    private object HistoryDiff : DiffUtil.ItemCallback<HistoryEntryWithRestriction>() {
         override fun areContentsTheSame(
             oldItem: HistoryEntryWithRestriction,
             newItem: HistoryEntryWithRestriction

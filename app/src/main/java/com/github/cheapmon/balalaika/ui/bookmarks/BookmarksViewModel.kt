@@ -15,6 +15,7 @@
  */
 package com.github.cheapmon.balalaika.ui.bookmarks
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
@@ -26,7 +27,7 @@ import kotlinx.coroutines.launch
  *
  * @see DictionaryRepository
  */
-class BookmarksViewModel(
+class BookmarksViewModel @ViewModelInject constructor(
     private val repository: DictionaryRepository
 ) : ViewModel() {
     /** All lexemes that are currently bookmarked */

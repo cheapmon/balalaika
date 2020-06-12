@@ -15,6 +15,7 @@
  */
 package com.github.cheapmon.balalaika.ui.search
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.switchMap
@@ -29,7 +30,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 /** View model for [SearchFragment] */
-class SearchViewModel(
+class SearchViewModel @ViewModelInject constructor(
     private val searchRepository: SearchRepository,
     private val historyRepository: HistoryRepository
 ) : ViewModel() {

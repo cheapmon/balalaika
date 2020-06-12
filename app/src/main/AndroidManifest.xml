@@ -18,7 +18,7 @@
     package="com.github.cheapmon.balalaika">
 
     <application
-        android:name=".Application"
+        android:name=".Balalaika"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"

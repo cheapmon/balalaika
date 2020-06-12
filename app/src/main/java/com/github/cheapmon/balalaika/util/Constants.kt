@@ -18,9 +18,11 @@ package com.github.cheapmon.balalaika.util
 import com.github.cheapmon.balalaika.data.config.Config
 import com.github.cheapmon.balalaika.data.storage.Storage
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /** Application-wide constants */
 @Suppress("PropertyName")
+@Singleton
 class Constants @Inject constructor() {
     /**
      * Key used in [storage][Storage] to save database version key

@@ -15,6 +15,7 @@
  */
 package com.github.cheapmon.balalaika.ui.preferences
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.cheapmon.balalaika.data.entities.category.Category
@@ -24,7 +25,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 /** View model for [PreferencesFragment] */
-class PreferencesViewModel(
+class PreferencesViewModel @ViewModelInject constructor(
     private val repository: DictionaryRepository
 ) : ViewModel() {
     /** Select a view for the current dictionary */

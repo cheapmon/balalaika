@@ -20,6 +20,10 @@ import androidx.room.Room
 import com.github.cheapmon.balalaika.data.AppDatabase
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.scopes.ActivityScoped
 
 /**
  * Database dependency injection module
@@ -27,40 +31,41 @@ import dagger.Provides
  * This module inject the application database and all of its data access objects.
  */
 @Module
+@InstallIn(ActivityComponent::class)
 class DatabaseModule {
     /** @suppress */
-    @ActivityScope
+    @ActivityScoped
     @Provides
-    fun provideDatabase(context: Context) =
+    fun provideDatabase(@ApplicationContext context: Context) =
         Room.databaseBuilder(context, AppDatabase::class.java, "balalaika").build()
 
     /** @suppress */
-    @ActivityScope
+    @ActivityScoped
     @Provides
     fun provideCategories(appDatabase: AppDatabase) = appDatabase.categories()
 
     /** @suppress */
-    @ActivityScope
+    @ActivityScoped
     @Provides
     fun provideLexemes(appDatabase: AppDatabase) = appDatabase.lexemes()
 
     /** @suppress */
-    @ActivityScope
+    @ActivityScoped
     @Provides
     fun provideProperties(appDatabase: AppDatabase) = appDatabase.properties()
 
     /** @suppress */
-    @ActivityScope
+    @ActivityScoped
     @Provides
     fun provideDictionaryEntries(appDatabase: AppDatabase) = appDatabase.dictionaryEntries()
 
     /** @suppress */
-    @ActivityScope
+    @ActivityScoped
     @Provides
     fun provideDictionaryViews(appDatabase: AppDatabase) = appDatabase.dictionaryViews()
 
     /** @suppress */
-    @ActivityScope
+    @ActivityScoped
     @Provides
     fun provideHistoryEntries(appDatabase: AppDatabase) = appDatabase.historyEntries()
 }

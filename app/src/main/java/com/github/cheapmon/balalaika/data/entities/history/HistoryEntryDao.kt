@@ -16,8 +16,8 @@
 package com.github.cheapmon.balalaika.data.entities.history
 
 import androidx.room.*
-import kotlinx.coroutines.flow.Flow
 import com.github.cheapmon.balalaika.data.entities.category.Category
+import kotlinx.coroutines.flow.Flow
 
 /** Database link for [history entries][HistoryEntry] */
 @Dao

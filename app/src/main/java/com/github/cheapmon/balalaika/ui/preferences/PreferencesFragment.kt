@@ -15,7 +15,6 @@
  */
 package com.github.cheapmon.balalaika.ui.preferences
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -25,19 +24,15 @@ import androidx.navigation.fragment.findNavController
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import com.github.cheapmon.balalaika.Application
 import com.github.cheapmon.balalaika.R
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /** Fragment for configuring preferences */
+@AndroidEntryPoint
 class PreferencesFragment : PreferenceFragmentCompat() {
     /** @suppress */
-    @Inject
-    lateinit var viewModelFactory: PreferencesViewModelFactory
-
-    /** @suppress */
-    private lateinit var viewModel: PreferencesViewModel
+    private val viewModel: PreferencesViewModel by viewModels()
 
     /** Load data and add callbacks */
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -91,14 +86,5 @@ class PreferencesFragment : PreferenceFragmentCompat() {
                 true
             }
         }
-    }
-
-    /** Inject view model */
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-
-        (requireActivity().application as Application).appComponent.inject(this)
-        val model by viewModels<PreferencesViewModel> { viewModelFactory }
-        viewModel = model
     }
 }

@@ -25,6 +25,9 @@ import com.github.cheapmon.balalaika.data.storage.PreferenceStorage
 import com.github.cheapmon.balalaika.data.storage.Storage
 import dagger.Binds
 import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.scopes.ActivityScoped
 
 /**
  * Import utility dependency injection module
@@ -32,24 +35,25 @@ import dagger.Module
  * This module injects all classes associated with database import and utility operations.
  */
 @Module
+@InstallIn(ActivityComponent::class)
 abstract class ImportModule {
     /** @suppress */
-    @ActivityScope
+    @ActivityScoped
     @Binds
     abstract fun provideResourceLoader(androidResourceLoader: AndroidResourceLoader): ResourceLoader
 
     /** @suppress */
-    @ActivityScope
+    @ActivityScoped
     @Binds
     abstract fun provideImporter(csvImporter: CsvEntityImporter): EntityImporter
 
     /** @suppress */
-    @ActivityScope
+    @ActivityScoped
     @Binds
     abstract fun provideConfigLoader(yamlConfigLoader: YamlConfigLoader): ConfigLoader
 
     /** @suppress */
-    @ActivityScope
+    @ActivityScoped
     @Binds
     abstract fun provideStorage(preferenceStorage: PreferenceStorage): Storage
 }

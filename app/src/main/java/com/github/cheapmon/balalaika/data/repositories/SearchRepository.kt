@@ -19,8 +19,8 @@ import com.github.cheapmon.balalaika.data.entities.entry.DictionaryEntry
 import com.github.cheapmon.balalaika.data.entities.entry.DictionaryEntryDao
 import com.github.cheapmon.balalaika.data.entities.history.SearchRestriction
 import com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme
-import com.github.cheapmon.balalaika.di.ActivityScope
 import com.github.cheapmon.balalaika.ui.search.SearchFragment
+import dagger.hilt.android.scopes.ActivityScoped
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
@@ -30,7 +30,7 @@ import javax.inject.Inject
  *
  * @see SearchFragment
  */
-@ActivityScope
+@ActivityScoped
 @Suppress("EXPERIMENTAL_API_USAGE")
 class SearchRepository @Inject constructor(
     private val dictionaryEntryDao: DictionaryEntryDao

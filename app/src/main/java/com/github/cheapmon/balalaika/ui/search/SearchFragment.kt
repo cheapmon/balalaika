@@ -15,7 +15,6 @@
  */
 package com.github.cheapmon.balalaika.ui.search
 
-import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -31,15 +30,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.github.cheapmon.balalaika.Application
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.data.entities.entry.GroupedEntry
 import com.github.cheapmon.balalaika.data.entities.history.SearchRestriction
 import com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme
 import com.github.cheapmon.balalaika.databinding.FragmentSearchBinding
 import com.github.cheapmon.balalaika.util.grouped
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /**
  * Fragment for querying the database
@@ -49,13 +47,10 @@ import javax.inject.Inject
  * - Apply restriction to the search query
  * - Show an entry in the dictionary
  */
+@AndroidEntryPoint
 class SearchFragment : Fragment(), SearchAdapter.Listener {
     /** @suppress */
-    @Inject
-    lateinit var viewModelFactory: SearchViewModelFactory
-
-    /** @suppress */
-    lateinit var viewModel: SearchViewModel
+    private val viewModel: SearchViewModel by viewModels()
 
     private val args: SearchFragmentArgs by navArgs()
 
@@ -87,15 +82,6 @@ class SearchFragment : Fragment(), SearchAdapter.Listener {
         handleArgs()
         bindUi()
         return binding.root
-    }
-
-    /** Inject view model */
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-
-        (requireActivity().application as Application).appComponent.inject(this)
-        val model by viewModels<SearchViewModel> { viewModelFactory }
-        viewModel = model
     }
 
     /** Process fragment arguments */

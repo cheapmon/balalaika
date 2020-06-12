@@ -22,6 +22,7 @@ import com.github.cheapmon.balalaika.data.AppDatabase
 import com.github.cheapmon.balalaika.data.config.ConfigLoader
 import com.github.cheapmon.balalaika.data.storage.Storage
 import com.github.cheapmon.balalaika.util.Constants
+import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
 
 /**
@@ -32,6 +33,7 @@ import javax.inject.Inject
  * If there are any problems with the sources, rollback is used. After successful import, the new
  * version number is saved.
  */
+@ActivityScoped
 class ImportUtil @Inject constructor(
     /** Extracts entities from sources */
     private val entityImporter: EntityImporter,

@@ -31,9 +31,11 @@ import com.github.cheapmon.balalaika.data.storage.Storage
 import com.github.cheapmon.balalaika.databinding.ActivityMainBinding
 import com.github.cheapmon.balalaika.databinding.AppBarMainBinding
 import com.google.android.material.navigation.NavigationView
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /** Main activity for Balalaika */
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var navController: NavController
@@ -48,8 +50,6 @@ class MainActivity : AppCompatActivity() {
 
     /** Prepare user interface and check for database updates */
     override fun onCreate(savedInstanceState: Bundle?) {
-        (application as Application).appComponent.inject(this)
-
         super.onCreate(savedInstanceState)
 
         val activityBinding: ActivityMainBinding =

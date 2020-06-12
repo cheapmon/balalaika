@@ -97,8 +97,7 @@ class DictionaryAdapter(
     class ViewHolder(val binding: FragmentDictionaryItemBinding) :
         RecyclerView.ViewHolder(binding.root)
 
-    /** @suppress */
-    object DictionaryDiff : DiffUtil.ItemCallback<Lexeme>() {
+    private object DictionaryDiff : DiffUtil.ItemCallback<Lexeme>() {
         override fun areItemsTheSame(oldItem: Lexeme, newItem: Lexeme): Boolean {
             return oldItem.lexemeId == newItem.lexemeId
         }

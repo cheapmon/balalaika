@@ -49,8 +49,7 @@ class BookmarksAdapter(
         val binding: FragmentBookmarksItemBinding
     ) : RecyclerView.ViewHolder(binding.root)
 
-    /** @suppress */
-    object BookmarksDiff : DiffUtil.ItemCallback<Lexeme>() {
+    private object BookmarksDiff : DiffUtil.ItemCallback<Lexeme>() {
         override fun areContentsTheSame(
             oldItem: Lexeme,
             newItem: Lexeme

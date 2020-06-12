@@ -24,9 +24,9 @@ import com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme
 import com.github.cheapmon.balalaika.data.entities.lexeme.LexemeDao
 import com.github.cheapmon.balalaika.data.entities.view.DictionaryView
 import com.github.cheapmon.balalaika.data.entities.view.DictionaryViewDao
-import com.github.cheapmon.balalaika.di.ActivityScope
 import com.github.cheapmon.balalaika.ui.bookmarks.BookmarksFragment
 import com.github.cheapmon.balalaika.ui.dictionary.DictionaryFragment
+import dagger.hilt.android.scopes.ActivityScoped
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
@@ -37,7 +37,7 @@ import javax.inject.Inject
  * @see DictionaryFragment
  * @see BookmarksFragment
  */
-@ActivityScope
+@ActivityScoped
 @Suppress("EXPERIMENTAL_API_USAGE")
 class DictionaryRepository @Inject constructor(
     categoryDao: CategoryDao,

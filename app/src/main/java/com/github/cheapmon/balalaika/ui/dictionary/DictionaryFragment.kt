@@ -15,7 +15,6 @@
  */
 package com.github.cheapmon.balalaika.ui.dictionary
 
-import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
 import android.net.Uri
@@ -30,7 +29,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.github.cheapmon.balalaika.Application
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.data.entities.entry.GroupedEntry
 import com.github.cheapmon.balalaika.data.entities.history.SearchRestriction
@@ -41,6 +39,7 @@ import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetListener
 import com.github.cheapmon.balalaika.util.grouped
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -57,13 +56,10 @@ import javax.inject.Inject
  * - Collapse an entry
  * - See advanced actions on an entry
  */
+@AndroidEntryPoint
 class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListener {
     /** @suppress */
-    @Inject
-    lateinit var viewModelFactory: DictionaryViewModelFactory
-
-    /** @suppress */
-    private lateinit var viewModel: DictionaryViewModel
+    private val viewModel: DictionaryViewModel by viewModels()
 
     /** @suppress */
     @Inject
@@ -97,15 +93,6 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
         bindUi()
         handleArgs()
         return binding.root
-    }
-
-    /** Inject view model */
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-
-        (requireActivity().application as Application).appComponent.inject(this)
-        val model by viewModels<DictionaryViewModel> { viewModelFactory }
-        viewModel = model
     }
 
     /** Create options menu */

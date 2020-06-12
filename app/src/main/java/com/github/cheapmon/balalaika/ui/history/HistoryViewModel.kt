@@ -15,6 +15,7 @@
  */
 package com.github.cheapmon.balalaika.ui.history
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
@@ -25,7 +26,7 @@ import com.github.cheapmon.balalaika.data.repositories.HistoryRepository
 import kotlinx.coroutines.launch
 
 /** View model for [HistoryFragment] */
-class HistoryViewModel(
+class HistoryViewModel @ViewModelInject constructor(
     private val repository: HistoryRepository
 ) : ViewModel() {
     /** All search history entries */

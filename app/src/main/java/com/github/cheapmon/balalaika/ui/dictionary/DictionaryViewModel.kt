@@ -15,23 +15,28 @@
  */
 package com.github.cheapmon.balalaika.ui.dictionary
 
+import android.content.Context
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import androidx.paging.toLiveData
+import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.data.entities.category.Category
 import com.github.cheapmon.balalaika.data.entities.entry.DictionaryEntry
 import com.github.cheapmon.balalaika.data.entities.view.DictionaryViewWithCategories
 import com.github.cheapmon.balalaika.data.repositories.DictionaryRepository
+import com.github.cheapmon.balalaika.data.storage.Storage
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 /** View model for [DictionaryFragment] */
-class DictionaryViewModel(
+class DictionaryViewModel @ViewModelInject constructor(
     private val repository: DictionaryRepository,
-    categoryId: Long?,
-    dictionaryViewId: Long?
+    storage: Storage,
+    @ApplicationContext context: Context
 ) : ViewModel() {
     /** Lexemes currently shown, depending on user input */
     val lexemes = repository.lexemes.asLiveData().switchMap {
@@ -42,7 +47,11 @@ class DictionaryViewModel(
     val inProgress = repository.inProgress.asLiveData()
 
     init {
+        val categoryId =
+            storage.getString(context.getString(R.string.preferences_key_order), null)?.toLong()
         if (categoryId != null) repository.setCategoryId(categoryId)
+        val dictionaryViewId =
+            storage.getString(context.getString(R.string.preferences_key_view), null)?.toLong()
         if (dictionaryViewId != null) repository.setDictionaryViewId(dictionaryViewId)
     }
 

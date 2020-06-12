@@ -19,8 +19,8 @@ import com.github.cheapmon.balalaika.data.entities.history.HistoryEntry
 import com.github.cheapmon.balalaika.data.entities.history.HistoryEntryDao
 import com.github.cheapmon.balalaika.data.entities.history.HistoryEntryWithRestriction
 import com.github.cheapmon.balalaika.data.entities.history.SearchRestriction
-import com.github.cheapmon.balalaika.di.ActivityScope
 import com.github.cheapmon.balalaika.ui.history.HistoryFragment
+import dagger.hilt.android.scopes.ActivityScoped
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -30,7 +30,7 @@ import javax.inject.Inject
  *
  * @see HistoryFragment
  */
-@ActivityScope
+@ActivityScoped
 class HistoryRepository @Inject constructor(
     private val historyEntryDao: HistoryEntryDao
 ) {
