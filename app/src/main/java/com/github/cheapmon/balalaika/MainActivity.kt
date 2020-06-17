@@ -19,34 +19,22 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.github.cheapmon.balalaika.data.insert.ImportUtil
-import com.github.cheapmon.balalaika.data.storage.Storage
 import com.github.cheapmon.balalaika.databinding.ActivityMainBinding
 import com.github.cheapmon.balalaika.databinding.AppBarMainBinding
 import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 /** Main activity for Balalaika */
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var navController: NavController
-
-    /** @suppress */
-    @Inject
-    lateinit var importUtil: ImportUtil
-
-    /** @suppress */
-    @Inject
-    lateinit var storage: Storage
 
     /** Prepare user interface and check for database updates */
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,15 +57,6 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-
-        lifecycleScope.launchWhenCreated {
-            importUtil.import()
-            // Set default options
-            val orderKey = getString(R.string.preferences_key_order)
-            val viewKey = getString(R.string.preferences_key_view)
-            if (!storage.contains(orderKey)) storage.putString(orderKey, "-1")
-            if (!storage.contains(viewKey)) storage.putString(viewKey, "1")
-        }
     }
 
     /** @suppress */

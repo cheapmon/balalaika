@@ -15,17 +15,24 @@
  */
 package com.github.cheapmon.balalaika.data.repositories
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import com.github.cheapmon.balalaika.data.entities.cache.CacheEntry
+import com.github.cheapmon.balalaika.data.entities.cache.CacheEntryDao
 import com.github.cheapmon.balalaika.data.entities.category.Category
 import com.github.cheapmon.balalaika.data.entities.category.CategoryDao
 import com.github.cheapmon.balalaika.data.entities.category.WidgetType
+import com.github.cheapmon.balalaika.data.entities.entry.DictionaryDao
 import com.github.cheapmon.balalaika.data.entities.entry.DictionaryEntry
-import com.github.cheapmon.balalaika.data.entities.entry.DictionaryEntryDao
 import com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme
 import com.github.cheapmon.balalaika.data.entities.lexeme.LexemeDao
+import com.github.cheapmon.balalaika.data.entities.property.PropertyDao
 import com.github.cheapmon.balalaika.data.entities.view.DictionaryView
 import com.github.cheapmon.balalaika.data.entities.view.DictionaryViewDao
 import com.github.cheapmon.balalaika.ui.bookmarks.BookmarksFragment
 import com.github.cheapmon.balalaika.ui.dictionary.DictionaryFragment
+import com.github.cheapmon.balalaika.util.Constants
 import dagger.hilt.android.scopes.ActivityScoped
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.*
@@ -40,31 +47,14 @@ import javax.inject.Inject
 @ActivityScoped
 @Suppress("EXPERIMENTAL_API_USAGE")
 class DictionaryRepository @Inject constructor(
+    private val constants: Constants,
     categoryDao: CategoryDao,
     private val lexemeDao: LexemeDao,
-    private val dictionaryEntryDao: DictionaryEntryDao,
-    dictionaryDao: DictionaryViewDao
+    private val propertyDao: PropertyDao,
+    private val dictionaryDao: DictionaryDao,
+    viewDao: DictionaryViewDao,
+    private val cacheEntryDao: CacheEntryDao
 ) {
-    /** Current [dictionary view][DictionaryView] selected in the user interface */
-    private val dictionaryViewIdChannel: ConflatedBroadcastChannel<Long?> =
-        ConflatedBroadcastChannel(null)
-
-    /** Current [ordering category][Category] selected in the user interface */
-    private val categoryIdChannel: ConflatedBroadcastChannel<Long?> =
-        ConflatedBroadcastChannel(null)
-
-    /**
-     * State of computation
-     *
-     * Used to indicate ongoing calculations in the user interface.
-     *
-     * Holds `true` whenever the [dictionary view][DictionaryView] or [ordering category][Category]
-     * has been changed, while new [dictionary entries][DictionaryEntry] are calculated.
-     * Holds `false` when the computation is finished.
-     */
-    private val inProgressChannel: ConflatedBroadcastChannel<Boolean> =
-        ConflatedBroadcastChannel(true)
-
     /** Dummy [category][Category] used when no category has been selected in the user interface */
     private val defaultCategory = Category(
         -1,
@@ -77,25 +67,15 @@ class DictionaryRepository @Inject constructor(
         orderBy = false
     )
 
-    /** Lexemes currently shown, depending on user input */
-    val lexemes = dictionaryViewIdChannel.asFlow().distinctUntilChanged()
-        .combine(categoryIdChannel.asFlow().distinctUntilChanged()) { d, c ->
-            val dictionaryViewId = d ?: 1
-            // Use default ordering when no category has been selected
-            if (c == null) dictionaryEntryDao.getLexemesFiltered(dictionaryViewId)
-            else dictionaryEntryDao.getLexemesSorted(dictionaryViewId, c)
-        }
-
-    /** Identifiers of [lexemes], used to identify where to scroll to */
-    val positions = dictionaryViewIdChannel.asFlow().distinctUntilChanged()
-        .combine(categoryIdChannel.asFlow().distinctUntilChanged()) { d, c ->
-            val dictionaryViewId = d ?: 1
-            if (c == null) dictionaryEntryDao.getIdsFiltered(dictionaryViewId)
-            else dictionaryEntryDao.getIdsSorted(dictionaryViewId, c)
-        }.flattenConcat()
+    private val _dictionaryView = ConflatedBroadcastChannel(constants.DEFAULT_DICTIONARY_VIEW_ID)
+    private val _category = ConflatedBroadcastChannel(constants.DEFAULT_CATEGORY_ID)
+    private val _initialKey = ConflatedBroadcastChannel<Long?>(null)
+    private val dictionaryView = _dictionaryView.asFlow().distinctUntilChanged()
+    private val category = _category.asFlow().distinctUntilChanged()
+    private val initialKey = _initialKey.asFlow().distinctUntilChanged()
 
     /** All available [dictionary views][DictionaryView] */
-    val dictionaryViews = dictionaryDao.getAllWithCategories()
+    val dictionaryViews = viewDao.getAllWithCategories()
 
     /** All [lexemes][Lexeme] that are currently bookmarked */
     val bookmarks = lexemeDao.getBookmarks()
@@ -105,29 +85,67 @@ class DictionaryRepository @Inject constructor(
         listOf(defaultCategory) + it
     }
 
-    /** Current state of computation */
-    val inProgress = inProgressChannel.asFlow()
+    /**
+     * Current dictionary, depending on the user configuration
+     *
+     * Emits every time the view, category or initial key is changed.
+     */
+    val dictionary = combine(dictionaryView, category, initialKey) { d, c, i -> Triple(d, c, i) }
+        .flatMapLatest { (d, c, i) -> getDictionary(d, c, i) }
 
-    /** Select [category][Category] to order [lexemes] by */
-    fun setCategoryId(categoryId: Long) {
-        if (categoryId == defaultCategory.categoryId) categoryIdChannel.offer(null)
-        else categoryIdChannel.offer(categoryId)
+    /** Set dictionary view */
+    fun setDictionaryView(id: Long) = _dictionaryView.offer(id)
+
+    /** Set dictionary ordering */
+    fun setCategory(id: Long) = _category.offer(id)
+
+    /** Set the first entry to display */
+    fun setInitialKey(id: Long?) = _initialKey.offer(id)
+
+    private fun getDictionary(
+        dictionaryViewId: Long,
+        categoryId: Long,
+        initialKey: Long?
+    ): Flow<PagingData<DictionaryEntry>> {
+        return flow {
+            val pager = Pager(
+                config = PagingConfig(pageSize = constants.PAGE_SIZE),
+                initialKey = initialKey,
+                pagingSourceFactory = {
+                    DictionaryPagingSource(
+                        constants,
+                        cacheEntryDao,
+                        lexemeDao,
+                        propertyDao,
+                        dictionaryViewId
+                    )
+                }
+            ).flow
+            // Wait for refresh to finish
+            refreshCache(dictionaryViewId, categoryId).collect { done ->
+                if (done) pager.collect { value -> emit(value) }
+            }
+        }
     }
 
-    /** Select a [view][DictionaryView] for the current dictionary */
-    fun setDictionaryViewId(dictionaryViewId: Long) {
-        dictionaryViewIdChannel.offer(dictionaryViewId)
+    private fun refreshCache(dictionaryViewId: Long, categoryId: Long): Flow<Boolean> {
+        return flow {
+            emit(false)
+            val entries = if (categoryId == constants.DEFAULT_CATEGORY_ID) {
+                dictionaryDao.getLexemes(dictionaryViewId)
+            } else {
+                dictionaryDao.getLexemes(dictionaryViewId, categoryId)
+            }.mapIndexed { idx, id -> CacheEntry(idx + 1L, id) }
+            cacheEntryDao.clearDictionaryCache()
+            cacheEntryDao.insertIntoDictionaryCache(entries)
+            emit(true)
+        }
     }
 
-    /** Get all [dictionary entries][DictionaryEntry] for a [lexeme][Lexeme] */
-    suspend fun getDictionaryEntriesFor(lexemeId: Long): List<DictionaryEntry> {
-        inProgressChannel.offer(true)
-        val d = dictionaryViewIdChannel.asFlow().first() ?: 1
-        val c = categoryIdChannel.asFlow().first()
-        val result = if (c == null) dictionaryEntryDao.getFiltered(d, lexemeId)
-        else dictionaryEntryDao.getSorted(d, c, lexemeId)
-        inProgressChannel.offer(false)
-        return result
+    /** Get the position of a lexeme in the dictionary */
+    suspend fun getIdOf(externalId: String?): Long? = externalId?.let {
+        val lexemeId = lexemeDao.getLexemeIdByExternalId(externalId) ?: return@let null
+        cacheEntryDao.findEntryInDictionaryCache(lexemeId)
     }
 
     /** Toggle bookmark state for a [lexeme][Lexeme] */

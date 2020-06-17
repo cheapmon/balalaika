@@ -23,24 +23,27 @@ import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.data.entities.entry.GroupedEntry
+import com.github.cheapmon.balalaika.data.entities.entry.DictionaryEntry
 import com.github.cheapmon.balalaika.data.entities.history.SearchRestriction
-import com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme
 import com.github.cheapmon.balalaika.data.storage.Storage
 import com.github.cheapmon.balalaika.databinding.FragmentDictionaryBinding
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetListener
-import com.github.cheapmon.balalaika.util.grouped
+import com.github.cheapmon.balalaika.util.Constants
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -56,6 +59,7 @@ import javax.inject.Inject
  * - Collapse an entry
  * - See advanced actions on an entry
  */
+@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListener {
     private val viewModel: DictionaryViewModel by viewModels()
@@ -64,12 +68,32 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
     @Inject
     lateinit var storage: Storage
 
+    /** @suppress */
+    @Inject
+    lateinit var constants: Constants
+
     private val args: DictionaryFragmentArgs by navArgs()
 
     private lateinit var binding: FragmentDictionaryBinding
     private lateinit var recyclerView: RecyclerView
     private lateinit var dictionaryLayoutManager: LinearLayoutManager
     private lateinit var dictionaryAdapter: DictionaryAdapter
+
+    private lateinit var job: Job
+
+    /** Set default values for the dictionary view and the dictionary ordering */
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val categoryId = storage.getString(constants.ORDER_KEY, null)?.toLong()
+            ?: constants.DEFAULT_CATEGORY_ID
+        storage.putString(constants.ORDER_KEY, categoryId.toString())
+        viewModel.setCategory(categoryId)
+        val dictionaryViewId = storage.getString(constants.VIEW_KEY, null)?.toLong()
+            ?: constants.DEFAULT_DICTIONARY_VIEW_ID
+        storage.putString(constants.VIEW_KEY, dictionaryViewId.toString())
+        viewModel.setDictionaryView(dictionaryViewId)
+    }
 
     /** Prepare view and load data */
     override fun onCreateView(
@@ -87,11 +111,32 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
                 adapter = dictionaryAdapter
                 setHasFixedSize(true)
             }
-            inProgress = true
         }
         bindUi()
-        handleArgs()
+        indicateProgress()
+        scrollTo(args.externalId)
         return binding.root
+    }
+
+
+    private fun bindUi() {
+        job = lifecycleScope.launch {
+            viewModel.dictionary.collectLatest { data -> dictionaryAdapter.submitData(data) }
+        }
+    }
+
+    private fun indicateProgress() {
+        lifecycleScope.launch {
+            dictionaryAdapter.loadStateFlow.combine(viewModel.importFlow) { loadState, done ->
+                (loadState.refresh is LoadState.Loading) || !done
+            }.collect { inProgress -> binding.inProgress = inProgress }
+        }
+    }
+
+    /** Cancel dictionary loading */
+    override fun onDestroy() {
+        super.onDestroy()
+        job.cancel()
     }
 
     /** Create options menu */
@@ -108,48 +153,13 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
      * - Navigate to search
      */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val orderKey = getString(R.string.preferences_key_order)
-        val viewKey = getString(R.string.preferences_key_view)
         return when (item.itemId) {
             R.id.action_order_by -> {
-                lifecycleScope.launch {
-                    val categories = viewModel.getCategories()
-                    val names = categories.map { it.name }.toTypedArray()
-                    val ids = categories.map { it.categoryId.toString() }
-                    val selected = ids.indexOfFirst {
-                        it == storage.getString(orderKey, null)
-                    }
-                    MaterialAlertDialogBuilder(requireContext())
-                        .setIcon(R.drawable.ic_sort)
-                        .setTitle(R.string.menu_order_by)
-                        .setSingleChoiceItems(names, selected) { _, which ->
-                            val id = categories[which].categoryId
-                            storage.putString(orderKey, id.toString())
-                            viewModel.setCategory(id)
-                        }.setPositiveButton(R.string.affirm, null)
-                        .show()
-                }
+                showOrderingDialog()
                 true
             }
             R.id.action_setup_view -> {
-                lifecycleScope.launch {
-                    val dictionaryViews = viewModel.getDictionaryViews()
-                    val names = dictionaryViews.map { it.dictionaryView.name }.toTypedArray()
-                    val ids = dictionaryViews.map { it.dictionaryView.dictionaryViewId.toString() }
-                    val selected = ids.indexOfFirst {
-                        it == storage.getString(viewKey, null)
-                    }
-                    MaterialAlertDialogBuilder(requireContext())
-                        .setIcon(R.drawable.ic_view)
-                        .setTitle(R.string.menu_setup_view)
-                        .setSingleChoiceItems(names, selected) { _, which ->
-                            val id = dictionaryViews[which].dictionaryView.dictionaryViewId
-                            storage.putString(viewKey, id.toString())
-                            viewModel.setDictionaryView(id)
-                            dictionaryAdapter.notifyDataSetChanged()
-                        }.setPositiveButton(R.string.affirm, null)
-                        .show()
-                }
+                showDictionaryViewDialog()
                 true
             }
             R.id.action_search -> {
@@ -161,58 +171,68 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
         }
     }
 
-    /** Bind data */
-    private fun bindUi() {
-        viewModel.lexemes.observe(viewLifecycleOwner, Observer {
-            dictionaryAdapter.submitList(it)
-        })
-        viewModel.inProgress.observe(viewLifecycleOwner, Observer {
-            binding.inProgress = it
-        })
+    private fun showOrderingDialog() {
+        lifecycleScope.launch {
+            val categories = viewModel.getCategories()
+            val names = categories.map { it.name }.toTypedArray()
+            val ids = categories.map { it.categoryId.toString() }
+            val selected = ids.indexOfFirst {
+                it == storage.getString(constants.ORDER_KEY, null)
+            }
+            MaterialAlertDialogBuilder(requireContext())
+                .setIcon(R.drawable.ic_sort)
+                .setTitle(R.string.menu_order_by)
+                .setSingleChoiceItems(names, selected) { _, which ->
+                    val id = categories[which].categoryId
+                    storage.putString(constants.ORDER_KEY, id.toString())
+                    viewModel.setCategory(id)
+                }.setPositiveButton(R.string.affirm, null)
+                .show()
+        }
     }
 
-    /** Handle fragment arguments */
-    private fun handleArgs() {
-        val externalId = args.externalId
-        if (externalId != null) {
-            scrollTo(externalId)
+    private fun showDictionaryViewDialog() {
+        lifecycleScope.launch {
+            val dictionaryViews = viewModel.getDictionaryViews()
+            val names = dictionaryViews.map { it.dictionaryView.name }.toTypedArray()
+            val ids = dictionaryViews.map { it.dictionaryView.dictionaryViewId.toString() }
+            val selected = ids.indexOfFirst {
+                it == storage.getString(constants.VIEW_KEY, null)
+            }
+            MaterialAlertDialogBuilder(requireContext())
+                .setIcon(R.drawable.ic_view)
+                .setTitle(R.string.menu_setup_view)
+                .setSingleChoiceItems(names, selected) { _, which ->
+                    val id = dictionaryViews[which].dictionaryView.dictionaryViewId
+                    storage.putString(constants.VIEW_KEY, id.toString())
+                    viewModel.setDictionaryView(id)
+                }.setPositiveButton(R.string.affirm, null)
+                .show()
         }
     }
 
     /** Scroll to a dictionary entry */
-    private fun scrollTo(externalId: String) {
+    private fun scrollTo(externalId: String?) {
         lifecycleScope.launch {
-            val position = viewModel.getPositionOf(externalId)
-            delay(200)
-            recyclerView.post {
-                dictionaryLayoutManager.scrollToPositionWithOffset(position, 0)
-            }
+            val initialKey = viewModel.getIdOf(externalId)
+            viewModel.setInitialKey(initialKey)
         }
     }
 
     /** Add or remove an entry to bookmarks */
-    override fun onClickBookmarkButton(entry: GroupedEntry) {
-        viewModel.toggleBookmark(entry.lexeme.lexemeId)
-        val message = if (entry.lexeme.isBookmark) {
-            getString(R.string.dictionary_bookmark_remove, entry.lexeme.form)
+    override fun onClickBookmarkButton(entry: DictionaryEntry, isBookmark: Boolean) {
+        viewModel.toggleBookmark(entry.lexemeWithBase.lexeme.lexemeId)
+        val message = if (isBookmark) {
+            getString(R.string.dictionary_bookmark_remove, entry.lexemeWithBase.lexeme.form)
         } else {
-            getString(R.string.dictionary_bookmark_add, entry.lexeme.form)
+            getString(R.string.dictionary_bookmark_add, entry.lexemeWithBase.lexeme.form)
         }
         Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
     }
 
     /** Go to base of a lexeme */
-    override fun onClickBaseButton(entry: GroupedEntry) {
-        if (entry.base != null) scrollTo(entry.base.externalId)
-    }
-
-    /** Load dictionary entries for a lexeme */
-    override fun onLoadLexeme(lexeme: Lexeme, block: (entry: GroupedEntry?) -> Unit) {
-        lifecycleScope.launch {
-            val entry = viewModel.getDictionaryEntriesFor(lexeme.lexemeId).grouped()
-            block(entry)
-        }
-    }
+    override fun onClickBaseButton(entry: DictionaryEntry) =
+        scrollTo(entry.lexemeWithBase.base?.externalId)
 
     /** Play audio file */
     override fun onClickAudioButton(resId: Int) {
@@ -238,9 +258,7 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
     }
 
     /** Scroll to a dictionary entry */
-    override fun onClickScrollButton(externalId: String) {
-        scrollTo(externalId)
-    }
+    override fun onClickScrollButton(externalId: String) = scrollTo(externalId)
 
     /** Open link in browser */
     override fun onClickLinkButton(link: String) {

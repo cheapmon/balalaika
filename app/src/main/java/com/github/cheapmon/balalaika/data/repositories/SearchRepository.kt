@@ -15,11 +15,18 @@
  */
 package com.github.cheapmon.balalaika.data.repositories
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import com.github.cheapmon.balalaika.data.entities.cache.CacheEntryDao
+import com.github.cheapmon.balalaika.data.entities.cache.SearchCacheEntry
+import com.github.cheapmon.balalaika.data.entities.entry.DictionaryDao
 import com.github.cheapmon.balalaika.data.entities.entry.DictionaryEntry
-import com.github.cheapmon.balalaika.data.entities.entry.DictionaryEntryDao
 import com.github.cheapmon.balalaika.data.entities.history.SearchRestriction
-import com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme
+import com.github.cheapmon.balalaika.data.entities.lexeme.LexemeDao
+import com.github.cheapmon.balalaika.data.entities.property.PropertyDao
 import com.github.cheapmon.balalaika.ui.search.SearchFragment
+import com.github.cheapmon.balalaika.util.Constants
 import dagger.hilt.android.scopes.ActivityScoped
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.*
@@ -33,74 +40,69 @@ import javax.inject.Inject
 @ActivityScoped
 @Suppress("EXPERIMENTAL_API_USAGE")
 class SearchRepository @Inject constructor(
-    private val dictionaryEntryDao: DictionaryEntryDao
+    private val constants: Constants,
+    private val cacheEntryDao: CacheEntryDao,
+    private val dictionaryDao: DictionaryDao,
+    private val lexemeDao: LexemeDao,
+    private val propertyDao: PropertyDao
 ) {
-    /** Current query set by user */
-    private val queryChannel: ConflatedBroadcastChannel<String> = ConflatedBroadcastChannel()
+    private val _query = ConflatedBroadcastChannel("")
+    private val _restriction = ConflatedBroadcastChannel<SearchRestriction>(SearchRestriction.None)
 
-    /** Current [search restriction][SearchRestriction] set by user */
-    private val restrictionChannel: ConflatedBroadcastChannel<SearchRestriction> =
-        ConflatedBroadcastChannel()
+    /** Current search query */
+    val query = _query.asFlow().distinctUntilChanged().debounce(300)
 
-    /**
-     * Current state of computation
-     *
-     * Holds `true` while the database is queried
-     */
-    private val inProgressChannel: ConflatedBroadcastChannel<Boolean> =
-        ConflatedBroadcastChannel(false)
+    /** Current search restriction */
+    val restriction = _restriction.asFlow().distinctUntilChanged()
 
-    init {
-        // Search unrestricted by default
-        restrictionChannel.offer(SearchRestriction.None)
-    }
+    /** Current dictionary, depending on the user configuration */
+    val dictionary = query.combine(restriction) { query, restriction -> Pair(query, restriction) }
+        .flatMapLatest { (query, restriction) -> getDictionary(query, restriction) }
 
-    /** [Lexemes][Lexeme] matching the user's query */
-    val lexemes = queryChannel.asFlow().distinctUntilChanged().debounce(300)
-        .combine(restrictionChannel.asFlow().distinctUntilChanged()) { q, r ->
-            when (r) {
-                is SearchRestriction.None ->
-                    dictionaryEntryDao.findLexemes(q)
-                is SearchRestriction.Some ->
-                    dictionaryEntryDao.findLexemesWith(q, r.category.categoryId, r.restriction)
+    /** Set the search query */
+    fun setQuery(query: String) = _query.offer(query)
+
+    /** Set the search restriction */
+    fun setRestriction(restriction: SearchRestriction) = _restriction.offer(restriction)
+
+    private fun getDictionary(
+        query: String,
+        searchRestriction: SearchRestriction
+    ): Flow<PagingData<DictionaryEntry>> = flow {
+        val pager = Pager(
+            config = PagingConfig(pageSize = constants.PAGE_SIZE),
+            pagingSourceFactory = {
+                SearchPagingSource(
+                    constants,
+                    cacheEntryDao,
+                    lexemeDao,
+                    propertyDao
+                )
             }
+        ).flow
+        // Wait for refresh to finish
+        refreshCache(query, searchRestriction).collect { done ->
+            if (done) pager.collect { value -> emit(value) }
         }
-
-    /** Current query */
-    val query = queryChannel.asFlow()
-
-    /** Current [search restriction][SearchRestriction] */
-    val restriction = restrictionChannel.asFlow()
-
-    /** Current state of computation */
-    val inProgress = inProgressChannel.asFlow()
-
-    /** Set query */
-    fun setQuery(query: String) {
-        queryChannel.offer(query)
     }
 
-    /** Set [search restriction][SearchRestriction] */
-    fun setRestriction(restriction: SearchRestriction) {
-        restrictionChannel.offer(restriction)
-    }
-
-    /** Get all [dictionary entries][DictionaryEntry] associated with a [lexeme][Lexeme] */
-    suspend fun getDictionaryEntriesFor(lexemeId: Long): List<DictionaryEntry> {
-        inProgressChannel.offer(true)
-        val q = queryChannel.asFlow().first()
-        val result = when (val r = restrictionChannel.asFlow().first()) {
+    private fun refreshCache(
+        query: String,
+        searchRestriction: SearchRestriction
+    ): Flow<Boolean> = flow {
+        emit(false)
+        val entries = when (searchRestriction) {
             is SearchRestriction.None ->
-                dictionaryEntryDao.find(q, lexemeId)
+                dictionaryDao.findLexemes(query)
             is SearchRestriction.Some ->
-                dictionaryEntryDao.findWith(q, r.category.categoryId, r.restriction, lexemeId)
-        }
-        inProgressChannel.offer(false)
-        return result
-    }
-
-    /** Remove [search restriction][SearchRestriction] */
-    fun clearRestriction() {
-        restrictionChannel.offer(SearchRestriction.None)
+                dictionaryDao.findLexemes(
+                    query,
+                    searchRestriction.category.categoryId,
+                    searchRestriction.restriction
+                )
+        }.mapIndexed { idx, id -> SearchCacheEntry(idx + 1L, id) }
+        cacheEntryDao.clearSearchCache()
+        cacheEntryDao.insertIntoSearchCache(entries)
+        emit(true)
     }
 }

@@ -19,7 +19,7 @@ import android.view.ViewGroup
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.data.entities.category.Category
 import com.github.cheapmon.balalaika.data.entities.category.WidgetType
-import com.github.cheapmon.balalaika.data.entities.property.PropertyWithRelations
+import com.github.cheapmon.balalaika.data.entities.property.PropertyWithCategory
 
 /**
  * Widget for external hyperlinks
@@ -33,7 +33,7 @@ class UrlWidget(
     parent: ViewGroup,
     listener: WidgetListener,
     category: Category,
-    properties: List<PropertyWithRelations>,
+    properties: List<PropertyWithCategory>,
     hasActions: Boolean,
     searchText: String?
 ) : BaseWidget(parent, listener, category, properties, hasActions, searchText) {

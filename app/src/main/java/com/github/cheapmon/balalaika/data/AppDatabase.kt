@@ -21,8 +21,8 @@ import androidx.room.TypeConverters
 import com.github.cheapmon.balalaika.data.entities.category.Category
 import com.github.cheapmon.balalaika.data.entities.category.CategoryDao
 import com.github.cheapmon.balalaika.data.entities.category.WidgetTypeConverters
-import com.github.cheapmon.balalaika.data.entities.entry.DictionaryEntry
-import com.github.cheapmon.balalaika.data.entities.entry.DictionaryEntryDao
+import com.github.cheapmon.balalaika.data.entities.entry.DictionaryDao
+import com.github.cheapmon.balalaika.data.entities.entry.PropertyDatabaseView
 import com.github.cheapmon.balalaika.data.entities.history.HistoryEntry
 import com.github.cheapmon.balalaika.data.entities.history.HistoryEntryDao
 import com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme
@@ -48,7 +48,7 @@ import com.github.cheapmon.balalaika.data.entities.view.DictionaryViewToCategory
         DictionaryViewToCategory::class,
         HistoryEntry::class
     ],
-    views = [DictionaryEntry::class],
+    views = [PropertyDatabaseView::class],
     version = 1,
     exportSchema = false
 )
@@ -63,8 +63,8 @@ abstract class AppDatabase : RoomDatabase() {
     /** Database link for [properties][Property] */
     abstract fun properties(): PropertyDao
 
-    /** Database link for [dictionary entries][DictionaryEntry] */
-    abstract fun dictionaryEntries(): DictionaryEntryDao
+    /** Database link for [dictionary entries][PropertyDatabaseView] */
+    abstract fun dictionaryEntries(): DictionaryDao
 
     /** Database link for [dictionary views][DictionaryView] */
     abstract fun dictionaryViews(): DictionaryViewDao

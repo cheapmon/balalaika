@@ -15,64 +15,64 @@
  */
 package com.github.cheapmon.balalaika.ui.dictionary
 
-import android.content.Context
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
-import androidx.paging.toLiveData
-import com.github.cheapmon.balalaika.R
+import androidx.paging.cachedIn
 import com.github.cheapmon.balalaika.data.entities.category.Category
-import com.github.cheapmon.balalaika.data.entities.entry.DictionaryEntry
 import com.github.cheapmon.balalaika.data.entities.view.DictionaryViewWithCategories
+import com.github.cheapmon.balalaika.data.insert.ImportUtil
 import com.github.cheapmon.balalaika.data.repositories.DictionaryRepository
-import com.github.cheapmon.balalaika.data.storage.Storage
-import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
 /** View model for [DictionaryFragment] */
 class DictionaryViewModel @ViewModelInject constructor(
     private val repository: DictionaryRepository,
-    storage: Storage,
-    @ApplicationContext context: Context
+    private val importUtil: ImportUtil
 ) : ViewModel() {
-    /** Lexemes currently shown, depending on user input */
-    val lexemes = repository.lexemes.asLiveData().switchMap {
-        it.toLiveData(10)
+    /**
+     * Current state of import operations
+     *
+     * Calls the [import utility][ImportUtil] and emits `true` when finished.
+     */
+    val importFlow: Flow<Boolean> = flow {
+        emit(false)
+        importUtil.import()
+        emit(true)
     }
 
-    /** Current state of computation */
-    val inProgress = repository.inProgress.asLiveData()
-
-    init {
-        val categoryId =
-            storage.getString(context.getString(R.string.preferences_key_order), null)?.toLong()
-        if (categoryId != null) repository.setCategoryId(categoryId)
-        val dictionaryViewId =
-            storage.getString(context.getString(R.string.preferences_key_view), null)?.toLong()
-        if (dictionaryViewId != null) repository.setDictionaryViewId(dictionaryViewId)
+    /**
+     * Adapt dictionary presentation to user configuration
+     *
+     * The view is only updated if one of these settings changed:
+     * - Dictionary view
+     * - Category to order by
+     * - Initial entry
+     */
+    val dictionary = flow {
+        val result = repository.dictionary.cachedIn(viewModelScope)
+        importFlow.collect { done -> if (done) result.collect { value -> emit(value) } }
     }
 
-    /** Select category to order lexemes by */
-    fun setCategory(categoryId: Long) {
-        repository.setCategoryId(categoryId)
-    }
+    /** Set the dictionary view */
+    fun setDictionaryView(id: Long) = repository.setDictionaryView(id)
 
-    /** Select a view for the current dictionary */
-    fun setDictionaryView(dictionaryViewId: Long) {
-        repository.setDictionaryViewId(dictionaryViewId)
-    }
+    /** Set the dictionary ordering */
+    fun setCategory(id: Long) = repository.setCategory(id)
+
+    /** Set the first entry to display */
+    fun setInitialKey(id: Long?) = repository.setInitialKey(id)
+
+    /** Get position of lexeme in the current dictionary setup */
+    suspend fun getIdOf(externalId: String?): Long? = repository.getIdOf(externalId)
 
     /** Toggle bookmark state for a lexeme */
     fun toggleBookmark(lexemeId: Long) {
         viewModelScope.launch { repository.toggleBookmark(lexemeId) }
-    }
-
-    /** Get position of a lexeme in the dictionary */
-    suspend fun getPositionOf(externalId: String): Int {
-        return repository.positions.first().indexOfFirst { it == externalId }
     }
 
     /** All available sortable categories */
@@ -83,10 +83,5 @@ class DictionaryViewModel @ViewModelInject constructor(
     /** All available dictionary views */
     suspend fun getDictionaryViews(): List<DictionaryViewWithCategories> {
         return repository.dictionaryViews.first()
-    }
-
-    /** Get all dictionary entries for a lexeme */
-    suspend fun getDictionaryEntriesFor(lexemeId: Long): List<DictionaryEntry> {
-        return repository.getDictionaryEntriesFor(lexemeId)
     }
 }

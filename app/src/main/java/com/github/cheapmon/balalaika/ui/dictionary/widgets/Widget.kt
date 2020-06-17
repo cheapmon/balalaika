@@ -23,7 +23,7 @@ import com.github.cheapmon.balalaika.data.entities.category.WidgetType
 import com.github.cheapmon.balalaika.data.entities.history.SearchRestriction
 import com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme
 import com.github.cheapmon.balalaika.data.entities.property.Property
-import com.github.cheapmon.balalaika.data.entities.property.PropertyWithRelations
+import com.github.cheapmon.balalaika.data.entities.property.PropertyWithCategory
 
 /**
  * Small user interface element for displaying [properties][Property] of [lexemes][Lexeme]
@@ -43,7 +43,7 @@ abstract class Widget(
     /** Data category of [properties] */
     private val category: Category,
     /** List of properties to be displayed */
-    private val properties: List<PropertyWithRelations>,
+    private val properties: List<PropertyWithCategory>,
     /** Availability of action buttons to the user */
     private val hasActions: Boolean,
     /** An optional search query */
@@ -88,7 +88,7 @@ object Widgets {
         parent: ViewGroup,
         listener: WidgetListener,
         category: Category,
-        properties: List<PropertyWithRelations>,
+        properties: List<PropertyWithCategory>,
         hasActions: Boolean = true,
         searchText: String? = null
     ): Widget {

@@ -23,7 +23,7 @@ import androidx.databinding.DataBindingUtil
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.data.entities.category.Category
 import com.github.cheapmon.balalaika.data.entities.history.SearchRestriction
-import com.github.cheapmon.balalaika.data.entities.property.PropertyWithRelations
+import com.github.cheapmon.balalaika.data.entities.property.PropertyWithCategory
 import com.github.cheapmon.balalaika.databinding.HelperButtonBinding
 import com.github.cheapmon.balalaika.databinding.WidgetTemplateBinding
 import com.github.cheapmon.balalaika.util.ResourceUtil
@@ -45,7 +45,7 @@ open class BaseWidget(
     /** @suppress */
     val category: Category,
     /** @suppress */
-    val properties: List<PropertyWithRelations>,
+    val properties: List<PropertyWithCategory>,
     /** @suppress */
     private val hasActions: Boolean,
     /** @suppress */
@@ -86,7 +86,7 @@ open class BaseWidget(
     open fun createPropertyView(
         inflater: LayoutInflater,
         contentView: ViewGroup,
-        property: PropertyWithRelations
+        property: PropertyWithCategory
     ): View {
         val propertyBinding: HelperButtonBinding =
             DataBindingUtil.inflate(inflater, R.layout.helper_button, contentView, false)

@@ -17,25 +17,29 @@ package com.github.cheapmon.balalaika.ui.preferences
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.github.cheapmon.balalaika.data.entities.category.Category
 import com.github.cheapmon.balalaika.data.entities.view.DictionaryViewWithCategories
 import com.github.cheapmon.balalaika.data.repositories.DictionaryRepository
+import com.github.cheapmon.balalaika.data.storage.Storage
+import com.github.cheapmon.balalaika.util.Constants
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 
 /** View model for [PreferencesFragment] */
 class PreferencesViewModel @ViewModelInject constructor(
-    private val repository: DictionaryRepository
+    private val repository: DictionaryRepository,
+    private val storage: Storage,
+    private val constants: Constants
 ) : ViewModel() {
     /** Select a view for the current dictionary */
     fun setDictionaryView(dictionaryViewId: Long) {
-        viewModelScope.launch { repository.setDictionaryViewId(dictionaryViewId) }
+        val key = constants.VIEW_KEY
+        storage.putString(key, dictionaryViewId.toString())
     }
 
     /** Select category to order lexemes by */
     fun setCategory(categoryId: Long) {
-        viewModelScope.launch { repository.setCategoryId(categoryId) }
+        val key = constants.ORDER_KEY
+        storage.putString(key, categoryId.toString())
     }
 
     /** All available dictionary views */

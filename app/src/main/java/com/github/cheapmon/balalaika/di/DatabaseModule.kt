@@ -18,6 +18,7 @@ package com.github.cheapmon.balalaika.di
 import android.content.Context
 import androidx.room.Room
 import com.github.cheapmon.balalaika.data.AppDatabase
+import com.github.cheapmon.balalaika.data.CacheDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -68,4 +69,15 @@ class DatabaseModule {
     @ActivityScoped
     @Provides
     fun provideHistoryEntries(appDatabase: AppDatabase) = appDatabase.historyEntries()
+
+    /** @suppress */
+    @ActivityScoped
+    @Provides
+    fun provideCacheDatabase(@ApplicationContext context: Context) =
+        Room.inMemoryDatabaseBuilder(context, CacheDatabase::class.java).build()
+
+    /** @suppress */
+    @ActivityScoped
+    @Provides
+    fun provideCacheEntries(cacheDatabase: CacheDatabase) = cacheDatabase.cacheEntries()
 }

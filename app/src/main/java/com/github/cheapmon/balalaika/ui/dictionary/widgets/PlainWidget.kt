@@ -22,7 +22,7 @@ import androidx.databinding.DataBindingUtil
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.data.entities.category.Category
 import com.github.cheapmon.balalaika.data.entities.category.WidgetType
-import com.github.cheapmon.balalaika.data.entities.property.PropertyWithRelations
+import com.github.cheapmon.balalaika.data.entities.property.PropertyWithCategory
 import com.github.cheapmon.balalaika.databinding.HelperItalicBinding
 import com.github.cheapmon.balalaika.databinding.WidgetPlainBinding
 import com.github.cheapmon.balalaika.util.highlight
@@ -38,7 +38,7 @@ open class PlainWidget(
     parent: ViewGroup,
     listener: WidgetListener,
     category: Category,
-    properties: List<PropertyWithRelations>,
+    properties: List<PropertyWithCategory>,
     hasActions: Boolean,
     searchText: String?
 ) : BaseWidget(parent, listener, category, properties, hasActions, searchText) {
@@ -51,7 +51,7 @@ open class PlainWidget(
     override fun createPropertyView(
         inflater: LayoutInflater,
         contentView: ViewGroup,
-        property: PropertyWithRelations
+        property: PropertyWithCategory
     ): View {
         val propertyBinding: HelperItalicBinding =
             DataBindingUtil.inflate(inflater, R.layout.helper_italic, contentView, false)

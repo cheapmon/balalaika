@@ -24,19 +24,21 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.data.entities.entry.GroupedEntry
 import com.github.cheapmon.balalaika.data.entities.history.SearchRestriction
 import com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme
 import com.github.cheapmon.balalaika.databinding.FragmentSearchBinding
-import com.github.cheapmon.balalaika.util.grouped
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 /**
@@ -47,6 +49,7 @@ import kotlinx.coroutines.launch
  * - Apply restriction to the search query
  * - Show an entry in the dictionary
  */
+@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class SearchFragment : Fragment(), SearchAdapter.Listener {
     private val viewModel: SearchViewModel by viewModels()
@@ -73,61 +76,67 @@ class SearchFragment : Fragment(), SearchAdapter.Listener {
             }
             searchInput.addTextChangedListener(Watcher())
             searchRestriction.setOnCloseIconClickListener {
-                viewModel.clearRestriction()
-                searchRestriction.visibility = View.GONE
+                viewModel.setRestriction(SearchRestriction.None)
             }
-            inProgress = true
         }
+        indicateProgress()
         handleArgs()
         bindUi()
         return binding.root
     }
 
-    /** Process fragment arguments */
-    private fun handleArgs() {
-        val query = args.query
-        val restriction = args.restriction
-        if (query != null) {
-            viewModel.setQuery(query)
+    private fun indicateProgress() {
+        lifecycleScope.launch {
+            searchAdapter.loadStateFlow.combine(viewModel.importFlow) { loadState, done ->
+                (loadState.refresh is LoadState.Loading) || !done
+            }.collect { inProgress -> binding.inProgress = inProgress }
         }
-        if (restriction != null) viewModel.setRestriction(restriction)
     }
 
-    /** Bind data */
     private fun bindUi() {
-        viewModel.entries.observe(viewLifecycleOwner, Observer { list ->
-            searchAdapter.submitList(list)
-            if (list.isEmpty()) {
-                binding.searchEmptyIcon.visibility = View.VISIBLE
-                binding.searchEmptyText.visibility = View.VISIBLE
-            } else {
-                binding.searchEmptyIcon.visibility = View.GONE
-                binding.searchEmptyText.visibility = View.GONE
+        lifecycleScope.launch {
+            launch {
+                viewModel.dictionary.collectLatest { data -> searchAdapter.submitData(data) }
             }
-        })
-        viewModel.query.observe(viewLifecycleOwner, Observer {
-            searchAdapter.submitSearchText(it)
-            binding.query = it
-        })
-        viewModel.restriction.observe(viewLifecycleOwner, Observer {
-            when (it) {
-                is SearchRestriction.None -> {
-                    binding.restriction = ""
-                    binding.searchRestriction.visibility = View.GONE
-                }
-                is SearchRestriction.Some -> {
-                    binding.restriction = getString(
-                        R.string.search_restriction,
-                        it.category.name, it.restriction
-                    )
-                    binding.searchRestriction.visibility = View.VISIBLE
+            launch {
+                viewModel.query.collectLatest { query ->
+                    binding.query = query
+                    searchAdapter.submitSearchText(query)
                 }
             }
-        })
-        viewModel.inProgress.observe(viewLifecycleOwner, Observer {
-            binding.inProgress = it
-        })
+            launch {
+                viewModel.restriction.collectLatest { restriction ->
+                    when (restriction) {
+                        is SearchRestriction.None -> {
+                            binding.restriction = ""
+                            binding.searchRestriction.visibility = View.GONE
+                        }
+                        is SearchRestriction.Some -> {
+                            binding.restriction = getString(
+                                R.string.search_restriction,
+                                restriction.category.name, restriction.restriction
+                            )
+                            binding.searchRestriction.visibility = View.VISIBLE
+                        }
+                    }
+                }
+            }
+        }
+        /*if (itemCount == 0) {
+            binding.searchEmptyIcon.visibility = View.VISIBLE
+            binding.searchEmptyText.visibility = View.VISIBLE
+        } else {
+            binding.searchEmptyIcon.visibility = View.GONE
+            binding.searchEmptyText.visibility = View.GONE
+        }*/
     }
+
+    /** Process fragment arguments */
+    private fun handleArgs() {
+        args.query?.let { viewModel.setQuery(it) }
+        args.restriction?.let { viewModel.setRestriction(it) }
+    }
+
 
     /** Show entry in dictionary */
     override fun onClickItem(lexeme: Lexeme) {
@@ -136,21 +145,14 @@ class SearchFragment : Fragment(), SearchAdapter.Listener {
         findNavController().navigate(directions)
     }
 
-    /** Load all properties for a lexeme */
-    override fun onLoadLexeme(lexeme: Lexeme, block: (entry: GroupedEntry?) -> Unit) {
-        lifecycleScope.launch {
-            val entry = viewModel.getDictionaryEntriesFor(lexeme.lexemeId).grouped()
-            block(entry)
-        }
-    }
-
     /** @suppress */
     inner class Watcher : TextWatcher {
         override fun afterTextChanged(s: Editable?) = Unit
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            if (s.toString().length >= 2) viewModel.setQuery(s.toString().trim())
+            val query = s.toString().trim()
+            if (query.length >= 2) viewModel.setQuery(query)
         }
     }
 }

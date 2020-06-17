@@ -18,11 +18,21 @@ package com.github.cheapmon.balalaika.data.entities.lexeme
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
 
 /** Database link for [lexemes][Lexeme] */
 @Dao
 interface LexemeDao {
+    /** Find a [lexeme][Lexeme] by its [identifier][Lexeme.lexemeId] */
+    @Transaction
+    @Query("SELECT * FROM lexeme WHERE id = (:lexemeId) LIMIT 1")
+    suspend fun getLexemeById(lexemeId: Long): LexemeWithBase?
+
+    /** Find a [lexeme][Lexeme] by its [external identifier][Lexeme.externalId] */
+    @Query("SELECT id FROM lexeme WHERE external_id = (:externalId) LIMIT 1")
+    suspend fun getLexemeIdByExternalId(externalId: String): Long?
+
     /** Get all bookmarked [lexemes][Lexeme] */
     @Query("SELECT * FROM lexeme WHERE is_bookmark = 1")
     fun getBookmarks(): Flow<List<Lexeme>>

@@ -19,7 +19,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.github.cheapmon.balalaika.data.entities.category.Category
-import com.github.cheapmon.balalaika.data.entities.entry.DictionaryEntry
+import com.github.cheapmon.balalaika.data.entities.entry.PropertyDatabaseView
 
 /**
  * Limited view on dictionary entries
@@ -34,7 +34,7 @@ import com.github.cheapmon.balalaika.data.entities.entry.DictionaryEntry
  * For additional information on Balalaika's data model, please refer to the
  * [Import documentation][com.github.cheapmon.balalaika.data.insert].
  *
- * @see DictionaryEntry
+ * @see PropertyDatabaseView
  */
 @Entity(tableName = "dictionary_view")
 data class DictionaryView(

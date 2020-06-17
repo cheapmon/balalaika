@@ -18,12 +18,12 @@ package com.github.cheapmon.balalaika.ui.dictionary
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.paging.PagedListAdapter
+import android.widget.ImageButton
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.data.entities.entry.GroupedEntry
-import com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme
+import com.github.cheapmon.balalaika.data.entities.entry.DictionaryEntry
 import com.github.cheapmon.balalaika.databinding.FragmentDictionaryItemBinding
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetListener
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.Widgets
@@ -32,8 +32,7 @@ import com.github.cheapmon.balalaika.ui.dictionary.widgets.Widgets
 class DictionaryAdapter(
     private val listener: Listener,
     private val widgetListener: WidgetListener
-) : PagedListAdapter<Lexeme, DictionaryAdapter.ViewHolder>(DictionaryDiff) {
-
+) : PagingDataAdapter<DictionaryEntry, DictionaryAdapter.ViewHolder>(DictionaryDiff) {
     /** Create view */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -49,17 +48,20 @@ class DictionaryAdapter(
      * - Group entries and pass to widgets
      */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val lex = getItem(position) ?: return
-        listener.onLoadLexeme(lex) { entry ->
-            with(holder.binding) {
-                if (entry == null) {
-                    lexeme = lex
-                    base = null
-                    entryProperties.visibility = View.GONE
-                    return@with
-                }
-                lexeme = entry.lexeme
-                base = entry.base
+        val entry = getItem(position) ?: return
+        holder.bind(entry)
+    }
+
+    /** @suppress */
+    inner class ViewHolder(private val binding: FragmentDictionaryItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        private var isBookmark: Boolean = false
+
+        /** Bind single entry to this view holder */
+        fun bind(entry: DictionaryEntry) {
+            with(binding) {
+                lexeme = entry.lexemeWithBase.lexeme
+                base = entry.lexemeWithBase.base
                 entryProperties.visibility = View.VISIBLE
                 entryCollapseButton.setOnClickListener {
                     if (entryProperties.visibility == View.GONE) {
@@ -73,13 +75,12 @@ class DictionaryAdapter(
                 entryBaseButton.setOnClickListener {
                     listener.onClickBaseButton(entry)
                 }
-                if (entry.lexeme.isBookmark) {
-                    entryBookmarkButton.setImageResource(R.drawable.ic_bookmark)
-                } else {
-                    entryBookmarkButton.setImageResource(R.drawable.ic_bookmark_border)
-                }
+                isBookmark = entry.lexemeWithBase.lexeme.isBookmark
+                updateBookmarkButton(entryBookmarkButton)
                 entryBookmarkButton.setOnClickListener {
-                    listener.onClickBookmarkButton(entry)
+                    listener.onClickBookmarkButton(entry, isBookmark)
+                    isBookmark = !isBookmark
+                    updateBookmarkButton(entryBookmarkButton)
                 }
                 entryProperties.visibility = View.VISIBLE
                 entryProperties.removeAllViews()
@@ -91,20 +92,24 @@ class DictionaryAdapter(
                     }
             }
         }
+
+        private fun updateBookmarkButton(button: ImageButton) {
+            if (isBookmark) {
+                button.setImageResource(R.drawable.ic_bookmark)
+            } else {
+                button.setImageResource(R.drawable.ic_bookmark_border)
+            }
+        }
     }
 
-    /** @suppress */
-    class ViewHolder(val binding: FragmentDictionaryItemBinding) :
-        RecyclerView.ViewHolder(binding.root)
-
-    private object DictionaryDiff : DiffUtil.ItemCallback<Lexeme>() {
-        override fun areItemsTheSame(oldItem: Lexeme, newItem: Lexeme): Boolean {
-            return oldItem.lexemeId == newItem.lexemeId
+    private object DictionaryDiff : DiffUtil.ItemCallback<DictionaryEntry>() {
+        override fun areItemsTheSame(oldItem: DictionaryEntry, newItem: DictionaryEntry): Boolean {
+            return oldItem.lexemeWithBase.lexeme.lexemeId == newItem.lexemeWithBase.lexeme.lexemeId
         }
 
         override fun areContentsTheSame(
-            oldItem: Lexeme,
-            newItem: Lexeme
+            oldItem: DictionaryEntry,
+            newItem: DictionaryEntry
         ): Boolean {
             return oldItem == newItem
         }
@@ -113,12 +118,9 @@ class DictionaryAdapter(
     /** Component that handles actions from this adapter */
     interface Listener {
         /** Callback for whenever a bookmark button is clicked */
-        fun onClickBookmarkButton(entry: GroupedEntry)
+        fun onClickBookmarkButton(entry: DictionaryEntry, isBookmark: Boolean)
 
         /** Callback for whenever a base button is clicked */
-        fun onClickBaseButton(entry: GroupedEntry)
-
-        /** Callback for whenever a lexeme is loaded */
-        fun onLoadLexeme(lexeme: Lexeme, block: (entry: GroupedEntry?) -> Unit)
+        fun onClickBaseButton(entry: DictionaryEntry)
     }
 }

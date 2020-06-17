@@ -15,19 +15,42 @@
  */
 package com.github.cheapmon.balalaika.util
 
+import android.content.Context
+import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.data.config.Config
 import com.github.cheapmon.balalaika.data.storage.Storage
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
 /** Application-wide constants */
 @Suppress("PropertyName")
 @Singleton
-class Constants @Inject constructor() {
+class Constants @Inject constructor(
+    @ApplicationContext context: Context
+) {
     /**
-     * Key used in [storage][Storage] to save database version key
+     * Key used in [storage][Storage] to save database version
      *
      * @see Config
      */
     val DB_VERSION_KEY = "db_version"
+
+    /** Key used in [storage][Storage] to save dictionary order */
+    val ORDER_KEY = context.getString(R.string.preferences_key_order)
+
+    /** Default dictionary order */
+    val DEFAULT_CATEGORY_ID = -1L
+
+    /** Key used in [storage][Storage] to save dictionary view */
+    val VIEW_KEY = context.getString(R.string.preferences_key_view)
+
+    /** Default dictionary view */
+    val DEFAULT_DICTIONARY_VIEW_ID = 1L
+
+    /** Paging start index */
+    val PAGING_START_INDEX = 1L
+
+    /** Number of elements loaded per page */
+    val PAGE_SIZE = 15
 }

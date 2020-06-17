@@ -17,76 +17,79 @@ package com.github.cheapmon.balalaika.ui.search
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
-import androidx.paging.toLiveData
-import com.github.cheapmon.balalaika.data.entities.entry.DictionaryEntry
+import androidx.paging.cachedIn
 import com.github.cheapmon.balalaika.data.entities.history.HistoryEntry
 import com.github.cheapmon.balalaika.data.entities.history.SearchRestriction
+import com.github.cheapmon.balalaika.data.insert.ImportUtil
 import com.github.cheapmon.balalaika.data.repositories.HistoryRepository
 import com.github.cheapmon.balalaika.data.repositories.SearchRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
 /** View model for [SearchFragment] */
 class SearchViewModel @ViewModelInject constructor(
     private val searchRepository: SearchRepository,
-    private val historyRepository: HistoryRepository
+    private val historyRepository: HistoryRepository,
+    private val importUtil: ImportUtil
 ) : ViewModel() {
-
-    /** Lexemes matching the user's query */
-    val entries = searchRepository.lexemes.asLiveData().switchMap {
-        it.toLiveData(10)
+    /**
+     * Current state of import operations
+     *
+     * Calls the [import utility][ImportUtil] and emits `true` when finished.
+     */
+    val importFlow: Flow<Boolean> = flow {
+        emit(false)
+        importUtil.import()
+        emit(true)
     }
 
-    /** Current query */
-    val query = searchRepository.query.asLiveData()
+    /** Current search query */
+    val query = searchRepository.query
 
     /** Current search restriction */
-    val restriction = searchRepository.restriction.asLiveData()
+    val restriction = searchRepository.restriction
 
-    /** Current state of computation */
-    val inProgress = searchRepository.inProgress.asLiveData()
+    /**
+     * Current dictionary, depending on the user configuration
+     *
+     * _Note_: This ensures that the dictionary is up-to-date by checking that any import
+     * operations have been finished.
+     */
+    val dictionary = flow {
+        val result = searchRepository.dictionary.cachedIn(viewModelScope)
+        importFlow.collect { done -> if (done) result.collect { value -> emit(value) } }
+    }
 
-    /** Set query */
-    fun setQuery(query: String) {
+    /** Set the search query */
+    fun setQuery(query: String) =
         searchRepository.setQuery(query)
-    }
 
-    /** Set restriction */
-    fun setRestriction(restriction: SearchRestriction) {
+    /** Set the search restriction */
+    fun setRestriction(restriction: SearchRestriction) =
         searchRepository.setRestriction(restriction)
-    }
-
-    /** Get all dictionary entries associated with a lexeme */
-    suspend fun getDictionaryEntriesFor(lexemeId: Long): List<DictionaryEntry> {
-        return searchRepository.getDictionaryEntriesFor(lexemeId)
-    }
-
-    /** Remove search restriction */
-    fun clearRestriction() {
-        searchRepository.clearRestriction()
-    }
 
     /** Add search to history */
     fun addToHistory() {
         viewModelScope.launch {
-            val query = searchRepository.query.first()
+            val query = this@SearchViewModel.query.first()
+            val restriction = this@SearchViewModel.restriction.first()
             if (query.isBlank()) return@launch
-            val entry = when (val r = searchRepository.restriction.first()) {
+            val entry = when (restriction) {
                 is SearchRestriction.None ->
                     HistoryEntry(query = query)
                 is SearchRestriction.Some ->
                     HistoryEntry(
                         query = query,
-                        categoryId = r.category.categoryId,
-                        restriction = r.restriction
+                        categoryId = restriction.category.categoryId,
+                        restriction = restriction.restriction
                     )
             }
             historyRepository.removeSimilarEntries(entry)
             historyRepository.addEntry(entry)
         }
     }
-
 }

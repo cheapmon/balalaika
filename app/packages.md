@@ -58,6 +58,9 @@ Configuration of database version and sources
 # Package com.github.cheapmon.balalaika.data.entities
 Entities, relations and their database representation
 
+# Package com.github.cheapmon.balalaika.data.entities.cache
+Cache entry entity and its associated types
+
 # Package com.github.cheapmon.balalaika.data.entities.category
 Category entity and its associated types
 
