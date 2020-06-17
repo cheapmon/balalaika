@@ -83,7 +83,7 @@ class BookmarksFragment : Fragment(), BookmarksAdapter.Listener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.bookmarks_clear -> {
-                MaterialAlertDialogBuilder(context)
+                MaterialAlertDialogBuilder(requireContext())
                     .setTitle(R.string.bookmarks_clear_title)
                     .setPositiveButton(R.string.bookmarks_clear_affirm) { _, _ -> clearBookmarks() }
                     .setNegativeButton(R.string.bookmarks_clear_cancel, null)

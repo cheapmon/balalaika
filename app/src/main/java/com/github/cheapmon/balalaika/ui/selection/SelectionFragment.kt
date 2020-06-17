@@ -16,81 +16,49 @@
 package com.github.cheapmon.balalaika.ui.selection
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.databinding.FragmentSelectionBinding
-import com.google.android.material.snackbar.Snackbar
+import com.github.cheapmon.balalaika.databinding.FragmentSelectionTabsBinding
+import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 
-/**
- * Fragment for dictionary selection
- *
- * The user may:
- * - See all available local dictionaries
- * - Navigate to a dictionary's detail view
- * - Set dictionary active or inactive
- */
-class SelectionFragment : Fragment(), SelectionAdapter.Listener {
-    private val viewModel: SelectionViewModel by viewModels()
+@AndroidEntryPoint
+class SelectionFragment : Fragment() {
+    private lateinit var fragmentStateAdapter: SelectionFragmentStateAdapter
+    private lateinit var viewPager: ViewPager2
+    private lateinit var binding: FragmentSelectionTabsBinding
 
-    private lateinit var binding: FragmentSelectionBinding
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var selectionLayoutManager: LinearLayoutManager
-    private lateinit var selectionAdapter: SelectionAdapter
-
-    /** Create view */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_selection, container, false)
-        selectionLayoutManager = LinearLayoutManager(context)
-        selectionAdapter = SelectionAdapter(this)
-        recyclerView = binding.selectionList.apply {
-            layoutManager = selectionLayoutManager
-            adapter = selectionAdapter
-            setHasFixedSize(true)
-            addItemDecoration(DividerItemDecoration(context, selectionLayoutManager.orientation))
-        }
-        setHasOptionsMenu(true)
-        submitData()
+        binding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_selection_tabs, container, false)
         return binding.root
     }
 
-    /** Create options menu */
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_selection, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    /** Bind data */
-    private fun submitData() {
-        viewModel.dictionaries.observe(viewLifecycleOwner, Observer {
-            selectionAdapter.submitList(ArrayList(it))
-            if (it.isEmpty()) {
-                binding.selectionEmptyIcon.visibility = View.VISIBLE
-                binding.selectionEmptyText.visibility = View.VISIBLE
-            } else {
-                binding.selectionEmptyIcon.visibility = View.GONE
-                binding.selectionEmptyText.visibility = View.GONE
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        fragmentStateAdapter = SelectionFragmentStateAdapter(this)
+        viewPager = binding.selectionPager
+        viewPager.adapter = fragmentStateAdapter
+        TabLayoutMediator(binding.selectionTabLayout, viewPager) { tab, position ->
+            when (position) {
+                0 -> {
+                    tab.text = requireContext().getString(R.string.selection_tab_list)
+                    tab.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_library)
+                }
+                1 -> {
+                    tab.text = requireContext().getString(R.string.selection_tab_download)
+                    tab.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_download)
+                }
             }
-        })
-    }
-
-    /** Show dictionary in detail view */
-    override fun onClickDictionary(dictionary: Dictionary) {
-        Snackbar.make(binding.root, "Not yet implemented", Snackbar.LENGTH_SHORT).show()
-    }
-
-    /** Toggle dictionary active state */
-    override fun onToggleDictionary(dictionary: Dictionary) {
-        Snackbar.make(binding.root, "Not yet implemented", Snackbar.LENGTH_SHORT).show()
+        }.attach()
     }
 }

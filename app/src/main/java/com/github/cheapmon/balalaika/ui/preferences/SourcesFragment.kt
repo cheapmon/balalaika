@@ -64,7 +64,7 @@ class SourcesFragment : PreferenceFragmentCompat() {
 
     /** Show summary and actions for a single source */
     private fun showSourceDialog(source: Config.Source) {
-        MaterialAlertDialogBuilder(context)
+        MaterialAlertDialogBuilder(requireContext())
             .setTitle(source.name)
             .setMessage(source.summary)
             .setPositiveButton(R.string.preferences_source_open) { _, _ -> openLink(source.url) }

@@ -16,13 +16,14 @@
 package com.github.cheapmon.balalaika.ui.selection
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.databinding.FragmentSelectionItemBinding
 
-/** Adapter for [SelectionFragment] */
+/** Adapter for [SelectionListFragment] */
 class SelectionAdapter(
     private val listener: Listener
 ) : ListAdapter<Dictionary, SelectionAdapter.ViewHolder>(Diff) {
@@ -38,7 +39,7 @@ class SelectionAdapter(
         val item = getItem(position)
         with(holder.binding) {
             dictionary = item
-            root.setOnClickListener { listener.onClickDictionary(item) }
+            root.setOnClickListener { listener.onClickDictionary(item, selectionItemRoot) }
             selectionSwitch.setOnClickListener { listener.onToggleDictionary(item) }
         }
     }
@@ -68,7 +69,7 @@ class SelectionAdapter(
     /** Component that handles actions from this adapter */
     interface Listener {
         /** Callback for whenever a dictionary is clicked */
-        fun onClickDictionary(dictionary: Dictionary)
+        fun onClickDictionary(dictionary: Dictionary, itemView: View)
 
         /** Callback for whenever a dictionary is toggled */
         fun onToggleDictionary(dictionary: Dictionary)

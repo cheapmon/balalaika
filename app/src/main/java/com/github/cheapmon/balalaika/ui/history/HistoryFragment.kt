@@ -83,7 +83,7 @@ class HistoryFragment : Fragment(), HistoryAdapter.Listener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.history_clear -> {
-                MaterialAlertDialogBuilder(context)
+                MaterialAlertDialogBuilder(requireContext())
                     .setTitle(R.string.history_clear_title)
                     .setPositiveButton(R.string.history_clear_affirm) { _, _ -> clearHistory() }
                     .setNegativeButton(R.string.history_clear_cancel, null)

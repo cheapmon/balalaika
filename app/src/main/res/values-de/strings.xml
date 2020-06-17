@@ -32,6 +32,7 @@
     <string name="menu_order_by">Sortieren</string>
     <string name="menu_setup_view">Sicht einstellen</string>
     <string name="menu_selection">Meine Wörterbücher</string>
+    <string name="menu_selection_detail">Wörterbuch</string>
 
     <!-- Descriptions for accessibility -->
     <string name="desc_history_item_icon">Verlaufseintrag</string>
@@ -96,4 +97,7 @@
 
     <!-- Dictionary selection fragment -->
     <string name="selection_empty">Keine gespeicherten Wörterbücher</string>
+    <string name="selection_summary_title">Zusammenfassung</string>
+    <string name="selection_tab_list">Meine Wörterbücher</string>
+    <string name="selection_tab_download">Download</string>
 </resources>

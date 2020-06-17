@@ -32,6 +32,7 @@
     <string name="menu_order_by">Order by</string>
     <string name="menu_setup_view">Setup View</string>
     <string name="menu_selection">My Dictionaries</string>
+    <string name="menu_selection_detail">Dictionary</string>
 
     <!-- Descriptions for accessibility -->
     <string name="desc_history_item_icon">History entry</string>
@@ -96,4 +97,7 @@
 
     <!-- Dictionary selection fragment -->
     <string name="selection_empty">You have no saved dictionaries</string>
+    <string name="selection_summary_title">Summary</string>
+    <string name="selection_tab_list">My dictionaries</string>
+    <string name="selection_tab_download">Download</string>
 </resources>

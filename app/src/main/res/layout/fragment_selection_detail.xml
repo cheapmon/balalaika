@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright 2020 Simon Kaleschke
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="dictionary"
+            type="com.github.cheapmon.balalaika.ui.selection.Dictionary" />
+    </data>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/selection_detail_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/selection_detail_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+            android:layout_marginVertical="@dimen/activity_vertical_margin">
+
+            <TextView
+                android:id="@+id/selection_detail_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{dictionary.name}"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                app:layout_constraintBottom_toTopOf="@+id/selection_detail_guideline_title"
+                app:layout_constraintStart_toStartOf="@+id/selection_detail_guideline_icon"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Dictionary Name" />
+
+            <ImageView
+                android:id="@+id/selection_detail_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                app:layout_constraintBottom_toTopOf="@+id/selection_detail_guideline_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_library" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/selection_detail_guideline_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_begin="56dp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/selection_detail_guideline_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="56dp" />
+
+            <ImageView
+                android:id="@+id/selection_detail_summary_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@+id/selection_detail_guideline_summary"
+                app:layout_constraintEnd_toStartOf="@+id/selection_detail_guideline_icon"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/selection_detail_guideline_title"
+                app:srcCompat="@drawable/ic_summary" />
+
+            <TextView
+                android:id="@+id/selection_detail_summary_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/selection_summary_title"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/selection_detail_guideline_summary"
+                app:layout_constraintStart_toStartOf="@+id/selection_detail_guideline_icon"
+                app:layout_constraintTop_toTopOf="@+id/selection_detail_guideline_title" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/selection_detail_guideline_summary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_begin="80dp" />
+
+            <TextView
+                android:id="@+id/selection_detail_summary_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@{dictionary.summary}"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/selection_detail_guideline_icon"
+                app:layout_constraintTop_toTopOf="@+id/selection_detail_guideline_summary"
+                tools:text="@string/impsum" />
+
+            <TextView
+                android:id="@+id/selection_detail_active_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@{String.valueOf(dictionary.active)}"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:textColor="?attr/colorControlNormal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/selection_detail_guideline_icon"
+                app:layout_constraintTop_toBottomOf="@+id/selection_detail_summary_text"
+                tools:text="This dictionary is currently active" />
+
+            <ImageView
+                android:id="@+id/selection_detail_active_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/selection_detail_active_text"
+                app:layout_constraintEnd_toStartOf="@+id/selection_detail_guideline_icon"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/selection_detail_active_text"
+                app:srcCompat="@drawable/ic_toggle" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</layout>

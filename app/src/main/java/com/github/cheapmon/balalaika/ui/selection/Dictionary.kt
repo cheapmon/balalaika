@@ -15,9 +15,40 @@
  */
 package com.github.cheapmon.balalaika.ui.selection
 
+import android.os.Parcel
+import android.os.Parcelable
+
 data class Dictionary(
     val id: Long,
     val name: String,
     val summary: String,
     val active: Boolean
-)
+) : Parcelable {
+    constructor(parcel: Parcel) : this(
+        parcel.readLong(),
+        parcel.readString().orEmpty(),
+        parcel.readString().orEmpty(),
+        parcel.readByte() != 0.toByte()
+    )
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeLong(id)
+        parcel.writeString(name)
+        parcel.writeString(summary)
+        parcel.writeByte(if (active) 1 else 0)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Dictionary> {
+        override fun createFromParcel(parcel: Parcel): Dictionary {
+            return Dictionary(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Dictionary?> {
+            return arrayOfNulls(size)
+        }
+    }
+}

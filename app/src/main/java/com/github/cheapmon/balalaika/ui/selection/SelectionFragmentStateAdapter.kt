@@ -15,20 +15,17 @@
  */
 package com.github.cheapmon.balalaika.ui.selection
 
-import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import kotlinx.coroutines.flow.flowOf
+import androidx.fragment.app.Fragment
+import androidx.viewpager2.adapter.FragmentStateAdapter
 
-/**
- * View model for [SelectionListFragment]
- */
-class SelectionViewModel @ViewModelInject constructor() : ViewModel() {
-    private val _dictionaries = listOf(
-        Dictionary(1, "Dictionary A", "AAA", true),
-        Dictionary(2, "Dictionary B", "BBB", false)
-    )
+class SelectionFragmentStateAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
+    override fun getItemCount(): Int = 2
 
-    /** All available local dictionaries */
-    val dictionaries = flowOf(_dictionaries).asLiveData()
+    override fun createFragment(position: Int): Fragment {
+        return when (position) {
+            0 -> SelectionListFragment()
+            1 -> SelectionListFragment()
+            else -> throw IllegalArgumentException("Position must be either 0 or 1")
+        }
+    }
 }
