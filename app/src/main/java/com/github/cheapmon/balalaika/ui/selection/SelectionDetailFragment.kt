@@ -21,11 +21,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.databinding.FragmentSelectionDetailBinding
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -44,31 +46,34 @@ class SelectionDetailFragment : Fragment() {
         with(binding) {
             dictionary = args.dictionary
             remote = args.remote
+            listener = Listener()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 selectionDetailSummaryText.justificationMode = JUSTIFICATION_MODE_INTER_WORD
                 selectionDetailInfoText.justificationMode = JUSTIFICATION_MODE_INTER_WORD
             }
-            selectionButtonActivate.setOnClickListener { onClickActivateButton() }
-            selectionButtonUpdate.setOnClickListener { onClickUpdateButton() }
-            selectionButtonAdd.setOnClickListener { onClickAddButton() }
-            selectionButtonRemove.setOnClickListener { onClickRemoveButton() }
+            if (args.dictionary.active) {
+                (selectionButtonActivate as MaterialButton).icon =
+                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox_empty)
+            }
         }
         return binding.root
     }
 
-    private fun onClickActivateButton() {
-        Snackbar.make(binding.root, "Not implemented yet", Snackbar.LENGTH_SHORT).show()
-    }
+    inner class Listener {
+        fun onClickActivateButton() {
+            Snackbar.make(binding.root, "Not implemented yet", Snackbar.LENGTH_SHORT).show()
+        }
 
-    private fun onClickUpdateButton() {
-        Snackbar.make(binding.root, "Not implemented yet", Snackbar.LENGTH_SHORT).show()
-    }
+        fun onClickUpdateButton() {
+            Snackbar.make(binding.root, "Not implemented yet", Snackbar.LENGTH_SHORT).show()
+        }
 
-    private fun onClickAddButton() {
-        Snackbar.make(binding.root, "Not implemented yet", Snackbar.LENGTH_SHORT).show()
-    }
+        fun onClickAddButton() {
+            Snackbar.make(binding.root, "Not implemented yet", Snackbar.LENGTH_SHORT).show()
+        }
 
-    private fun onClickRemoveButton() {
-        Snackbar.make(binding.root, "Not implemented yet", Snackbar.LENGTH_SHORT).show()
+        fun onClickRemoveButton() {
+            Snackbar.make(binding.root, "Not implemented yet", Snackbar.LENGTH_SHORT).show()
+        }
     }
 }

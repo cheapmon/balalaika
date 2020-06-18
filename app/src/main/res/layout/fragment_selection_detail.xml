@@ -22,6 +22,10 @@
         <import type="android.view.View" />
 
         <variable
+            name="listener"
+            type="com.github.cheapmon.balalaika.ui.selection.SelectionDetailFragment.Listener" />
+
+        <variable
             name="dictionary"
             type="com.github.cheapmon.balalaika.ui.selection.Dictionary" />
 
@@ -44,6 +48,21 @@
             android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
             android:layout_marginVertical="@dimen/activity_vertical_margin"
             android:paddingBottom="16dp">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/selection_detail_active"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:clickable="false"
+                android:text="@string/selection_is_active"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                android:visibility="@{dictionary.active ? View.VISIBLE : View.GONE}"
+                app:chipMinHeight="24dp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/selection_detail_title"
+                app:layout_constraintStart_toEndOf="@+id/selection_detail_title"
+                tools:text="@string/selection_is_active" />
 
             <ImageView
                 android:id="@+id/selection_detail_icon"
@@ -243,7 +262,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="@string/selection_action_activate"
+                android:onClick="@{() -> listener.onClickActivateButton()}"
+                android:text="@{dictionary.active ? @string/selection_action_deactivate : @string/selection_action_activate}"
                 android:visibility="@{remote ? View.GONE : View.VISIBLE}"
                 app:icon="@drawable/ic_checkbox"
                 app:layout_constraintBottom_toTopOf="@+id/selection_button_update"
@@ -256,6 +276,7 @@
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:onClick="@{() -> listener.onClickUpdateButton()}"
                 android:text="@string/selection_action_update"
                 android:visibility="@{remote ? View.GONE : View.VISIBLE}"
                 app:icon="@drawable/ic_update"
@@ -268,8 +289,9 @@
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:onClick="@{() -> listener.onClickAddButton()}"
                 android:text="@string/selection_action_add"
-                android:visibility="@{remote ? View.VISIBLE : View.GONE }"
+                android:visibility="@{remote ? View.VISIBLE : View.GONE}"
                 app:icon="@drawable/ic_library"
                 app:layout_constraintBottom_toTopOf="@+id/selection_button_remove"
                 app:layout_constraintStart_toStartOf="@+id/selection_button_update"
@@ -280,9 +302,10 @@
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:onClick="@{() -> listener.onClickRemoveButton()}"
                 android:text="@string/selection_action_remove"
                 android:textColor="@color/design_default_color_error"
-                android:visibility="@{remote ? View.GONE : View.VISIBLE }"
+                android:visibility="@{remote ? View.GONE : View.VISIBLE}"
                 app:icon="@drawable/ic_delete"
                 app:iconTint="@color/design_default_color_error"
                 app:layout_constraintStart_toStartOf="@+id/selection_button_add"

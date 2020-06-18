@@ -36,7 +36,8 @@ class SelectionViewModel @ViewModelInject constructor(
             name = "Dictionary A",
             summary = context.getString(R.string.impsum),
             additionalInfo = context.getString(R.string.impsum),
-            authors = "Simon Kaleschke"
+            authors = "Simon Kaleschke",
+            active = true
         ),
         Dictionary(
             2,
@@ -44,7 +45,8 @@ class SelectionViewModel @ViewModelInject constructor(
             name = "Dictionary B",
             summary = "BBB",
             additionalInfo = "https://www.example.org is a very important website",
-            authors = "Thomas the tank engine"
+            authors = "Thomas the tank engine",
+            active = false
         )
     )
 

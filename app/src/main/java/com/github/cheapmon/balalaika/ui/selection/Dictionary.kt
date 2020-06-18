@@ -23,5 +23,6 @@ data class Dictionary(
     val name: String,
     val summary: String,
     val authors: String,
-    val additionalInfo: String
+    val additionalInfo: String,
+    val active: Boolean
 ) : Serializable

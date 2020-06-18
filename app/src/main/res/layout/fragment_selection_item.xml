@@ -19,6 +19,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="dictionary"
             type="com.github.cheapmon.balalaika.ui.selection.Dictionary" />
@@ -64,6 +66,21 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_library" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/selection_item_chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:clickable="false"
+                android:text="@string/selection_is_active"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                android:visibility="@{dictionary.active ? View.VISIBLE : View.GONE}"
+                app:chipMinHeight="24dp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/selection_item_title"
+                app:layout_constraintStart_toEndOf="@+id/selection_item_title"
+                tools:text="@string/selection_is_active" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/selection_guideline_title"
