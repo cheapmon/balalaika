@@ -85,4 +85,3 @@ class HistoryAdapter(
         fun onClickRedoButton(historyEntry: HistoryEntryWithRestriction)
     }
 }
-

@@ -22,10 +22,11 @@ import com.github.cheapmon.balalaika.data.entities.property.Property
 import com.github.cheapmon.balalaika.data.entities.view.DictionaryView
 import com.github.cheapmon.balalaika.data.entities.view.DictionaryViewToCategory
 import com.github.cheapmon.balalaika.data.resources.ResourceLoader
-import org.apache.commons.csv.CSVFormat
 import java.io.InputStreamReader
-import java.util.*
+import java.util.HashMap
+import java.util.Locale
 import javax.inject.Inject
+import org.apache.commons.csv.CSVFormat
 
 /** [Importer][EntityImporter] for extracting database entities from `.csv` source files */
 class CsvEntityImporter @Inject constructor(

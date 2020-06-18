@@ -15,9 +15,18 @@
  */
 package com.github.cheapmon.balalaika.data.entities.category
 
-import com.github.cheapmon.balalaika.data.entities.category.WidgetType.*
+import com.github.cheapmon.balalaika.data.entities.category.WidgetType.AUDIO
+import com.github.cheapmon.balalaika.data.entities.category.WidgetType.KEY_VALUE
+import com.github.cheapmon.balalaika.data.entities.category.WidgetType.PLAIN
 import com.github.cheapmon.balalaika.data.entities.property.Property
-import com.github.cheapmon.balalaika.ui.dictionary.widgets.*
+import com.github.cheapmon.balalaika.ui.dictionary.widgets.AudioWidget
+import com.github.cheapmon.balalaika.ui.dictionary.widgets.BaseWidget
+import com.github.cheapmon.balalaika.ui.dictionary.widgets.ExampleWidget
+import com.github.cheapmon.balalaika.ui.dictionary.widgets.MorphologyWidget
+import com.github.cheapmon.balalaika.ui.dictionary.widgets.PlainWidget
+import com.github.cheapmon.balalaika.ui.dictionary.widgets.ReferenceWidget
+import com.github.cheapmon.balalaika.ui.dictionary.widgets.UrlWidget
+import com.github.cheapmon.balalaika.ui.dictionary.widgets.Widget
 
 /**
  * Types of Widgets

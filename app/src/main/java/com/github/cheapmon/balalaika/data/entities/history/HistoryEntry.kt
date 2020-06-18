@@ -15,7 +15,11 @@
  */
 package com.github.cheapmon.balalaika.data.entities.history
 
-import androidx.room.*
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
 import com.github.cheapmon.balalaika.data.entities.category.Category
 import com.github.cheapmon.balalaika.ui.history.HistoryFragment
 

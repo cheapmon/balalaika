@@ -74,4 +74,3 @@ class BookmarksAdapter(
         fun onClickRedoButton(lexeme: Lexeme)
     }
 }
-

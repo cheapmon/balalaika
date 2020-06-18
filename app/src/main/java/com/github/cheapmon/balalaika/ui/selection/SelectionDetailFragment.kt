@@ -38,7 +38,8 @@ class SelectionDetailFragment : Fragment() {
     private val args: SelectionDetailFragmentArgs by navArgs()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding =

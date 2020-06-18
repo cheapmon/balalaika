@@ -15,7 +15,11 @@
  */
 package com.github.cheapmon.balalaika.data.entities.lexeme
 
-import androidx.room.*
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
 import com.github.cheapmon.balalaika.ui.bookmarks.BookmarksFragment
 import com.github.cheapmon.balalaika.ui.dictionary.DictionaryFragment
 

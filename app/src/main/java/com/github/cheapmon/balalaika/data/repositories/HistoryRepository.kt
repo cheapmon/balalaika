@@ -21,9 +21,9 @@ import com.github.cheapmon.balalaika.data.entities.history.HistoryEntryWithRestr
 import com.github.cheapmon.balalaika.data.entities.history.SearchRestriction
 import com.github.cheapmon.balalaika.ui.history.HistoryFragment
 import dagger.hilt.android.scopes.ActivityScoped
+import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
 
 /**
  * Search history data handling

@@ -137,7 +137,6 @@ class SearchFragment : Fragment(), SearchAdapter.Listener {
         args.restriction?.let { viewModel.setRestriction(it) }
     }
 
-
     /** Show entry in dictionary */
     override fun onClickItem(lexeme: Lexeme) {
         viewModel.addToHistory()

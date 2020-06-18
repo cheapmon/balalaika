@@ -16,9 +16,9 @@
 package com.github.cheapmon.balalaika.data.config
 
 import com.github.cheapmon.balalaika.data.resources.ResourceLoader
+import javax.inject.Inject
 import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.constructor.Constructor
-import javax.inject.Inject
 
 /**
  * [ConfigLoader] which creates a configuration object from a YAML source file

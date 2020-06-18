@@ -70,4 +70,3 @@ class SelectionAdapter(
         fun onClickDictionary(dictionary: Dictionary)
     }
 }
-
