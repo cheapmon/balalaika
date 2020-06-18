@@ -15,18 +15,37 @@
  */
 package com.github.cheapmon.balalaika.ui.selection
 
+import android.content.Context
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
+import com.github.cheapmon.balalaika.R
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.flowOf
 
 /**
  * View model for [SelectionListFragment]
  */
-class SelectionViewModel @ViewModelInject constructor() : ViewModel() {
+class SelectionViewModel @ViewModelInject constructor(
+    @ApplicationContext context: Context
+) : ViewModel() {
     private val _dictionaries = listOf(
-        Dictionary(1, "Dictionary A", "AAA", true),
-        Dictionary(2, "Dictionary B", "BBB", false)
+        Dictionary(
+            1,
+            version = 3,
+            name = "Dictionary A",
+            summary = context.getString(R.string.impsum),
+            additionalInfo = context.getString(R.string.impsum),
+            authors = "Simon Kaleschke"
+        ),
+        Dictionary(
+            2,
+            version = 2,
+            name = "Dictionary B",
+            summary = "BBB",
+            additionalInfo = "https://www.example.org is a very important website",
+            authors = "Thomas the tank engine"
+        )
     )
 
     /** All available local dictionaries */

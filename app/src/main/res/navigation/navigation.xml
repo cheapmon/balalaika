@@ -95,6 +95,9 @@
         <argument
             android:name="dictionary"
             app:argType="com.github.cheapmon.balalaika.ui.selection.Dictionary" />
+        <argument
+            android:name="remote"
+            app:argType="boolean" />
     </fragment>
     <fragment
         android:id="@+id/nav_selection"

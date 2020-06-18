@@ -15,6 +15,8 @@
  */
 package com.github.cheapmon.balalaika.ui.selection
 
+import android.graphics.text.LineBreaker.JUSTIFICATION_MODE_INTER_WORD
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,6 +26,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.databinding.FragmentSelectionDetailBinding
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -40,7 +43,32 @@ class SelectionDetailFragment : Fragment() {
             DataBindingUtil.inflate(inflater, R.layout.fragment_selection_detail, container, false)
         with(binding) {
             dictionary = args.dictionary
+            remote = args.remote
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                selectionDetailSummaryText.justificationMode = JUSTIFICATION_MODE_INTER_WORD
+                selectionDetailInfoText.justificationMode = JUSTIFICATION_MODE_INTER_WORD
+            }
+            selectionButtonActivate.setOnClickListener { onClickActivateButton() }
+            selectionButtonUpdate.setOnClickListener { onClickUpdateButton() }
+            selectionButtonAdd.setOnClickListener { onClickAddButton() }
+            selectionButtonRemove.setOnClickListener { onClickRemoveButton() }
         }
         return binding.root
+    }
+
+    private fun onClickActivateButton() {
+        Snackbar.make(binding.root, "Not implemented yet", Snackbar.LENGTH_SHORT).show()
+    }
+
+    private fun onClickUpdateButton() {
+        Snackbar.make(binding.root, "Not implemented yet", Snackbar.LENGTH_SHORT).show()
+    }
+
+    private fun onClickAddButton() {
+        Snackbar.make(binding.root, "Not implemented yet", Snackbar.LENGTH_SHORT).show()
+    }
+
+    private fun onClickRemoveButton() {
+        Snackbar.make(binding.root, "Not implemented yet", Snackbar.LENGTH_SHORT).show()
     }
 }

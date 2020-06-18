@@ -16,7 +16,9 @@
 package com.github.cheapmon.balalaika.ui.selection
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -27,7 +29,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.databinding.FragmentSelectionListBinding
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -83,14 +84,9 @@ class SelectionListFragment : Fragment(), SelectionAdapter.Listener {
     }
 
     /** Show dictionary in detail view */
-    override fun onClickDictionary(dictionary: Dictionary, itemView: View) {
+    override fun onClickDictionary(dictionary: Dictionary) {
         val directions =
-            SelectionFragmentDirections.actionNavSelectionToNavSelectionDetail(dictionary)
+            SelectionFragmentDirections.actionNavSelectionToNavSelectionDetail(dictionary, false)
         findNavController().navigate(directions)
-    }
-
-    /** Toggle dictionary active state */
-    override fun onToggleDictionary(dictionary: Dictionary) {
-        Snackbar.make(binding.root, "Not yet implemented", Snackbar.LENGTH_SHORT).show()
     }
 }

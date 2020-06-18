@@ -59,19 +59,11 @@
                 android:layout_marginLeft="12dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
+                android:contentDescription="@string/menu_dictionary"
                 app:layout_constraintBottom_toTopOf="@+id/selection_guideline_title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_library" />
-
-            <Switch
-                android:id="@+id/selection_switch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="@{dictionary.active}"
-                app:layout_constraintBottom_toTopOf="@+id/selection_guideline_title"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/selection_guideline_title"
@@ -105,6 +97,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:contentDescription="@string/selection_summary_title"
                 app:layout_constraintEnd_toStartOf="@+id/selection_guideline_icon"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/selection_guideline_title"

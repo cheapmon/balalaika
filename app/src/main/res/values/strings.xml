@@ -100,4 +100,11 @@
     <string name="selection_summary_title">Summary</string>
     <string name="selection_tab_list">My dictionaries</string>
     <string name="selection_tab_download">Download</string>
+    <string name="selection_authors_title">Authors</string>
+    <string name="selection_info_title">Additional information</string>
+    <string name="selection_action_activate">Set as active</string>
+    <string name="selection_action_update">Check for Updates</string>
+    <string name="selection_action_add">Add to Library</string>
+    <string name="selection_action_remove">Remove from library</string>
+    <string name="selection_version_title">Version</string>
 </resources>
