@@ -17,33 +17,34 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="empty"
+            type="Boolean" />
+
+        <variable
+            name="pending"
+            type="Boolean" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.selection.SelectionListFragment">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/selection_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:itemCount="4"
-            tools:listitem="@layout/fragment_selection_item" />
-
         <ImageView
             android:id="@+id/selection_empty_icon"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:contentDescription="@string/bookmarks_empty"
-            android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@id/selection_empty_text"
+            android:contentDescription="@string/selection_empty"
+            android:visibility="@{empty ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toTopOf="@+id/selection_empty_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintTop_toBottomOf="@+id/selection_refresh"
             app:srcCompat="@drawable/ic_library"
             tools:visibility="visible" />
 
@@ -51,13 +52,45 @@
             android:id="@+id/selection_empty_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:text="@string/selection_empty"
-            android:visibility="gone"
+            android:visibility="@{empty ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toTopOf="@+id/selection_retry"
+            app:layout_constraintEnd_toEndOf="@+id/selection_empty_icon"
+            app:layout_constraintStart_toStartOf="@+id/selection_empty_icon"
+            app:layout_constraintTop_toBottomOf="@+id/selection_empty_icon"
+            tools:visibility="visible" />
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/selection_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/selection_empty_icon"
-            tools:visibility="visible" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/selection_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:itemCount="4"
+                tools:listitem="@layout/fragment_selection_item" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <Button
+            android:id="@+id/selection_retry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/retry"
+            android:visibility="@{empty ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toTopOf="@+id/selection_refresh"
+            app:layout_constraintEnd_toEndOf="@+id/selection_empty_icon"
+            app:layout_constraintStart_toStartOf="@+id/selection_empty_icon"
+            app:layout_constraintTop_toBottomOf="@+id/selection_empty_text" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

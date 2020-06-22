@@ -93,7 +93,19 @@ class SelectionDetailFragment : Fragment() {
         }
 
         fun onClickAddButton(dictionary: Dictionary) {
-            Snackbar.make(binding.root, "Not implemented yet", Snackbar.LENGTH_SHORT).show()
+            MaterialAlertDialogBuilder(requireContext())
+                .setMessage(
+                    requireContext().getString(
+                        R.string.selection_confirm_add,
+                        dictionary.name
+                    )
+                ).setPositiveButton(R.string.affirm) { _, _ ->
+                    val directions =
+                        SelectionDetailFragmentDirections.actionNavSelectionDetailToNavSelection(0)
+                    findNavController().navigate(directions)
+                    viewModel.addDictionary(dictionary)
+                }.setNegativeButton(R.string.cancel, null)
+                .show()
         }
 
         fun onClickRemoveButton(dictionary: Dictionary) {

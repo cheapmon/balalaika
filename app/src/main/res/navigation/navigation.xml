@@ -111,6 +111,10 @@
         <action
             android:id="@+id/action_nav_selection_to_nav_selection_detail"
             app:destination="@id/nav_selection_detail" />
+        <argument
+            android:name="tab"
+            app:argType="integer"
+            android:defaultValue="0" />
     </fragment>
 
 </navigation>

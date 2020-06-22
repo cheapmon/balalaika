@@ -18,6 +18,7 @@
     <string name="app_name">Balalaika</string>
     <string name="cancel">Cancel</string>
     <string name="affirm">OK</string>
+    <string name="retry">Retry</string>
 
     <!-- Navigation drawer -->
     <string name="nav_header_desc">Navigation header</string>
@@ -96,7 +97,7 @@
     <string name="preferences_icon_title">Balalaika icon created by</string>
 
     <!-- Dictionary selection fragment -->
-    <string name="selection_empty">You have no saved dictionaries</string>
+    <string name="selection_empty">No dictionaries</string>
     <string name="selection_summary_title">Summary</string>
     <string name="selection_tab_list">My dictionaries</string>
     <string name="selection_tab_download">Download</string>
@@ -111,5 +112,8 @@
     <string name="selection_is_active">active</string>
     <string name="selection_confirm_activate">Activate this dictionary?</string>
     <string name="selection_confirm_deactivate">Deactivate this dictionary?</string>
+    <string name="selection_confirm_add">Add %1$s to library?</string>
     <string name="selection_confirm_remove">Remove this dictionary?</string>
+    <string name="selection_loading_success">Found %1$d dictionaries</string>
+    <string name="selection_loading_failed">Loading dictionaries failed</string>
 </resources>

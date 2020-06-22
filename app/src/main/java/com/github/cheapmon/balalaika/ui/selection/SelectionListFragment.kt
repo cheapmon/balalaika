@@ -58,6 +58,7 @@ class SelectionListFragment : Fragment(), SelectionAdapter.Listener {
             DataBindingUtil.inflate(inflater, R.layout.fragment_selection_list, container, false)
         selectionLayoutManager = LinearLayoutManager(context)
         selectionAdapter = SelectionAdapter(this)
+        binding.selectionRefresh.isEnabled = false
         recyclerView = binding.selectionList.apply {
             layoutManager = selectionLayoutManager
             adapter = selectionAdapter
@@ -73,13 +74,7 @@ class SelectionListFragment : Fragment(), SelectionAdapter.Listener {
     private fun submitData() {
         viewModel.dictionaries.observe(viewLifecycleOwner, Observer {
             selectionAdapter.submitList(ArrayList(it))
-            if (it.isEmpty()) {
-                binding.selectionEmptyIcon.visibility = View.VISIBLE
-                binding.selectionEmptyText.visibility = View.VISIBLE
-            } else {
-                binding.selectionEmptyIcon.visibility = View.GONE
-                binding.selectionEmptyText.visibility = View.GONE
-            }
+            binding.empty = it.isEmpty()
         })
     }
 

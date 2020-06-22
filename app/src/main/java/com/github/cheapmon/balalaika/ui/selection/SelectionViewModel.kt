@@ -27,9 +27,14 @@ class SelectionViewModel @ViewModelInject constructor(
 ) : ViewModel() {
     val dictionaries = repository.dictionaries.asLiveData()
 
+    fun getRemoteDictionaries(forceRefresh: Boolean) =
+        repository.getRemoteDictionaries(forceRefresh).asLiveData()
+
     fun getDictionary(id: Long) = repository.getDictionary(id).asLiveData()
 
     fun toggleActive(id: Long) = repository.toggleActive(id)
+
+    fun addDictionary(dictionary: Dictionary) = repository.addDictionary(dictionary)
 
     fun removeDictionary(id: Long) = repository.removeDictionary(id)
 }

@@ -18,6 +18,7 @@
     <string name="app_name">Balalaika</string>
     <string name="cancel">Abbrechen</string>
     <string name="affirm">OK</string>
+    <string name="retry">Wiederholen</string>
 
     <!-- Navigation drawer -->
     <string name="nav_header_desc">Navigation</string>
@@ -96,7 +97,7 @@
     <string name="preferences_icon_title">Balalaika Icon erstellt von</string>
 
     <!-- Dictionary selection fragment -->
-    <string name="selection_empty">Keine gespeicherten Wörterbücher</string>
+    <string name="selection_empty">Keine Wörterbücher</string>
     <string name="selection_summary_title">Zusammenfassung</string>
     <string name="selection_tab_list">Wörterbücher</string>
     <string name="selection_tab_download">Download</string>
@@ -111,5 +112,8 @@
     <string name="selection_is_active">aktiv</string>
     <string name="selection_confirm_activate">Dieses Wörterbuch aktivieren?</string>
     <string name="selection_confirm_deactivate">Dieses Wörterbuch deaktivieren?</string>
+    <string name="selection_confirm_add">%1$s hinzufügen?</string>
     <string name="selection_confirm_remove">Dieses Wörterbuch löschen?</string>
+    <string name="selection_loading_success">%1$d Wörterbücher gefunden</string>
+    <string name="selection_loading_failed">Wörterbücher konnten nicht geladen werden</string>
 </resources>

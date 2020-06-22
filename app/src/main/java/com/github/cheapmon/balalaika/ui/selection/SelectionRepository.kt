@@ -19,15 +19,18 @@ import android.content.Context
 import com.github.cheapmon.balalaika.R
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ActivityScoped
-import javax.inject.Inject
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
+// TODO: Replace with real implementation
 @ActivityScoped
 class SelectionRepository @Inject constructor(
-    @ApplicationContext context: Context
+    @ApplicationContext context: Context,
+    private val service: DictionaryService
 ) {
     private var _dictionaryList = listOf(
         Dictionary(
@@ -56,6 +59,11 @@ class SelectionRepository @Inject constructor(
 
     val dictionaries = _dictionaries.asFlow()
 
+    fun getRemoteDictionaries(forceRefresh: Boolean) = flow {
+        emit(DictionaryService.RemoteResponse.Pending)
+        emit(service.getDictionariesFromRemoteSource(forceRefresh))
+    }
+
     fun getDictionary(id: Long): Flow<Dictionary?> = _dictionaries.asFlow()
         .map { list -> list.find { item -> item.id == id } }
 
@@ -70,6 +78,11 @@ class SelectionRepository @Inject constructor(
                 item.apply { this.active = this.id == id }
             }
         }
+        _dictionaries.offer(_dictionaryList)
+    }
+
+    fun addDictionary(dictionary: Dictionary) {
+        _dictionaryList = _dictionaryList + listOf(dictionary)
         _dictionaries.offer(_dictionaryList)
     }
 

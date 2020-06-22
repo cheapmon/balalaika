@@ -24,7 +24,7 @@ class SelectionFragmentStateAdapter(fragment: Fragment) : FragmentStateAdapter(f
     override fun createFragment(position: Int): Fragment {
         return when (position) {
             0 -> SelectionListFragment()
-            1 -> SelectionListFragment()
+            1 -> SelectionDownloadFragment()
             else -> throw IllegalArgumentException("Position must be either 0 or 1")
         }
     }
