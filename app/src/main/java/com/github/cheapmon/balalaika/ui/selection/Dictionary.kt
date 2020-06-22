@@ -19,10 +19,11 @@ import java.io.Serializable
 
 data class Dictionary(
     val id: Long,
+    val externalId: String,
     val version: Int,
     val name: String,
     val summary: String,
     val authors: String,
     val additionalInfo: String,
-    val active: Boolean
+    var active: Boolean
 ) : Serializable

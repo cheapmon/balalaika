@@ -109,4 +109,7 @@
     <string name="selection_action_remove">Aus Bibliothek entfernen</string>
     <string name="selection_version_title">Version</string>
     <string name="selection_is_active">aktiv</string>
+    <string name="selection_confirm_activate">Dieses Wörterbuch aktivieren?</string>
+    <string name="selection_confirm_deactivate">Dieses Wörterbuch deaktivieren?</string>
+    <string name="selection_confirm_remove">Dieses Wörterbuch löschen?</string>
 </resources>

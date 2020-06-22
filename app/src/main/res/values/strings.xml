@@ -109,4 +109,7 @@
     <string name="selection_action_remove">Remove from library</string>
     <string name="selection_version_title">Version</string>
     <string name="selection_is_active">active</string>
+    <string name="selection_confirm_activate">Activate this dictionary?</string>
+    <string name="selection_confirm_deactivate">Deactivate this dictionary?</string>
+    <string name="selection_confirm_remove">Remove this dictionary?</string>
 </resources>
