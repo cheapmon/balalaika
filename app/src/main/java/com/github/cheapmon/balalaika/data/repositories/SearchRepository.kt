@@ -25,6 +25,7 @@ import com.github.cheapmon.balalaika.data.entities.entry.DictionaryEntry
 import com.github.cheapmon.balalaika.data.entities.history.SearchRestriction
 import com.github.cheapmon.balalaika.data.entities.lexeme.LexemeDao
 import com.github.cheapmon.balalaika.data.entities.property.PropertyDao
+import com.github.cheapmon.balalaika.data.insert.ImportUtil
 import com.github.cheapmon.balalaika.ui.search.SearchFragment
 import com.github.cheapmon.balalaika.util.Constants
 import dagger.hilt.android.scopes.ActivityScoped
@@ -32,12 +33,10 @@ import javax.inject.Inject
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
 
 /**
  * Database searching and data handling
@@ -48,6 +47,7 @@ import kotlinx.coroutines.flow.flow
 @Suppress("EXPERIMENTAL_API_USAGE")
 class SearchRepository @Inject constructor(
     private val constants: Constants,
+    private val importUtil: ImportUtil,
     private val cacheEntryDao: CacheEntryDao,
     private val dictionaryDao: DictionaryDao,
     private val lexemeDao: LexemeDao,
@@ -72,11 +72,13 @@ class SearchRepository @Inject constructor(
     /** Set the search restriction */
     fun setRestriction(restriction: SearchRestriction) = _restriction.offer(restriction)
 
-    private fun getDictionary(
+    private suspend fun getDictionary(
         query: String,
         searchRestriction: SearchRestriction
-    ): Flow<PagingData<DictionaryEntry>> = flow {
-        val pager = Pager(
+    ): Flow<PagingData<DictionaryEntry>> {
+        importUtil.import()
+        refreshCache(query, searchRestriction)
+        return Pager(
             config = PagingConfig(pageSize = constants.PAGE_SIZE),
             pagingSourceFactory = {
                 SearchPagingSource(
@@ -87,17 +89,12 @@ class SearchRepository @Inject constructor(
                 )
             }
         ).flow
-        // Wait for refresh to finish
-        refreshCache(query, searchRestriction).collect { done ->
-            if (done) pager.collect { value -> emit(value) }
-        }
     }
 
-    private fun refreshCache(
+    private suspend fun refreshCache(
         query: String,
         searchRestriction: SearchRestriction
-    ): Flow<Boolean> = flow {
-        emit(false)
+    ) {
         val entries = when (searchRestriction) {
             is SearchRestriction.None ->
                 dictionaryDao.findLexemes(query)
@@ -110,6 +107,5 @@ class SearchRepository @Inject constructor(
         }.mapIndexed { idx, id -> SearchCacheEntry(idx + 1L, id) }
         cacheEntryDao.clearSearchCache()
         cacheEntryDao.insertIntoSearchCache(entries)
-        emit(true)
     }
 }

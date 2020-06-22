@@ -30,6 +30,7 @@ import com.github.cheapmon.balalaika.data.entities.lexeme.LexemeDao
 import com.github.cheapmon.balalaika.data.entities.property.PropertyDao
 import com.github.cheapmon.balalaika.data.entities.view.DictionaryView
 import com.github.cheapmon.balalaika.data.entities.view.DictionaryViewDao
+import com.github.cheapmon.balalaika.data.insert.ImportUtil
 import com.github.cheapmon.balalaika.ui.bookmarks.BookmarksFragment
 import com.github.cheapmon.balalaika.ui.dictionary.DictionaryFragment
 import com.github.cheapmon.balalaika.util.Constants
@@ -38,11 +39,9 @@ import javax.inject.Inject
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 /**
@@ -55,6 +54,7 @@ import kotlinx.coroutines.flow.map
 @Suppress("EXPERIMENTAL_API_USAGE")
 class DictionaryRepository @Inject constructor(
     private val constants: Constants,
+    private val importUtil: ImportUtil,
     categoryDao: CategoryDao,
     private val lexemeDao: LexemeDao,
     private val propertyDao: PropertyDao,
@@ -109,44 +109,36 @@ class DictionaryRepository @Inject constructor(
     /** Set the first entry to display */
     fun setInitialKey(id: Long?) = _initialKey.offer(id)
 
-    private fun getDictionary(
+    private suspend fun getDictionary(
         dictionaryViewId: Long,
         categoryId: Long,
         initialKey: Long?
     ): Flow<PagingData<DictionaryEntry>> {
-        return flow {
-            val pager = Pager(
-                config = PagingConfig(pageSize = constants.PAGE_SIZE),
-                initialKey = initialKey,
-                pagingSourceFactory = {
-                    DictionaryPagingSource(
-                        constants,
-                        cacheEntryDao,
-                        lexemeDao,
-                        propertyDao,
-                        dictionaryViewId
-                    )
-                }
-            ).flow
-            // Wait for refresh to finish
-            refreshCache(dictionaryViewId, categoryId).collect { done ->
-                if (done) pager.collect { value -> emit(value) }
+        importUtil.import()
+        refreshCache(dictionaryViewId, categoryId)
+        return Pager(
+            config = PagingConfig(pageSize = constants.PAGE_SIZE),
+            initialKey = initialKey,
+            pagingSourceFactory = {
+                DictionaryPagingSource(
+                    constants,
+                    cacheEntryDao,
+                    lexemeDao,
+                    propertyDao,
+                    dictionaryViewId
+                )
             }
-        }
+        ).flow
     }
 
-    private fun refreshCache(dictionaryViewId: Long, categoryId: Long): Flow<Boolean> {
-        return flow {
-            emit(false)
-            val entries = if (categoryId == constants.DEFAULT_CATEGORY_ID) {
-                dictionaryDao.getLexemes(dictionaryViewId)
-            } else {
-                dictionaryDao.getLexemes(dictionaryViewId, categoryId)
-            }.mapIndexed { idx, id -> CacheEntry(idx + 1L, id) }
-            cacheEntryDao.clearDictionaryCache()
-            cacheEntryDao.insertIntoDictionaryCache(entries)
-            emit(true)
-        }
+    private suspend fun refreshCache(dictionaryViewId: Long, categoryId: Long) {
+        val entries = if (categoryId == constants.DEFAULT_CATEGORY_ID) {
+            dictionaryDao.getLexemes(dictionaryViewId)
+        } else {
+            dictionaryDao.getLexemes(dictionaryViewId, categoryId)
+        }.mapIndexed { idx, id -> CacheEntry(idx + 1L, id) }
+        cacheEntryDao.clearDictionaryCache()
+        cacheEntryDao.insertIntoDictionaryCache(entries)
     }
 
     /** Get the position of a lexeme in the dictionary */

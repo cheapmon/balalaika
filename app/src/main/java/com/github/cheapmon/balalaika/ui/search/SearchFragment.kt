@@ -38,7 +38,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 /**
@@ -87,9 +86,9 @@ class SearchFragment : Fragment(), SearchAdapter.Listener {
 
     private fun indicateProgress() {
         lifecycleScope.launch {
-            searchAdapter.loadStateFlow.combine(viewModel.importFlow) { loadState, done ->
-                (loadState.refresh is LoadState.Loading) || !done
-            }.collect { inProgress -> binding.inProgress = inProgress }
+            searchAdapter.loadStateFlow.collect { loadState ->
+                binding.inProgress = loadState.refresh is LoadState.Loading
+            }
         }
     }
 

@@ -21,30 +21,14 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.github.cheapmon.balalaika.data.entities.category.Category
 import com.github.cheapmon.balalaika.data.entities.view.DictionaryViewWithCategories
-import com.github.cheapmon.balalaika.data.insert.ImportUtil
 import com.github.cheapmon.balalaika.data.repositories.DictionaryRepository
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
 /** View model for [DictionaryFragment] */
 class DictionaryViewModel @ViewModelInject constructor(
-    private val repository: DictionaryRepository,
-    private val importUtil: ImportUtil
+    private val repository: DictionaryRepository
 ) : ViewModel() {
-    /**
-     * Current state of import operations
-     *
-     * Calls the [import utility][ImportUtil] and emits `true` when finished.
-     */
-    val importFlow: Flow<Boolean> = flow {
-        emit(false)
-        importUtil.import()
-        emit(true)
-    }
-
     /**
      * Adapt dictionary presentation to user configuration
      *
@@ -53,10 +37,7 @@ class DictionaryViewModel @ViewModelInject constructor(
      * - Category to order by
      * - Initial entry
      */
-    val dictionary = flow {
-        val result = repository.dictionary.cachedIn(viewModelScope)
-        importFlow.collect { done -> if (done) result.collect { value -> emit(value) } }
-    }
+    val dictionary = repository.dictionary.cachedIn(viewModelScope)
 
     /** Set the dictionary view */
     fun setDictionaryView(id: Long) = repository.setDictionaryView(id)

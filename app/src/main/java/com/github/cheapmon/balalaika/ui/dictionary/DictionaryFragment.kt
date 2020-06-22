@@ -46,10 +46,8 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 /**
@@ -83,8 +81,6 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
     private lateinit var recyclerView: RecyclerView
     private lateinit var dictionaryLayoutManager: LinearLayoutManager
     private lateinit var dictionaryAdapter: DictionaryAdapter
-
-    private lateinit var job: Job
 
     /** Set default values for the dictionary view and the dictionary ordering */
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -124,23 +120,17 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
     }
 
     private fun bindUi() {
-        job = lifecycleScope.launch {
+        lifecycleScope.launch {
             viewModel.dictionary.collectLatest { data -> dictionaryAdapter.submitData(data) }
         }
     }
 
     private fun indicateProgress() {
         lifecycleScope.launch {
-            dictionaryAdapter.loadStateFlow.combine(viewModel.importFlow) { loadState, done ->
-                (loadState.refresh is LoadState.Loading) || !done
-            }.collect { inProgress -> binding.inProgress = inProgress }
+            dictionaryAdapter.loadStateFlow.collect { loadState ->
+                binding.inProgress = loadState.refresh is LoadState.Loading
+            }
         }
-    }
-
-    /** Cancel dictionary loading */
-    override fun onDestroy() {
-        super.onDestroy()
-        job.cancel()
     }
 
     /** Create options menu */
