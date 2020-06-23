@@ -20,11 +20,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.data.entities.category.Category
-import com.github.cheapmon.balalaika.data.entities.category.WidgetType
-import com.github.cheapmon.balalaika.data.entities.property.PropertyWithCategory
 import com.github.cheapmon.balalaika.databinding.HelperItalicBinding
 import com.github.cheapmon.balalaika.databinding.WidgetPlainBinding
+import com.github.cheapmon.balalaika.db.entities.category.Category
+import com.github.cheapmon.balalaika.db.entities.category.WidgetType
+import com.github.cheapmon.balalaika.db.entities.property.PropertyWithCategory
 import com.github.cheapmon.balalaika.util.highlight
 
 /**

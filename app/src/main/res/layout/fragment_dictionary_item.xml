@@ -23,11 +23,11 @@
 
         <variable
             name="base"
-            type="com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme" />
+            type="com.github.cheapmon.balalaika.db.entities.lexeme.Lexeme" />
 
         <variable
             name="lexeme"
-            type="com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme" />
+            type="com.github.cheapmon.balalaika.db.entities.lexeme.Lexeme" />
     </data>
 
     <com.google.android.material.card.MaterialCardView

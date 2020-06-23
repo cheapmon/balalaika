@@ -17,8 +17,8 @@ package com.github.cheapmon.balalaika.util
 
 import android.content.Context
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.data.config.Config
-import com.github.cheapmon.balalaika.data.storage.Storage
+import com.github.cheapmon.balalaika.domain.config.Config
+import com.github.cheapmon.balalaika.domain.storage.Storage
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton

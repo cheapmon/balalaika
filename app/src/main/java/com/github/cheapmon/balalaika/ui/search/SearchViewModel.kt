@@ -19,10 +19,10 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.github.cheapmon.balalaika.data.entities.history.HistoryEntry
-import com.github.cheapmon.balalaika.data.entities.history.SearchRestriction
-import com.github.cheapmon.balalaika.data.repositories.HistoryRepository
-import com.github.cheapmon.balalaika.data.repositories.SearchRepository
+import com.github.cheapmon.balalaika.db.entities.history.HistoryEntry
+import com.github.cheapmon.balalaika.db.entities.history.SearchRestriction
+import com.github.cheapmon.balalaika.domain.repositories.HistoryRepository
+import com.github.cheapmon.balalaika.domain.repositories.SearchRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 

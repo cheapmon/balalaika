@@ -21,7 +21,7 @@
 
         <variable
             name="lexeme"
-            type="com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme" />
+            type="com.github.cheapmon.balalaika.db.entities.lexeme.Lexeme" />
     </data>
 
     <androidx.appcompat.widget.LinearLayoutCompat

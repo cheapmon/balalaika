@@ -19,9 +19,9 @@ import android.content.Context
 import com.github.cheapmon.balalaika.R
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ActivityScoped
-import kotlinx.coroutines.delay
 import java.io.IOException
 import javax.inject.Inject
+import kotlinx.coroutines.delay
 
 // TODO: Replace with real implementation
 @ActivityScoped

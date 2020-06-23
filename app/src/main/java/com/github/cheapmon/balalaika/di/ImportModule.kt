@@ -15,14 +15,14 @@
  */
 package com.github.cheapmon.balalaika.di
 
-import com.github.cheapmon.balalaika.data.config.ConfigLoader
-import com.github.cheapmon.balalaika.data.config.YamlConfigLoader
-import com.github.cheapmon.balalaika.data.insert.CsvEntityImporter
-import com.github.cheapmon.balalaika.data.insert.EntityImporter
-import com.github.cheapmon.balalaika.data.resources.AndroidResourceLoader
-import com.github.cheapmon.balalaika.data.resources.ResourceLoader
-import com.github.cheapmon.balalaika.data.storage.PreferenceStorage
-import com.github.cheapmon.balalaika.data.storage.Storage
+import com.github.cheapmon.balalaika.domain.config.ConfigLoader
+import com.github.cheapmon.balalaika.domain.config.YamlConfigLoader
+import com.github.cheapmon.balalaika.domain.insert.CsvEntityImporter
+import com.github.cheapmon.balalaika.domain.insert.EntityImporter
+import com.github.cheapmon.balalaika.domain.resources.AndroidResourceLoader
+import com.github.cheapmon.balalaika.domain.resources.ResourceLoader
+import com.github.cheapmon.balalaika.domain.storage.PreferenceStorage
+import com.github.cheapmon.balalaika.domain.storage.Storage
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

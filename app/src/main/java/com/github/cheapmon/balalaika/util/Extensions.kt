@@ -21,7 +21,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.data.entities.entry.PropertyDatabaseView
+import com.github.cheapmon.balalaika.db.entities.entry.PropertyDatabaseView
 import com.github.cheapmon.balalaika.ui.search.SearchAdapter
 
 /**

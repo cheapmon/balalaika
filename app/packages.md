@@ -52,7 +52,7 @@ Main application classes
 # Package com.github.cheapmon.balalaika.data
 Models and interfaces for the application database and additional resources
 
-# Package com.github.cheapmon.balalaika.data.config
+# Package com.github.cheapmon.balalaika.domain.config
 Configuration of database version and sources
 
 # Package com.github.cheapmon.balalaika.data.entities
@@ -79,16 +79,16 @@ Property entity and its associated types
 # Package com.github.cheapmon.balalaika.data.entities.view
 Data view entity and its associated types
 
-# Package com.github.cheapmon.balalaika.data.insert
+# Package com.github.cheapmon.balalaika.domain.insert
 Import of input files into the application database
 
-# Package com.github.cheapmon.balalaika.data.repositories
+# Package com.github.cheapmon.balalaika.domain.repositories
 Repositories for local and remote data sources
 
-# Package com.github.cheapmon.balalaika.data.resources
+# Package com.github.cheapmon.balalaika.domain.resources
 Retrieval of raw Android resources
 
-# Package com.github.cheapmon.balalaika.data.storage
+# Package com.github.cheapmon.balalaika.domain.storage
 Local key-value storage
 
 

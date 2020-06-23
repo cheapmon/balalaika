@@ -20,8 +20,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme
 import com.github.cheapmon.balalaika.databinding.FragmentBookmarksItemBinding
+import com.github.cheapmon.balalaika.db.entities.lexeme.Lexeme
 
 /** Adapter for [BookmarksFragment] */
 class BookmarksAdapter(

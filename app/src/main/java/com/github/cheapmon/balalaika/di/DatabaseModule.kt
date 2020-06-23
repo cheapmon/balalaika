@@ -17,8 +17,8 @@ package com.github.cheapmon.balalaika.di
 
 import android.content.Context
 import androidx.room.Room
-import com.github.cheapmon.balalaika.data.AppDatabase
-import com.github.cheapmon.balalaika.data.CacheDatabase
+import com.github.cheapmon.balalaika.db.AppDatabase
+import com.github.cheapmon.balalaika.db.CacheDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

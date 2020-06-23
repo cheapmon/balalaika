@@ -23,8 +23,8 @@ import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.get
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.data.config.Config
-import com.github.cheapmon.balalaika.data.config.ConfigLoader
+import com.github.cheapmon.balalaika.domain.config.Config
+import com.github.cheapmon.balalaika.domain.config.ConfigLoader
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
