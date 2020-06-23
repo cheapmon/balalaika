@@ -60,7 +60,7 @@ class SelectionRepository @Inject constructor(
     val dictionaries = _dictionaries.asFlow()
 
     fun getRemoteDictionaries(forceRefresh: Boolean) = flow {
-        emit(DictionaryService.RemoteResponse.Pending)
+        emit(DictionaryService.Response.Pending)
         emit(service.getDictionariesFromRemoteSource(forceRefresh))
     }
 

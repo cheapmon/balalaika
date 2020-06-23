@@ -28,17 +28,17 @@ import javax.inject.Inject
 class DictionaryService @Inject constructor(
     @ApplicationContext context: Context
 ) {
-    sealed class RemoteResponse {
-        object Pending : RemoteResponse()
-        data class Success(val dictionaries: List<Dictionary>) : RemoteResponse()
-        data class Failed(val cause: Throwable) : RemoteResponse()
+    sealed class Response {
+        object Pending : Response()
+        data class Success(val dictionaries: List<Dictionary>) : Response()
+        data class Failed(val cause: Throwable) : Response()
     }
 
-    private var currentResult: RemoteResponse? = null
+    private var currentResult: Response? = null
 
-    suspend fun getDictionariesFromRemoteSource(forceRefresh: Boolean = false): RemoteResponse {
+    suspend fun getDictionariesFromRemoteSource(forceRefresh: Boolean = false): Response {
         val lastResult = currentResult
-        return if (lastResult is RemoteResponse.Success && !forceRefresh) {
+        return if (lastResult is Response.Success && !forceRefresh) {
             lastResult
         } else {
             val newResult = fakeDictionaries()
@@ -70,9 +70,9 @@ class DictionaryService @Inject constructor(
         )
     )
 
-    private suspend fun fakeDictionaries(): RemoteResponse {
+    private suspend fun fakeDictionaries(): Response {
         delay((1000..2500).random().toLong())
-        return if ((0..9).random() > 5) RemoteResponse.Success(_dictionaryList)
-        else RemoteResponse.Failed(IOException("Loading dictionaries failed"))
+        return if ((0..9).random() > 5) Response.Success(_dictionaryList)
+        else Response.Failed(IOException("Loading dictionaries failed"))
     }
 }

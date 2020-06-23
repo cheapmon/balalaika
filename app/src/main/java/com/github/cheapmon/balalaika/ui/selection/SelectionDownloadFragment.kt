@@ -89,13 +89,13 @@ class SelectionDownloadFragment : Fragment(), SelectionAdapter.Listener,
         job = lifecycleScope.launch {
             viewModel.getRemoteDictionaries(forceRefresh)
                 .observe(viewLifecycleOwner, Observer { response ->
-                    binding.pending = response is DictionaryService.RemoteResponse.Pending
-                    binding.empty = response is DictionaryService.RemoteResponse.Failed
+                    binding.pending = response is DictionaryService.Response.Pending
+                    binding.empty = response is DictionaryService.Response.Failed
                     when (response) {
-                        is DictionaryService.RemoteResponse.Pending -> {
+                        is DictionaryService.Response.Pending -> {
                             swipeRefreshLayout.isRefreshing = true
                         }
-                        is DictionaryService.RemoteResponse.Failed -> {
+                        is DictionaryService.Response.Failed -> {
                             swipeRefreshLayout.isRefreshing = false
                             selectionAdapter.submitList(listOf())
                             Toast.makeText(
@@ -104,7 +104,7 @@ class SelectionDownloadFragment : Fragment(), SelectionAdapter.Listener,
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
-                        is DictionaryService.RemoteResponse.Success -> {
+                        is DictionaryService.Response.Success -> {
                             swipeRefreshLayout.isRefreshing = false
                             selectionAdapter.submitList(ArrayList(response.dictionaries))
                             binding.empty = response.dictionaries.isEmpty()
