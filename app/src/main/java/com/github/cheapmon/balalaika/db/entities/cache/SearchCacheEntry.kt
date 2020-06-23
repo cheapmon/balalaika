@@ -21,7 +21,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.github.cheapmon.balalaika.db.entities.lexeme.Lexeme
-import com.github.cheapmon.balalaika.domain.repositories.SearchPagingSource
+import com.github.cheapmon.balalaika.domain.paging.SearchPagingSource
 
 /**
  * Entry in the search cache

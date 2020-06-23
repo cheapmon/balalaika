@@ -26,6 +26,7 @@ import com.github.cheapmon.balalaika.db.entities.history.SearchRestriction
 import com.github.cheapmon.balalaika.db.entities.lexeme.LexemeDao
 import com.github.cheapmon.balalaika.db.entities.property.PropertyDao
 import com.github.cheapmon.balalaika.domain.insert.ImportUtil
+import com.github.cheapmon.balalaika.domain.paging.SearchPagingSource
 import com.github.cheapmon.balalaika.ui.search.SearchFragment
 import com.github.cheapmon.balalaika.util.Constants
 import dagger.hilt.android.scopes.ActivityScoped

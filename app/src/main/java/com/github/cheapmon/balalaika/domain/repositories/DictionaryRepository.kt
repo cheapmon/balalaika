@@ -31,6 +31,7 @@ import com.github.cheapmon.balalaika.db.entities.property.PropertyDao
 import com.github.cheapmon.balalaika.db.entities.view.DictionaryView
 import com.github.cheapmon.balalaika.db.entities.view.DictionaryViewDao
 import com.github.cheapmon.balalaika.domain.insert.ImportUtil
+import com.github.cheapmon.balalaika.domain.paging.DictionaryPagingSource
 import com.github.cheapmon.balalaika.ui.bookmarks.BookmarksFragment
 import com.github.cheapmon.balalaika.ui.dictionary.DictionaryFragment
 import com.github.cheapmon.balalaika.util.Constants
