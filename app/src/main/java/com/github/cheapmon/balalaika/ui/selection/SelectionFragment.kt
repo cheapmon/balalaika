@@ -25,6 +25,7 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.databinding.FragmentSelectionTabsBinding
+import com.github.cheapmon.balalaika.util.exhaustive
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -58,7 +59,8 @@ class SelectionFragment : Fragment() {
                     tab.text = requireContext().getString(R.string.selection_tab_download)
                     tab.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_download)
                 }
-            }
+                else -> {}
+            }.exhaustive
         }.attach()
     }
 }

@@ -34,6 +34,7 @@ import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.data.entities.history.SearchRestriction
 import com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme
 import com.github.cheapmon.balalaika.databinding.FragmentSearchBinding
+import com.github.cheapmon.balalaika.util.exhaustive
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
@@ -117,7 +118,7 @@ class SearchFragment : Fragment(), SearchAdapter.Listener {
                             )
                             binding.searchRestriction.visibility = View.VISIBLE
                         }
-                    }
+                    }.exhaustive
                 }
             }
         }

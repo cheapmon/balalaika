@@ -47,3 +47,7 @@ fun String.highlight(text: String?, context: Context): SpannedString {
         }
     }
 }
+
+/** Exhaustive matching for `when` in statements */
+val <T> T.exhaustive: T
+    get() = this

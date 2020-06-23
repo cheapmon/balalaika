@@ -32,6 +32,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.databinding.FragmentSelectionListBinding
+import com.github.cheapmon.balalaika.util.exhaustive
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -84,7 +85,6 @@ class SelectionDownloadFragment : Fragment(), SelectionAdapter.Listener,
 
     /** Bind data */
     private fun bindUi(forceRefresh: Boolean = false) {
-        swipeRefreshLayout.isRefreshing = true
         job?.cancel()
         job = lifecycleScope.launch {
             viewModel.getRemoteDictionaries(forceRefresh)
@@ -92,6 +92,9 @@ class SelectionDownloadFragment : Fragment(), SelectionAdapter.Listener,
                     binding.pending = response is DictionaryService.RemoteResponse.Pending
                     binding.empty = response is DictionaryService.RemoteResponse.Failed
                     when (response) {
+                        is DictionaryService.RemoteResponse.Pending -> {
+                            swipeRefreshLayout.isRefreshing = true
+                        }
                         is DictionaryService.RemoteResponse.Failed -> {
                             swipeRefreshLayout.isRefreshing = false
                             selectionAdapter.submitList(listOf())
@@ -114,7 +117,7 @@ class SelectionDownloadFragment : Fragment(), SelectionAdapter.Listener,
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
-                    }
+                    }.exhaustive
                 })
         }
     }
