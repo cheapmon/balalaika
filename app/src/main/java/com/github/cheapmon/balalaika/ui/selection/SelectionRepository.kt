@@ -17,6 +17,7 @@ package com.github.cheapmon.balalaika.ui.selection
 
 import android.content.Context
 import com.github.cheapmon.balalaika.R
+import com.github.cheapmon.balalaika.domain.services.DictionaryService
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject

@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.cheapmon.balalaika.ui.selection
+package com.github.cheapmon.balalaika.domain.services
 
 import android.content.Context
 import com.github.cheapmon.balalaika.R
+import com.github.cheapmon.balalaika.ui.selection.Dictionary
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ActivityScoped
 import java.io.IOException
@@ -72,7 +73,11 @@ class DictionaryService @Inject constructor(
 
     private suspend fun fakeDictionaries(): Response {
         delay((1000..2500).random().toLong())
-        return if ((0..9).random() > 5) Response.Success(_dictionaryList)
-        else Response.Failed(IOException("Loading dictionaries failed"))
+        return if ((0..9).random() > 5) Response.Success(
+            _dictionaryList
+        )
+        else Response.Failed(
+            IOException("Loading dictionaries failed")
+        )
     }
 }
