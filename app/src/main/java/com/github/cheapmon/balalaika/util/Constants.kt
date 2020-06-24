@@ -53,4 +53,7 @@ class Constants @Inject constructor(
 
     /** Number of elements loaded per page */
     val PAGE_SIZE = 15
+
+    /** Timeout (ms) for loading from a remote source */
+    val REMOTE_TIMEOUT: Long = 2500
 }

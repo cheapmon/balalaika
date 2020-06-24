@@ -18,34 +18,26 @@ package com.github.cheapmon.balalaika.domain.services
 import android.content.Context
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
+import com.github.cheapmon.balalaika.domain.Response
+import com.github.cheapmon.balalaika.util.Constants
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ActivityScoped
 import java.io.IOException
 import javax.inject.Inject
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withTimeout
 
 // TODO: Replace with real implementation
 @ActivityScoped
 class DictionaryService @Inject constructor(
-    @ApplicationContext context: Context
+    @ApplicationContext context: Context,
+    private val constants: Constants
 ) {
-    sealed class Response {
-        object Pending : Response()
-        data class Success(val dictionaries: List<Dictionary>) : Response()
-        data class Failed(val cause: Throwable) : Response()
-    }
-
-    private var currentResult: Response? = null
-
-    suspend fun getDictionariesFromRemoteSource(forceRefresh: Boolean = false): Response {
-        val lastResult = currentResult
-        return if (lastResult is Response.Success && !forceRefresh) {
-            lastResult
-        } else {
-            val newResult = fakeDictionaries()
-            currentResult = newResult
-            newResult
-        }
+    fun getDictionariesFromRemoteSource(): Flow<Response<Dictionary>> = flow {
+        emit(Response.Pending)
+        emit(fakeDictionaries())
     }
 
     private val _dictionaryList = listOf(
@@ -75,13 +67,12 @@ class DictionaryService @Inject constructor(
         )
     )
 
-    private suspend fun fakeDictionaries(): Response {
-        delay((1000..2500).random().toLong())
-        return if ((0..9).random() > 5) Response.Success(
-            _dictionaryList
-        )
-        else Response.Failed(
-            IOException("Loading dictionaries failed")
-        )
+    private suspend fun fakeDictionaries(): Response<Dictionary> {
+        var response: Response<Dictionary>? = null
+        withTimeout(constants.REMOTE_TIMEOUT) {
+            delay((100..3000).random().toLong())
+            if ((0..99).random() > 2) response = Response.Success(_dictionaryList)
+        }
+        return response ?: Response.Failure(IOException("Could not load dictionaries"))
     }
 }

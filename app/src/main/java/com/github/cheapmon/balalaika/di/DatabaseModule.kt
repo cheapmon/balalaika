@@ -43,6 +43,11 @@ class DatabaseModule {
     /** @suppress */
     @ActivityScoped
     @Provides
+    fun provideDictionaries(appDatabase: AppDatabase) = appDatabase.dictionaries()
+
+    /** @suppress */
+    @ActivityScoped
+    @Provides
     fun provideCategories(appDatabase: AppDatabase) = appDatabase.categories()
 
     /** @suppress */

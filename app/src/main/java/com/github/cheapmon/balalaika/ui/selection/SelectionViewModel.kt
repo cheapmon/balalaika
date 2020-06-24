@@ -19,18 +19,17 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
-import com.github.cheapmon.balalaika.domain.repositories.SelectionRepository
+import com.github.cheapmon.balalaika.domain.repositories.DictionaryRepository
 
 /**
  * View model for [SelectionListFragment]
  */
 class SelectionViewModel @ViewModelInject constructor(
-    private val repository: SelectionRepository
+    private val repository: DictionaryRepository
 ) : ViewModel() {
-    val dictionaries = repository.dictionaries.asLiveData()
+    val dictionaries = repository.installedDictionaries.asLiveData()
 
-    fun getRemoteDictionaries(forceRefresh: Boolean) =
-        repository.getRemoteDictionaries(forceRefresh).asLiveData()
+    fun getRemoteDictionaries() = repository.getRemoteDictionaries().asLiveData()
 
     fun getDictionary(id: Long) = repository.getDictionary(id).asLiveData()
 

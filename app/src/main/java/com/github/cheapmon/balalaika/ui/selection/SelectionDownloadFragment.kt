@@ -33,8 +33,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.databinding.FragmentSelectionListBinding
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
-import com.github.cheapmon.balalaika.domain.services.DictionaryService
-import com.github.cheapmon.balalaika.util.exhaustive
+import com.github.cheapmon.balalaika.domain.Response
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -86,40 +85,30 @@ class SelectionDownloadFragment : Fragment(), SelectionAdapter.Listener,
     }
 
     /** Bind data */
-    private fun bindUi(forceRefresh: Boolean = false) {
+    private fun bindUi() {
         job?.cancel()
         job = lifecycleScope.launch {
-            viewModel.getRemoteDictionaries(forceRefresh)
+            viewModel
+                .getRemoteDictionaries()
                 .observe(viewLifecycleOwner, Observer { response ->
-                    binding.pending = response is DictionaryService.Response.Pending
-                    binding.empty = response is DictionaryService.Response.Failed
+                    binding.pending = response.isPending()
+                    binding.empty = response.isFailure()
                     when (response) {
-                        is DictionaryService.Response.Pending -> {
+                        is Response.Pending -> {
                             swipeRefreshLayout.isRefreshing = true
+                            Toast.makeText(context, "Pending", Toast.LENGTH_SHORT).show()
                         }
-                        is DictionaryService.Response.Failed -> {
+                        is Response.Success -> {
+                            swipeRefreshLayout.isRefreshing = false
+                            selectionAdapter.submitList(response.data)
+                            Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
+                        }
+                        is Response.Failure -> {
                             swipeRefreshLayout.isRefreshing = false
                             selectionAdapter.submitList(listOf())
-                            Toast.makeText(
-                                context,
-                                context?.getString(R.string.selection_loading_failed),
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            Toast.makeText(context, "Failure", Toast.LENGTH_SHORT).show()
                         }
-                        is DictionaryService.Response.Success -> {
-                            swipeRefreshLayout.isRefreshing = false
-                            selectionAdapter.submitList(ArrayList(response.dictionaries))
-                            binding.empty = response.dictionaries.isEmpty()
-                            Toast.makeText(
-                                context,
-                                context?.getString(
-                                    R.string.selection_loading_success,
-                                    response.dictionaries.count()
-                                ),
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }.exhaustive
+                    }
                 })
         }
     }
@@ -133,6 +122,7 @@ class SelectionDownloadFragment : Fragment(), SelectionAdapter.Listener,
 
     /** Refresh dictionary list from remote */
     override fun onRefresh() {
-        bindUi(forceRefresh = true)
+        // TODO: Force refresh
+        bindUi()
     }
 }
