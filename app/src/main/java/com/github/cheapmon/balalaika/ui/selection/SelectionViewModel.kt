@@ -18,6 +18,8 @@ package com.github.cheapmon.balalaika.ui.selection
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
+import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
+import com.github.cheapmon.balalaika.domain.repositories.SelectionRepository
 
 /**
  * View model for [SelectionListFragment]

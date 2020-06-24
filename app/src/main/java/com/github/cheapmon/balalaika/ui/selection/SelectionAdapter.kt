@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.databinding.FragmentSelectionItemBinding
+import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 
 /** Adapter for [SelectionListFragment] */
 class SelectionAdapter(
@@ -60,7 +61,7 @@ class SelectionAdapter(
             oldItem: Dictionary,
             newItem: Dictionary
         ): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.dictionaryId == newItem.dictionaryId
         }
     }
 

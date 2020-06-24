@@ -20,8 +20,8 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.github.cheapmon.balalaika.db.entities.cache.CacheEntryDao
 import com.github.cheapmon.balalaika.db.entities.cache.SearchCacheEntry
-import com.github.cheapmon.balalaika.db.entities.entry.DictionaryDao
 import com.github.cheapmon.balalaika.db.entities.entry.DictionaryEntry
+import com.github.cheapmon.balalaika.db.entities.entry.DictionaryEntryDao
 import com.github.cheapmon.balalaika.db.entities.history.SearchRestriction
 import com.github.cheapmon.balalaika.db.entities.lexeme.LexemeDao
 import com.github.cheapmon.balalaika.db.entities.property.PropertyDao
@@ -50,7 +50,7 @@ class SearchRepository @Inject constructor(
     private val constants: Constants,
     private val importUtil: ImportUtil,
     private val cacheEntryDao: CacheEntryDao,
-    private val dictionaryDao: DictionaryDao,
+    private val dictionaryEntryDao: DictionaryEntryDao,
     private val lexemeDao: LexemeDao,
     private val propertyDao: PropertyDao
 ) {
@@ -98,9 +98,9 @@ class SearchRepository @Inject constructor(
     ) {
         val entries = when (searchRestriction) {
             is SearchRestriction.None ->
-                dictionaryDao.findLexemes(query)
+                dictionaryEntryDao.findLexemes(query)
             is SearchRestriction.Some ->
-                dictionaryDao.findLexemes(
+                dictionaryEntryDao.findLexemes(
                     query,
                     searchRestriction.category.categoryId,
                     searchRestriction.restriction

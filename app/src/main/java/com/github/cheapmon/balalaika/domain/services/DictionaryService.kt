@@ -17,7 +17,7 @@ package com.github.cheapmon.balalaika.domain.services
 
 import android.content.Context
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.ui.selection.Dictionary
+import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ActivityScoped
 import java.io.IOException
@@ -57,7 +57,9 @@ class DictionaryService @Inject constructor(
             summary = context.getString(R.string.impsum),
             additionalInfo = context.getString(R.string.impsum),
             authors = "Simon Kaleschke",
-            active = true
+            isActive = false,
+            isInstalled = false,
+            url = "https://www.example.org"
         ),
         Dictionary(
             2,
@@ -67,7 +69,9 @@ class DictionaryService @Inject constructor(
             summary = "BBB",
             additionalInfo = "https://www.example.org is a very important website",
             authors = "Thomas the tank engine",
-            active = false
+            isActive = false,
+            isInstalled = false,
+            url = "https://www.example.org"
         )
     )
 

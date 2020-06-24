@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.databinding.FragmentSelectionListBinding
+import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import dagger.hilt.android.AndroidEntryPoint
 
 /**

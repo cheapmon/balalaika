@@ -30,6 +30,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.databinding.FragmentSelectionDetailBinding
+import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -54,7 +55,7 @@ class SelectionDetailFragment : Fragment() {
     }
 
     private fun bindUi() {
-        viewModel.getDictionary(args.dictionary.id).observe(viewLifecycleOwner, Observer {
+        viewModel.getDictionary(args.dictionary.dictionaryId).observe(viewLifecycleOwner, Observer {
             with(binding) {
                 dictionary = it
                 remote = args.remote
@@ -63,7 +64,7 @@ class SelectionDetailFragment : Fragment() {
                     selectionDetailSummaryText.justificationMode = JUSTIFICATION_MODE_INTER_WORD
                     selectionDetailInfoText.justificationMode = JUSTIFICATION_MODE_INTER_WORD
                 }
-                if (it?.active == true) {
+                if (it?.isActive == true) {
                     (selectionButtonActivate as MaterialButton).icon =
                         ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox_empty)
                 } else {
@@ -76,14 +77,14 @@ class SelectionDetailFragment : Fragment() {
 
     inner class Listener {
         fun onClickActivateButton(dictionary: Dictionary) {
-            val message = if (dictionary.active) {
+            val message = if (dictionary.isActive) {
                 R.string.selection_confirm_deactivate
             } else {
                 R.string.selection_confirm_activate
             }
             MaterialAlertDialogBuilder(requireContext())
                 .setMessage(message)
-                .setPositiveButton(R.string.affirm) { _, _ -> viewModel.toggleActive(dictionary.id) }
+                .setPositiveButton(R.string.affirm) { _, _ -> viewModel.toggleActive(dictionary.dictionaryId) }
                 .setNegativeButton(R.string.cancel, null)
                 .show()
         }
@@ -115,7 +116,7 @@ class SelectionDetailFragment : Fragment() {
                     val directions =
                         SelectionDetailFragmentDirections.actionNavSelectionDetailToNavSelection()
                     findNavController().navigate(directions)
-                    viewModel.removeDictionary(dictionary.id)
+                    viewModel.removeDictionary(dictionary.dictionaryId)
                 }.setNegativeButton(R.string.cancel, null)
                 .show()
         }

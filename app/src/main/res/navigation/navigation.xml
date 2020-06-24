@@ -94,7 +94,7 @@
         tools:layout="@layout/fragment_selection_detail">
         <argument
             android:name="dictionary"
-            app:argType="com.github.cheapmon.balalaika.ui.selection.Dictionary" />
+            app:argType="com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary" />
         <argument
             android:name="remote"
             app:argType="boolean" />

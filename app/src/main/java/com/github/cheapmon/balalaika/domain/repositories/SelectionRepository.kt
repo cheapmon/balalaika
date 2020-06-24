@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.cheapmon.balalaika.ui.selection
+package com.github.cheapmon.balalaika.domain.repositories
 
 import android.content.Context
 import com.github.cheapmon.balalaika.R
+import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.domain.services.DictionaryService
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ActivityScoped
@@ -42,7 +43,9 @@ class SelectionRepository @Inject constructor(
             summary = context.getString(R.string.impsum),
             additionalInfo = context.getString(R.string.impsum),
             authors = "Simon Kaleschke",
-            active = true
+            isActive = true,
+            isInstalled = true,
+            url = "https://www.example.org"
         ),
         Dictionary(
             2,
@@ -52,7 +55,9 @@ class SelectionRepository @Inject constructor(
             summary = "BBB",
             additionalInfo = "https://www.example.org is a very important website",
             authors = "Thomas the tank engine",
-            active = false
+            isActive = false,
+            isInstalled = true,
+            url = "https://www.example.org"
         )
     )
 
@@ -66,29 +71,14 @@ class SelectionRepository @Inject constructor(
     }
 
     fun getDictionary(id: Long): Flow<Dictionary?> = _dictionaries.asFlow()
-        .map { list -> list.find { item -> item.id == id } }
+        .map { list -> list.find { item -> item.dictionaryId == id } }
 
     fun toggleActive(id: Long) {
-        val dictionary = _dictionaryList.find { item -> item.id == id } ?: return
-        _dictionaryList = if (dictionary.active) {
-            _dictionaryList.map { item ->
-                item.apply { this.active = false }
-            }
-        } else {
-            _dictionaryList.map { item ->
-                item.apply { this.active = this.id == id }
-            }
-        }
-        _dictionaries.offer(_dictionaryList)
     }
 
     fun addDictionary(dictionary: Dictionary) {
-        _dictionaryList = _dictionaryList + listOf(dictionary)
-        _dictionaries.offer(_dictionaryList)
     }
 
     fun removeDictionary(id: Long) {
-        _dictionaryList = _dictionaryList.filter { item -> item.id != id }
-        _dictionaries.offer(_dictionaryList)
     }
 }
