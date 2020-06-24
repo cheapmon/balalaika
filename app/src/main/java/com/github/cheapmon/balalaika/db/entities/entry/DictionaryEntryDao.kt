@@ -39,7 +39,7 @@ import com.github.cheapmon.balalaika.ui.search.SearchFragment
  * @see PropertyDao.getProperties
  */
 @Dao
-interface DictionaryDao {
+interface DictionaryEntryDao {
     /**
      * Get all [lexeme ids][Lexeme.lexemeId], depending on a certain
      * [dictionary view][DictionaryView]
