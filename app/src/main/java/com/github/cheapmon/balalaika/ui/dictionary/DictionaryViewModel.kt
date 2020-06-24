@@ -21,13 +21,13 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.github.cheapmon.balalaika.db.entities.category.Category
 import com.github.cheapmon.balalaika.db.entities.view.DictionaryViewWithCategories
-import com.github.cheapmon.balalaika.domain.repositories.DictionaryRepository
+import com.github.cheapmon.balalaika.domain.repositories.DictionaryEntryRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 /** View model for [DictionaryFragment] */
 class DictionaryViewModel @ViewModelInject constructor(
-    private val repository: DictionaryRepository
+    private val repository: DictionaryEntryRepository
 ) : ViewModel() {
     /**
      * Adapt dictionary presentation to user configuration

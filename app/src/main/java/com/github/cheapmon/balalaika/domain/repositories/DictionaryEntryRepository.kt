@@ -23,8 +23,8 @@ import com.github.cheapmon.balalaika.db.entities.cache.CacheEntryDao
 import com.github.cheapmon.balalaika.db.entities.category.Category
 import com.github.cheapmon.balalaika.db.entities.category.CategoryDao
 import com.github.cheapmon.balalaika.db.entities.category.WidgetType
-import com.github.cheapmon.balalaika.db.entities.entry.DictionaryDao
 import com.github.cheapmon.balalaika.db.entities.entry.DictionaryEntry
+import com.github.cheapmon.balalaika.db.entities.entry.DictionaryEntryDao
 import com.github.cheapmon.balalaika.db.entities.lexeme.Lexeme
 import com.github.cheapmon.balalaika.db.entities.lexeme.LexemeDao
 import com.github.cheapmon.balalaika.db.entities.property.PropertyDao
@@ -53,13 +53,13 @@ import kotlinx.coroutines.flow.map
  */
 @ActivityScoped
 @Suppress("EXPERIMENTAL_API_USAGE")
-class DictionaryRepository @Inject constructor(
+class DictionaryEntryRepository @Inject constructor(
     private val constants: Constants,
     private val importUtil: ImportUtil,
     categoryDao: CategoryDao,
     private val lexemeDao: LexemeDao,
     private val propertyDao: PropertyDao,
-    private val dictionaryDao: DictionaryDao,
+    private val dictionaryEntryDao: DictionaryEntryDao,
     viewDao: DictionaryViewDao,
     private val cacheEntryDao: CacheEntryDao
 ) {
@@ -134,9 +134,9 @@ class DictionaryRepository @Inject constructor(
 
     private suspend fun refreshCache(dictionaryViewId: Long, categoryId: Long) {
         val entries = if (categoryId == constants.DEFAULT_CATEGORY_ID) {
-            dictionaryDao.getLexemes(dictionaryViewId)
+            dictionaryEntryDao.getLexemes(dictionaryViewId)
         } else {
-            dictionaryDao.getLexemes(dictionaryViewId, categoryId)
+            dictionaryEntryDao.getLexemes(dictionaryViewId, categoryId)
         }.mapIndexed { idx, id -> CacheEntry(idx + 1L, id) }
         cacheEntryDao.clearDictionaryCache()
         cacheEntryDao.insertIntoDictionaryCache(entries)

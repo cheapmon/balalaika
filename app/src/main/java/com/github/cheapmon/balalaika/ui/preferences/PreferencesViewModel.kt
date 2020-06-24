@@ -19,14 +19,14 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import com.github.cheapmon.balalaika.db.entities.category.Category
 import com.github.cheapmon.balalaika.db.entities.view.DictionaryViewWithCategories
-import com.github.cheapmon.balalaika.domain.repositories.DictionaryRepository
+import com.github.cheapmon.balalaika.domain.repositories.DictionaryEntryRepository
 import com.github.cheapmon.balalaika.domain.storage.Storage
 import com.github.cheapmon.balalaika.util.Constants
 import kotlinx.coroutines.flow.first
 
 /** View model for [PreferencesFragment] */
 class PreferencesViewModel @ViewModelInject constructor(
-    private val repository: DictionaryRepository,
+    private val repository: DictionaryEntryRepository,
     private val storage: Storage,
     private val constants: Constants
 ) : ViewModel() {
