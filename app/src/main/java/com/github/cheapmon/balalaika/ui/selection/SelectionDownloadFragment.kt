@@ -24,7 +24,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -34,9 +33,8 @@ import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.databinding.FragmentSelectionListBinding
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.domain.Response
+import com.github.cheapmon.balalaika.util.exhaustive
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 
 /**
  * Fragment for dictionary download
@@ -57,15 +55,12 @@ class SelectionDownloadFragment : Fragment(), SelectionAdapter.Listener,
     private lateinit var selectionAdapter: SelectionAdapter
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
-    private var job: Job? = null
-
     /** Create view */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        setHasOptionsMenu(true)
         binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_selection_list, container, false)
         selectionLayoutManager = LinearLayoutManager(context)
@@ -79,50 +74,43 @@ class SelectionDownloadFragment : Fragment(), SelectionAdapter.Listener,
             setHasFixedSize(true)
             addItemDecoration(DividerItemDecoration(context, selectionLayoutManager.orientation))
         }
-        binding.selectionRetry.setOnClickListener { bindUi() }
-        bindUi()
+        setHasOptionsMenu(true)
+        submitData()
         return binding.root
     }
 
     /** Bind data */
-    private fun bindUi() {
-        job?.cancel()
-        job = lifecycleScope.launch {
-            viewModel
-                .getRemoteDictionaries()
-                .observe(viewLifecycleOwner, Observer { response ->
-                    binding.pending = response.isPending()
-                    binding.empty = response.isFailure()
-                    when (response) {
-                        is Response.Pending -> {
-                            swipeRefreshLayout.isRefreshing = true
-                            Toast.makeText(context, "Pending", Toast.LENGTH_SHORT).show()
-                        }
-                        is Response.Success -> {
-                            swipeRefreshLayout.isRefreshing = false
-                            selectionAdapter.submitList(response.data)
-                            Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
-                        }
-                        is Response.Failure -> {
-                            swipeRefreshLayout.isRefreshing = false
-                            selectionAdapter.submitList(listOf())
-                            Toast.makeText(context, "Failure", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                })
-        }
+    private fun submitData() {
+        viewModel.downloadable.observe(viewLifecycleOwner, Observer { response ->
+            swipeRefreshLayout.isRefreshing = response.isPending()
+            when (response) {
+                is Response.Success -> {
+                    selectionAdapter.submitList(response.data)
+                    binding.isEmpty = response.data.isEmpty()
+                }
+                is Response.Failure -> {
+                    selectionAdapter.submitList(listOf())
+                    binding.isEmpty = true
+                    Toast.makeText(
+                        requireContext(),
+                        requireContext().getString(R.string.selection_loading_failed),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                else -> {
+                }
+            }.exhaustive
+        })
     }
 
     /** Show dictionary in detail view */
     override fun onClickDictionary(dictionary: Dictionary) {
         val directions =
-            SelectionFragmentDirections.actionNavSelectionToNavSelectionDetail(dictionary, true)
+            SelectionFragmentDirections.actionNavSelectionToNavSelectionDetail(dictionary)
         findNavController().navigate(directions)
     }
 
-    /** Refresh dictionary list from remote */
     override fun onRefresh() {
-        // TODO: Force refresh
-        bindUi()
+        viewModel.refresh()
     }
 }

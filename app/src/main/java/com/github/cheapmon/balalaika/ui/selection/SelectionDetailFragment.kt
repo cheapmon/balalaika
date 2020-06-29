@@ -25,7 +25,6 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.github.cheapmon.balalaika.R
@@ -55,24 +54,21 @@ class SelectionDetailFragment : Fragment() {
     }
 
     private fun bindUi() {
-        viewModel.getDictionary(args.dictionary.dictionaryId).observe(viewLifecycleOwner, Observer {
-            with(binding) {
-                dictionary = it
-                remote = args.remote
-                listener = Listener()
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    selectionDetailSummaryText.justificationMode = JUSTIFICATION_MODE_INTER_WORD
-                    selectionDetailInfoText.justificationMode = JUSTIFICATION_MODE_INTER_WORD
-                }
-                if (it?.isActive == true) {
-                    (selectionButtonActivate as MaterialButton).icon =
-                        ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox_empty)
-                } else {
-                    (selectionButtonActivate as MaterialButton).icon =
-                        ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox)
-                }
+        with(binding) {
+            dictionary = args.dictionary
+            listener = Listener()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                selectionDetailSummaryText.justificationMode = JUSTIFICATION_MODE_INTER_WORD
+                selectionDetailInfoText.justificationMode = JUSTIFICATION_MODE_INTER_WORD
             }
-        })
+            if (args.dictionary.isActive) {
+                (selectionButtonActivate as MaterialButton).icon =
+                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox_empty)
+            } else {
+                (selectionButtonActivate as MaterialButton).icon =
+                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox)
+            }
+        }
     }
 
     inner class Listener {

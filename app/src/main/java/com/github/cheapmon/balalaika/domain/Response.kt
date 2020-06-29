@@ -25,13 +25,13 @@ sealed class Response<out T> {
     fun isFailure(): Boolean = this is Failure
 }
 
-fun <T> Response<T>.or(value: List<T>): List<T> = when(this) {
+fun <T> Response<T>.or(value: List<T>): List<T> = when (this) {
     is Response.Pending -> value
     is Response.Success -> data
     is Response.Failure -> value
 }
 
-fun <T> Response<T>.orEmpty(): List<T> = when(this) {
+fun <T> Response<T>.orEmpty(): List<T> = when (this) {
     is Response.Pending -> listOf()
     is Response.Success -> data
     is Response.Failure -> listOf()

@@ -19,6 +19,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -27,9 +28,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.databinding.FragmentSelectionListBinding
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
+import com.github.cheapmon.balalaika.domain.Response
+import com.github.cheapmon.balalaika.util.exhaustive
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -41,13 +45,15 @@ import dagger.hilt.android.AndroidEntryPoint
  * - Set dictionary active or inactive
  */
 @AndroidEntryPoint
-class SelectionListFragment : Fragment(), SelectionAdapter.Listener {
+class SelectionListFragment : Fragment(), SelectionAdapter.Listener,
+    SwipeRefreshLayout.OnRefreshListener {
     private val viewModel: SelectionViewModel by viewModels()
 
     private lateinit var binding: FragmentSelectionListBinding
     private lateinit var recyclerView: RecyclerView
     private lateinit var selectionLayoutManager: LinearLayoutManager
     private lateinit var selectionAdapter: SelectionAdapter
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     /** Create view */
     override fun onCreateView(
@@ -59,7 +65,9 @@ class SelectionListFragment : Fragment(), SelectionAdapter.Listener {
             DataBindingUtil.inflate(inflater, R.layout.fragment_selection_list, container, false)
         selectionLayoutManager = LinearLayoutManager(context)
         selectionAdapter = SelectionAdapter(this)
-        binding.selectionRefresh.isEnabled = false
+        swipeRefreshLayout = binding.selectionRefresh.apply {
+            setOnRefreshListener(this@SelectionListFragment)
+        }
         recyclerView = binding.selectionList.apply {
             layoutManager = selectionLayoutManager
             adapter = selectionAdapter
@@ -73,16 +81,36 @@ class SelectionListFragment : Fragment(), SelectionAdapter.Listener {
 
     /** Bind data */
     private fun submitData() {
-        viewModel.dictionaries.observe(viewLifecycleOwner, Observer {
-            selectionAdapter.submitList(ArrayList(it))
-            binding.empty = it.isEmpty()
+        viewModel.dictionaries.observe(viewLifecycleOwner, Observer { response ->
+            swipeRefreshLayout.isRefreshing = response.isPending()
+            when (response) {
+                is Response.Success -> {
+                    selectionAdapter.submitList(response.data)
+                    binding.isEmpty = response.data.isEmpty()
+                }
+                is Response.Failure -> {
+                    selectionAdapter.submitList(listOf())
+                    binding.isEmpty = true
+                    Toast.makeText(
+                        requireContext(),
+                        requireContext().getString(R.string.selection_loading_failed),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                else -> {
+                }
+            }.exhaustive
         })
     }
 
     /** Show dictionary in detail view */
     override fun onClickDictionary(dictionary: Dictionary) {
         val directions =
-            SelectionFragmentDirections.actionNavSelectionToNavSelectionDetail(dictionary, false)
+            SelectionFragmentDirections.actionNavSelectionToNavSelectionDetail(dictionary)
         findNavController().navigate(directions)
+    }
+
+    override fun onRefresh() {
+        viewModel.refresh()
     }
 }

@@ -66,10 +66,10 @@ class DictionaryService @Inject constructor(
     )
 
     private suspend fun fakeDictionaries(): Response<Dictionary> {
-        var response: Response<Dictionary>? = null
+        var response: Response<Dictionary>?
         withTimeout(constants.REMOTE_TIMEOUT) {
             delay((100..3000).random().toLong())
-            if ((0..99).random() > 2) response = Response.Success(_dictionaryList)
+            response = Response.Success(_dictionaryList)
         }
         return response ?: Response.Failure(IOException("Could not load dictionaries"))
     }

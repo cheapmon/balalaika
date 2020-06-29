@@ -15,10 +15,10 @@
  */
 package com.github.cheapmon.balalaika.domain
 
-sealed class InstallState<out T> {
-    data class Installable<out T>(val t: T) : InstallState<T>()
-    data class Installed<out T>(val t: T) : InstallState<T>()
-    data class Updatable<out T>(val t: T) : InstallState<T>()
+sealed class InstallState<out T>(val t: T) {
+    data class Installable<out T>(private val tt: T) : InstallState<T>(tt)
+    data class Installed<out T>(private val tt: T) : InstallState<T>(tt)
+    data class Updatable<out T>(private val tt: T) : InstallState<T>(tt)
 
     fun isInstalled() = this is Installed || this is Updatable
     fun isUpdatable() = this is Updatable

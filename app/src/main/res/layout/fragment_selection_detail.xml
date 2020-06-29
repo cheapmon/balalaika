@@ -28,10 +28,6 @@
         <variable
             name="dictionary"
             type="com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary" />
-
-        <variable
-            name="remote"
-            type="Boolean" />
     </data>
 
     <ScrollView
@@ -264,7 +260,6 @@
                 android:layout_marginTop="16dp"
                 android:onClick="@{() -> listener.onClickActivateButton(dictionary)}"
                 android:text="@{dictionary.active ? @string/selection_action_deactivate : @string/selection_action_activate}"
-                android:visibility="@{remote ? View.GONE : View.VISIBLE}"
                 app:icon="@drawable/ic_checkbox"
                 app:layout_constraintBottom_toTopOf="@+id/selection_button_update"
                 app:layout_constraintStart_toStartOf="parent"
@@ -278,7 +273,6 @@
                 android:layout_height="wrap_content"
                 android:onClick="@{() -> listener.onClickUpdateButton(dictionary)}"
                 android:text="@string/selection_action_update"
-                android:visibility="@{remote ? View.GONE : View.VISIBLE}"
                 app:icon="@drawable/ic_update"
                 app:layout_constraintBottom_toTopOf="@+id/selection_button_add"
                 app:layout_constraintStart_toStartOf="@+id/selection_button_activate"
@@ -291,7 +285,6 @@
                 android:layout_height="wrap_content"
                 android:onClick="@{() -> listener.onClickAddButton(dictionary)}"
                 android:text="@string/selection_action_add"
-                android:visibility="@{remote ? View.VISIBLE : View.GONE}"
                 app:icon="@drawable/ic_library"
                 app:layout_constraintBottom_toTopOf="@+id/selection_button_remove"
                 app:layout_constraintStart_toStartOf="@+id/selection_button_update"
@@ -305,7 +298,6 @@
                 android:onClick="@{() -> listener.onClickRemoveButton(dictionary)}"
                 android:text="@string/selection_action_remove"
                 android:textColor="@color/design_default_color_error"
-                android:visibility="@{remote ? View.GONE : View.VISIBLE}"
                 app:icon="@drawable/ic_delete"
                 app:iconTint="@color/design_default_color_error"
                 app:layout_constraintStart_toStartOf="@+id/selection_button_add"

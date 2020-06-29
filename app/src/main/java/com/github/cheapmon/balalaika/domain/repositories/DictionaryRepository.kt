@@ -17,8 +17,7 @@ package com.github.cheapmon.balalaika.domain.repositories
 
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.db.entities.dictionary.DictionaryDao
-import com.github.cheapmon.balalaika.domain.Response
-import com.github.cheapmon.balalaika.domain.services.DictionaryService
+import com.github.cheapmon.balalaika.domain.services.DictionaryMediator
 import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -27,12 +26,10 @@ import kotlinx.coroutines.flow.Flow
 @ActivityScoped
 class DictionaryRepository @Inject constructor(
     private val dictionaryDao: DictionaryDao,
-    private val service: DictionaryService
+    private val mediator: DictionaryMediator
 ) {
-    val installedDictionaries: Flow<List<Dictionary>> = dictionaryDao.getAll()
-
-    fun getRemoteDictionaries(): Flow<Response<Dictionary>> =
-        service.getDictionariesFromRemoteSource()
+    val installedDictionaries = mediator.local
+    val downloadableDictionaries = mediator.download
 
     fun getDictionary(id: Long): Flow<Dictionary?> = dictionaryDao.getById(id)
 
@@ -43,5 +40,9 @@ class DictionaryRepository @Inject constructor(
     }
 
     fun removeDictionary(id: Long) {
+    }
+
+    fun refresh() {
+        mediator.refresh()
     }
 }

@@ -22,11 +22,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.databinding.FragmentSelectionItemBinding
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
+import com.github.cheapmon.balalaika.domain.InstallState
 
-/** Adapter for [SelectionListFragment] */
+/** Adapter for [SelectionDownloadFragment] */
 class SelectionAdapter(
     private val listener: Listener
-) : ListAdapter<Dictionary, SelectionAdapter.ViewHolder>(Diff) {
+) : ListAdapter<InstallState<Dictionary>, SelectionAdapter.ViewHolder>(Diff) {
     /** Create view */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -38,8 +39,10 @@ class SelectionAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
         with(holder.binding) {
-            dictionary = item
-            root.setOnClickListener { listener.onClickDictionary(item) }
+            dictionary = item.t
+            isInstalled = item.isInstalled()
+            isUpdatable = item.isUpdatable()
+            root.setOnClickListener { listener.onClickDictionary(item.t) }
         }
     }
 
@@ -49,19 +52,19 @@ class SelectionAdapter(
     ) : RecyclerView.ViewHolder(binding.root)
 
     /** @suppress */
-    object Diff : DiffUtil.ItemCallback<Dictionary>() {
+    object Diff : DiffUtil.ItemCallback<InstallState<Dictionary>>() {
         override fun areContentsTheSame(
-            oldItem: Dictionary,
-            newItem: Dictionary
+            oldItem: InstallState<Dictionary>,
+            newItem: InstallState<Dictionary>
         ): Boolean {
             return oldItem == newItem
         }
 
         override fun areItemsTheSame(
-            oldItem: Dictionary,
-            newItem: Dictionary
+            oldItem: InstallState<Dictionary>,
+            newItem: InstallState<Dictionary>
         ): Boolean {
-            return oldItem.dictionaryId == newItem.dictionaryId
+            return oldItem.t.dictionaryId == newItem.t.dictionaryId
         }
     }
 

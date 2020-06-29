@@ -21,12 +21,12 @@ import com.github.cheapmon.balalaika.domain.InstallState
 import com.github.cheapmon.balalaika.domain.Response
 import com.github.cheapmon.balalaika.domain.orEmpty
 import dagger.hilt.android.scopes.ActivityScoped
+import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.mapLatest
-import javax.inject.Inject
 
 @ActivityScoped
 class DictionaryMediator @Inject constructor(
@@ -43,26 +43,31 @@ class DictionaryMediator @Inject constructor(
         combine(d, s, f) { a, b, c -> Triple(a, b, c) }
     }
 
-    val local: Flow<List<InstallState<Dictionary>>> = all.mapLatest { (d, s, f) ->
-        if ((s is Response.Failure) && (f is Response.Failure)) {
-            d.map { InstallState.Installed(it) }
+    val local: Flow<Response<InstallState<Dictionary>>> = all.mapLatest { (d, s, f) ->
+        if (s.isPending() || f.isPending()) {
+            Response.Pending
+        } else if (s.isFailure() && f.isFailure()) {
+            Response.Success(d.map { InstallState.Installed(it) })
         } else {
             val list = s.orEmpty() + f.orEmpty()
-            d.map {
+            val result = d.map {
                 if (list.contains(it)) {
                     InstallState.Updatable(it)
                 } else {
                     InstallState.Installed(it)
                 }
             }
+            Response.Success(result)
         }
     }
 
-    val download: Flow<List<InstallState<Dictionary>>> = all.mapLatest { (d, s, f) ->
-        if ((s is Response.Failure) && (f is Response.Failure)) {
-            d.map { InstallState.Installed(it) }
+    val download: Flow<Response<InstallState<Dictionary>>> = all.mapLatest { (d, s, f) ->
+        if (s.isPending() || f.isPending()) {
+            Response.Pending
+        } else if (s.isFailure() && f.isFailure()) {
+            Response.Success(d.map { InstallState.Installed(it) })
         } else {
-            (d + s.orEmpty() + f.orEmpty())
+            val result = (d + s.orEmpty() + f.orEmpty())
                 .groupBy { it.externalId }
                 .map { (id, list) ->
                     val newest = list.maxBy { it.version } ?: throw IllegalStateException()
@@ -72,6 +77,7 @@ class DictionaryMediator @Inject constructor(
                         else -> InstallState.Installable(newest)
                     }
                 }
+            Response.Success(result)
         }
     }
 

@@ -83,11 +83,6 @@
         android:name="com.github.cheapmon.balalaika.ui.preferences.SourcesFragment"
         android:label="@string/menu_sources" />
     <fragment
-        android:id="@+id/nav_selection_list"
-        android:name="com.github.cheapmon.balalaika.ui.selection.SelectionListFragment"
-        android:label="@string/menu_selection"
-        tools:layout="@layout/fragment_selection_list" />
-    <fragment
         android:id="@+id/nav_selection_detail"
         android:name="com.github.cheapmon.balalaika.ui.selection.SelectionDetailFragment"
         android:label="@string/menu_selection_detail"
@@ -95,9 +90,6 @@
         <argument
             android:name="dictionary"
             app:argType="com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary" />
-        <argument
-            android:name="remote"
-            app:argType="boolean" />
         <action
             android:id="@+id/action_nav_selection_detail_to_nav_selection"
             app:destination="@id/nav_selection"

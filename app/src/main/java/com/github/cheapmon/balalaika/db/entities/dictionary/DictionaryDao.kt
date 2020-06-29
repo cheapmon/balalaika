@@ -39,7 +39,7 @@ interface DictionaryDao {
                     WHERE external_id = (:externalId)""")
     suspend fun toggleIsActive(externalId: String)
 
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(dictionary: List<Dictionary>)
 
     @Query("DELETE FROM dictionary")

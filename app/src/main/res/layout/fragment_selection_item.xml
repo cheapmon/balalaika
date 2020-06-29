@@ -24,6 +24,14 @@
         <variable
             name="dictionary"
             type="com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary" />
+
+        <variable
+            name="is_installed"
+            type="Boolean" />
+
+        <variable
+            name="is_updatable"
+            type="Boolean" />
     </data>
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -48,9 +56,9 @@
                 android:text="@{dictionary.name}"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/selection_guideline_title"
+                app:layout_constraintBottom_toBottomOf="@+id/selection_item_icon"
                 app:layout_constraintStart_toStartOf="@+id/selection_guideline_icon"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/selection_item_icon"
                 tools:text="Dictionary Name" />
 
             <ImageView
@@ -60,34 +68,52 @@
                 android:layout_marginStart="12dp"
                 android:layout_marginLeft="12dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
                 android:contentDescription="@string/menu_dictionary"
-                app:layout_constraintBottom_toTopOf="@+id/selection_guideline_title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_library" />
 
-            <com.google.android.material.chip.Chip
+            <com.google.android.material.chip.ChipGroup
                 android:id="@+id/selection_item_chip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:clickable="false"
-                android:text="@string/selection_is_active"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                android:visibility="@{dictionary.active ? View.VISIBLE : View.GONE}"
-                app:chipMinHeight="24dp"
-                app:layout_constraintBaseline_toBaselineOf="@+id/selection_item_title"
-                app:layout_constraintStart_toEndOf="@+id/selection_item_title"
-                tools:text="@string/selection_is_active" />
+                app:layout_constraintStart_toStartOf="@+id/selection_guideline_icon"
+                app:layout_constraintTop_toBottomOf="@+id/selection_item_icon"
+                app:singleLine="true">
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/selection_guideline_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_begin="40dp" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/selection_item_chip_installed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/selection_is_installed"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                    android:visibility="@{is_installed ? View.VISIBLE : View.GONE}"
+                    app:chipIconSize="16dp"
+                    app:chipMinHeight="16dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/selection_item_chip_active"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/selection_is_active"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                    android:textColor="@android:color/white"
+                    android:visibility="@{dictionary.isActive ? View.VISIBLE : View.GONE}"
+                    app:chipMinHeight="16dp"
+                    app:chipSurfaceColor="@color/colorPrimary" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/selection_item_chip_updatable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/selection_is_updatable"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                    android:textColor="@android:color/white"
+                    android:visibility="@{is_updatable ? View.VISIBLE : View.GONE}"
+                    app:chipMinHeight="16dp"
+                    app:chipSurfaceColor="@color/colorSecondary" />
+
+            </com.google.android.material.chip.ChipGroup>
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/selection_guideline_icon"
@@ -113,11 +139,10 @@
                 android:id="@+id/selection_summary_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:contentDescription="@string/selection_summary_title"
                 app:layout_constraintEnd_toStartOf="@+id/selection_guideline_icon"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/selection_guideline_title"
+                app:layout_constraintTop_toBottomOf="@+id/selection_item_chip"
                 app:srcCompat="@drawable/ic_summary" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
