@@ -28,6 +28,14 @@
         <variable
             name="dictionary"
             type="com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary" />
+
+        <variable
+            name="is_installed"
+            type="Boolean" />
+
+        <variable
+            name="is_updatable"
+            type="Boolean" />
     </data>
 
     <ScrollView
@@ -44,21 +52,6 @@
             android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
             android:layout_marginVertical="@dimen/activity_vertical_margin"
             android:paddingBottom="16dp">
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/selection_detail_active"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:clickable="false"
-                android:text="@string/selection_is_active"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                android:visibility="@{dictionary.active ? View.VISIBLE : View.GONE}"
-                app:chipMinHeight="24dp"
-                app:layout_constraintBaseline_toBaselineOf="@+id/selection_detail_title"
-                app:layout_constraintStart_toEndOf="@+id/selection_detail_title"
-                tools:text="@string/selection_is_active" />
 
             <ImageView
                 android:id="@+id/selection_detail_icon"
@@ -87,15 +80,55 @@
                 app:layout_constraintTop_toTopOf="@+id/selection_detail_icon"
                 tools:text="Dictionary Name" />
 
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/selection_detail_chip"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                app:layout_constraintStart_toStartOf="@+id/selection_detail_guideline_icon"
+                app:layout_constraintTop_toBottomOf="@+id/selection_detail_icon"
+                app:singleLine="true">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/selection_detail_chip_installed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{is_installed ? @string/selection_is_installed : @string/selection_is_installable}"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                    app:chipIconSize="16dp"
+                    app:chipMinHeight="16dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/selection_detail_chip_active"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/selection_is_active"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                    android:textColor="@android:color/white"
+                    android:visibility="@{dictionary.isActive ? View.VISIBLE : View.GONE}"
+                    app:chipMinHeight="16dp"
+                    app:chipSurfaceColor="@color/colorPrimary" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/selection_detail_chip_updatable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/selection_is_updatable"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                    android:textColor="@android:color/white"
+                    android:visibility="@{is_updatable ? View.VISIBLE : View.GONE}"
+                    app:chipMinHeight="16dp"
+                    app:chipSurfaceColor="@color/colorSecondary" />
+
+            </com.google.android.material.chip.ChipGroup>
+
             <View
                 android:id="@+id/selection_divider_top"
                 android:layout_width="0dp"
                 android:layout_height="1dp"
-                android:layout_marginTop="16dp"
                 android:background="?android:attr/listDivider"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/selection_detail_icon" />
+                app:layout_constraintTop_toBottomOf="@+id/selection_detail_chip" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/selection_detail_guideline_icon"
@@ -108,11 +141,11 @@
                 android:id="@+id/selection_detail_author_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="8dp"
                 android:contentDescription="@string/selection_authors_title"
                 app:layout_constraintEnd_toEndOf="@+id/selection_detail_icon"
                 app:layout_constraintStart_toStartOf="@+id/selection_detail_icon"
-                app:layout_constraintTop_toBottomOf="@+id/selection_detail_icon"
+                app:layout_constraintTop_toBottomOf="@+id/selection_divider_top"
                 app:srcCompat="@drawable/ic_author" />
 
             <TextView
@@ -252,57 +285,59 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/selection_version_text" />
 
-            <Button
-                android:id="@+id/selection_button_activate"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:onClick="@{() -> listener.onClickActivateButton(dictionary)}"
-                android:text="@{dictionary.active ? @string/selection_action_deactivate : @string/selection_action_activate}"
-                app:icon="@drawable/ic_checkbox"
-                app:layout_constraintBottom_toTopOf="@+id/selection_button_update"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/selection_divider_bottom"
-                app:layout_constraintVertical_chainStyle="packed" />
+                app:layout_constraintTop_toBottomOf="@+id/selection_divider_bottom">
 
-            <Button
-                android:id="@+id/selection_button_update"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:onClick="@{() -> listener.onClickUpdateButton(dictionary)}"
-                android:text="@string/selection_action_update"
-                app:icon="@drawable/ic_update"
-                app:layout_constraintBottom_toTopOf="@+id/selection_button_add"
-                app:layout_constraintStart_toStartOf="@+id/selection_button_activate"
-                app:layout_constraintTop_toBottomOf="@+id/selection_button_activate" />
+                <Button
+                    android:id="@+id/selection_button_activate"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{() -> listener.onClickActivateButton(dictionary)}"
+                    android:text="@{dictionary.active ? @string/selection_action_deactivate : @string/selection_action_activate}"
+                    android:visibility="@{is_installed}"
+                    app:icon="@drawable/ic_checkbox" />
 
-            <Button
-                android:id="@+id/selection_button_add"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:onClick="@{() -> listener.onClickAddButton(dictionary)}"
-                android:text="@string/selection_action_add"
-                app:icon="@drawable/ic_library"
-                app:layout_constraintBottom_toTopOf="@+id/selection_button_remove"
-                app:layout_constraintStart_toStartOf="@+id/selection_button_update"
-                app:layout_constraintTop_toBottomOf="@+id/selection_button_update" />
+                <Button
+                    android:id="@+id/selection_button_update"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{() -> listener.onClickUpdateButton(dictionary)}"
+                    android:text="@string/selection_action_update"
+                    android:visibility="@{is_updatable}"
+                    app:icon="@drawable/ic_update" />
 
-            <Button
-                android:id="@+id/selection_button_remove"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:onClick="@{() -> listener.onClickRemoveButton(dictionary)}"
-                android:text="@string/selection_action_remove"
-                android:textColor="@color/design_default_color_error"
-                app:icon="@drawable/ic_delete"
-                app:iconTint="@color/design_default_color_error"
-                app:layout_constraintStart_toStartOf="@+id/selection_button_add"
-                app:layout_constraintTop_toBottomOf="@+id/selection_button_add"
-                app:rippleColor="@color/design_default_color_error" />
+                <Button
+                    android:id="@+id/selection_button_add"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{() -> listener.onClickAddButton(dictionary)}"
+                    android:text="@string/selection_action_add"
+                    android:visibility="@{!is_installed}"
+                    app:icon="@drawable/ic_library" />
+
+                <Button
+                    android:id="@+id/selection_button_remove"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{() -> listener.onClickRemoveButton(dictionary)}"
+                    android:text="@string/selection_action_remove"
+                    android:textColor="@color/design_default_color_error"
+                    android:visibility="@{is_installed}"
+                    app:icon="@drawable/ic_delete"
+                    app:iconTint="@color/design_default_color_error"
+                    app:rippleColor="@color/design_default_color_error" />
+
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

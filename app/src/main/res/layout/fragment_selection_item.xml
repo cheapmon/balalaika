@@ -85,10 +85,8 @@
                     android:id="@+id/selection_item_chip_installed"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/selection_is_installed"
+                    android:text="@{is_installed ? @string/selection_is_installed : @string/selection_is_installable}"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                    android:visibility="@{is_installed ? View.VISIBLE : View.GONE}"
-                    app:chipIconSize="16dp"
                     app:chipMinHeight="16dp" />
 
                 <com.google.android.material.chip.Chip

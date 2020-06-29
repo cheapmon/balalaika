@@ -58,6 +58,8 @@ class SelectionDetailFragment : Fragment() {
         val state: InstallState<Dictionary> = args.dictionary.data
         with(binding) {
             dictionary = state.t
+            isInstalled = state.isInstalled()
+            isUpdatable = state.isUpdatable()
             listener = Listener()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 selectionDetailSummaryText.justificationMode = JUSTIFICATION_MODE_INTER_WORD
