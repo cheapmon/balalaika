@@ -29,7 +29,7 @@ class DictionaryRepository @Inject constructor(
     private val dictionaryDao: DictionaryDao,
     private val service: DictionaryService
 ) {
-    val installedDictionaries: Flow<List<Dictionary>> = dictionaryDao.getInstalled()
+    val installedDictionaries: Flow<List<Dictionary>> = dictionaryDao.getAll()
 
     fun getRemoteDictionaries(): Flow<Response<Dictionary>> =
         service.getDictionariesFromRemoteSource()

@@ -30,6 +30,5 @@ data class Dictionary(
     val authors: String,
     @ColumnInfo(name = "additional_info") val additionalInfo: String,
     val url: String,
-    @ColumnInfo(name = "is_active") val isActive: Boolean = false,
-    @ColumnInfo(name = "is_installed") val isInstalled: Boolean = false
+    @ColumnInfo(name = "is_active") val isActive: Boolean = false
 ) : Serializable

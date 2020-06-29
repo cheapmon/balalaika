@@ -23,11 +23,8 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface DictionaryDao {
-    @Query("SELECT * FROM dictionary WHERE is_installed = 0")
-    suspend fun getDownloadable(): List<Dictionary>
-
-    @Query("SELECT * FROM dictionary WHERE is_installed = 1")
-    fun getInstalled(): Flow<List<Dictionary>>
+    @Query("SELECT * FROM dictionary")
+    fun getAll(): Flow<List<Dictionary>>
 
     @Query("SELECT * FROM dictionary WHERE id = (:id) LIMIT 1")
     fun getById(id: Long): Flow<Dictionary?>
@@ -39,7 +36,7 @@ interface DictionaryDao {
     suspend fun deactivateAll()
 
     @Query("""UPDATE dictionary SET is_active = NOT is_active
-                    WHERE external_id = (:externalId) AND is_installed = 1""")
+                    WHERE external_id = (:externalId)""")
     suspend fun toggleIsActive(externalId: String)
 
     @Insert(onConflict = OnConflictStrategy.ABORT)

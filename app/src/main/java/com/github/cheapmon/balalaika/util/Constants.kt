@@ -56,4 +56,7 @@ class Constants @Inject constructor(
 
     /** Timeout (ms) for loading from a remote source */
     val REMOTE_TIMEOUT: Long = 2500
+
+    /** Timeout (ms) for loading from the filesystem */
+    val LOCAL_TIMEOUT: Long = 1000
 }

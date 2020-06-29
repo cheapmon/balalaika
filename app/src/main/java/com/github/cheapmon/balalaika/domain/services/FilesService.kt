@@ -15,27 +15,23 @@
  */
 package com.github.cheapmon.balalaika.domain.services
 
-import android.content.Context
-import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.domain.Response
 import com.github.cheapmon.balalaika.util.Constants
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ActivityScoped
-import java.io.IOException
-import javax.inject.Inject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withTimeout
+import java.io.IOException
+import javax.inject.Inject
 
 // TODO: Replace with real implementation
 @ActivityScoped
-class DictionaryService @Inject constructor(
-    @ApplicationContext context: Context,
+class FilesService @Inject constructor(
     private val constants: Constants
-) {
-    fun getDictionariesFromRemoteSource(): Flow<Response<Dictionary>> = flow {
+){
+    fun getLocalDictionaries() : Flow<Response<Dictionary>> = flow {
         emit(Response.Pending)
         emit(fakeDictionaries())
     }
@@ -44,10 +40,10 @@ class DictionaryService @Inject constructor(
         Dictionary(
             1,
             externalId = "dic_a",
-            version = 3,
+            version = 2,
             name = "Dictionary A",
-            summary = context.getString(R.string.impsum),
-            additionalInfo = context.getString(R.string.impsum),
+            summary = "",
+            additionalInfo = "",
             authors = "Simon Kaleschke",
             isActive = false,
             url = "https://www.example.org"
@@ -55,22 +51,22 @@ class DictionaryService @Inject constructor(
         Dictionary(
             2,
             externalId = "dic_b",
-            version = 2,
+            version = 3,
             name = "Dictionary B",
-            summary = "BBB",
+            summary = "CCC",
             additionalInfo = "https://www.example.org is a very important website",
-            authors = "Thomas the tank engine",
+            authors = "Senf",
             isActive = false,
             url = "https://www.example.org"
         )
     )
 
     private suspend fun fakeDictionaries(): Response<Dictionary> {
-        var response: Response<Dictionary>? = null
-        withTimeout(constants.REMOTE_TIMEOUT) {
-            delay((100..3000).random().toLong())
-            if ((0..99).random() > 2) response = Response.Success(_dictionaryList)
+        var result: Response<Dictionary>?
+        withTimeout(constants.LOCAL_TIMEOUT) {
+            delay((10..1200).random().toLong())
+            result = Response.Success(_dictionaryList)
         }
-        return response ?: Response.Failure(IOException("Could not load dictionaries"))
+        return result ?: Response.Failure(IOException("Could not read dictionaries from files"))
     }
 }
