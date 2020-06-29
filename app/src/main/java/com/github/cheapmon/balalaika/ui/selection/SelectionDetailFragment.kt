@@ -30,6 +30,7 @@ import androidx.navigation.fragment.navArgs
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.databinding.FragmentSelectionDetailBinding
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
+import com.github.cheapmon.balalaika.domain.InstallState
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -54,14 +55,15 @@ class SelectionDetailFragment : Fragment() {
     }
 
     private fun bindUi() {
+        val state: InstallState<Dictionary> = args.dictionary.data
         with(binding) {
-            dictionary = args.dictionary
+            dictionary = state.t
             listener = Listener()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 selectionDetailSummaryText.justificationMode = JUSTIFICATION_MODE_INTER_WORD
                 selectionDetailInfoText.justificationMode = JUSTIFICATION_MODE_INTER_WORD
             }
-            if (args.dictionary.isActive) {
+            if (state.t.isActive) {
                 (selectionButtonActivate as MaterialButton).icon =
                     ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox_empty)
             } else {

@@ -42,7 +42,7 @@ class SelectionAdapter(
             dictionary = item.t
             isInstalled = item.isInstalled()
             isUpdatable = item.isUpdatable()
-            root.setOnClickListener { listener.onClickDictionary(item.t) }
+            root.setOnClickListener { listener.onClickDictionary(item) }
         }
     }
 
@@ -71,6 +71,6 @@ class SelectionAdapter(
     /** Component that handles actions from this adapter */
     interface Listener {
         /** Callback for whenever a dictionary is clicked */
-        fun onClickDictionary(dictionary: Dictionary)
+        fun onClickDictionary(dictionary: InstallState<Dictionary>)
     }
 }
