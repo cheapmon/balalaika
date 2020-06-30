@@ -65,25 +65,21 @@ class SelectionDetailFragment : Fragment() {
                 selectionDetailSummaryText.justificationMode = JUSTIFICATION_MODE_INTER_WORD
                 selectionDetailInfoText.justificationMode = JUSTIFICATION_MODE_INTER_WORD
             }
-            if (state.t.isActive) {
-                (selectionButtonActivate as MaterialButton).icon =
-                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox_empty)
-            } else {
-                (selectionButtonActivate as MaterialButton).icon =
-                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox)
-            }
         }
     }
 
     inner class Listener {
         fun onClickActivateButton(dictionary: Dictionary) {
-            val message = if (dictionary.isActive) {
-                R.string.selection_confirm_deactivate
-            } else {
-                R.string.selection_confirm_activate
-            }
             MaterialAlertDialogBuilder(requireContext())
-                .setMessage(message)
+                .setMessage(R.string.selection_confirm_activate)
+                .setPositiveButton(R.string.affirm) { _, _ -> viewModel.toggleActive(dictionary.dictionaryId) }
+                .setNegativeButton(R.string.cancel, null)
+                .show()
+        }
+
+        fun onClickDeactivateButton(dictionary: Dictionary) {
+            MaterialAlertDialogBuilder(requireContext())
+                .setMessage(R.string.selection_confirm_deactivate)
                 .setPositiveButton(R.string.affirm) { _, _ -> viewModel.toggleActive(dictionary.dictionaryId) }
                 .setNegativeButton(R.string.cancel, null)
                 .show()
@@ -102,7 +98,7 @@ class SelectionDetailFragment : Fragment() {
                     )
                 ).setPositiveButton(R.string.affirm) { _, _ ->
                     val directions =
-                        SelectionDetailFragmentDirections.actionNavSelectionDetailToNavSelection(0)
+                        SelectionDetailFragmentDirections.actionNavSelectionDetailToNavSelection()
                     findNavController().navigate(directions)
                     viewModel.addDictionary(dictionary)
                 }.setNegativeButton(R.string.cancel, null)

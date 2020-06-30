@@ -83,7 +83,7 @@
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/selection_detail_chip"
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="@+id/selection_detail_guideline_icon"
                 app:layout_constraintTop_toBottomOf="@+id/selection_detail_icon"
                 app:singleLine="true">
@@ -133,6 +133,7 @@
                 android:id="@+id/selection_divider_top"
                 android:layout_width="0dp"
                 android:layout_height="1dp"
+                android:layout_marginTop="8dp"
                 android:background="?android:attr/listDivider"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -308,9 +309,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:onClick="@{() -> listener.onClickActivateButton(dictionary)}"
-                    android:text="@{dictionary.active ? @string/selection_action_deactivate : @string/selection_action_activate}"
-                    android:visibility="@{is_installed}"
+                    android:text="@string/selection_action_activate"
+                    android:visibility="@{is_installed &amp;&amp; !dictionary.active}"
                     app:icon="@drawable/ic_checkbox" />
+
+                <Button
+                    android:id="@+id/selection_button_deactivate"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{() -> listener.onClickDeactivateButton(dictionary)}"
+                    android:text="@string/selection_action_deactivate"
+                    android:visibility="@{is_installed &amp;&amp; dictionary.active}"
+                    app:icon="@drawable/ic_checkbox_empty" />
 
                 <Button
                     android:id="@+id/selection_button_update"

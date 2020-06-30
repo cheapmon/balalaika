@@ -146,6 +146,7 @@
                 android:id="@+id/selection_summary_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:contentDescription="@string/selection_summary_title"
                 app:layout_constraintEnd_toStartOf="@+id/selection_guideline_icon"
                 app:layout_constraintStart_toStartOf="parent"
