@@ -18,8 +18,10 @@ package com.github.cheapmon.balalaika.ui.selection
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.domain.repositories.DictionaryRepository
+import kotlinx.coroutines.launch
 
 /**
  * View model for [SelectionFragment]
@@ -29,13 +31,17 @@ class SelectionViewModel @ViewModelInject constructor(
 ) : ViewModel() {
     val dictionaries = repository.dictionaries.asLiveData()
 
-    fun getDictionary(id: Long) = repository.getDictionary(id).asLiveData()
+    fun toggleActive(dictionary: Dictionary) = viewModelScope.launch {
+        repository.toggleActive(dictionary)
+    }
 
-    fun toggleActive(id: Long) = repository.toggleActive(id)
+    fun addDictionary(dictionary: Dictionary) = viewModelScope.launch {
+        repository.addDictionary(dictionary)
+    }
 
-    fun addDictionary(dictionary: Dictionary) = repository.addDictionary(dictionary)
-
-    fun removeDictionary(id: Long) = repository.removeDictionary(id)
+    fun removeDictionary(externalId: String) = viewModelScope.launch {
+        repository.removeDictionary(externalId)
+    }
 
     fun refresh() {
         repository.refresh()

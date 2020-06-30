@@ -17,6 +17,7 @@ package com.github.cheapmon.balalaika.util
 
 import android.content.Context
 import android.text.SpannedString
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
@@ -51,3 +52,27 @@ fun String.highlight(text: String?, context: Context): SpannedString {
 /** Exhaustive matching for `when` in statements */
 val <T> T.exhaustive: T
     get() = this
+
+/** Logger for any class */
+class Logger(private val name: String) {
+    fun assert(msg: Any?) = log(Log.ASSERT, msg)
+    fun debug(msg: Any?) = log(Log.DEBUG, msg)
+    fun error(msg: Any?) = log(Log.ERROR, msg)
+    fun info(msg: Any?) = log(Log.INFO, msg)
+    fun verbose(msg: Any?) = log(Log.VERBOSE, msg)
+    fun warn(msg: Any?) = log(Log.WARN, msg)
+    private fun log(priority: Int, msg: Any?) = Log.println(priority, name, msg.toString())
+}
+
+/**
+ * Access the [logger][Logger] for a class
+ *
+ * Sample usage:
+ * ```
+ * logger {
+ *   info("Some information")
+ *   debug(someValue)
+ * }
+ * ```
+ */
+inline fun <reified T> T.logger(block: Logger.() -> Unit) = Logger(T::class.java.name).block()

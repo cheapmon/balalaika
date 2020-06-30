@@ -20,7 +20,6 @@ import com.github.cheapmon.balalaika.db.entities.dictionary.DictionaryDao
 import com.github.cheapmon.balalaika.domain.services.DictionaryMediator
 import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
-import kotlinx.coroutines.flow.Flow
 
 // TODO: Replace with real implementation
 @ActivityScoped
@@ -30,15 +29,22 @@ class DictionaryRepository @Inject constructor(
 ) {
     val dictionaries = mediator.dictionaries
 
-    fun getDictionary(id: Long): Flow<Dictionary?> = dictionaryDao.getById(id)
-
-    fun toggleActive(id: Long) {
+    suspend fun toggleActive(dictionary: Dictionary) {
+        if (dictionary.isActive) {
+            dictionaryDao.setInactive(dictionary.externalId)
+        } else {
+            dictionaryDao.setActive(dictionary.externalId)
+        }
     }
 
-    fun addDictionary(dictionary: Dictionary) {
+    suspend fun addDictionary(dictionary: Dictionary) {
+        dictionaryDao.insertAll(listOf(dictionary))
+        // TODO: Import everything else
     }
 
-    fun removeDictionary(id: Long) {
+    suspend fun removeDictionary(externalId: String) {
+        dictionaryDao.remove(externalId)
+        // TODO: Remove everything else
     }
 
     fun refresh() {

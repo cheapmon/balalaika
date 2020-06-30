@@ -24,7 +24,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.withTimeout
+import kotlinx.coroutines.withTimeoutOrNull
 
 // TODO: Replace with real implementation
 @ActivityScoped
@@ -62,8 +62,8 @@ class FilesService @Inject constructor(
     )
 
     private suspend fun fakeDictionaries(): Response<Dictionary> {
-        var result: Response<Dictionary>?
-        withTimeout(constants.LOCAL_TIMEOUT) {
+        var result: Response<Dictionary>? = null
+        withTimeoutOrNull(constants.LOCAL_TIMEOUT) {
             delay((10..1200).random().toLong())
             result = Response.Success(_dictionaryList)
         }

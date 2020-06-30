@@ -26,21 +26,23 @@ interface DictionaryDao {
     @Query("SELECT * FROM dictionary")
     fun getAll(): Flow<List<Dictionary>>
 
-    @Query("SELECT * FROM dictionary WHERE id = (:id) LIMIT 1")
-    fun getById(id: Long): Flow<Dictionary?>
+    @Query("SELECT * FROM dictionary WHERE external_id = (:externalId) LIMIT 1")
+    suspend fun getByExternalId(externalId: String): Dictionary?
 
     @Query("SELECT * FROM dictionary WHERE is_active LIMIT 1")
     suspend fun getActive(): Dictionary?
 
-    @Query("UPDATE dictionary SET is_active = 0")
-    suspend fun deactivateAll()
+    @Query("""UPDATE dictionary SET is_active = (external_id == (:externalId))""")
+    suspend fun setActive(externalId: String)
 
-    @Query("""UPDATE dictionary SET is_active = NOT is_active
-                    WHERE external_id = (:externalId)""")
-    suspend fun toggleIsActive(externalId: String)
+    @Query("""UPDATE dictionary SET is_active = 0 WHERE external_id = (:externalId)""")
+    suspend fun setInactive(externalId: String)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(dictionary: List<Dictionary>)
+
+    @Query("DELETE FROM dictionary WHERE external_id = (:externalId)")
+    suspend fun remove(externalId: String)
 
     @Query("DELETE FROM dictionary")
     suspend fun clear()
