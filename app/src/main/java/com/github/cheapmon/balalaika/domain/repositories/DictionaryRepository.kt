@@ -28,8 +28,7 @@ class DictionaryRepository @Inject constructor(
     private val dictionaryDao: DictionaryDao,
     private val mediator: DictionaryMediator
 ) {
-    val installedDictionaries = mediator.local
-    val downloadableDictionaries = mediator.download
+    val dictionaries = mediator.dictionaries
 
     fun getDictionary(id: Long): Flow<Dictionary?> = dictionaryDao.getById(id)
 

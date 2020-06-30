@@ -24,7 +24,7 @@ import com.github.cheapmon.balalaika.databinding.FragmentSelectionItemBinding
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.domain.InstallState
 
-/** Adapter for [SelectionDownloadFragment] */
+/** Adapter for [SelectionFragment] */
 class SelectionAdapter(
     private val listener: Listener
 ) : ListAdapter<InstallState<Dictionary>, SelectionAdapter.ViewHolder>(Diff) {

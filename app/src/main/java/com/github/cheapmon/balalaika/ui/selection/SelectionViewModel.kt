@@ -22,13 +22,12 @@ import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.domain.repositories.DictionaryRepository
 
 /**
- * View model for [SelectionDownloadFragment]
+ * View model for [SelectionFragment]
  */
 class SelectionViewModel @ViewModelInject constructor(
     private val repository: DictionaryRepository
 ) : ViewModel() {
-    val dictionaries = repository.installedDictionaries.asLiveData()
-    val downloadable = repository.downloadableDictionaries.asLiveData()
+    val dictionaries = repository.dictionaries.asLiveData()
 
     fun getDictionary(id: Long) = repository.getDictionary(id).asLiveData()
 

@@ -92,9 +92,11 @@
                     android:id="@+id/selection_detail_chip_installed"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{is_installed ? @string/selection_is_installed : @string/selection_is_installable}"
+                    android:text="@string/selection_is_installed"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                    app:chipIconSize="16dp"
+                    android:visibility="@{is_installed}"
+                    app:chipIcon="@drawable/ic_library"
+                    app:chipIconSize="12dp"
                     app:chipMinHeight="16dp" />
 
                 <com.google.android.material.chip.Chip
@@ -105,6 +107,9 @@
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
                     android:textColor="@android:color/white"
                     android:visibility="@{dictionary.isActive ? View.VISIBLE : View.GONE}"
+                    app:chipIcon="@drawable/ic_checkbox"
+                    app:chipIconSize="12dp"
+                    app:chipIconTint="@android:color/white"
                     app:chipMinHeight="16dp"
                     app:chipSurfaceColor="@color/colorPrimary" />
 
@@ -116,6 +121,9 @@
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
                     android:textColor="@android:color/white"
                     android:visibility="@{is_updatable ? View.VISIBLE : View.GONE}"
+                    app:chipIcon="@drawable/ic_update"
+                    app:chipIconSize="12dp"
+                    app:chipIconTint="@android:color/white"
                     app:chipMinHeight="16dp"
                     app:chipSurfaceColor="@color/colorSecondary" />
 
