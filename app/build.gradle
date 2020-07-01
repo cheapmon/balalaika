@@ -23,6 +23,8 @@ plugins {
     id "org.jlleitschuh.gradle.ktlint"
 }
 
+apply from: rootProject.file('gradle/generated-kotlin-sources.gradle')
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
@@ -33,6 +35,7 @@ android {
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -133,12 +136,21 @@ dependencies {
     // Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.7'
 
+    // Functional programming
+    implementation "io.arrow-kt:arrow-optics:$arrow_version"
+    implementation "io.arrow-kt:arrow-syntax:$arrow_version"
+    kapt "io.arrow-kt:arrow-meta:$arrow_version"
+
+    // Multidex support
+    implementation 'com.android.support:multidex:1.0.3'
+
     // Import
     implementation "org.apache.commons:commons-csv:1.8"
     implementation "org.yaml:snakeyaml:1.26:android"
 
     // Testing
     testImplementation "junit:junit:4.13"
+    testImplementation 'org.mockito:mockito-core:3.3.1'
     androidTestImplementation "androidx.test.ext:junit:1.1.1"
     androidTestImplementation "androidx.test.espresso:espresso-core:3.2.0"
 }

@@ -25,7 +25,6 @@ import com.github.cheapmon.balalaika.db.entities.entry.DictionaryEntryDao
 import com.github.cheapmon.balalaika.db.entities.history.SearchRestriction
 import com.github.cheapmon.balalaika.db.entities.lexeme.LexemeDao
 import com.github.cheapmon.balalaika.db.entities.property.PropertyDao
-import com.github.cheapmon.balalaika.domain.insert.ImportUtil
 import com.github.cheapmon.balalaika.domain.paging.SearchPagingSource
 import com.github.cheapmon.balalaika.ui.search.SearchFragment
 import com.github.cheapmon.balalaika.util.Constants
@@ -48,7 +47,6 @@ import kotlinx.coroutines.flow.flatMapLatest
 @Suppress("EXPERIMENTAL_API_USAGE")
 class SearchRepository @Inject constructor(
     private val constants: Constants,
-    private val importUtil: ImportUtil,
     private val cacheEntryDao: CacheEntryDao,
     private val dictionaryEntryDao: DictionaryEntryDao,
     private val lexemeDao: LexemeDao,
@@ -77,7 +75,6 @@ class SearchRepository @Inject constructor(
         query: String,
         searchRestriction: SearchRestriction
     ): Flow<PagingData<DictionaryEntry>> {
-        importUtil.import()
         refreshCache(query, searchRestriction)
         return Pager(
             config = PagingConfig(pageSize = constants.PAGE_SIZE),

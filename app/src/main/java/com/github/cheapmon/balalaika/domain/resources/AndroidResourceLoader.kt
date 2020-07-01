@@ -16,6 +16,7 @@
 package com.github.cheapmon.balalaika.domain.resources
 
 import android.content.Context
+import androidx.annotation.RawRes
 import com.github.cheapmon.balalaika.R
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.InputStream
@@ -27,13 +28,10 @@ import javax.inject.Inject
 class AndroidResourceLoader @Inject constructor(
     @ApplicationContext private val context: Context
 ) : ResourceLoader {
-    override val categoriesId: Int = R.raw.categories
-    override val lexemesId: Int = R.raw.lexemes
-    override val fullFormsId: Int = R.raw.full_forms
-    override val propertiesId: Int = R.raw.properties
-    override val dictionaryViewsId: Int = R.raw.views
-    override val configId: Int = R.raw.config
+    @RawRes
+    private val dictionaryListId: Int = R.raw.dictionaries
 
-    /** Read raw Android resource file */
-    override fun read(id: Int): InputStream = context.resources.openRawResource(id)
+    override val dictionaryList: InputStream = readResource(dictionaryListId)
+
+    private fun readResource(@RawRes id: Int): InputStream = context.resources.openRawResource(id)
 }

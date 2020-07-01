@@ -15,10 +15,6 @@
  */
 package com.github.cheapmon.balalaika.di
 
-import com.github.cheapmon.balalaika.domain.config.ConfigLoader
-import com.github.cheapmon.balalaika.domain.config.YamlConfigLoader
-import com.github.cheapmon.balalaika.domain.insert.CsvEntityImporter
-import com.github.cheapmon.balalaika.domain.insert.EntityImporter
 import com.github.cheapmon.balalaika.domain.resources.AndroidResourceLoader
 import com.github.cheapmon.balalaika.domain.resources.ResourceLoader
 import com.github.cheapmon.balalaika.domain.storage.PreferenceStorage
@@ -41,16 +37,6 @@ abstract class ImportModule {
     @ActivityScoped
     @Binds
     abstract fun provideResourceLoader(androidResourceLoader: AndroidResourceLoader): ResourceLoader
-
-    /** @suppress */
-    @ActivityScoped
-    @Binds
-    abstract fun provideImporter(csvImporter: CsvEntityImporter): EntityImporter
-
-    /** @suppress */
-    @ActivityScoped
-    @Binds
-    abstract fun provideConfigLoader(yamlConfigLoader: YamlConfigLoader): ConfigLoader
 
     /** @suppress */
     @ActivityScoped

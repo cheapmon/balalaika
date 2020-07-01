@@ -16,47 +16,45 @@
 package com.github.cheapmon.balalaika.domain.services
 
 import com.github.cheapmon.balalaika.db.entities.dictionary.DictionaryDao
-import com.github.cheapmon.balalaika.domain.InstallState
-import com.github.cheapmon.balalaika.domain.Response
-import com.github.cheapmon.balalaika.domain.orEmpty
+import com.github.cheapmon.balalaika.domain.misc.InstallState
+import com.github.cheapmon.balalaika.domain.misc.Response
+import com.github.cheapmon.balalaika.domain.misc.orEmpty
 import dagger.hilt.android.scopes.ActivityScoped
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.mapLatest
+import javax.inject.Inject
 
 @ActivityScoped
 class DictionaryMediator @Inject constructor(
     dao: DictionaryDao,
-    service: DictionaryService,
-    files: FilesService
+    providers: Set<DictionaryProvider>
 ) {
     private val state = MutableStateFlow(false)
 
     val dictionaries = state.flatMapLatest {
-        val d = dao.getAll()
-        val s = service.getDictionariesFromRemoteSource()
-        val f = files.getLocalDictionaries()
-        combine(d, s, f) { a, b, c -> Triple(a, b, c) }
-    }.mapLatest { (d, s, f) ->
-        if (s.isPending() || f.isPending()) {
-            Response.Pending
-        } else if (s.isFailure() && f.isFailure()) {
-            Response.Success(d.map { InstallState.Installed(it) })
-        } else {
-            val result = (d + s.orEmpty() + f.orEmpty())
-                .groupBy { it.externalId }
-                .map { (id, list) ->
-                    val newest = list.maxBy { it.version } ?: throw IllegalStateException()
-                    val current = d.find { it.externalId == id }
-                    when {
-                        d.contains(newest) -> InstallState.Installed(newest)
-                        current != null -> InstallState.Updatable(current)
-                        else -> InstallState.Installable(newest)
+        val flows = providers.map { it.get() }
+        val combined = combine(flows) { f -> f.asList() }
+        dao.getAll().combine(combined) { d, p -> Pair(d, p) }
+    }.mapLatest { (d, list) ->
+        when {
+            list.any { it.isPending() } -> Response.Pending
+            list.all { it.isFailure() } -> Response.Success(d.map { InstallState.Installed(it) })
+            else -> {
+                val result = (d + list.flatMap { it.orEmpty() })
+                    .groupBy { it.externalId }
+                    .map { (id, list) ->
+                        val newest = list.maxBy { it.version } ?: throw IllegalStateException()
+                        val current = d.find { it.externalId == id }
+                        when {
+                            d.contains(newest) -> InstallState.Installed(newest)
+                            current != null -> InstallState.Updatable(current)
+                            else -> InstallState.Installable(newest)
+                        }
                     }
-                }
-            Response.Success(result)
+                Response.Success(result)
+            }
         }
     }
 

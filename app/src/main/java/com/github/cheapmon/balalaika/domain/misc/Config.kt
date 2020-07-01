@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.cheapmon.balalaika.domain.resources
+package com.github.cheapmon.balalaika.domain.misc
 
-import java.io.InputStream
+import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 
-/** Component which reads application resources */
-interface ResourceLoader {
-    val dictionaryList: InputStream
-}
+// TODO: Move into parser class
+data class Config(
+    val dictionaries: List<Dictionary> = listOf()
+)

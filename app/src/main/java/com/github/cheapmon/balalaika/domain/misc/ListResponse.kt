@@ -13,25 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.cheapmon.balalaika.domain
+package com.github.cheapmon.balalaika.domain.misc
 
-sealed class Response<out T> {
-    object Pending : Response<Nothing>()
-    data class Success<out T>(val data: List<T>) : Response<T>()
-    data class Failure<out T>(val cause: Throwable) : Response<T>()
+typealias ListResponse<T> = Response<List<T>>
 
-    fun isPending(): Boolean = this is Pending
-    fun isSuccess(): Boolean = this is Success
-    fun isFailure(): Boolean = this is Failure
-}
-
-fun <T> Response<T>.or(value: List<T>): List<T> = when (this) {
-    is Response.Pending -> value
-    is Response.Success -> data
-    is Response.Failure -> value
-}
-
-fun <T> Response<T>.orEmpty(): List<T> = when (this) {
+// TODO: Move to Response and possibly replace with something from arrow
+fun <T> ListResponse<T>.orEmpty(): List<T> = when(this) {
     is Response.Pending -> listOf()
     is Response.Success -> data
     is Response.Failure -> listOf()

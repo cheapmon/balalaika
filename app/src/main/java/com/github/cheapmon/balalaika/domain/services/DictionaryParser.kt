@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.cheapmon.balalaika.domain.resources
+package com.github.cheapmon.balalaika.domain.services
 
-import java.io.InputStream
+import com.github.cheapmon.balalaika.domain.misc.Config
+import com.github.cheapmon.balalaika.domain.misc.Response
 
-/** Component which reads application resources */
-interface ResourceLoader {
-    val dictionaryList: InputStream
+interface DictionaryParser {
+    fun parse(): Response<Config>
 }

@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.cheapmon.balalaika.domain.config
+package com.github.cheapmon.balalaika.domain.misc
 
-/**
- * Component which reads some input files and produces a configuration object
- *
- * @see Config
- */
-interface ConfigLoader {
-    /** Create a configuration object from input files */
-    fun readConfig(): Config
+sealed class InstallState<out T>(val t: T) {
+    data class Installable<out T>(private val tt: T) : InstallState<T>(tt)
+    data class Installed<out T>(private val tt: T) : InstallState<T>(tt)
+    data class Updatable<out T>(private val tt: T) : InstallState<T>(tt)
+
+    fun isInstalled() = this is Installed || this is Updatable
+    fun isUpdatable() = this is Updatable
 }

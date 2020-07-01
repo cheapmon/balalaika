@@ -13,11 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.cheapmon.balalaika.domain.resources
+package com.github.cheapmon.balalaika.domain.services
 
-import java.io.InputStream
+import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
+import com.github.cheapmon.balalaika.domain.misc.ListResponse
+import com.github.cheapmon.balalaika.domain.misc.Response
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
-/** Component which reads application resources */
-interface ResourceLoader {
-    val dictionaryList: InputStream
+// TODO: Dependency injection, @Provides etc
+abstract class DictionaryProvider {
+    abstract suspend fun getFromSource(): ListResponse<Dictionary>
+
+    fun get(): Flow<ListResponse<Dictionary>> = flow {
+        emit(Response.Pending)
+        emit(getFromSource())
+    }
 }

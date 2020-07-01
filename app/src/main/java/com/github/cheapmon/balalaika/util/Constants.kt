@@ -17,7 +17,6 @@ package com.github.cheapmon.balalaika.util
 
 import android.content.Context
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.domain.config.Config
 import com.github.cheapmon.balalaika.domain.storage.Storage
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -29,13 +28,6 @@ import javax.inject.Singleton
 class Constants @Inject constructor(
     @ApplicationContext context: Context
 ) {
-    /**
-     * Key used in [storage][Storage] to save database version
-     *
-     * @see Config
-     */
-    val DB_VERSION_KEY = "db_version"
-
     /** Key used in [storage][Storage] to save dictionary order */
     val ORDER_KEY = context.getString(R.string.preferences_key_order)
 

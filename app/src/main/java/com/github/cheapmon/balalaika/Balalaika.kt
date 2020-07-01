@@ -15,9 +15,9 @@
  */
 package com.github.cheapmon.balalaika
 
-import android.app.Application
+import androidx.multidex.MultiDexApplication
 import dagger.hilt.android.HiltAndroidApp
 
 /** Application configuration for dependency injection */
 @HiltAndroidApp
-class Balalaika : Application()
+class Balalaika : MultiDexApplication()

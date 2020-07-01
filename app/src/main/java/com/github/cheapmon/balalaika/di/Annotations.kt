@@ -13,13 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.cheapmon.balalaika.domain
+package com.github.cheapmon.balalaika.di
 
-sealed class InstallState<out T>(val t: T) {
-    data class Installable<out T>(private val tt: T) : InstallState<T>(tt)
-    data class Installed<out T>(private val tt: T) : InstallState<T>(tt)
-    data class Updatable<out T>(private val tt: T) : InstallState<T>(tt)
+import javax.inject.Qualifier
 
-    fun isInstalled() = this is Installed || this is Updatable
-    fun isUpdatable() = this is Updatable
-}
+@Retention(AnnotationRetention.BINARY)
+@Qualifier
+annotation class DefaultDispatcher
+
+@Retention(AnnotationRetention.BINARY)
+@Qualifier
+annotation class IoDispatcher
+
+@Retention(AnnotationRetention.BINARY)
+@Qualifier
+annotation class MainDispatcher
+
+@Retention(AnnotationRetention.BINARY)
+@Qualifier
+annotation class MainImmediateDispatcher
+
+@Retention(AnnotationRetention.BINARY)
+@Qualifier
+annotation class ApplicationScope
