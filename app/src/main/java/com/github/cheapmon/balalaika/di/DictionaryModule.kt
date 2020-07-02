@@ -27,14 +27,16 @@ import dagger.multibindings.IntoSet
 
 @Module
 @InstallIn(ActivityComponent::class)
-abstract class DictionaryModule {
+class DictionaryModule {
     @ActivityScoped
     @Provides
     @IntoSet
-    abstract fun provideServerProvider(provider: ServerDictionaryProvider): DictionaryProvider
+    fun provideServerProvider(provider: ServerDictionaryProvider): DictionaryProvider =
+        provider
 
     @ActivityScoped
     @Provides
     @IntoSet
-    abstract fun provideResourcesProvider(provider: ResourcesDictionaryProvider): DictionaryProvider
+    fun provideResourcesProvider(provider: ResourcesDictionaryProvider): DictionaryProvider =
+        provider
 }

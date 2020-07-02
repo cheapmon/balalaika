@@ -29,7 +29,7 @@ import kotlinx.coroutines.flow.mapLatest
 @ActivityScoped
 class DictionaryMediator @Inject constructor(
     dao: DictionaryDao,
-    providers: Set<DictionaryProvider>
+    providers: Set<@JvmSuppressWildcards DictionaryProvider>
 ) {
     private val state = MutableStateFlow(false)
 
