@@ -15,8 +15,6 @@
  */
 package com.github.cheapmon.balalaika.domain.misc
 
-import java.lang.IllegalStateException
-
 // TODO: File structure
 sealed class Response<out T> {
     object Pending : Response<Nothing>()
@@ -29,7 +27,7 @@ sealed class Response<out T> {
 }
 
 val <T> Response<T>.data
-    get(): T = when(this) {
+    get(): T = when (this) {
         is Response.Pending -> throw IllegalStateException("Response is pending")
         is Response.Success -> data
         is Response.Failure -> throw IllegalStateException("Response is failure")
@@ -45,4 +43,18 @@ fun <T> Response<T>.orNull(): T? = when (this) {
     is Response.Pending -> null
     is Response.Success -> data
     is Response.Failure -> null
+}
+
+fun <T, R> Response<T>.map(block: T.() -> R): Response<R> = when (this) {
+    is Response.Pending -> Response.Pending
+    is Response.Success -> Response.Success(data.block())
+    is Response.Failure -> Response.Failure(cause)
+}
+
+typealias ListResponse<T> = Response<List<T>>
+
+fun <T> ListResponse<T>.orEmpty(): List<T> = when (this) {
+    is Response.Pending -> listOf()
+    is Response.Success -> data
+    is Response.Failure -> listOf()
 }

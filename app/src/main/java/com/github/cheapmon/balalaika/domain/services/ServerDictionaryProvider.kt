@@ -20,9 +20,9 @@ import com.github.cheapmon.balalaika.domain.misc.ListResponse
 import com.github.cheapmon.balalaika.domain.misc.Response
 import com.github.cheapmon.balalaika.util.Constants
 import dagger.hilt.android.scopes.ActivityScoped
-import kotlinx.coroutines.withTimeoutOrNull
 import java.io.IOException
 import javax.inject.Inject
+import kotlinx.coroutines.withTimeoutOrNull
 
 @ActivityScoped
 class ServerDictionaryProvider @Inject constructor(

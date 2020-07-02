@@ -20,11 +20,11 @@ import com.github.cheapmon.balalaika.domain.misc.InstallState
 import com.github.cheapmon.balalaika.domain.misc.Response
 import com.github.cheapmon.balalaika.domain.misc.orEmpty
 import dagger.hilt.android.scopes.ActivityScoped
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.mapLatest
-import javax.inject.Inject
 
 @ActivityScoped
 class DictionaryMediator @Inject constructor(

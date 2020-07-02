@@ -20,6 +20,6 @@ sealed class InstallState<out T>(val t: T) {
     data class Installed<out T>(private val tt: T) : InstallState<T>(tt)
     data class Updatable<out T>(private val tt: T) : InstallState<T>(tt)
 
-    fun isInstalled() = this is Installed || this is Updatable
-    fun isUpdatable() = this is Updatable
+    fun isInstalled(): Boolean = this is Installed || this is Updatable
+    fun isUpdatable(): Boolean = this is Updatable
 }

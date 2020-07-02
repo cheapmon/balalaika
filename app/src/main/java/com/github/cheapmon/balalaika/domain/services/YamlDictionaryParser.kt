@@ -18,9 +18,9 @@ package com.github.cheapmon.balalaika.domain.services
 import com.github.cheapmon.balalaika.domain.misc.Config
 import com.github.cheapmon.balalaika.domain.misc.Response
 import com.github.cheapmon.balalaika.domain.resources.ResourceLoader
+import javax.inject.Inject
 import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.constructor.Constructor
-import javax.inject.Inject
 
 class YamlDictionaryParser @Inject constructor(
     // TODO: Rename resource loader
