@@ -85,10 +85,10 @@ Import of input files into the application database
 # Package com.github.cheapmon.balalaika.domain.repositories
 Repositories for local and remote data sources
 
-# Package com.github.cheapmon.balalaika.domain.resources
+# Package com.github.cheapmon.balalaika.core.resources
 Retrieval of raw Android resources
 
-# Package com.github.cheapmon.balalaika.domain.storage
+# Package com.github.cheapmon.balalaika.core.storage
 Local key-value storage
 
 

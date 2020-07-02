@@ -22,7 +22,7 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.github.cheapmon.balalaika.db.entities.history.HistoryEntry
 import com.github.cheapmon.balalaika.db.entities.history.HistoryEntryWithRestriction
-import com.github.cheapmon.balalaika.domain.repositories.HistoryRepository
+import com.github.cheapmon.balalaika.data.history.HistoryRepository
 import kotlinx.coroutines.launch
 
 /** View model for [HistoryFragment] */

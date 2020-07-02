@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.cheapmon.balalaika.domain.repositories
+package com.github.cheapmon.balalaika.data.search
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -25,7 +25,6 @@ import com.github.cheapmon.balalaika.db.entities.entry.DictionaryEntryDao
 import com.github.cheapmon.balalaika.db.entities.history.SearchRestriction
 import com.github.cheapmon.balalaika.db.entities.lexeme.LexemeDao
 import com.github.cheapmon.balalaika.db.entities.property.PropertyDao
-import com.github.cheapmon.balalaika.domain.paging.SearchPagingSource
 import com.github.cheapmon.balalaika.ui.search.SearchFragment
 import com.github.cheapmon.balalaika.util.Constants
 import dagger.hilt.android.scopes.ActivityScoped

@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.cheapmon.balalaika.domain.services
+package com.github.cheapmon.balalaika.data.selection
 
 import com.github.cheapmon.balalaika.db.entities.dictionary.DictionaryDao
-import com.github.cheapmon.balalaika.domain.misc.InstallState
-import com.github.cheapmon.balalaika.domain.misc.Response
-import com.github.cheapmon.balalaika.domain.misc.orEmpty
+import com.github.cheapmon.balalaika.core.InstallState
+import com.github.cheapmon.balalaika.core.Response
+import com.github.cheapmon.balalaika.core.orEmpty
 import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -13,40 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.cheapmon.balalaika.domain.paging
+package com.github.cheapmon.balalaika.data.search
 
 import androidx.paging.PagingSource
 import com.github.cheapmon.balalaika.db.entities.cache.CacheEntryDao
 import com.github.cheapmon.balalaika.db.entities.entry.DictionaryEntry
 import com.github.cheapmon.balalaika.db.entities.lexeme.LexemeDao
 import com.github.cheapmon.balalaika.db.entities.property.PropertyDao
-import com.github.cheapmon.balalaika.ui.dictionary.DictionaryFragment
+import com.github.cheapmon.balalaika.ui.search.SearchFragment
 import com.github.cheapmon.balalaika.util.Constants
 
 /**
- * Paging source for the main dictionary user interface
+ * Paging source for the dictionary search interface
  *
- * On every configuration change, the whole dictionary is filtered and ordered and the results
+ * On every configuration change, the whole dictionary is filtered and the results
  * are cached. Using this indirection, we enable paging for dictionary entries, only loading
  * small portions of the dictionary at the same time.
  *
- * @see DictionaryFragment
+ * @see SearchFragment
  */
-class DictionaryPagingSource(
-    constants: Constants,
+class SearchPagingSource(
+    private val constants: Constants,
     private val cacheEntryDao: CacheEntryDao,
     private val lexemeDao: LexemeDao,
-    private val propertyDao: PropertyDao,
-    private val dictionaryViewId: Long
+    private val propertyDao: PropertyDao
 ) : PagingSource<Long, DictionaryEntry>() {
     private val startId = constants.PAGING_START_INDEX
 
     /** Load next page */
     override suspend fun load(params: LoadParams<Long>): LoadResult<Long, DictionaryEntry> {
         val pos = params.key ?: startId
-        val data = cacheEntryDao.getFromDictionaryCache(pos, params.loadSize).mapNotNull { id ->
+        val data = cacheEntryDao.getFromSearchCache(pos, params.loadSize).mapNotNull { id ->
             val lexeme = lexemeDao.getLexemeById(id) ?: return@mapNotNull null
-            val properties = propertyDao.getProperties(id, dictionaryViewId)
+            val properties = propertyDao.getProperties(id, constants.DEFAULT_DICTIONARY_VIEW_ID)
             DictionaryEntry(lexeme, properties)
         }
         return LoadResult.Page(

@@ -15,9 +15,9 @@
  */
 package com.github.cheapmon.balalaika.di
 
-import com.github.cheapmon.balalaika.domain.services.DictionaryProvider
-import com.github.cheapmon.balalaika.domain.services.ResourcesDictionaryProvider
-import com.github.cheapmon.balalaika.domain.services.ServerDictionaryProvider
+import com.github.cheapmon.balalaika.data.selection.DictionaryProvider
+import com.github.cheapmon.balalaika.data.selection.ResourcesDictionaryProvider
+import com.github.cheapmon.balalaika.data.selection.ServerDictionaryProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

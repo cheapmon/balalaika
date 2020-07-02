@@ -13,20 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.cheapmon.balalaika.domain.services
+package com.github.cheapmon.balalaika.core.storage
 
-import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
-import com.github.cheapmon.balalaika.domain.misc.ListResponse
-import com.github.cheapmon.balalaika.domain.misc.Response
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+/** Simple key-value storage */
+interface Storage {
+    /** Read an [Int] from storage */
+    fun getInt(key: String, defValue: Int): Int
 
-// TODO: Dependency injection, @Provides etc
-abstract class DictionaryProvider {
-    abstract suspend fun getFromSource(): ListResponse<Dictionary>
+    /** Read a [String] from storage */
+    fun getString(key: String, defValue: String?): String?
 
-    fun get(): Flow<ListResponse<Dictionary>> = flow {
-        emit(Response.Pending)
-        emit(getFromSource())
-    }
+    /** Add an [Int] to storage */
+    fun putInt(key: String, value: Int)
+
+    /** Add a [String] to storage */
+    fun putString(key: String, value: String)
+
+    /** Check if storage contains [key] */
+    fun contains(key: String): Boolean
 }

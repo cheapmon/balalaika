@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.cheapmon.balalaika.domain.services
+package com.github.cheapmon.balalaika.data.selection
 
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
-import com.github.cheapmon.balalaika.domain.misc.ListResponse
-import com.github.cheapmon.balalaika.domain.misc.Response
+import com.github.cheapmon.balalaika.core.ListResponse
+import com.github.cheapmon.balalaika.core.Response
 import com.github.cheapmon.balalaika.util.Constants
 import dagger.hilt.android.scopes.ActivityScoped
 import java.io.IOException

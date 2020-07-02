@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.cheapmon.balalaika.domain.repositories
+package com.github.cheapmon.balalaika.data.history
 
 import com.github.cheapmon.balalaika.db.entities.history.HistoryEntry
 import com.github.cheapmon.balalaika.db.entities.history.HistoryEntryDao

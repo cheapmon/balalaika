@@ -15,36 +15,24 @@
  */
 package com.github.cheapmon.balalaika
 
+import com.github.cheapmon.balalaika.core.ListResponse
+import com.github.cheapmon.balalaika.core.data
+import com.github.cheapmon.balalaika.data.selection.YamlDictionaryParser
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
-import com.github.cheapmon.balalaika.domain.misc.Config
-import com.github.cheapmon.balalaika.domain.misc.Response
-import com.github.cheapmon.balalaika.domain.misc.data
-import com.github.cheapmon.balalaika.domain.resources.ResourceLoader
-import com.github.cheapmon.balalaika.domain.services.YamlDictionaryParser
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.junit.MockitoJUnitRunner
 
-// TODO: Rename
-@RunWith(MockitoJUnitRunner::class)
-class DictionaryLoaderTest {
-    @Mock
-    private lateinit var resourceLoader: ResourceLoader
-
-    private fun loadFrom(contents: String): Response<Config> {
-        `when`(resourceLoader.dictionaryList).thenReturn(contents.byteInputStream())
-        return YamlDictionaryParser(resourceLoader).parse()
+class DictionaryParserTest {
+    private fun loadFrom(contents: String): ListResponse<Dictionary> {
+        return YamlDictionaryParser().parse(contents.byteInputStream())
     }
 
     @Test
     fun `parses empty file`() {
         val response = loadFrom("dictionaries: []")
         assertTrue(response.isSuccess())
-        assertTrue(response.data.dictionaries.isEmpty())
+        assertTrue(response.data.isEmpty())
     }
 
     @Test
@@ -70,9 +58,9 @@ class DictionaryLoaderTest {
             """
         )
         assertTrue(response.isSuccess())
-        assertEquals(response.data.dictionaries.size, 1)
+        assertEquals(response.data.size, 1)
         assertEquals(
-            response.data.dictionaries, listOf(
+            response.data, listOf(
                 Dictionary(
                     externalId = "dict_a",
                     version = 1,
@@ -101,9 +89,9 @@ class DictionaryLoaderTest {
             """
         )
         assertTrue(response.isSuccess())
-        assertEquals(response.data.dictionaries.size, 2)
+        assertEquals(response.data.size, 2)
         assertEquals(
-            response.data.dictionaries, listOf(
+            response.data, listOf(
                 Dictionary(
                     dictionaryId = 0,
                     externalId = "dict_a",

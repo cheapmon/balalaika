@@ -15,10 +15,10 @@
  */
 package com.github.cheapmon.balalaika.di
 
-import com.github.cheapmon.balalaika.domain.resources.AndroidResourceLoader
-import com.github.cheapmon.balalaika.domain.resources.ResourceLoader
-import com.github.cheapmon.balalaika.domain.storage.PreferenceStorage
-import com.github.cheapmon.balalaika.domain.storage.Storage
+import com.github.cheapmon.balalaika.core.resources.AndroidResourceLoader
+import com.github.cheapmon.balalaika.core.resources.ResourceLoader
+import com.github.cheapmon.balalaika.core.storage.PreferenceStorage
+import com.github.cheapmon.balalaika.core.storage.Storage
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

@@ -21,7 +21,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.github.cheapmon.balalaika.db.entities.category.Category
 import com.github.cheapmon.balalaika.db.entities.view.DictionaryViewWithCategories
-import com.github.cheapmon.balalaika.domain.repositories.DictionaryEntryRepository
+import com.github.cheapmon.balalaika.data.dictionary.DictionaryEntryRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 

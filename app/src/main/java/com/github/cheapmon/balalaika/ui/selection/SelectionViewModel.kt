@@ -20,7 +20,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
-import com.github.cheapmon.balalaika.domain.repositories.DictionaryRepository
+import com.github.cheapmon.balalaika.data.selection.DictionaryRepository
 import kotlinx.coroutines.launch
 
 /**

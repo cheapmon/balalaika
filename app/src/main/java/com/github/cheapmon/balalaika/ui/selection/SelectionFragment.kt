@@ -32,9 +32,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.databinding.FragmentSelectionListBinding
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
-import com.github.cheapmon.balalaika.domain.misc.DictionaryParcel
-import com.github.cheapmon.balalaika.domain.misc.InstallState
-import com.github.cheapmon.balalaika.domain.misc.Response
+import com.github.cheapmon.balalaika.core.DictionaryParcel
+import com.github.cheapmon.balalaika.core.InstallState
+import com.github.cheapmon.balalaika.core.Response
 import com.github.cheapmon.balalaika.util.exhaustive
 import dagger.hilt.android.AndroidEntryPoint
 

@@ -13,11 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.cheapmon.balalaika.domain.resources
+package com.github.cheapmon.balalaika.core
 
-import java.io.InputStream
+sealed class InstallState<out T>(val t: T) {
+    data class Installable<out T>(private val tt: T) : InstallState<T>(tt)
+    data class Installed<out T>(private val tt: T) : InstallState<T>(tt)
+    data class Updatable<out T>(private val tt: T) : InstallState<T>(tt)
 
-/** Component which reads application resources */
-interface ResourceLoader {
-    val dictionaryList: InputStream
+    fun isInstalled(): Boolean = this is Installed || this is Updatable
+    fun isUpdatable(): Boolean = this is Updatable
 }

@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.databinding.FragmentSelectionItemBinding
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
-import com.github.cheapmon.balalaika.domain.misc.InstallState
+import com.github.cheapmon.balalaika.core.InstallState
 
 /** Adapter for [SelectionFragment] */
 class SelectionAdapter(

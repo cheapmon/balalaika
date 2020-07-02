@@ -38,7 +38,7 @@ import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.databinding.FragmentDictionaryBinding
 import com.github.cheapmon.balalaika.db.entities.entry.DictionaryEntry
 import com.github.cheapmon.balalaika.db.entities.history.SearchRestriction
-import com.github.cheapmon.balalaika.domain.storage.Storage
+import com.github.cheapmon.balalaika.core.storage.Storage
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetListener
 import com.github.cheapmon.balalaika.util.Constants
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
