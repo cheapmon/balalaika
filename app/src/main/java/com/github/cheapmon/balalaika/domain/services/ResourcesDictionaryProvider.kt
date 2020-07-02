@@ -26,14 +26,12 @@ import kotlinx.coroutines.withTimeoutOrNull
 
 @ActivityScoped
 class ResourcesDictionaryProvider @Inject constructor(
-    private val constants: Constants,
-    private val parser: DictionaryParser
+    private val constants: Constants
 ) : DictionaryProvider() {
     override suspend fun getFromSource(): ListResponse<Dictionary> {
         var response: ListResponse<Dictionary>? = null
         withTimeoutOrNull(constants.LOCAL_TIMEOUT) {
             // TODO: Get local dictionaries
-            // TODO: Replace with something from arrow, so we can use mapLeft etc.
             response = Response.Success(listOf())
         }
         return response ?: Response.Failure(IOException("Could not read dictionaries"))

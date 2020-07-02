@@ -15,30 +15,29 @@
  */
 package com.github.cheapmon.balalaika.domain.services
 
-import com.github.cheapmon.balalaika.domain.misc.Config
+import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
+import com.github.cheapmon.balalaika.domain.misc.ListResponse
 import com.github.cheapmon.balalaika.domain.misc.Response
-import com.github.cheapmon.balalaika.domain.resources.ResourceLoader
+import java.io.InputStream
 import javax.inject.Inject
 import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.constructor.Constructor
 
-class YamlDictionaryParser @Inject constructor(
-    // TODO: Rename resource loader
-    private val resourceLoader: ResourceLoader
-) : DictionaryParser {
-    override fun parse(): Response<Config> {
+class YamlDictionaryParser @Inject constructor() {
+    fun parse(contents: InputStream): ListResponse<Dictionary> {
         return try {
             val yaml = Yaml(Constructor(Config::class.java))
-            val contents = resourceLoader.dictionaryList
             val parsed = yaml.load(contents) as Config
-            val data = parsed.copy(
-                dictionaries = parsed.dictionaries.map {
-                    it.copy(dictionaryId = 0, isActive = false)
-                }
-            )
+            val data = parsed.dictionaries.map {
+                it.copy(dictionaryId = 0, isActive = false)
+            }
             Response.Success(data)
         } catch (ex: Exception) {
             Response.Failure(ex)
         }
     }
+
+    private data class Config(
+        val dictionaries: List<Dictionary> = listOf()
+    )
 }
