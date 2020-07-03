@@ -18,7 +18,6 @@ package com.github.cheapmon.balalaika.core.resources
 import android.content.Context
 import com.github.cheapmon.balalaika.R
 import dagger.hilt.android.qualifiers.ApplicationContext
-import java.io.File
 import java.io.InputStream
 import java.util.zip.ZipFile
 import javax.inject.Inject
@@ -38,7 +37,7 @@ class AndroidResourceProvider @Inject constructor(
 
     override fun getDictionaryZip(name: String): ZipFile? {
         val fileName = dictionaries.find { it.startsWith(name) } ?: return null
-        val file = File(fileName).apply {
+        val file = context.filesDir.resolve(fileName).apply {
             outputStream().use { context.assets.open(fileName).copyTo(it) }
         }
         return ZipFile(file)
