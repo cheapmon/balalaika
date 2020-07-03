@@ -18,18 +18,19 @@ package com.github.cheapmon.balalaika.data.selection
 import com.github.cheapmon.balalaika.core.ListResponse
 import com.github.cheapmon.balalaika.core.Response
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
+import com.github.cheapmon.balalaika.di.DictionaryProviderType
 import java.io.InputStream
 import javax.inject.Inject
 import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.constructor.Constructor
 
 class YamlDictionaryParser @Inject constructor() {
-    fun parse(contents: InputStream, providerKey: String?): ListResponse<Dictionary> {
+    fun parse(contents: InputStream, providerKey: DictionaryProviderType?): ListResponse<Dictionary> {
         return try {
             val yaml = Yaml(Constructor(Config::class.java))
             val parsed = yaml.load(contents) as Config
             val data = parsed.dictionaries.map {
-                it.copy(dictionaryId = 0, isActive = false, providerKey = providerKey)
+                it.copy(dictionaryId = 0, isActive = false).apply { this.providerKey = providerKey }
             }
             Response.Success(data)
         } catch (ex: Exception) {

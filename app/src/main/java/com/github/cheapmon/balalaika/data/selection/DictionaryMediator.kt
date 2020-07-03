@@ -21,6 +21,7 @@ import com.github.cheapmon.balalaika.core.data
 import com.github.cheapmon.balalaika.core.orEmpty
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.db.entities.dictionary.DictionaryDao
+import com.github.cheapmon.balalaika.di.DictionaryProviderType
 import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -34,7 +35,7 @@ import kotlinx.coroutines.flow.mapLatest
 @ActivityScoped
 class DictionaryMediator @Inject constructor(
     dao: DictionaryDao,
-    private val providers: Map<String, @JvmSuppressWildcards DictionaryProvider>,
+    private val providers: Map<DictionaryProviderType, @JvmSuppressWildcards DictionaryProvider>,
     private val extractor: ZipExtractor,
     private val importer: CsvEntityImporter
 ) {

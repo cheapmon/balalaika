@@ -24,7 +24,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.scopes.ActivityScoped
 import dagger.multibindings.IntoMap
-import dagger.multibindings.StringKey
 
 @Module
 @InstallIn(ActivityComponent::class)
@@ -32,14 +31,14 @@ class DictionaryModule {
     @ActivityScoped
     @Provides
     @IntoMap
-    @StringKey("SERVER")
+    @DictionaryProviderKey(DictionaryProviderType.SERVER)
     fun provideServerProvider(provider: ServerDictionaryProvider): DictionaryProvider =
         provider
 
     @ActivityScoped
     @Provides
     @IntoMap
-    @StringKey("RESOURCES")
+    @DictionaryProviderKey(DictionaryProviderType.RESOURCES)
     fun provideResourcesProvider(provider: ResourcesDictionaryProvider): DictionaryProvider =
         provider
 }

@@ -17,6 +17,7 @@ package com.github.cheapmon.balalaika.data.selection
 
 import com.github.cheapmon.balalaika.core.Response
 import com.github.cheapmon.balalaika.core.resources.ResourceProvider
+import com.github.cheapmon.balalaika.di.DictionaryProviderType
 import com.github.cheapmon.balalaika.util.Constants
 import dagger.hilt.android.scopes.ActivityScoped
 import java.io.IOException
@@ -35,7 +36,7 @@ class ResourcesDictionaryProvider @Inject constructor(
     override suspend fun getDictionaryList() = flow {
         emit(Response.Pending)
         val response = withTimeoutOrNull(constants.LOCAL_TIMEOUT) {
-            parser.parse(resources.dictionaryList, "RESOURCES")
+            parser.parse(resources.dictionaryList, DictionaryProviderType.RESOURCES)
         } ?: Response.Failure(IOException("Could not read dictionaries"))
         emit(response)
     }

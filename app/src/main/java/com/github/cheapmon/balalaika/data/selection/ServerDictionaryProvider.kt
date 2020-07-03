@@ -16,6 +16,7 @@
 package com.github.cheapmon.balalaika.data.selection
 
 import com.github.cheapmon.balalaika.core.Response
+import com.github.cheapmon.balalaika.di.DictionaryProviderType
 import com.github.cheapmon.balalaika.util.Constants
 import dagger.hilt.android.scopes.ActivityScoped
 import java.io.IOException
@@ -33,7 +34,7 @@ class ServerDictionaryProvider @Inject constructor(
     override suspend fun getDictionaryList() = flow {
         emit(Response.Pending)
         val response = withTimeoutOrNull(constants.REMOTE_TIMEOUT) {
-            parser.parse("".byteInputStream(), "SERVER")
+            parser.parse("".byteInputStream(), DictionaryProviderType.SERVER)
         } ?: Response.Failure(IOException("Could not download dictionaries"))
         emit(response)
     }

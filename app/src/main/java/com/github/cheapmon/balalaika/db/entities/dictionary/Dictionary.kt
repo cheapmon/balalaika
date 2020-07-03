@@ -17,7 +17,9 @@ package com.github.cheapmon.balalaika.db.entities.dictionary
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
+import com.github.cheapmon.balalaika.di.DictionaryProviderType
 
 @Entity(tableName = "dictionary")
 data class Dictionary(
@@ -29,6 +31,7 @@ data class Dictionary(
     val authors: String = "",
     @ColumnInfo(name = "additional_info") val additionalInfo: String = "",
     val url: String? = null,
-    @ColumnInfo(name = "is_active") val isActive: Boolean = false,
-    val providerKey: String? = null
-)
+    @ColumnInfo(name = "is_active") val isActive: Boolean = false
+) {
+    @Ignore var providerKey: DictionaryProviderType? = null
+}
