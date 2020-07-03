@@ -47,5 +47,5 @@ interface LexemeDao {
 
     /** Insert all [lexemes][Lexeme] into the database */
     @Insert
-    suspend fun insertAll(vararg lexemes: Lexeme)
+    suspend fun insertAll(lexemes: List<Lexeme>)
 }

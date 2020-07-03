@@ -15,25 +15,31 @@
  */
 package com.github.cheapmon.balalaika.data.selection
 
-import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
-import com.github.cheapmon.balalaika.core.ListResponse
 import com.github.cheapmon.balalaika.core.Response
 import com.github.cheapmon.balalaika.util.Constants
 import dagger.hilt.android.scopes.ActivityScoped
 import java.io.IOException
+import java.util.zip.ZipFile
 import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withTimeoutOrNull
 
 @ActivityScoped
 class ServerDictionaryProvider @Inject constructor(
-    private val constants: Constants
-) : DictionaryProvider() {
-    override suspend fun getFromSource(): ListResponse<Dictionary> {
-        var response: ListResponse<Dictionary>? = null
-        withTimeoutOrNull(constants.REMOTE_TIMEOUT) {
-            // TODO: Get remote dictionaries
-            response = Response.Success(listOf())
-        }
-        return response ?: Response.Failure(IOException("Could not download dictionaries"))
+    private val constants: Constants,
+    private val parser: YamlDictionaryParser
+) : DictionaryProvider {
+    override suspend fun getDictionaryList() = flow {
+        emit(Response.Pending)
+        val response = withTimeoutOrNull(constants.REMOTE_TIMEOUT) {
+            parser.parse("".byteInputStream(), "SERVER")
+        } ?: Response.Failure(IOException("Could not download dictionaries"))
+        emit(response)
+    }
+
+    override suspend fun getDictionary(externalId: String): Flow<Response<ZipFile>> = flow {
+        emit(Response.Pending)
+        emit(Response.Failure(NotImplementedError()))
     }
 }

@@ -23,20 +23,23 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.scopes.ActivityScoped
-import dagger.multibindings.IntoSet
+import dagger.multibindings.IntoMap
+import dagger.multibindings.StringKey
 
 @Module
 @InstallIn(ActivityComponent::class)
 class DictionaryModule {
     @ActivityScoped
     @Provides
-    @IntoSet
+    @IntoMap
+    @StringKey("SERVER")
     fun provideServerProvider(provider: ServerDictionaryProvider): DictionaryProvider =
         provider
 
     @ActivityScoped
     @Provides
-    @IntoSet
+    @IntoMap
+    @StringKey("RESOURCES")
     fun provideResourcesProvider(provider: ResourcesDictionaryProvider): DictionaryProvider =
         provider
 }

@@ -15,25 +15,39 @@
  */
 package com.github.cheapmon.balalaika.data.selection
 
-import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
-import com.github.cheapmon.balalaika.core.ListResponse
 import com.github.cheapmon.balalaika.core.Response
+import com.github.cheapmon.balalaika.core.resources.ResourceProvider
 import com.github.cheapmon.balalaika.util.Constants
 import dagger.hilt.android.scopes.ActivityScoped
 import java.io.IOException
+import java.util.zip.ZipFile
 import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withTimeoutOrNull
 
 @ActivityScoped
 class ResourcesDictionaryProvider @Inject constructor(
-    private val constants: Constants
-) : DictionaryProvider() {
-    override suspend fun getFromSource(): ListResponse<Dictionary> {
-        var response: ListResponse<Dictionary>? = null
-        withTimeoutOrNull(constants.LOCAL_TIMEOUT) {
-            // TODO: Get local dictionaries
-            response = Response.Success(listOf())
+    private val constants: Constants,
+    private val resources: ResourceProvider,
+    private val parser: YamlDictionaryParser
+) : DictionaryProvider {
+    override suspend fun getDictionaryList() = flow {
+        emit(Response.Pending)
+        val response = withTimeoutOrNull(constants.LOCAL_TIMEOUT) {
+            parser.parse(resources.dictionaryList, "RESOURCES")
+        } ?: Response.Failure(IOException("Could not read dictionaries"))
+        emit(response)
+    }
+
+    override suspend fun getDictionary(externalId: String): Flow<Response<ZipFile>> = flow {
+        emit(Response.Pending)
+        try {
+            val file = resources.getDictionaryZip(externalId)
+                ?: throw IOException("Could not find .zip file $externalId")
+            emit(Response.Success(file))
+        } catch (ex: IOException) {
+            emit(Response.Failure(ex))
         }
-        return response ?: Response.Failure(IOException("Could not read dictionaries"))
     }
 }

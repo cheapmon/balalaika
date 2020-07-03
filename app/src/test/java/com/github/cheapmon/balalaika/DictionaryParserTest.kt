@@ -25,7 +25,7 @@ import org.junit.Test
 
 class DictionaryParserTest {
     private fun loadFrom(contents: String): ListResponse<Dictionary> {
-        return YamlDictionaryParser().parse(contents.byteInputStream())
+        return YamlDictionaryParser().parse(contents.byteInputStream(), null)
     }
 
     @Test

@@ -42,5 +42,5 @@ interface PropertyDao {
 
     /** Insert all [properties][Property] into the database */
     @Insert
-    suspend fun insertAll(vararg properties: Property)
+    suspend fun insertAll(properties: List<Property>)
 }

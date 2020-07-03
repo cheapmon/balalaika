@@ -29,5 +29,6 @@ data class Dictionary(
     val authors: String = "",
     @ColumnInfo(name = "additional_info") val additionalInfo: String = "",
     val url: String? = null,
-    @ColumnInfo(name = "is_active") val isActive: Boolean = false
+    @ColumnInfo(name = "is_active") val isActive: Boolean = false,
+    val providerKey: String? = null
 )

@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.cheapmon.balalaika.data.selection
+package com.github.cheapmon.balalaika.core.resources
 
-import com.github.cheapmon.balalaika.core.ListResponse
-import com.github.cheapmon.balalaika.core.Response
-import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
+import java.io.InputStream
 import java.util.zip.ZipFile
-import kotlinx.coroutines.flow.Flow
 
-interface DictionaryProvider {
-    suspend fun getDictionaryList(): Flow<ListResponse<Dictionary>>
-    suspend fun getDictionary(externalId: String): Flow<Response<ZipFile>>
+/** Component which reads application resources */
+interface ResourceProvider {
+    val dictionaryList: InputStream
+
+    fun getDictionaryZip(name: String): ZipFile?
 }

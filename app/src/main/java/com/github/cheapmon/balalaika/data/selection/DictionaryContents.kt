@@ -13,11 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.cheapmon.balalaika.core.resources
+package com.github.cheapmon.balalaika.data.selection
 
 import java.io.InputStream
 
-/** Component which reads application resources */
-interface ResourceLoader {
-    val dictionaryList: InputStream
-}
+data class DictionaryContents(
+    val categories: InputStream,
+    val lexemes: InputStream,
+    val fullForms: InputStream,
+    val properties: InputStream,
+    val views: InputStream
+)

@@ -16,22 +16,31 @@
 package com.github.cheapmon.balalaika.core.resources
 
 import android.content.Context
-import androidx.annotation.RawRes
 import com.github.cheapmon.balalaika.R
 import dagger.hilt.android.qualifiers.ApplicationContext
+import java.io.File
 import java.io.InputStream
+import java.util.zip.ZipFile
 import javax.inject.Inject
 
 /**
- * [Resource loader][ResourceLoader] which reads Android resource files
+ * [Resource provider][ResourceProvider] which reads Android resource files
  */
-class AndroidResourceLoader @Inject constructor(
+class AndroidResourceProvider @Inject constructor(
     @ApplicationContext private val context: Context
-) : ResourceLoader {
-    @RawRes
-    private val dictionaryListId: Int = R.raw.dictionaries
+) : ResourceProvider {
+    override val dictionaryList: InputStream =
+        context.resources.openRawResource(R.raw.dictionaries)
 
-    override val dictionaryList: InputStream = readResource(dictionaryListId)
+    private val dictionaries = context.assets.list("")
+        ?.filter { it.endsWith(".zip") }
+        .orEmpty()
 
-    private fun readResource(@RawRes id: Int): InputStream = context.resources.openRawResource(id)
+    override fun getDictionaryZip(name: String): ZipFile? {
+        val fileName = dictionaries.find { it.startsWith(name) } ?: return null
+        val file = File(fileName).apply {
+            outputStream().use { context.assets.open(fileName).copyTo(it) }
+        }
+        return ZipFile(file)
+    }
 }

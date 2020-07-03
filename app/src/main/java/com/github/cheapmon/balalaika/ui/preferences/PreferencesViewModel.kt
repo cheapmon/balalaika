@@ -17,10 +17,10 @@ package com.github.cheapmon.balalaika.ui.preferences
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
+import com.github.cheapmon.balalaika.core.storage.Storage
+import com.github.cheapmon.balalaika.data.dictionary.DictionaryEntryRepository
 import com.github.cheapmon.balalaika.db.entities.category.Category
 import com.github.cheapmon.balalaika.db.entities.view.DictionaryViewWithCategories
-import com.github.cheapmon.balalaika.data.dictionary.DictionaryEntryRepository
-import com.github.cheapmon.balalaika.core.storage.Storage
 import com.github.cheapmon.balalaika.util.Constants
 import kotlinx.coroutines.flow.first
 

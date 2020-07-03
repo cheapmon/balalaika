@@ -34,9 +34,9 @@ interface DictionaryViewDao {
 
     /** Insert all [dictionary views][DictionaryView] into the database */
     @Insert
-    suspend fun insertAll(vararg dictionaryViews: DictionaryView)
+    suspend fun insertViews(dictionaryViews: List<DictionaryView>)
 
     /** Insert all [dictionary view relations][DictionaryViewToCategory] into the database */
     @Insert
-    suspend fun insertAll(vararg dictionaryViewToCategory: DictionaryViewToCategory)
+    suspend fun insertRelation(dictionaryViewToCategory: List<DictionaryViewToCategory>)
 }

@@ -15,7 +15,6 @@
  */
 package com.github.cheapmon.balalaika.core
 
-// TODO: File structure
 sealed class Response<out T> {
     object Pending : Response<Nothing>()
     data class Success<out T>(val data: T) : Response<T>()
@@ -47,12 +46,8 @@ fun <T> Response<T>.orNull(): T? = when (this) {
 
 fun <T, R> Response<T>.map(block: T.() -> R): Response<R> = when (this) {
     is Response.Pending -> Response.Pending
-    is Response.Success -> Response.Success(
-        data.block()
-    )
-    is Response.Failure -> Response.Failure(
-        cause
-    )
+    is Response.Success -> Response.Success(data.block())
+    is Response.Failure -> Response.Failure(cause)
 }
 
 typealias ListResponse<T> = Response<List<T>>

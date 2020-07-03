@@ -15,8 +15,8 @@
  */
 package com.github.cheapmon.balalaika.di
 
-import com.github.cheapmon.balalaika.core.resources.AndroidResourceLoader
-import com.github.cheapmon.balalaika.core.resources.ResourceLoader
+import com.github.cheapmon.balalaika.core.resources.AndroidResourceProvider
+import com.github.cheapmon.balalaika.core.resources.ResourceProvider
 import com.github.cheapmon.balalaika.core.storage.PreferenceStorage
 import com.github.cheapmon.balalaika.core.storage.Storage
 import dagger.Binds
@@ -36,7 +36,7 @@ abstract class ImportModule {
     /** @suppress */
     @ActivityScoped
     @Binds
-    abstract fun provideResourceLoader(androidResourceLoader: AndroidResourceLoader): ResourceLoader
+    abstract fun provideResourceProvider(provider: AndroidResourceProvider): ResourceProvider
 
     /** @suppress */
     @ActivityScoped

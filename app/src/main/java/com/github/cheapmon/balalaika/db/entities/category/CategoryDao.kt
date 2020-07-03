@@ -29,5 +29,5 @@ interface CategoryDao {
 
     /** Insert all data categories into the database */
     @Insert
-    suspend fun insertAll(vararg categories: Category)
+    suspend fun insertAll(categories: List<Category>)
 }

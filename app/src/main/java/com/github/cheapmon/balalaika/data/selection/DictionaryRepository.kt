@@ -20,7 +20,6 @@ import com.github.cheapmon.balalaika.db.entities.dictionary.DictionaryDao
 import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
 
-// TODO: Replace with real implementation
 @ActivityScoped
 class DictionaryRepository @Inject constructor(
     private val dictionaryDao: DictionaryDao,
@@ -38,7 +37,6 @@ class DictionaryRepository @Inject constructor(
 
     suspend fun addDictionary(dictionary: Dictionary) {
         dictionaryDao.insertAll(listOf(dictionary))
-        // TODO: Import everything else
     }
 
     suspend fun removeDictionary(externalId: String) {
