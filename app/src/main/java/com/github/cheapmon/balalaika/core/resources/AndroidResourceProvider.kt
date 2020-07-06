@@ -42,4 +42,9 @@ class AndroidResourceProvider @Inject constructor(
         }
         return ZipFile(file)
     }
+
+    override fun removeFromLocalStorage(name: String) {
+        val fileName = dictionaries.find { it.startsWith(name) } ?: return
+        context.filesDir.resolve(fileName).delete()
+    }
 }

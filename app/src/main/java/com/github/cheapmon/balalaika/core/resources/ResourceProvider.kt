@@ -23,4 +23,6 @@ interface ResourceProvider {
     val dictionaryList: InputStream
 
     fun getDictionaryZip(name: String): ZipFile?
+
+    fun removeFromLocalStorage(name: String)
 }
