@@ -26,12 +26,8 @@ import com.github.cheapmon.balalaika.db.entities.dictionary.DictionaryDao
 import com.github.cheapmon.balalaika.di.DictionaryProviderType
 import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.mapLatest
 
 @ActivityScoped
@@ -43,11 +39,8 @@ class DictionaryMediator @Inject constructor(
 ) {
     private val state = MutableStateFlow(false)
 
-    val dictionaries = state.flatMapLatest {
-        val flows = providers.map { (_, v) -> v.getDictionaryList() }
-        val combined = combine(flows) { f -> f.asList() }
-        dao.getAll().combine(combined) { d, p -> Pair(d, p) }
-    }.mapLatest { (d, list) ->
+    val dictionaries = state.flatMapLatest { dao.getAll() }.mapLatest { d ->
+        val list = providers.map { (_, v) -> v.getDictionaryList() }
         when {
             list.all { it.isLeft() } -> d.map { InstallState.Installed(it) }.right()
             else -> {
@@ -67,19 +60,17 @@ class DictionaryMediator @Inject constructor(
         }
     }
 
-    suspend fun installDictionary(dictionary: Dictionary): Flow<Either<Throwable, Unit>> = flow {
+    suspend fun installDictionary(dictionary: Dictionary): Either<Throwable, Unit> {
         val provider = providers[dictionary.providerKey]
         val zip = provider?.getDictionary(dictionary.externalId)
-        if (zip == null) {
-            emit(IllegalStateException("No provider specified").left())
+        return if (zip == null) {
+            IllegalStateException("No provider specified").left()
         } else {
-            zip.collectLatest { value ->
-                val result = when (val extracted = value.flatMap { extractor.extract(it) }) {
-                    is Either.Left -> extracted
-                    is Either.Right -> importer.import(extracted.b)
-                }
-                emit(result)
+            val result = when (val extracted = zip.flatMap { extractor.extract(it) }) {
+                is Either.Left -> extracted
+                is Either.Right -> importer.import(extracted.b)
             }
+            result
         }
     }
 

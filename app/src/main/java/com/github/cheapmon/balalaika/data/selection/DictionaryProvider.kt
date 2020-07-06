@@ -18,9 +18,8 @@ package com.github.cheapmon.balalaika.data.selection
 import arrow.core.Either
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import java.util.zip.ZipFile
-import kotlinx.coroutines.flow.Flow
 
 interface DictionaryProvider {
-    suspend fun getDictionaryList(): Flow<Either<Throwable, List<Dictionary>>>
-    suspend fun getDictionary(externalId: String): Flow<Either<Throwable, ZipFile>>
+    suspend fun getDictionaryList(): Either<Throwable, List<Dictionary>>
+    suspend fun getDictionary(externalId: String): Either<Throwable, ZipFile>
 }
