@@ -15,14 +15,12 @@
  */
 package com.github.cheapmon.balalaika.data.selection
 
-import com.github.cheapmon.balalaika.core.Response
+import arrow.core.left
 import com.github.cheapmon.balalaika.di.DictionaryProviderType
 import com.github.cheapmon.balalaika.util.Constants
 import dagger.hilt.android.scopes.ActivityScoped
 import java.io.IOException
-import java.util.zip.ZipFile
 import javax.inject.Inject
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withTimeoutOrNull
 
@@ -32,15 +30,13 @@ class ServerDictionaryProvider @Inject constructor(
     private val parser: YamlDictionaryParser
 ) : DictionaryProvider {
     override suspend fun getDictionaryList() = flow {
-        emit(Response.Pending)
         val response = withTimeoutOrNull(constants.REMOTE_TIMEOUT) {
             parser.parse("".byteInputStream(), DictionaryProviderType.SERVER)
-        } ?: Response.Failure(IOException("Could not download dictionaries"))
+        } ?: IOException("Could not download dictionaries").left()
         emit(response)
     }
 
-    override suspend fun getDictionary(externalId: String): Flow<Response<ZipFile>> = flow {
-        emit(Response.Pending)
-        emit(Response.Failure(NotImplementedError()))
+    override suspend fun getDictionary(externalId: String) = flow {
+        emit(NotImplementedError().left())
     }
 }

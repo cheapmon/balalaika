@@ -15,14 +15,16 @@
  */
 package com.github.cheapmon.balalaika.data.selection
 
-import com.github.cheapmon.balalaika.core.Response
+import arrow.core.Either
+import arrow.core.left
+import arrow.core.right
 import java.io.IOException
 import java.lang.IllegalStateException
 import java.util.zip.ZipFile
 import javax.inject.Inject
 
 class ZipExtractor @Inject constructor() {
-    fun extract(zip: ZipFile): Response<DictionaryContents> {
+    fun extract(zip: ZipFile): Either<Throwable, DictionaryContents> {
         return try {
             val entries = zip.use { file ->
                 file.entries().asSequence().map { entry ->
@@ -41,13 +43,11 @@ class ZipExtractor @Inject constructor() {
                 properties,
                 views
             )
-            Response.Success(contents)
+            contents.right()
         } catch (ex: IOException) {
-            Response.Failure(ex)
+            ex.left()
         }
     }
 
-    private fun failureForFile(name: String) = Response.Failure<DictionaryContents>(
-        cause = IllegalStateException("File is missing: $name")
-    )
+    private fun failureForFile(name: String) = IllegalStateException("File is missing: $name").left()
 }

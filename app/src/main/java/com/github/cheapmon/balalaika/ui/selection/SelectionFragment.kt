@@ -23,20 +23,22 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import arrow.core.Either
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.core.DictionaryParcel
 import com.github.cheapmon.balalaika.core.InstallState
-import com.github.cheapmon.balalaika.core.Response
 import com.github.cheapmon.balalaika.databinding.FragmentSelectionListBinding
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.util.exhaustive
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SelectionFragment : Fragment(), SelectionAdapter.Listener,
@@ -69,20 +71,20 @@ class SelectionFragment : Fragment(), SelectionAdapter.Listener,
             addItemDecoration(DividerItemDecoration(context, selectionLayoutManager.orientation))
         }
         setHasOptionsMenu(true)
-        submitData()
+        lifecycleScope.launch { submitData() }
         return binding.root
     }
 
     /** Bind data */
-    private fun submitData() {
-        viewModel.dictionaries.observe(viewLifecycleOwner, Observer { response ->
-            swipeRefreshLayout.isRefreshing = response.isPending()
+    private suspend fun submitData() {
+        viewModel.dictionaries.collect { response ->
+            swipeRefreshLayout.isRefreshing = false
             when (response) {
-                is Response.Success -> {
-                    selectionAdapter.submitList(response.data)
-                    binding.isEmpty = response.data.isEmpty()
+                is Either.Right -> {
+                    selectionAdapter.submitList(response.b)
+                    binding.isEmpty = response.b.isEmpty()
                 }
-                is Response.Failure -> {
+                is Either.Left -> {
                     selectionAdapter.submitList(listOf())
                     binding.isEmpty = true
                     Toast.makeText(
@@ -94,7 +96,7 @@ class SelectionFragment : Fragment(), SelectionAdapter.Listener,
                 else -> {
                 }
             }.exhaustive
-        })
+        }
     }
 
     /** Show dictionary in detail view */
@@ -106,6 +108,7 @@ class SelectionFragment : Fragment(), SelectionAdapter.Listener,
     }
 
     override fun onRefresh() {
+        swipeRefreshLayout.isRefreshing = true
         viewModel.refresh()
     }
 }

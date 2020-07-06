@@ -15,31 +15,30 @@
  */
 package com.github.cheapmon.balalaika
 
-import com.github.cheapmon.balalaika.core.ListResponse
-import com.github.cheapmon.balalaika.core.data
+import arrow.core.getOrElse
 import com.github.cheapmon.balalaika.data.selection.YamlDictionaryParser
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
+import java.lang.IllegalStateException
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class DictionaryParserTest {
-    private fun loadFrom(contents: String): ListResponse<Dictionary> {
-        return YamlDictionaryParser().parse(contents.byteInputStream(), null)
-    }
+    private fun loadFrom(contents: String) =
+        YamlDictionaryParser().parse(contents.byteInputStream(), null)
 
     @Test
     fun `parses empty file`() {
         val response = loadFrom("dictionaries: []")
-        assertTrue(response.isSuccess())
-        assertTrue(response.data.isEmpty())
+        assertTrue(response.isRight())
+        assertTrue(response.fold({ false }, { it.isEmpty() }))
     }
 
     @Test
     fun `does not parse broken file`() {
         listOf("{", "}", ";").forEach { contents ->
             val response = loadFrom(contents)
-            assertTrue(response.isFailure())
+            assertTrue(response.isLeft())
         }
     }
 
@@ -57,10 +56,11 @@ class DictionaryParserTest {
                 isActive: true
             """
         )
-        assertTrue(response.isSuccess())
-        assertEquals(response.data.size, 1)
+        assertTrue(response.isRight())
+        val list = response.getOrElse { throw IllegalStateException() }
+        assertEquals(list.size, 1)
         assertEquals(
-            response.data, listOf(
+            list, listOf(
                 Dictionary(
                     externalId = "dict_a",
                     version = 1,
@@ -88,10 +88,11 @@ class DictionaryParserTest {
                 name: Dictionary B
             """
         )
-        assertTrue(response.isSuccess())
-        assertEquals(response.data.size, 2)
+        assertTrue(response.isRight())
+        val list = response.getOrElse { throw IllegalStateException() }
+        assertEquals(list.size, 2)
         assertEquals(
-            response.data, listOf(
+            list, listOf(
                 Dictionary(
                     dictionaryId = 0,
                     externalId = "dict_a",

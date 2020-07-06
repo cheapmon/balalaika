@@ -15,15 +15,14 @@
  */
 package com.github.cheapmon.balalaika.data.selection
 
-import com.github.cheapmon.balalaika.core.Response
+import arrow.core.left
+import arrow.core.right
 import com.github.cheapmon.balalaika.core.resources.ResourceProvider
 import com.github.cheapmon.balalaika.di.DictionaryProviderType
 import com.github.cheapmon.balalaika.util.Constants
 import dagger.hilt.android.scopes.ActivityScoped
 import java.io.IOException
-import java.util.zip.ZipFile
 import javax.inject.Inject
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withTimeoutOrNull
 
@@ -34,21 +33,19 @@ class ResourcesDictionaryProvider @Inject constructor(
     private val parser: YamlDictionaryParser
 ) : DictionaryProvider {
     override suspend fun getDictionaryList() = flow {
-        emit(Response.Pending)
         val response = withTimeoutOrNull(constants.LOCAL_TIMEOUT) {
             parser.parse(resources.dictionaryList, DictionaryProviderType.RESOURCES)
-        } ?: Response.Failure(IOException("Could not read dictionaries"))
+        } ?: IOException("Could not read dictionaries").left()
         emit(response)
     }
 
-    override suspend fun getDictionary(externalId: String): Flow<Response<ZipFile>> = flow {
-        emit(Response.Pending)
+    override suspend fun getDictionary(externalId: String) = flow {
         try {
             val file = resources.getDictionaryZip(externalId)
                 ?: throw IOException("Could not find .zip file $externalId")
-            emit(Response.Success(file))
+            emit(file.right())
         } catch (ex: IOException) {
-            emit(Response.Failure(ex))
+            emit(ex.left())
         }
     }
 }

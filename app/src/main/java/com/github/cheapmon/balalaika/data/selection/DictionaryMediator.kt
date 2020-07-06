@@ -15,10 +15,12 @@
  */
 package com.github.cheapmon.balalaika.data.selection
 
+import arrow.core.Either
+import arrow.core.flatMap
+import arrow.core.getOrElse
+import arrow.core.left
+import arrow.core.right
 import com.github.cheapmon.balalaika.core.InstallState
-import com.github.cheapmon.balalaika.core.Response
-import com.github.cheapmon.balalaika.core.data
-import com.github.cheapmon.balalaika.core.orEmpty
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.db.entities.dictionary.DictionaryDao
 import com.github.cheapmon.balalaika.di.DictionaryProviderType
@@ -47,10 +49,9 @@ class DictionaryMediator @Inject constructor(
         dao.getAll().combine(combined) { d, p -> Pair(d, p) }
     }.mapLatest { (d, list) ->
         when {
-            list.any { it.isPending() } -> Response.Pending
-            list.all { it.isFailure() } -> Response.Success(d.map { InstallState.Installed(it) })
+            list.all { it.isLeft() } -> d.map { InstallState.Installed(it) }.right()
             else -> {
-                val result = (d + list.flatMap { it.orEmpty() })
+                val result = (d + list.flatMap { it.getOrElse { emptyList() } })
                     .groupBy { it.externalId }
                     .map { (id, list) ->
                         val newest = list.maxBy { it.version } ?: throw IllegalStateException()
@@ -61,25 +62,21 @@ class DictionaryMediator @Inject constructor(
                             else -> InstallState.Installable(newest)
                         }
                     }
-                Response.Success(result)
+                result.right()
             }
         }
     }
 
-    suspend fun installDictionary(dictionary: Dictionary): Flow<Response<Unit>> = flow {
+    suspend fun installDictionary(dictionary: Dictionary): Flow<Either<Throwable, Unit>> = flow {
         val provider = providers[dictionary.providerKey]
         val zip = provider?.getDictionary(dictionary.externalId)
         if (zip == null) {
-            emit(Response.Failure(java.lang.IllegalStateException("No provider specified")))
+            emit(IllegalStateException("No provider specified").left())
         } else {
             zip.collectLatest { value ->
-                val result = when (value) {
-                    is Response.Pending -> Response.Pending
-                    is Response.Success -> {
-                        val contents = extractor.extract(value.data)
-                        importer.import(contents.data)
-                    }
-                    is Response.Failure -> Response.Failure(value.cause)
+                val result = when (val extracted = value.flatMap { extractor.extract(it) }) {
+                    is Either.Left -> extracted
+                    is Either.Right -> importer.import(extracted.b)
                 }
                 emit(result)
             }

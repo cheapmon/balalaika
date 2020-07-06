@@ -15,8 +15,9 @@
  */
 package com.github.cheapmon.balalaika.data.selection
 
-import com.github.cheapmon.balalaika.core.ListResponse
-import com.github.cheapmon.balalaika.core.Response
+import arrow.core.Either
+import arrow.core.left
+import arrow.core.right
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.di.DictionaryProviderType
 import java.io.InputStream
@@ -25,16 +26,19 @@ import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.constructor.Constructor
 
 class YamlDictionaryParser @Inject constructor() {
-    fun parse(contents: InputStream, providerKey: DictionaryProviderType?): ListResponse<Dictionary> {
+    fun parse(
+        contents: InputStream,
+        providerKey: DictionaryProviderType?
+    ): Either<Throwable, List<Dictionary>> {
         return try {
             val yaml = Yaml(Constructor(Config::class.java))
             val parsed = yaml.load(contents) as Config
             val data = parsed.dictionaries.map {
                 it.copy(dictionaryId = 0, isActive = false).apply { this.providerKey = providerKey }
             }
-            Response.Success(data)
+            data.right()
         } catch (ex: Exception) {
-            Response.Failure(ex)
+            ex.left()
         }
     }
 
