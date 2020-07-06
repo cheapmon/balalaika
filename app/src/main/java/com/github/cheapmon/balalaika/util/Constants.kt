@@ -28,6 +28,9 @@ import javax.inject.Singleton
 class Constants @Inject constructor(
     @ApplicationContext context: Context
 ) {
+    /** Assets file with dictionary list */
+    val DICTIONARY_FILE: String = "dictionaries.yml"
+
     /** Key used in [storage][Storage] to save dictionary order */
     val ORDER_KEY = context.getString(R.string.preferences_key_order)
 

@@ -22,7 +22,7 @@ import com.github.cheapmon.balalaika.di.DictionaryProviderType
 import com.github.cheapmon.balalaika.util.Constants
 import dagger.hilt.android.scopes.ActivityScoped
 import java.io.IOException
-import java.util.zip.ZipFile
+import java.io.InputStream
 import javax.inject.Inject
 import kotlinx.coroutines.withTimeoutOrNull
 
@@ -37,7 +37,7 @@ class ServerDictionaryProvider @Inject constructor(
         } ?: IOException("Could not download dictionaries").left()
     }
 
-    override suspend fun getDictionary(externalId: String): Either<Throwable, ZipFile> {
+    override suspend fun getDictionary(externalId: String): Either<Throwable, InputStream> {
         return NotImplementedError().left()
     }
 }

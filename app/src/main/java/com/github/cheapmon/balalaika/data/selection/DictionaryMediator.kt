@@ -16,7 +16,6 @@
 package com.github.cheapmon.balalaika.data.selection
 
 import arrow.core.Either
-import arrow.core.flatMap
 import arrow.core.getOrElse
 import arrow.core.left
 import arrow.core.right
@@ -62,13 +61,24 @@ class DictionaryMediator @Inject constructor(
 
     suspend fun installDictionary(dictionary: Dictionary): Either<Throwable, Unit> {
         val provider = providers[dictionary.providerKey]
-        val zip = provider?.getDictionary(dictionary.externalId)
-        return if (zip == null) {
+        val input = provider?.getDictionary(dictionary.externalId)
+        return if (input == null) {
             IllegalStateException("No provider specified").left()
         } else {
-            val result = when (val extracted = zip.flatMap { extractor.extract(it) }) {
-                is Either.Left -> extracted
-                is Either.Right -> importer.import(extracted.b)
+            val zipFile = when (input) {
+                is Either.Left -> input
+                is Either.Right -> extractor.saveZip(dictionary.externalId, input.b)
+            }
+            val contents = when (zipFile) {
+                is Either.Left -> zipFile
+                is Either.Right -> extractor.extract(zipFile.b)
+            }
+            val result = when (contents) {
+                is Either.Left -> contents
+                is Either.Right -> importer.import(contents.b)
+            }
+            when (zipFile) {
+                is Either.Right -> extractor.removeZip(zipFile.b.name)
             }
             result
         }

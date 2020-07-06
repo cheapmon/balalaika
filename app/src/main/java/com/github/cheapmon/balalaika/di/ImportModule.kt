@@ -15,8 +15,6 @@
  */
 package com.github.cheapmon.balalaika.di
 
-import com.github.cheapmon.balalaika.core.resources.AndroidResourceProvider
-import com.github.cheapmon.balalaika.core.resources.ResourceProvider
 import com.github.cheapmon.balalaika.core.storage.PreferenceStorage
 import com.github.cheapmon.balalaika.core.storage.Storage
 import dagger.Binds
@@ -33,11 +31,6 @@ import dagger.hilt.android.scopes.ActivityScoped
 @Module
 @InstallIn(ActivityComponent::class)
 abstract class ImportModule {
-    /** @suppress */
-    @ActivityScoped
-    @Binds
-    abstract fun provideResourceProvider(provider: AndroidResourceProvider): ResourceProvider
-
     /** @suppress */
     @ActivityScoped
     @Binds

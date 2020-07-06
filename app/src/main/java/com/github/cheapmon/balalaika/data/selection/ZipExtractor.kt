@@ -15,39 +15,72 @@
  */
 package com.github.cheapmon.balalaika.data.selection
 
+import android.content.Context
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
+import com.github.cheapmon.balalaika.di.IoDispatcher
+import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.IOException
-import java.lang.IllegalStateException
+import java.io.InputStream
 import java.util.zip.ZipFile
 import javax.inject.Inject
+import javax.inject.Singleton
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 
-class ZipExtractor @Inject constructor() {
-    fun extract(zip: ZipFile): Either<Throwable, DictionaryContents> {
-        return try {
-            val entries = zip.use { file ->
-                file.entries().asSequence().map { entry ->
-                    entry.name.removeSuffix(".csv") to file.getInputStream(entry)
-                }.toMap()
+@Singleton
+class ZipExtractor @Inject constructor(
+    @IoDispatcher private val dispatcher: CoroutineDispatcher,
+    @ApplicationContext private val context: Context
+) {
+    suspend fun saveZip(fileName: String, input: InputStream): Either<Throwable, ZipFile> =
+        withContext(dispatcher) {
+            try {
+                val file = context.filesDir.resolve(fileName)
+                file.outputStream().use { input.copyTo(it) }
+                ZipFile(file).right()
+            } catch (ex: IOException) {
+                ex.left()
             }
-            val categories = entries["categories"] ?: return failureForFile("categories")
-            val lexemes = entries["lexemes"] ?: return failureForFile("lexemes")
-            val fullForms = entries["full_forms"] ?: return failureForFile("full_forms")
-            val properties = entries["properties"] ?: return failureForFile("properties")
-            val views = entries["views"] ?: return failureForFile("properties")
-            val contents = DictionaryContents(
-                categories,
-                lexemes,
-                fullForms,
-                properties,
-                views
-            )
-            contents.right()
-        } catch (ex: IOException) {
-            ex.left()
         }
-    }
 
-    private fun failureForFile(name: String) = IllegalStateException("File is missing: $name").left()
+    suspend fun extract(zip: ZipFile): Either<Throwable, DictionaryContents> =
+        withContext(dispatcher) {
+            try {
+                val entries = zip.use { file ->
+                    file.entries().asSequence().map { entry ->
+                        entry.name.removeSuffix(".csv") to file.getInputStream(entry)
+                    }.toMap()
+                }
+                val categories = entries["categories"] ?: failForFile("categories")
+                val lexemes = entries["lexemes"] ?: failForFile("lexemes")
+                val fullForms = entries["full_forms"] ?: failForFile("full_forms")
+                val properties = entries["properties"] ?: failForFile("properties")
+                val views = entries["views"] ?: failForFile("properties")
+                val contents = DictionaryContents(
+                    categories,
+                    lexemes,
+                    fullForms,
+                    properties,
+                    views
+                )
+                contents.right()
+            } catch (ex: Exception) {
+                ex.left()
+            }
+        }
+
+    suspend fun removeZip(fileName: String): Either<Throwable, Unit> =
+        withContext(dispatcher) {
+            try {
+                context.filesDir.resolve(fileName).delete()
+                Unit.right()
+            } catch (ex: Exception) {
+                ex.left()
+            }
+        }
+
+    private fun failForFile(name: String): Nothing =
+        throw IllegalStateException("File is missing: $name")
 }
