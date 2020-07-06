@@ -26,7 +26,7 @@ class ZipExtractor @Inject constructor() {
         return try {
             val entries = zip.use { file ->
                 file.entries().asSequence().map { entry ->
-                    entry.name to file.getInputStream(entry)
+                    entry.name.removeSuffix(".csv") to file.getInputStream(entry)
                 }.toMap()
             }
             val categories = entries["categories"] ?: return failureForFile("categories")
