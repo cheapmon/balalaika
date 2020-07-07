@@ -15,30 +15,29 @@
  */
 package com.github.cheapmon.balalaika.data.selection
 
-import arrow.core.Either
-import arrow.core.left
 import arrow.fx.IO
 import arrow.fx.extensions.fx
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.di.DictionaryProviderType
 import com.github.cheapmon.balalaika.util.Constants
 import dagger.hilt.android.scopes.ActivityScoped
-import java.io.IOException
 import javax.inject.Inject
-import kotlinx.coroutines.withTimeoutOrNull
+import kotlinx.coroutines.withTimeout
 
 @ActivityScoped
 class ServerDictionaryProvider @Inject constructor(
     private val constants: Constants,
     private val parser: YamlDictionaryParser
 ) : DictionaryProvider {
-    override suspend fun getDictionaryList(): Either<Throwable, List<Dictionary>> {
-        return withTimeoutOrNull(constants.REMOTE_TIMEOUT) {
-            parser.parse("dictionaries: []", DictionaryProviderType.SERVER)
-        } ?: IOException("Could not download dictionaries").left()
+    override fun getDictionaryList(): IO<List<Dictionary>> = IO.fx {
+        !!effect {
+            withTimeout(constants.REMOTE_TIMEOUT) {
+                parser.parse("dictionaries: []", DictionaryProviderType.SERVER)
+            }
+        }
     }
 
-    override suspend fun getDictionary(externalId: String): IO<ByteArray> = IO.fx {
+    override fun getDictionary(externalId: String): IO<ByteArray> = IO.fx {
         throw NotImplementedError()
     }
 }

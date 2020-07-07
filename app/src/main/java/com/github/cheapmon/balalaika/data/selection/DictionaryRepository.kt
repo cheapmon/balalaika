@@ -18,34 +18,58 @@ package com.github.cheapmon.balalaika.data.selection
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.db.entities.dictionary.DictionaryDao
 import dagger.hilt.android.scopes.ActivityScoped
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.coroutines.CoroutineContext
 
 @ActivityScoped
 class DictionaryRepository @Inject constructor(
     private val dictionaryDao: DictionaryDao,
     private val mediator: DictionaryMediator
-) {
+) : CoroutineScope {
+    override val coroutineContext: CoroutineContext = Dispatchers.IO
+
     val dictionaries = mediator.dictionaries
 
-    suspend fun toggleActive(dictionary: Dictionary) {
-        if (dictionary.isActive) {
-            dictionaryDao.setInactive(dictionary.externalId)
-        } else {
-            dictionaryDao.setActive(dictionary.externalId)
+    private val _isInstalling = MutableStateFlow(false)
+    val isInstalling: StateFlow<Boolean>
+        get() = _isInstalling
+
+    fun toggleActive(dictionary: Dictionary) {
+        launch {
+            if (dictionary.isActive) {
+                dictionaryDao.setInactive(dictionary.externalId)
+            } else {
+                dictionaryDao.setActive(dictionary.externalId)
+            }
         }
     }
 
-    suspend fun addDictionary(dictionary: Dictionary) {
-        dictionaryDao.insertAll(listOf(dictionary))
-        mediator.installDictionary(dictionary)
+    fun addDictionary(dictionary: Dictionary) {
+        launch {
+            showProgess {
+                dictionaryDao.insertAll(listOf(dictionary))
+                mediator.installDictionary(dictionary).attempt().suspended()
+            }
+        }
     }
 
-    suspend fun removeDictionary(externalId: String) {
-        dictionaryDao.remove(externalId)
+    fun removeDictionary(externalId: String) {
+        launch { dictionaryDao.remove(externalId) }
         // TODO: Remove everything else
     }
 
     fun refresh() {
         mediator.refresh()
+    }
+
+    private suspend fun showProgess(block: suspend () -> Unit) {
+        _isInstalling.value = true
+        block()
+        _isInstalling.value = false
     }
 }

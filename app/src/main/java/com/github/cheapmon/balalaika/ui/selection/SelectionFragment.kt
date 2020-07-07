@@ -38,6 +38,7 @@ import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.util.exhaustive
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -71,7 +72,10 @@ class SelectionFragment : Fragment(), SelectionAdapter.Listener,
             addItemDecoration(DividerItemDecoration(context, selectionLayoutManager.orientation))
         }
         setHasOptionsMenu(true)
-        lifecycleScope.launch { submitData() }
+        lifecycleScope.launch {
+            launch { submitData() }
+            launch { showProgress() }
+        }
         return binding.root
     }
 
@@ -97,6 +101,10 @@ class SelectionFragment : Fragment(), SelectionAdapter.Listener,
                 }
             }.exhaustive
         }
+    }
+
+    private suspend fun showProgress() {
+        viewModel.isInstalling.collectLatest { binding.isInstalling = it }
     }
 
     /** Show dictionary in detail view */

@@ -15,11 +15,10 @@
  */
 package com.github.cheapmon.balalaika.data.selection
 
-import arrow.core.Either
 import arrow.fx.IO
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 
 interface DictionaryProvider {
-    suspend fun getDictionaryList(): Either<Throwable, List<Dictionary>>
-    suspend fun getDictionary(externalId: String): IO<ByteArray>
+    fun getDictionaryList(): IO<List<Dictionary>>
+    fun getDictionary(externalId: String): IO<ByteArray>
 }

@@ -24,12 +24,26 @@
         <variable
             name="is_empty"
             type="Boolean" />
+
+        <variable
+            name="is_installing"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.selection.SelectionDownloadFragment">
+
+        <ProgressBar
+            android:id="@+id/selection_progress"
+            style="@style/Widget.MaterialComponents.ProgressIndicator.Linear.Indeterminate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="@{is_installing}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/selection_empty_icon"

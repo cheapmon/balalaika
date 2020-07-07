@@ -15,29 +15,28 @@
  */
 package com.github.cheapmon.balalaika.data.selection
 
-import arrow.core.Either
-import arrow.core.left
-import arrow.core.right
+import arrow.fx.IO
+import arrow.fx.extensions.fx
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.di.DictionaryProviderType
+import com.github.cheapmon.balalaika.di.IoDispatcher
 import javax.inject.Inject
+import kotlinx.coroutines.CoroutineDispatcher
 import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.constructor.Constructor
 
-class YamlDictionaryParser @Inject constructor() {
+class YamlDictionaryParser @Inject constructor(
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
+) {
     fun parse(
         contents: String,
         providerKey: DictionaryProviderType?
-    ): Either<Throwable, List<Dictionary>> {
-        return try {
-            val yaml = Yaml(Constructor(Config::class.java))
-            val parsed = yaml.load(contents) as Config
-            val data = parsed.dictionaries.map {
-                it.copy(dictionaryId = 0, isActive = false).apply { this.providerKey = providerKey }
-            }
-            data.right()
-        } catch (ex: Exception) {
-            ex.left()
+    ): IO<List<Dictionary>> = IO.fx {
+        continueOn(dispatcher)
+        val yaml = Yaml(Constructor(Config::class.java))
+        val parsed = yaml.load(contents) as Config
+        parsed.dictionaries.map {
+            it.copy(dictionaryId = 0, isActive = false).apply { this.providerKey = providerKey }
         }
     }
 

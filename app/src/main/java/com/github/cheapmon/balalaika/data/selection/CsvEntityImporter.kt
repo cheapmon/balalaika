@@ -16,9 +16,7 @@
 package com.github.cheapmon.balalaika.data.selection
 
 import androidx.room.withTransaction
-import arrow.core.Either
-import arrow.core.left
-import arrow.core.right
+import arrow.fx.IO
 import com.github.cheapmon.balalaika.db.AppDatabase
 import com.github.cheapmon.balalaika.db.entities.category.Category
 import com.github.cheapmon.balalaika.db.entities.category.WidgetType
@@ -40,19 +38,14 @@ class CsvEntityImporter @Inject constructor(
     private val lexemeIdCache: HashMap<String, Long> = hashMapOf()
     private val dictionaryViewIdCache: HashMap<String, Long> = hashMapOf()
 
-    suspend fun import(contents: DictionaryContents): Either<Throwable, Unit> {
-        return try {
-            db.withTransaction {
-                // TODO: Remove previous contents
-                db.categories().insertAll(readCategories(contents))
-                db.lexemes().insertAll(readLexemes(contents))
-                db.properties().insertAll(readProperties(contents))
-                db.dictionaryViews().insertViews(readDictionaryViews(contents))
-                db.dictionaryViews().insertRelation(readDictionaryViewToCategories(contents))
-            }
-            Unit.right()
-        } catch (ex: Exception) {
-            ex.left()
+    fun import(contents: DictionaryContents): IO<Unit> = IO.effect {
+        db.withTransaction {
+            // TODO: Remove previous contents
+            db.categories().insertAll(readCategories(contents))
+            db.lexemes().insertAll(readLexemes(contents))
+            db.properties().insertAll(readProperties(contents))
+            db.dictionaryViews().insertViews(readDictionaryViews(contents))
+            db.dictionaryViews().insertRelation(readDictionaryViewToCategories(contents))
         }
     }
 

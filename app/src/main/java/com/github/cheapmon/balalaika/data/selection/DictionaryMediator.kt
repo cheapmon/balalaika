@@ -15,10 +15,10 @@
  */
 package com.github.cheapmon.balalaika.data.selection
 
-import arrow.core.Either
 import arrow.core.getOrElse
-import arrow.core.left
 import arrow.core.right
+import arrow.fx.IO
+import arrow.fx.extensions.fx
 import com.github.cheapmon.balalaika.core.InstallState
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.db.entities.dictionary.DictionaryDao
@@ -39,7 +39,7 @@ class DictionaryMediator @Inject constructor(
     private val state = MutableStateFlow(false)
 
     val dictionaries = state.flatMapLatest { dao.getAll() }.mapLatest { d ->
-        val list = providers.map { (_, v) -> v.getDictionaryList() }
+        val list = providers.map { (_, v) -> v.getDictionaryList().attempt().suspended() }
         when {
             list.all { it.isLeft() } -> d.map { InstallState.Installed(it) }.right()
             else -> {
@@ -59,26 +59,15 @@ class DictionaryMediator @Inject constructor(
         }
     }
 
-    suspend fun installDictionary(dictionary: Dictionary): Either<Throwable, Unit> {
+    suspend fun installDictionary(dictionary: Dictionary): IO<Unit> = IO.fx {
         val provider = providers[dictionary.providerKey]
-        val input = provider?.getDictionary(dictionary.externalId)?.attempt()?.suspended()
-        return if (input == null) {
-            IllegalStateException("No provider specified").left()
+        if (provider == null) {
+            throw IllegalStateException("No provider specified")
         } else {
-            val zipFile = when (input) {
-                is Either.Left -> input
-                is Either.Right -> extractor.saveZip(dictionary.externalId, input.b)
-            }
-            val contents = when (zipFile) {
-                is Either.Left -> zipFile
-                is Either.Right -> extractor.extract(zipFile.b)
-            }
-            val result = when (contents) {
-                is Either.Left -> contents
-                is Either.Right -> importer.import(contents.b)
-            }
-            if (zipFile is Either.Right) extractor.removeZip(zipFile.b.name)
-            result
+            val input = !provider.getDictionary(dictionary.externalId)
+            val zipFile = !extractor.saveZip(dictionary.externalId, input)
+            val contents = !extractor.extract(zipFile)
+            !importer.import(contents)
         }
     }
 

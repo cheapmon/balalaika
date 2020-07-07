@@ -16,8 +16,6 @@
 package com.github.cheapmon.balalaika.data.selection
 
 import android.content.Context
-import arrow.core.Either
-import arrow.core.left
 import arrow.fx.IO
 import arrow.fx.extensions.fx
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
@@ -27,10 +25,10 @@ import com.github.cheapmon.balalaika.util.Constants
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ActivityScoped
 import java.io.FileNotFoundException
-import java.io.IOException
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.withTimeoutOrNull
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
 
 @ActivityScoped
 class ResourcesDictionaryProvider @Inject constructor(
@@ -46,16 +44,17 @@ class ResourcesDictionaryProvider @Inject constructor(
         .orEmpty()
         .filter { it.endsWith(".zip") }
 
-    override suspend fun getDictionaryList(): Either<Throwable, List<Dictionary>> {
-        return withTimeoutOrNull(constants.LOCAL_TIMEOUT) {
-            parser.parse(dictionaryList, DictionaryProviderType.RESOURCES)
-        } ?: IOException("Could not read dictionaries").left()
+    override fun getDictionaryList(): IO<List<Dictionary>> = IO.fx {
+        !!effect {
+            withTimeout(constants.LOCAL_TIMEOUT) {
+                parser.parse(dictionaryList, DictionaryProviderType.RESOURCES)
+            }
+        }
     }
 
-    override suspend fun getDictionary(externalId: String): IO<ByteArray> = IO.fx {
+    override fun getDictionary(externalId: String): IO<ByteArray> = IO.effect {
         val fileName = zipFiles.find { it.startsWith(externalId) }
             ?: throw FileNotFoundException()
-        continueOn(dispatcher)
-        context.assets.open(fileName).use { it.readBytes() }
+        withContext(dispatcher) { context.assets.open(fileName).use { it.readBytes() } }
     }
 }
