@@ -23,7 +23,7 @@ Without Android Studio, follow these steps:
     ```
     echo "sdk.dir=$HOME/android-sdk" >> local.properties
     ```
-5. Add your files under `app/src/main/res/raw` or copy an example from `example`
+5. Add .zip files under `app/src/main/assets` or copy an example from `example`
 (Will be documented in the future)
 6. Install and run the app to your device or emulator
     ```
