@@ -21,8 +21,8 @@ import arrow.core.left
 import arrow.core.right
 import com.github.cheapmon.balalaika.di.IoDispatcher
 import dagger.hilt.android.qualifiers.ApplicationContext
+import java.io.ByteArrayInputStream
 import java.io.IOException
-import java.io.InputStream
 import java.util.zip.ZipFile
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -34,11 +34,13 @@ class ZipExtractor @Inject constructor(
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
     @ApplicationContext private val context: Context
 ) {
-    suspend fun saveZip(fileName: String, input: InputStream): Either<Throwable, ZipFile> =
+    suspend fun saveZip(fileName: String, bytes: ByteArray): Either<Throwable, ZipFile> =
         withContext(dispatcher) {
             try {
                 val file = context.filesDir.resolve(fileName)
-                file.outputStream().use { input.copyTo(it) }
+                file.outputStream().use { out ->
+                    ByteArrayInputStream(bytes).use { it.copyTo(out) }
+                }
                 ZipFile(file).right()
             } catch (ex: IOException) {
                 ex.left()
@@ -50,7 +52,10 @@ class ZipExtractor @Inject constructor(
             try {
                 val entries = zip.use { file ->
                     file.entries().asSequence().map { entry ->
-                        entry.name.removeSuffix(".csv") to file.getInputStream(entry)
+                        Pair(
+                            entry.name.removeSuffix(".csv"),
+                            file.getInputStream(entry).bufferedReader().readText()
+                        )
                     }.toMap()
                 }
                 val categories = entries["categories"] ?: failForFile("categories")

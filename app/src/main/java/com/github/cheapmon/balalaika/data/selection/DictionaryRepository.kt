@@ -37,7 +37,7 @@ class DictionaryRepository @Inject constructor(
 
     suspend fun addDictionary(dictionary: Dictionary) {
         dictionaryDao.insertAll(listOf(dictionary))
-        // TODO: Add everything else
+        mediator.installDictionary(dictionary)
     }
 
     suspend fun removeDictionary(externalId: String) {

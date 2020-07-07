@@ -20,14 +20,13 @@ import arrow.core.left
 import arrow.core.right
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.di.DictionaryProviderType
-import java.io.InputStream
 import javax.inject.Inject
 import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.constructor.Constructor
 
 class YamlDictionaryParser @Inject constructor() {
     fun parse(
-        contents: InputStream,
+        contents: String,
         providerKey: DictionaryProviderType?
     ): Either<Throwable, List<Dictionary>> {
         return try {

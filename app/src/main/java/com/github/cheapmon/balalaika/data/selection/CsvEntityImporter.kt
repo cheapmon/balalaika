@@ -26,7 +26,6 @@ import com.github.cheapmon.balalaika.db.entities.lexeme.Lexeme
 import com.github.cheapmon.balalaika.db.entities.property.Property
 import com.github.cheapmon.balalaika.db.entities.view.DictionaryView
 import com.github.cheapmon.balalaika.db.entities.view.DictionaryViewToCategory
-import java.io.InputStream
 import java.io.InputStreamReader
 import java.util.HashMap
 import java.util.Locale
@@ -177,8 +176,8 @@ class CsvEntityImporter @Inject constructor(
         }.filterNot { it.dictionaryViewId == -1L || it.categoryId == -1L }
     }
 
-    private fun records(input: InputStream) =
+    private fun records(input: String) =
         CSVFormat.RFC4180.withFirstRecordAsHeader().parse(
-            InputStreamReader(input)
+            InputStreamReader(input.byteInputStream())
         )
 }

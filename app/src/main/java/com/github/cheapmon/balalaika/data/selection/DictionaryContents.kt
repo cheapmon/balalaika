@@ -15,12 +15,10 @@
  */
 package com.github.cheapmon.balalaika.data.selection
 
-import java.io.InputStream
-
 data class DictionaryContents(
-    val categories: InputStream,
-    val lexemes: InputStream,
-    val fullForms: InputStream,
-    val properties: InputStream,
-    val views: InputStream
+    val categories: String,
+    val lexemes: String,
+    val fullForms: String,
+    val properties: String,
+    val views: String
 )

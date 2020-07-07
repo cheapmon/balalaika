@@ -18,7 +18,8 @@ package com.github.cheapmon.balalaika.data.selection
 import android.content.Context
 import arrow.core.Either
 import arrow.core.left
-import arrow.core.right
+import arrow.fx.IO
+import arrow.fx.extensions.fx
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.di.DictionaryProviderType
 import com.github.cheapmon.balalaika.di.IoDispatcher
@@ -27,11 +28,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ActivityScoped
 import java.io.FileNotFoundException
 import java.io.IOException
-import java.io.InputStream
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.withContext
-import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.withTimeoutOrNull
 
 @ActivityScoped
@@ -42,6 +40,8 @@ class ResourcesDictionaryProvider @Inject constructor(
     private val parser: YamlDictionaryParser
 ) : DictionaryProvider {
     private val dictionaryList = context.assets.open(constants.DICTIONARY_FILE)
+        .bufferedReader()
+        .readText()
     private val zipFiles = context.assets.list("")
         .orEmpty()
         .filter { it.endsWith(".zip") }
@@ -52,15 +52,10 @@ class ResourcesDictionaryProvider @Inject constructor(
         } ?: IOException("Could not read dictionaries").left()
     }
 
-    override suspend fun getDictionary(externalId: String): Either<Throwable, InputStream> {
-        return try {
-            withTimeout(constants.LOCAL_TIMEOUT) {
-                val fileName = zipFiles.find { it.startsWith(externalId) }
-                    ?: throw FileNotFoundException()
-                withContext(dispatcher) { context.assets.open(fileName).right() }
-            }
-        } catch (ex: Exception) {
-            ex.left()
-        }
+    override suspend fun getDictionary(externalId: String): IO<ByteArray> = IO.fx {
+        val fileName = zipFiles.find { it.startsWith(externalId) }
+            ?: throw FileNotFoundException()
+        continueOn(dispatcher)
+        context.assets.open(fileName).use { it.readBytes() }
     }
 }

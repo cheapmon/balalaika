@@ -61,7 +61,7 @@ class DictionaryMediator @Inject constructor(
 
     suspend fun installDictionary(dictionary: Dictionary): Either<Throwable, Unit> {
         val provider = providers[dictionary.providerKey]
-        val input = provider?.getDictionary(dictionary.externalId)
+        val input = provider?.getDictionary(dictionary.externalId)?.attempt()?.suspended()
         return if (input == null) {
             IllegalStateException("No provider specified").left()
         } else {
@@ -77,9 +77,7 @@ class DictionaryMediator @Inject constructor(
                 is Either.Left -> contents
                 is Either.Right -> importer.import(contents.b)
             }
-            when (zipFile) {
-                is Either.Right -> extractor.removeZip(zipFile.b.name)
-            }
+            if (zipFile is Either.Right) extractor.removeZip(zipFile.b.name)
             result
         }
     }
