@@ -86,9 +86,9 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val categoryId = storage.getString(constants.ORDER_KEY, null)?.toLong()
+        val categoryId = storage.getString(constants.ORDER_KEY, null)
             ?: constants.DEFAULT_CATEGORY_ID
-        storage.putString(constants.ORDER_KEY, categoryId.toString())
+        storage.putString(constants.ORDER_KEY, categoryId)
         viewModel.setCategory(categoryId)
         val dictionaryViewId = storage.getString(constants.VIEW_KEY, null)?.toLong()
             ?: constants.DEFAULT_DICTIONARY_VIEW_ID
@@ -169,7 +169,7 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
         lifecycleScope.launch {
             val categories = viewModel.getCategories()
             val names = categories.map { it.name }.toTypedArray()
-            val ids = categories.map { it.categoryId.toString() }
+            val ids = categories.map { it.id }
             val selected = ids.indexOfFirst {
                 it == storage.getString(constants.ORDER_KEY, null)
             }
@@ -177,8 +177,8 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
                 .setIcon(R.drawable.ic_sort)
                 .setTitle(R.string.menu_order_by)
                 .setSingleChoiceItems(names, selected) { _, which ->
-                    val id = categories[which].categoryId
-                    storage.putString(constants.ORDER_KEY, id.toString())
+                    val id = categories[which].id
+                    storage.putString(constants.ORDER_KEY, id)
                     viewModel.setCategory(id)
                 }.setPositiveButton(R.string.affirm, null)
                 .show()

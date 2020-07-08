@@ -86,7 +86,7 @@ interface DictionaryEntryDao {
     )
     suspend fun getLexemes(
         dictionaryViewId: Long,
-        categoryId: Long
+        categoryId: String
     ): List<Long>
 
     /**
@@ -124,7 +124,7 @@ interface DictionaryEntryDao {
     )
     suspend fun findLexemes(
         query: String,
-        categoryId: Long,
+        categoryId: String,
         restriction: String
     ): List<Long>
 }

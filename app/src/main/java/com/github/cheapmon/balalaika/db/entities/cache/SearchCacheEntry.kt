@@ -17,7 +17,6 @@ package com.github.cheapmon.balalaika.db.entities.cache
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.github.cheapmon.balalaika.data.search.SearchPagingSource

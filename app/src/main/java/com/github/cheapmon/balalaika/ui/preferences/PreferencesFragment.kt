@@ -42,7 +42,7 @@ class PreferencesFragment : PreferenceFragmentCompat() {
             lifecycleScope.launch {
                 val categories = viewModel.getCategories()
                 entries = categories.map { it.name }.toTypedArray()
-                entryValues = categories.map { it.categoryId.toString() }.toTypedArray()
+                entryValues = categories.map { it.id }.toTypedArray()
             }
             setOnPreferenceChangeListener { _, value ->
                 viewModel.setCategory((value as String).toLong())

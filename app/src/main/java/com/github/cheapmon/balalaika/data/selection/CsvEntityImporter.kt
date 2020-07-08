@@ -15,6 +15,7 @@
  */
 package com.github.cheapmon.balalaika.data.selection
 
+import android.content.Context
 import androidx.room.withTransaction
 import arrow.fx.IO
 import com.github.cheapmon.balalaika.db.AppDatabase
@@ -24,6 +25,8 @@ import com.github.cheapmon.balalaika.db.entities.lexeme.Lexeme
 import com.github.cheapmon.balalaika.db.entities.property.Property
 import com.github.cheapmon.balalaika.db.entities.view.DictionaryView
 import com.github.cheapmon.balalaika.db.entities.view.DictionaryViewToCategory
+import com.github.cheapmon.balalaika.util.ResourceUtil
+import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.InputStreamReader
 import java.util.HashMap
 import java.util.Locale
@@ -32,9 +35,9 @@ import org.apache.commons.csv.CSVFormat
 
 /** Extracting database entities from `.csv` source files */
 class CsvEntityImporter @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val db: AppDatabase
 ) {
-    private val categoryIdCache: HashMap<String, Long> = hashMapOf()
     private val lexemeIdCache: HashMap<String, Long> = hashMapOf()
     private val dictionaryViewIdCache: HashMap<String, Long> = hashMapOf()
 
@@ -50,17 +53,14 @@ class CsvEntityImporter @Inject constructor(
     }
 
     private fun readCategories(contents: DictionaryContents): List<Category> {
-        var count = 1L
         return records(contents.categories).map {
-            categoryIdCache[it["id"]] = count
             Category(
-                categoryId = count++,
-                externalId = it["id"],
+                id = it["id"],
                 name = it["name"],
                 widget = WidgetType.valueOf(
                     it["widget"].toUpperCase(Locale.ROOT)
                 ),
-                iconId = it["icon"],
+                iconId = ResourceUtil.drawable(context, it["icon"]),
                 sequence = it["sequence"].toInt(),
                 hidden = it["hidden"] == "1",
                 orderBy = it["order_by"] == "1"
@@ -98,7 +98,7 @@ class CsvEntityImporter @Inject constructor(
                     key != "id" && key != "form" && value.isNotBlank()
                 }.map { (id, value) ->
                     Property(
-                        categoryId = categoryIdCache[id] ?: -1,
+                        categoryId = id,
                         lexemeId = lexemeIdCache[record["id"]] ?: -1,
                         value = value
                     )
@@ -110,7 +110,7 @@ class CsvEntityImporter @Inject constructor(
                     key != "id" && key != "form" && key != "base" && value.isNotBlank()
                 }.map { (id, value) ->
                     Property(
-                        categoryId = categoryIdCache[id] ?: -1,
+                        categoryId = id,
                         lexemeId = lexemeIdCache[record["id"]] ?: -1,
                         value = value
                     )
@@ -120,13 +120,13 @@ class CsvEntityImporter @Inject constructor(
             .filter { record -> record["value"].isNotBlank() }
             .map { record ->
                 Property(
-                    categoryId = categoryIdCache[record["category"]] ?: -1,
+                    categoryId = record["category"],
                     lexemeId = lexemeIdCache[record["id"]] ?: -1,
                     value = record["value"]
                 )
             }
         return (fromLexeme + fromFullForm + fromProperty)
-            .filterNot { it.categoryId == -1L || it.lexemeId == -1L }
+            .filterNot { it.lexemeId == -1L }
     }
 
     private fun readDictionaryViews(contents: DictionaryContents): List<DictionaryView> {
@@ -154,7 +154,7 @@ class CsvEntityImporter @Inject constructor(
         val default = records(contents.categories).map { record ->
             DictionaryViewToCategory(
                 dictionaryViewId = 1,
-                categoryId = categoryIdCache[record["id"]] ?: -1
+                categoryId = record["id"]
             )
         }
         return default + records(contents.views).flatMap { record ->
@@ -163,10 +163,10 @@ class CsvEntityImporter @Inject constructor(
                 .map { (id, _) ->
                     DictionaryViewToCategory(
                         dictionaryViewId = dictionaryViewIdCache[record["id"]] ?: -1,
-                        categoryId = categoryIdCache[id] ?: -1
+                        categoryId = id
                     )
                 }
-        }.filterNot { it.dictionaryViewId == -1L || it.categoryId == -1L }
+        }.filterNot { it.dictionaryViewId == -1L }
     }
 
     private fun records(input: String) =

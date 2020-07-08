@@ -48,5 +48,5 @@ data class DictionaryViewToCategory(
     /** [Dictionary view][DictionaryView] */
     @ColumnInfo(name = "dictionary_view_id") val dictionaryViewId: Long,
     /** [Category] associated with this dictionary view */
-    @ColumnInfo(name = "category_id") val categoryId: Long
+    @ColumnInfo(name = "category_id") val categoryId: String
 )

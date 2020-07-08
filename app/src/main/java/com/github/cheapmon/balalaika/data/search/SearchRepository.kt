@@ -98,7 +98,7 @@ class SearchRepository @Inject constructor(
             is SearchRestriction.Some ->
                 dictionaryEntryDao.findLexemes(
                     query,
-                    searchRestriction.category.categoryId,
+                    searchRestriction.category.id,
                     searchRestriction.restriction
                 )
         }.mapIndexed { idx, id -> SearchCacheEntry(idx + 1L, id) }

@@ -52,7 +52,7 @@ data class HistoryEntry(
      */
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") val historyEntryId: Long = 0,
     /** Optional [category][Category] of this entry if the search has been restricted */
-    @ColumnInfo(name = "category_id") val categoryId: Long? = null,
+    @ColumnInfo(name = "category_id") val categoryId: String? = null,
     /** Optional restriction of this entry */
     @ColumnInfo(name = "restriction") val restriction: String? = null,
     /** Search query */

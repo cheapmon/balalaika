@@ -60,7 +60,7 @@ class SearchViewModel @ViewModelInject constructor(
                 is SearchRestriction.Some ->
                     HistoryEntry(
                         query = query,
-                        categoryId = restriction.category.categoryId,
+                        categoryId = restriction.category.id,
                         restriction = restriction.restriction
                     )
             }

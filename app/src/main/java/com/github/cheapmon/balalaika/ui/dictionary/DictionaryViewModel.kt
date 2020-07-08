@@ -43,7 +43,7 @@ class DictionaryViewModel @ViewModelInject constructor(
     fun setDictionaryView(id: Long) = repository.setDictionaryView(id)
 
     /** Set the dictionary ordering */
-    fun setCategory(id: Long) = repository.setCategory(id)
+    fun setCategory(id: String) = repository.setCategory(id)
 
     /** Set the first entry to display */
     fun setInitialKey(id: Long?) = repository.setInitialKey(id)

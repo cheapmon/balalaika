@@ -47,7 +47,6 @@ import com.github.cheapmon.balalaika.db.entities.property.Property
             property.lexeme_id AS "p_lexeme_id",
             property.value AS "p_value", 
             category.id AS "c_id", 
-            category.external_id AS "c_external_id",
             category.name AS "c_name",
             category.widget AS "c_widget", 
             category.icon_id AS "c_icon_id", 

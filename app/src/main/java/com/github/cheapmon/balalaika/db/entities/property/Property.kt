@@ -52,7 +52,7 @@ data class Property(
      */
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") val propertyId: Long = 0,
     /** [Data category][Category] associated with this property */
-    @ColumnInfo(name = "category_id") val categoryId: Long,
+    @ColumnInfo(name = "category_id") val categoryId: String,
     /** [Lexeme] this property belongs to */
     @ColumnInfo(name = "lexeme_id") val lexemeId: Long,
     /** Serialized property value */

@@ -16,6 +16,7 @@
 package com.github.cheapmon.balalaika.db.entities.category
 
 import android.graphics.drawable.Drawable
+import androidx.annotation.DrawableRes
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
@@ -43,27 +44,16 @@ import com.github.cheapmon.balalaika.util.ResourceUtil
  * but not the same [Category]. This kind of differentiation enables a flexible and wide-spread
  * language support, which is one of the main goals of this project.
  *
- * For additional information on Balalaika's data model, please refer to the
- * [Import documentation][com.github.cheapmon.balalaika.db.insert].
- *
  * @see WidgetType
  */
 @Entity(
     indices = [
-        Index(value = ["external_id"], unique = true),
         Index(value = ["sequence"], unique = true)
     ]
 )
 data class Category(
-    /**
-     * Primary key of this category
-     *
-     * _Note_: A default value of `0` and `autoGenerate = true` effectively corresponds to
-     * auto increment.
-     */
-    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") val categoryId: Long = 0,
     /** Unique primary identifier of this category from sources */
-    @ColumnInfo(name = "external_id") val externalId: String,
+    @PrimaryKey val id: String = "",
     /** Display name of this category for the user interface */
     @ColumnInfo(name = "name") val name: String,
     /**
@@ -79,7 +69,7 @@ data class Category(
      *
      * @see ResourceUtil
      */
-    @ColumnInfo(name = "icon_id") val iconId: String,
+    @DrawableRes @ColumnInfo(name = "icon_id") val iconId: Int,
     /**
      * Unique position in ordering of data categories
      *

@@ -18,6 +18,7 @@ package com.github.cheapmon.balalaika.data.dictionary
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.db.entities.cache.CacheEntry
 import com.github.cheapmon.balalaika.db.entities.cache.CacheEntryDao
 import com.github.cheapmon.balalaika.db.entities.category.Category
@@ -62,11 +63,10 @@ class DictionaryEntryRepository @Inject constructor(
 ) {
     /** Dummy [category][Category] used when no category has been selected in the user interface */
     private val defaultCategory = Category(
-        -1,
+        constants.DEFAULT_CATEGORY_ID,
         "default",
-        "Default",
         WidgetType.PLAIN,
-        "",
+        R.drawable.ic_circle,
         -1,
         hidden = true,
         orderBy = false
@@ -102,14 +102,14 @@ class DictionaryEntryRepository @Inject constructor(
     fun setDictionaryView(id: Long) = _dictionaryView.offer(id)
 
     /** Set dictionary ordering */
-    fun setCategory(id: Long) = _category.offer(id)
+    fun setCategory(id: String) = _category.offer(id)
 
     /** Set the first entry to display */
     fun setInitialKey(id: Long?) = _initialKey.offer(id)
 
     private suspend fun getDictionary(
         dictionaryViewId: Long,
-        categoryId: Long,
+        categoryId: String,
         initialKey: Long?
     ): Flow<PagingData<DictionaryEntry>> {
         refreshCache(dictionaryViewId, categoryId)
@@ -128,7 +128,7 @@ class DictionaryEntryRepository @Inject constructor(
         ).flow
     }
 
-    private suspend fun refreshCache(dictionaryViewId: Long, categoryId: Long) {
+    private suspend fun refreshCache(dictionaryViewId: Long, categoryId: String) {
         val entries = if (categoryId == constants.DEFAULT_CATEGORY_ID) {
             dictionaryEntryDao.getLexemes(dictionaryViewId)
         } else {

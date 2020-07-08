@@ -35,7 +35,7 @@ class Constants @Inject constructor(
     val ORDER_KEY = context.getString(R.string.preferences_key_order)
 
     /** Default dictionary order */
-    val DEFAULT_CATEGORY_ID = -1L
+    val DEFAULT_CATEGORY_ID = "default"
 
     /** Key used in [storage][Storage] to save dictionary view */
     val VIEW_KEY = context.getString(R.string.preferences_key_view)
