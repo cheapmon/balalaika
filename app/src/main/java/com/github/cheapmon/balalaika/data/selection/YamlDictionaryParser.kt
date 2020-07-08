@@ -34,7 +34,7 @@ class YamlDictionaryParser @Inject constructor(
         val yaml = Yaml(Constructor(Config::class.java))
         val parsed = yaml.load(contents) as Config
         parsed.dictionaries.map {
-            it.copy(dictionaryId = 0, isActive = false)
+            it.copy(isActive = false, isInstalled = false, isUpdatable = false)
         }
     }
 

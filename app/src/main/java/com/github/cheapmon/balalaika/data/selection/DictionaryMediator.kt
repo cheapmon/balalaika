@@ -37,15 +37,15 @@ class DictionaryMediator @Inject constructor(
             v.getDictionaryList().attempt().suspended().getOrElse { emptyList() }
                 .map { it.copy(provider = k) }
         }
-        p.groupBy { it.externalId }
+        p.groupBy { it.id }
             .forEach { (id, list) ->
                 val newest = list.maxBy { it.version }
                     ?: throw IllegalStateException()
-                val current = d.find { it.externalId == id }
+                val current = d.find { it.id == id }
                 when {
                     current != null -> {
                         if (current.version < newest.version) {
-                            dao.setUpdatable(current.externalId)
+                            dao.setUpdatable(current.id)
                         }
                     }
                     else -> {
@@ -65,8 +65,8 @@ class DictionaryMediator @Inject constructor(
         if (provider == null) {
             throw IllegalStateException("No provider specified")
         } else {
-            val input = !provider.getDictionary(dictionary.externalId)
-            val zipFile = !extractor.saveZip(dictionary.externalId, input)
+            val input = !provider.getDictionary(dictionary.id)
+            val zipFile = !extractor.saveZip(dictionary.id, input)
             val contents = !extractor.extract(zipFile)
             !importer.import(contents)
         }

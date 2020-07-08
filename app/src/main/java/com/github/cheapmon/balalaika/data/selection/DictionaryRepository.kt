@@ -41,7 +41,7 @@ class DictionaryRepository @Inject constructor(
 
     val dictionaries = dictionaryDao.getAll()
 
-    fun getDictionary(externalId: String) = dictionaryDao.getByExternalId(externalId)
+    fun getDictionary(id: String) = dictionaryDao.findById(id)
 
     private val _inProgress = MutableStateFlow(false)
     val inProgress: StateFlow<Boolean>
@@ -50,9 +50,9 @@ class DictionaryRepository @Inject constructor(
     fun toggleActive(dictionary: Dictionary) {
         launch {
             if (dictionary.isActive) {
-                dictionaryDao.setInactive(dictionary.externalId)
+                dictionaryDao.setInactive(dictionary.id)
             } else {
-                dictionaryDao.setActive(dictionary.externalId)
+                dictionaryDao.setActive(dictionary.id)
             }
         }
     }
@@ -60,18 +60,18 @@ class DictionaryRepository @Inject constructor(
     fun addDictionary(dictionary: Dictionary) {
         launch {
             showProgess {
-                dictionaryDao.setInstalled(dictionary.externalId)
+                dictionaryDao.setInstalled(dictionary.id)
                 mediator.installDictionary(dictionary).attempt().suspended()
             }
         }
     }
 
-    fun removeDictionary(externalId: String) {
+    fun removeDictionary(id: String) {
         launch {
             showProgess {
-                dictionaryDao.setInactive(externalId)
-                dictionaryDao.setUninstalled(externalId)
-                dictionaryDao.setUnupdatable(externalId)
+                dictionaryDao.setInactive(id)
+                dictionaryDao.setUninstalled(id)
+                dictionaryDao.setUnupdatable(id)
                 // TODO: Remove everything else
             }
         }

@@ -90,7 +90,7 @@ class SelectionFragment : Fragment(), SelectionAdapter.Listener,
     /** Show dictionary in detail view */
     override fun onClickDictionary(dictionary: Dictionary) {
         val directions = SelectionFragmentDirections.actionNavSelectionToNavSelectionDetail(
-            dictionary.externalId
+            dictionary.id
         )
         findNavController().navigate(directions)
     }

@@ -116,7 +116,7 @@ class SelectionDetailFragment : Fragment() {
             MaterialAlertDialogBuilder(requireContext())
                 .setMessage(R.string.selection_confirm_remove)
                 .setPositiveButton(R.string.affirm) { _, _ ->
-                    viewModel.removeDictionary(dictionary.externalId)
+                    viewModel.removeDictionary(dictionary.id)
                     val directions =
                         SelectionDetailFragmentDirections.actionNavSelectionDetailToNavSelection()
                     findNavController().navigate(directions)

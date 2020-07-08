@@ -61,7 +61,7 @@ class SelectionAdapter(
             oldItem: Dictionary,
             newItem: Dictionary
         ): Boolean {
-            return oldItem.externalId == newItem.externalId
+            return oldItem.id == newItem.id
         }
     }
 

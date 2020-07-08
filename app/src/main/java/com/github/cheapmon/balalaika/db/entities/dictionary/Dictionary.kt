@@ -17,19 +17,16 @@ package com.github.cheapmon.balalaika.db.entities.dictionary
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "dictionary", indices = [Index("external_id", unique = true)])
+@Entity(tableName = "dictionary")
 data class Dictionary(
-    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") val dictionaryId: Long = 0,
-    @ColumnInfo(name = "external_id") val externalId: String = "",
+    @PrimaryKey val id: String = "",
     val version: Int = 0,
     val name: String = "",
     val summary: String = "",
     val authors: String = "",
     @ColumnInfo(name = "additional_info") val additionalInfo: String = "",
-    val url: String? = null,
     @ColumnInfo(name = "is_active") val isActive: Boolean = false,
     @ColumnInfo(name = "is_installed") val isInstalled: Boolean = false,
     @ColumnInfo(name = "is_updatable") val isUpdatable: Boolean = false,
