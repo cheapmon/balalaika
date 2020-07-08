@@ -19,8 +19,6 @@
 
     <data>
 
-        <import type="android.view.View" />
-
         <variable
             name="dictionary"
             type="com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary" />

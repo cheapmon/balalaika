@@ -22,6 +22,7 @@ import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -32,9 +33,10 @@ class DictionaryRepository @Inject constructor(
     private val mediator: DictionaryMediator
 ) : CoroutineScope {
     override val coroutineContext: CoroutineContext = Dispatchers.IO
+    private var refreshJob: Job? = null
 
     init {
-        launch { mediator.updateDictionaryList() }
+        refresh()
     }
 
     val dictionaries = dictionaryDao.getAll()
@@ -67,15 +69,17 @@ class DictionaryRepository @Inject constructor(
     fun removeDictionary(externalId: String) {
         launch {
             showProgess {
-                dictionaryDao.remove(externalId)
+                dictionaryDao.setInactive(externalId)
+                dictionaryDao.setUninstalled(externalId)
+                dictionaryDao.setUnupdatable(externalId)
                 // TODO: Remove everything else
-                mediator.updateDictionaryList()
             }
         }
     }
 
     fun refresh() {
-        launch { mediator.updateDictionaryList() }
+        refreshJob?.cancel()
+        refreshJob = launch { mediator.updateDictionaryList() }
     }
 
     private suspend fun showProgess(block: suspend () -> Unit) {

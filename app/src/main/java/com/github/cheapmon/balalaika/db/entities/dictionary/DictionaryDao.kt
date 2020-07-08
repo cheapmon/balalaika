@@ -44,6 +44,15 @@ interface DictionaryDao {
     @Query("""UPDATE dictionary SET is_installed = 1 WHERE external_id = (:externalId)""")
     suspend fun setInstalled(externalId: String)
 
+    @Query("""UPDATE dictionary SET is_installed = 0 WHERE external_id = (:externalId)""")
+    suspend fun setUninstalled(externalId: String)
+
+    @Query("""UPDATE dictionary SET is_updatable = 1 WHERE external_id = (:externalId)""")
+    suspend fun setUpdatable(externalId: String)
+
+    @Query("""UPDATE dictionary SET is_updatable = 0 WHERE external_id = (:externalId)""")
+    suspend fun setUnupdatable(externalId: String)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(dictionary: List<Dictionary>)
 

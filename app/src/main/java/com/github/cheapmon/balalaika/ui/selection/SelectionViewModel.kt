@@ -26,7 +26,7 @@ class SelectionViewModel @ViewModelInject constructor(
     private val repository: DictionaryRepository
 ) : ViewModel() {
     val dictionaries = repository.dictionaries
-    val isInstalling = repository.inProgress
+    val inProgress = repository.inProgress
 
     fun refresh() {
         repository.refresh()

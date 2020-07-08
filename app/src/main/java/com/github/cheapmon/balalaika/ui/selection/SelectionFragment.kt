@@ -84,7 +84,7 @@ class SelectionFragment : Fragment(), SelectionAdapter.Listener,
     }
 
     private suspend fun showProgress() {
-        viewModel.isInstalling.collectLatest { binding.isInstalling = it }
+        viewModel.inProgress.collectLatest { binding.inProgress = it }
     }
 
     /** Show dictionary in detail view */

@@ -19,8 +19,6 @@
 
     <data>
 
-        <import type="android.view.View" />
-
         <variable
             name="listener"
             type="com.github.cheapmon.balalaika.ui.selection.SelectionDetailFragment.Listener" />

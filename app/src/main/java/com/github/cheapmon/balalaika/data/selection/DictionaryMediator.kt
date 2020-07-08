@@ -22,6 +22,7 @@ import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.db.entities.dictionary.DictionaryDao
 import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
+import kotlinx.coroutines.flow.first
 
 @ActivityScoped
 class DictionaryMediator @Inject constructor(
@@ -31,27 +32,32 @@ class DictionaryMediator @Inject constructor(
     private val importer: CsvEntityImporter
 ) {
     suspend fun updateDictionaryList() {
-        val d = dao.getAllInstalled()
+        val d = dao.getAll().first()
         val p = providers.entries.flatMap { (k, v) ->
-            v.getDictionaryList().attempt().suspended().getOrElse { emptyList() }.map { it.copy(provider = k) }
+            v.getDictionaryList().attempt().suspended().getOrElse { emptyList() }
+                .map { it.copy(provider = k) }
         }
-        val dictionaries = p.groupBy { it.externalId }
-            .map { (id, list) ->
+        p.groupBy { it.externalId }
+            .forEach { (id, list) ->
                 val newest = list.maxBy { it.version }
                     ?: throw IllegalStateException()
                 val current = d.find { it.externalId == id }
                 when {
                     current != null -> {
                         if (current.version < newest.version) {
-                            current.copy(isUpdatable = true)
-                        } else {
-                            current
+                            dao.setUpdatable(current.externalId)
                         }
                     }
-                    else -> newest.copy(isActive = false, isInstalled = false, isUpdatable = false)
+                    else -> {
+                        val newDictionary = newest.copy(
+                            isActive = false,
+                            isInstalled = false,
+                            isUpdatable = false
+                        )
+                        dao.insertAll(listOf(newDictionary))
+                    }
                 }
             }
-        dao.insertAll(dictionaries)
     }
 
     fun installDictionary(dictionary: Dictionary): IO<Unit> = IO.fx {

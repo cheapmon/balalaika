@@ -19,8 +19,6 @@
 
     <data>
 
-        <import type="android.view.View" />
-
         <variable
             name="in_progress"
             type="Boolean" />
@@ -34,7 +32,7 @@
             android:id="@+id/entry_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="@{in_progress ? View.INVISIBLE : View.VISIBLE}"
+            android:visibility="@{!in_progress}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -49,7 +47,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:indeterminate="true"
-            android:visibility="@{in_progress ? View.VISIBLE : View.GONE}"
+            android:visibility="@{in_progress}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
