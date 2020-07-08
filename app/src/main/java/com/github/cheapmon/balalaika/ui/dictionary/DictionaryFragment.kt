@@ -115,7 +115,7 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
         }
         bindUi()
         indicateProgress()
-        scrollTo(args.externalId)
+        scrollTo(args.id)
         return binding.root
     }
 
@@ -206,9 +206,9 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
     }
 
     /** Scroll to a dictionary entry */
-    private fun scrollTo(externalId: String?) {
+    private fun scrollTo(id: String?) {
         lifecycleScope.launch {
-            val initialKey = viewModel.getIdOf(externalId)
+            val initialKey = viewModel.getIdOf(id)
             viewModel.setInitialKey(initialKey)
         }
     }
@@ -252,7 +252,7 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
     }
 
     /** Scroll to a dictionary entry */
-    override fun onClickScrollButton(externalId: String) = scrollTo(externalId)
+    override fun onClickScrollButton(id: String) = scrollTo(id)
 
     /** Open link in browser */
     override fun onClickLinkButton(link: String) {

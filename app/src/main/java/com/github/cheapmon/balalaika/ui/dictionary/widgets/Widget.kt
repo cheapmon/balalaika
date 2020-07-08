@@ -75,7 +75,7 @@ interface WidgetListener {
     fun onClickSearchButton(query: String, restriction: SearchRestriction)
 
     /** Callback for when a scroll action button is clicked */
-    fun onClickScrollButton(externalId: String)
+    fun onClickScrollButton(id: String)
 
     /** Callback for when a link action button is clicked */
     fun onClickLinkButton(link: String)

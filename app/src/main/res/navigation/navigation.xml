@@ -28,7 +28,7 @@
             android:id="@+id/action_nav_home_to_nav_search"
             app:destination="@id/nav_search" />
         <argument
-            android:name="external_id"
+            android:name="id"
             android:defaultValue="@null"
             app:argType="string"
             app:nullable="true" />
@@ -92,7 +92,7 @@
             app:destination="@id/nav_selection"
             app:popUpTo="@id/nav_selection" />
         <argument
-            android:name="external_id"
+            android:name="id"
             app:argType="string" />
     </fragment>
     <fragment

@@ -102,7 +102,7 @@ class SearchAdapter(
     private class WListener : WidgetListener {
         override fun onClickAudioButton(resId: Int) = Unit
         override fun onClickSearchButton(query: String, restriction: SearchRestriction) = Unit
-        override fun onClickScrollButton(externalId: String) = Unit
+        override fun onClickScrollButton(id: String) = Unit
         override fun onClickLinkButton(link: String) = Unit
     }
 

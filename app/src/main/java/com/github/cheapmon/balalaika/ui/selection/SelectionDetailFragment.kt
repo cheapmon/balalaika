@@ -55,7 +55,7 @@ class SelectionDetailFragment : Fragment() {
     }
 
     private suspend fun bindUi() {
-        viewModel.getDictionary(args.externalId).collect {
+        viewModel.getDictionary(args.id).collect {
             with(binding) {
                 dictionary = it
                 listener = Listener()

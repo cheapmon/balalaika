@@ -20,5 +20,5 @@ import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 
 interface DictionaryProvider {
     fun getDictionaryList(): IO<List<Dictionary>>
-    fun getDictionary(externalId: String): IO<ByteArray>
+    fun getDictionary(id: String): IO<ByteArray>
 }

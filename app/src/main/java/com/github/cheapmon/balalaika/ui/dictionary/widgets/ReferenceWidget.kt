@@ -26,7 +26,7 @@ import com.github.cheapmon.balalaika.db.entities.property.PropertyWithCategory
  * Widget for in-dictionary references
  *
  * Property values are of the form `<description>;;;<reference>`. The description can be arbitrary,
- * `<reference>` must be a valid [external identifier][Lexeme.externalId] of a [lexeme][Lexeme].
+ * `<reference>` must be a valid [identifier][Lexeme.id] of a [lexeme][Lexeme].
  *
  * @see WidgetType.REFERENCE
  */
@@ -48,7 +48,7 @@ class ReferenceWidget(
     }
 
     override fun onClickActionButtonListener(value: String) {
-        val externalId = value.split(Regex(";;;")).getOrNull(1) ?: return
-        listener.onClickScrollButton(externalId)
+        val id = value.split(Regex(";;;")).getOrNull(1) ?: return
+        listener.onClickScrollButton(id)
     }
 }

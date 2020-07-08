@@ -51,8 +51,8 @@ class ResourcesDictionaryProvider @Inject constructor(
         }
     }
 
-    override fun getDictionary(externalId: String): IO<ByteArray> = IO.effect {
-        val fileName = zipFiles.find { it.startsWith(externalId) }
+    override fun getDictionary(id: String): IO<ByteArray> = IO.effect {
+        val fileName = zipFiles.find { it.startsWith(id) }
             ?: throw FileNotFoundException()
         withContext(dispatcher) { context.assets.open(fileName).use { it.readBytes() } }
     }

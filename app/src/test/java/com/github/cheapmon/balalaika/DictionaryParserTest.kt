@@ -18,24 +18,27 @@ package com.github.cheapmon.balalaika
 import arrow.core.getOrElse
 import com.github.cheapmon.balalaika.data.selection.YamlDictionaryParser
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
-import java.lang.IllegalStateException
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class DictionaryParserTest {
-    private fun loadFrom(contents: String) =
-        YamlDictionaryParser().parse(contents.byteInputStream(), null)
+    private suspend fun loadFrom(contents: String) =
+        YamlDictionaryParser(TestCoroutineDispatcher()).parse(contents)
+            .attempt()
+            .suspended()
 
     @Test
-    fun `parses empty file`() {
+    fun `parses empty file`() = runBlockingTest {
         val response = loadFrom("dictionaries: []")
         assertTrue(response.isRight())
         assertTrue(response.fold({ false }, { it.isEmpty() }))
     }
 
     @Test
-    fun `does not parse broken file`() {
+    fun `does not parse broken file`() = runBlockingTest {
         listOf("{", "}", ";").forEach { contents ->
             val response = loadFrom(contents)
             assertTrue(response.isLeft())
@@ -43,12 +46,11 @@ class DictionaryParserTest {
     }
 
     @Test
-    fun `parses single entry`() {
+    fun `parses single entry`() = runBlockingTest {
         val response = loadFrom(
             """
             dictionaries:
-              - dictionaryId: 12
-                externalId: dict_a
+              - id: dict_a
                 version: 1
                 name: Dictionary A
                 summary: This is dictionary A
@@ -62,7 +64,7 @@ class DictionaryParserTest {
         assertEquals(
             list, listOf(
                 Dictionary(
-                    externalId = "dict_a",
+                    id = "dict_a",
                     version = 1,
                     name = "Dictionary A",
                     summary = "This is dictionary A",
@@ -73,18 +75,17 @@ class DictionaryParserTest {
     }
 
     @Test
-    fun `parses multiple entries`() {
+    fun `parses multiple entries`() = runBlockingTest {
         val response = loadFrom(
             """
             dictionaries:
-              - dictionaryId: 12
-                externalId: dict_a
+              - id: dict_a
                 version: 1
                 name: Dictionary A
                 summary: This is dictionary A
                 authors: Some guy and another guy
                 isActive: true
-              - externalId: dict_b
+              - id: dict_b
                 name: Dictionary B
             """
         )
@@ -94,8 +95,7 @@ class DictionaryParserTest {
         assertEquals(
             list, listOf(
                 Dictionary(
-                    dictionaryId = 0,
-                    externalId = "dict_a",
+                    id = "dict_a",
                     version = 1,
                     name = "Dictionary A",
                     summary = "This is dictionary A",
@@ -103,7 +103,7 @@ class DictionaryParserTest {
                     isActive = false
                 ),
                 Dictionary(
-                    externalId = "dict_b",
+                    id = "dict_b",
                     name = "Dictionary B"
                 )
             )

@@ -49,7 +49,7 @@ class DictionaryViewModel @ViewModelInject constructor(
     fun setInitialKey(id: Long?) = repository.setInitialKey(id)
 
     /** Get position of lexeme in the current dictionary setup */
-    suspend fun getIdOf(externalId: String?): Long? = repository.getIdOf(externalId)
+    suspend fun getIdOf(id: String?): Long? = repository.getIdOf(id)
 
     /** Toggle bookmark state for a lexeme */
     fun toggleBookmark(lexemeId: String) {

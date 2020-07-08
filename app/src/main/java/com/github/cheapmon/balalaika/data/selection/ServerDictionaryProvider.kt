@@ -36,7 +36,7 @@ class ServerDictionaryProvider @Inject constructor(
         }
     }
 
-    override fun getDictionary(externalId: String): IO<ByteArray> = IO.fx {
+    override fun getDictionary(id: String): IO<ByteArray> = IO.fx {
         throw NotImplementedError()
     }
 }
