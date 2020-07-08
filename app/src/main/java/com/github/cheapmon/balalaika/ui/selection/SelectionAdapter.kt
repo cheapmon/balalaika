@@ -20,14 +20,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.github.cheapmon.balalaika.core.InstallState
 import com.github.cheapmon.balalaika.databinding.FragmentSelectionItemBinding
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 
 /** Adapter for [SelectionFragment] */
 class SelectionAdapter(
     private val listener: Listener
-) : ListAdapter<InstallState<Dictionary>, SelectionAdapter.ViewHolder>(Diff) {
+) : ListAdapter<Dictionary, SelectionAdapter.ViewHolder>(Diff) {
     /** Create view */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -39,9 +38,7 @@ class SelectionAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
         with(holder.binding) {
-            dictionary = item.t
-            isInstalled = item.isInstalled()
-            isUpdatable = item.isUpdatable()
+            dictionary = item
             root.setOnClickListener { listener.onClickDictionary(item) }
         }
     }
@@ -52,25 +49,25 @@ class SelectionAdapter(
     ) : RecyclerView.ViewHolder(binding.root)
 
     /** @suppress */
-    object Diff : DiffUtil.ItemCallback<InstallState<Dictionary>>() {
+    object Diff : DiffUtil.ItemCallback<Dictionary>() {
         override fun areContentsTheSame(
-            oldItem: InstallState<Dictionary>,
-            newItem: InstallState<Dictionary>
+            oldItem: Dictionary,
+            newItem: Dictionary
         ): Boolean {
             return oldItem == newItem
         }
 
         override fun areItemsTheSame(
-            oldItem: InstallState<Dictionary>,
-            newItem: InstallState<Dictionary>
+            oldItem: Dictionary,
+            newItem: Dictionary
         ): Boolean {
-            return oldItem.t.dictionaryId == newItem.t.dictionaryId
+            return oldItem.externalId == newItem.externalId
         }
     }
 
     /** Component that handles actions from this adapter */
     interface Listener {
         /** Callback for whenever a dictionary is clicked */
-        fun onClickDictionary(dictionary: InstallState<Dictionary>)
+        fun onClickDictionary(dictionary: Dictionary)
     }
 }

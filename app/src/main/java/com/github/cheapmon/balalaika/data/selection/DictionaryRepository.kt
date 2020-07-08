@@ -18,13 +18,13 @@ package com.github.cheapmon.balalaika.data.selection
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.db.entities.dictionary.DictionaryDao
 import dagger.hilt.android.scopes.ActivityScoped
+import javax.inject.Inject
+import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import kotlin.coroutines.CoroutineContext
 
 @ActivityScoped
 class DictionaryRepository @Inject constructor(
@@ -33,11 +33,17 @@ class DictionaryRepository @Inject constructor(
 ) : CoroutineScope {
     override val coroutineContext: CoroutineContext = Dispatchers.IO
 
-    val dictionaries = mediator.dictionaries
+    init {
+        launch { mediator.updateDictionaryList() }
+    }
 
-    private val _isInstalling = MutableStateFlow(false)
-    val isInstalling: StateFlow<Boolean>
-        get() = _isInstalling
+    val dictionaries = dictionaryDao.getAll()
+
+    fun getDictionary(externalId: String) = dictionaryDao.getByExternalId(externalId)
+
+    private val _inProgress = MutableStateFlow(false)
+    val inProgress: StateFlow<Boolean>
+        get() = _inProgress
 
     fun toggleActive(dictionary: Dictionary) {
         launch {
@@ -52,24 +58,29 @@ class DictionaryRepository @Inject constructor(
     fun addDictionary(dictionary: Dictionary) {
         launch {
             showProgess {
-                dictionaryDao.insertAll(listOf(dictionary))
+                dictionaryDao.setInstalled(dictionary.externalId)
                 mediator.installDictionary(dictionary).attempt().suspended()
             }
         }
     }
 
     fun removeDictionary(externalId: String) {
-        launch { dictionaryDao.remove(externalId) }
-        // TODO: Remove everything else
+        launch {
+            showProgess {
+                dictionaryDao.remove(externalId)
+                // TODO: Remove everything else
+                mediator.updateDictionaryList()
+            }
+        }
     }
 
     fun refresh() {
-        mediator.refresh()
+        launch { mediator.updateDictionaryList() }
     }
 
     private suspend fun showProgess(block: suspend () -> Unit) {
-        _isInstalling.value = true
+        _inProgress.value = true
         block()
-        _isInstalling.value = false
+        _inProgress.value = false
     }
 }

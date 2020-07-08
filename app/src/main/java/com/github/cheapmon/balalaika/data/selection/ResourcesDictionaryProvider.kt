@@ -19,7 +19,6 @@ import android.content.Context
 import arrow.fx.IO
 import arrow.fx.extensions.fx
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
-import com.github.cheapmon.balalaika.di.DictionaryProviderType
 import com.github.cheapmon.balalaika.di.IoDispatcher
 import com.github.cheapmon.balalaika.util.Constants
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -47,7 +46,7 @@ class ResourcesDictionaryProvider @Inject constructor(
     override fun getDictionaryList(): IO<List<Dictionary>> = IO.fx {
         !!effect {
             withTimeout(constants.LOCAL_TIMEOUT) {
-                parser.parse(dictionaryList, DictionaryProviderType.RESOURCES)
+                parser.parse(dictionaryList)
             }
         }
     }

@@ -24,14 +24,6 @@
         <variable
             name="dictionary"
             type="com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary" />
-
-        <variable
-            name="is_installed"
-            type="Boolean" />
-
-        <variable
-            name="is_updatable"
-            type="Boolean" />
     </data>
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -87,7 +79,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/selection_is_installed"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                    android:visibility="@{is_installed}"
+                    android:visibility="@{dictionary.isInstalled}"
                     app:chipIcon="@drawable/ic_library"
                     app:chipIconSize="12dp"
                     app:chipMinHeight="16dp" />
@@ -99,7 +91,7 @@
                     android:text="@string/selection_is_active"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
                     android:textColor="@android:color/white"
-                    android:visibility="@{dictionary.isActive ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{dictionary.isActive}"
                     app:chipIcon="@drawable/ic_checkbox"
                     app:chipIconSize="12dp"
                     app:chipIconTint="@android:color/white"
@@ -113,7 +105,7 @@
                     android:text="@string/selection_is_updatable"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
                     android:textColor="@android:color/white"
-                    android:visibility="@{is_updatable ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{dictionary.isUpdatable}"
                     app:chipIcon="@drawable/ic_update"
                     app:chipIconSize="12dp"
                     app:chipIconTint="@android:color/white"

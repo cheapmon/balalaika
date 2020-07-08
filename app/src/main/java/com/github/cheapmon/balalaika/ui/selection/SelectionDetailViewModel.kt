@@ -23,6 +23,8 @@ import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 class SelectionDetailViewModel @ViewModelInject constructor(
     private val repository: DictionaryRepository
 ) : ViewModel() {
+    fun getDictionary(externalId: String) = repository.getDictionary(externalId)
+
     fun toggleActive(dictionary: Dictionary) = repository.toggleActive(dictionary)
 
     fun addDictionary(dictionary: Dictionary) = repository.addDictionary(dictionary)

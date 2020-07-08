@@ -21,23 +21,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import arrow.core.Either
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.core.InstallState
 import com.github.cheapmon.balalaika.databinding.FragmentSelectionDetailBinding
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
-import com.github.cheapmon.balalaika.util.exhaustive
-import com.github.cheapmon.balalaika.util.logger
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -54,20 +50,19 @@ class SelectionDetailFragment : Fragment() {
     ): View? {
         binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_selection_detail, container, false)
-        bindUi()
+        lifecycleScope.launch { bindUi() }
         return binding.root
     }
 
-    private fun bindUi() {
-        val state: InstallState<Dictionary> = args.dictionary.data
-        with(binding) {
-            dictionary = state.t
-            isInstalled = state.isInstalled()
-            isUpdatable = state.isUpdatable()
-            listener = Listener()
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                selectionDetailSummaryText.justificationMode = JUSTIFICATION_MODE_INTER_WORD
-                selectionDetailInfoText.justificationMode = JUSTIFICATION_MODE_INTER_WORD
+    private suspend fun bindUi() {
+        viewModel.getDictionary(args.externalId).collect {
+            with(binding) {
+                dictionary = it
+                listener = Listener()
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    selectionDetailSummaryText.justificationMode = JUSTIFICATION_MODE_INTER_WORD
+                    selectionDetailInfoText.justificationMode = JUSTIFICATION_MODE_INTER_WORD
+                }
             }
         }
     }

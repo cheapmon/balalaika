@@ -16,51 +16,46 @@
 package com.github.cheapmon.balalaika.data.selection
 
 import arrow.core.getOrElse
-import arrow.core.right
 import arrow.fx.IO
 import arrow.fx.extensions.fx
-import com.github.cheapmon.balalaika.core.InstallState
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.db.entities.dictionary.DictionaryDao
-import com.github.cheapmon.balalaika.di.DictionaryProviderType
 import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.mapLatest
 
 @ActivityScoped
 class DictionaryMediator @Inject constructor(
-    dao: DictionaryDao,
-    private val providers: Map<DictionaryProviderType, @JvmSuppressWildcards DictionaryProvider>,
+    private val dao: DictionaryDao,
+    private val providers: Map<String, @JvmSuppressWildcards DictionaryProvider>,
     private val extractor: ZipExtractor,
     private val importer: CsvEntityImporter
 ) {
-    private val state = MutableStateFlow(false)
-
-    val dictionaries = state.flatMapLatest { dao.getAll() }.mapLatest { d ->
-        val list = providers.map { (_, v) -> v.getDictionaryList().attempt().suspended() }
-        when {
-            list.all { it.isLeft() } -> d.map { InstallState.Installed(it) }.right()
-            else -> {
-                val result = (d + list.flatMap { it.getOrElse { emptyList() } })
-                    .groupBy { it.externalId }
-                    .map { (id, list) ->
-                        val newest = list.maxBy { it.version } ?: throw IllegalStateException()
-                        val current = d.find { it.externalId == id }
-                        when {
-                            d.contains(newest) -> InstallState.Installed(newest)
-                            current != null -> InstallState.Updatable(current)
-                            else -> InstallState.Installable(newest)
+    suspend fun updateDictionaryList() {
+        val d = dao.getAllInstalled()
+        val p = providers.entries.flatMap { (k, v) ->
+            v.getDictionaryList().attempt().suspended().getOrElse { emptyList() }.map { it.copy(provider = k) }
+        }
+        val dictionaries = p.groupBy { it.externalId }
+            .map { (id, list) ->
+                val newest = list.maxBy { it.version }
+                    ?: throw IllegalStateException()
+                val current = d.find { it.externalId == id }
+                when {
+                    current != null -> {
+                        if (current.version < newest.version) {
+                            current.copy(isUpdatable = true)
+                        } else {
+                            current
                         }
                     }
-                result.right()
+                    else -> newest.copy(isActive = false, isInstalled = false, isUpdatable = false)
+                }
             }
-        }
+        dao.insertAll(dictionaries)
     }
 
-    suspend fun installDictionary(dictionary: Dictionary): IO<Unit> = IO.fx {
-        val provider = providers[dictionary.providerKey]
+    fun installDictionary(dictionary: Dictionary): IO<Unit> = IO.fx {
+        val provider = providers[dictionary.provider]
         if (provider == null) {
             throw IllegalStateException("No provider specified")
         } else {
@@ -69,9 +64,5 @@ class DictionaryMediator @Inject constructor(
             val contents = !extractor.extract(zipFile)
             !importer.import(contents)
         }
-    }
-
-    fun refresh() {
-        state.value = !state.value
     }
 }

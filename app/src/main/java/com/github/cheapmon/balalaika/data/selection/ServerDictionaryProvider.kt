@@ -18,7 +18,6 @@ package com.github.cheapmon.balalaika.data.selection
 import arrow.fx.IO
 import arrow.fx.extensions.fx
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
-import com.github.cheapmon.balalaika.di.DictionaryProviderType
 import com.github.cheapmon.balalaika.util.Constants
 import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
@@ -32,7 +31,7 @@ class ServerDictionaryProvider @Inject constructor(
     override fun getDictionaryList(): IO<List<Dictionary>> = IO.fx {
         !!effect {
             withTimeout(constants.REMOTE_TIMEOUT) {
-                parser.parse("dictionaries: []", DictionaryProviderType.SERVER)
+                parser.parse("dictionaries: []")
             }
         }
     }

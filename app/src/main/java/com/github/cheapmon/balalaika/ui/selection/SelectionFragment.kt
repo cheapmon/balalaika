@@ -19,7 +19,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -29,13 +28,9 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import arrow.core.Either
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.core.DictionaryParcel
-import com.github.cheapmon.balalaika.core.InstallState
 import com.github.cheapmon.balalaika.databinding.FragmentSelectionListBinding
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
-import com.github.cheapmon.balalaika.util.exhaustive
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
@@ -83,23 +78,8 @@ class SelectionFragment : Fragment(), SelectionAdapter.Listener,
     private suspend fun submitData() {
         viewModel.dictionaries.collect { response ->
             swipeRefreshLayout.isRefreshing = false
-            when (response) {
-                is Either.Right -> {
-                    selectionAdapter.submitList(response.b)
-                    binding.isEmpty = response.b.isEmpty()
-                }
-                is Either.Left -> {
-                    selectionAdapter.submitList(listOf())
-                    binding.isEmpty = true
-                    Toast.makeText(
-                        requireContext(),
-                        requireContext().getString(R.string.selection_loading_failed),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                else -> {
-                }
-            }.exhaustive
+            selectionAdapter.submitList(response)
+            binding.isEmpty = response.isEmpty()
         }
     }
 
@@ -108,9 +88,9 @@ class SelectionFragment : Fragment(), SelectionAdapter.Listener,
     }
 
     /** Show dictionary in detail view */
-    override fun onClickDictionary(dictionary: InstallState<Dictionary>) {
+    override fun onClickDictionary(dictionary: Dictionary) {
         val directions = SelectionFragmentDirections.actionNavSelectionToNavSelectionDetail(
-            DictionaryParcel(dictionary)
+            dictionary.externalId
         )
         findNavController().navigate(directions)
     }
