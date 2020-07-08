@@ -37,7 +37,6 @@ data class CacheEntry(
      */
     @PrimaryKey @ColumnInfo(name = "id") val cacheEntryId: Long,
     /** Identifier of a [lexeme][Lexeme] */
-    @ForeignKey(entity = Lexeme::class, parentColumns = ["id"], childColumns = ["lexeme_id"])
     @ColumnInfo(name = "lexeme_id")
     val lexemeId: Long
 )
