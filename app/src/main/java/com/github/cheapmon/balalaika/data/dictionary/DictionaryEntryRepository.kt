@@ -139,13 +139,12 @@ class DictionaryEntryRepository @Inject constructor(
     }
 
     /** Get the position of a lexeme in the dictionary */
-    suspend fun getIdOf(externalId: String?): Long? = externalId?.let {
-        val lexemeId = lexemeDao.getLexemeIdByExternalId(externalId) ?: return@let null
-        cacheEntryDao.findEntryInDictionaryCache(lexemeId)
+    suspend fun getIdOf(id: String?): Long? = id?.let {
+        cacheEntryDao.findEntryInDictionaryCache(id)
     }
 
     /** Toggle bookmark state for a [lexeme][Lexeme] */
-    suspend fun toggleBookmark(lexemeId: Long) {
+    suspend fun toggleBookmark(lexemeId: String) {
         lexemeDao.toggleBookmark(lexemeId)
     }
 

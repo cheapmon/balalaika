@@ -121,7 +121,7 @@ class BookmarksFragment : Fragment(), BookmarksAdapter.Listener {
 
     /** Remove single bookmark */
     override fun onClickDeleteButton(lexeme: Lexeme) {
-        viewModel.removeBookmark(lexeme.lexemeId)
+        viewModel.removeBookmark(lexeme.id)
         Snackbar.make(binding.root, R.string.bookmarks_item_removed, Snackbar.LENGTH_SHORT)
             .show()
     }
@@ -129,7 +129,7 @@ class BookmarksFragment : Fragment(), BookmarksAdapter.Listener {
     /** Show bookmarked entry in dictionary */
     override fun onClickRedoButton(lexeme: Lexeme) {
         val directions =
-            BookmarksFragmentDirections.actionNavBookmarksToNavHome(lexeme.externalId)
+            BookmarksFragmentDirections.actionNavBookmarksToNavHome(lexeme.id)
         findNavController().navigate(directions)
     }
 }

@@ -38,7 +38,7 @@ interface PropertyDao {
                 WHERE dictionary_view_id = (:dictionaryViewId))
                 AND hidden = 0"""
     )
-    suspend fun getProperties(lexemeId: Long, dictionaryViewId: Long): List<PropertyWithCategory>
+    suspend fun getProperties(lexemeId: String, dictionaryViewId: Long): List<PropertyWithCategory>
 
     /** Insert all [properties][Property] into the database */
     @Insert

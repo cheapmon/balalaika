@@ -104,7 +104,7 @@ class DictionaryAdapter(
 
     private object DictionaryDiff : DiffUtil.ItemCallback<DictionaryEntry>() {
         override fun areItemsTheSame(oldItem: DictionaryEntry, newItem: DictionaryEntry): Boolean {
-            return oldItem.lexemeWithBase.lexeme.lexemeId == newItem.lexemeWithBase.lexeme.lexemeId
+            return oldItem.lexemeWithBase.lexeme.id == newItem.lexemeWithBase.lexeme.id
         }
 
         override fun areContentsTheSame(

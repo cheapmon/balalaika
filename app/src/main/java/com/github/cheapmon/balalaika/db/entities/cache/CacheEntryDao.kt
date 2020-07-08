@@ -29,14 +29,14 @@ interface CacheEntryDao {
         """SELECT lexeme_id FROM cache_entry
                 WHERE id >= (:startId) AND id < (:startId) + (:count)"""
     )
-    suspend fun getFromDictionaryCache(startId: Long, count: Int): List<Long>
+    suspend fun getFromDictionaryCache(startId: Long, count: Int): List<String>
 
     /** Get some entries from the search cache */
     @Query(
         """SELECT lexeme_id FROM search_cache_entry
                 WHERE id >= (:startId) AND id < (:startId) + (:count)"""
     )
-    suspend fun getFromSearchCache(startId: Long, count: Int): List<Long>
+    suspend fun getFromSearchCache(startId: Long, count: Int): List<String>
 
     /** Find the position of an entry in the main cache */
     @Transaction
@@ -45,7 +45,7 @@ interface CacheEntryDao {
                 WHERE lexeme_id = (:lexemeId)
                 LIMIT 1"""
     )
-    suspend fun findEntryInDictionaryCache(lexemeId: Long): Long?
+    suspend fun findEntryInDictionaryCache(lexemeId: String): Long?
 
     /** Insert entries into main cache */
     @Insert(onConflict = OnConflictStrategy.REPLACE)

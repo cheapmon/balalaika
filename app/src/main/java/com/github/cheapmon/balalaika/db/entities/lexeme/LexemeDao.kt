@@ -24,14 +24,10 @@ import kotlinx.coroutines.flow.Flow
 /** Database link for [lexemes][Lexeme] */
 @Dao
 interface LexemeDao {
-    /** Find a [lexeme][Lexeme] by its [identifier][Lexeme.lexemeId] */
+    /** Find a [lexeme][Lexeme] by its [identifier][Lexeme.id] */
     @Transaction
-    @Query("SELECT * FROM lexeme WHERE id = (:lexemeId) LIMIT 1")
-    suspend fun getLexemeById(lexemeId: Long): LexemeWithBase?
-
-    /** Find a [lexeme][Lexeme] by its [external identifier][Lexeme.externalId] */
-    @Query("SELECT id FROM lexeme WHERE external_id = (:externalId) LIMIT 1")
-    suspend fun getLexemeIdByExternalId(externalId: String): Long?
+    @Query("SELECT * FROM lexeme WHERE id = (:id) LIMIT 1")
+    suspend fun getLexemeById(id: String): LexemeWithBase?
 
     /** Get all bookmarked [lexemes][Lexeme] */
     @Query("SELECT * FROM lexeme WHERE is_bookmark = 1")
@@ -39,7 +35,7 @@ interface LexemeDao {
 
     /** Toggle bookmark state for a [lexeme][Lexeme] */
     @Query("UPDATE lexeme SET is_bookmark = NOT is_bookmark WHERE id = (:id)")
-    suspend fun toggleBookmark(id: Long)
+    suspend fun toggleBookmark(id: String)
 
     /** Remove all bookmarks */
     @Query("UPDATE lexeme SET is_bookmark = 0 WHERE is_bookmark = 1")

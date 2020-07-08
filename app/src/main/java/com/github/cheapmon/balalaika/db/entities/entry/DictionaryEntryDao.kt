@@ -34,14 +34,14 @@ import com.github.cheapmon.balalaika.ui.search.SearchFragment
  * 2. Fetching associated dictionary entries on demand
  *
  * In this data access object, we handle the first step by fetching
- * [lexeme identifiers][Lexeme.lexemeId] based on the user configuration.
+ * [lexeme identifiers][Lexeme.id] based on the user configuration.
  *
  * @see PropertyDao.getProperties
  */
 @Dao
 interface DictionaryEntryDao {
     /**
-     * Get all [lexeme ids][Lexeme.lexemeId], depending on a certain
+     * Get all [lexeme ids][Lexeme.id], depending on a certain
      * [dictionary view][DictionaryView]
      *
      * This effectively checks for all [categories][Category] that are displayed within the
@@ -61,7 +61,7 @@ interface DictionaryEntryDao {
                     GROUP BY id
                     ORDER BY form ASC, c_sequence ASC"""
     )
-    suspend fun getLexemes(dictionaryViewId: Long): List<Long>
+    suspend fun getLexemes(dictionaryViewId: Long): List<String>
 
     /**
      * Get all [lexemes][Lexeme], depending on a certain [dictionary view][DictionaryView] and
@@ -87,7 +87,7 @@ interface DictionaryEntryDao {
     suspend fun getLexemes(
         dictionaryViewId: Long,
         categoryId: String
-    ): List<Long>
+    ): List<String>
 
     /**
      * Find all [lexemes][Lexeme] whose [form][Lexeme.form] or
@@ -103,7 +103,7 @@ interface DictionaryEntryDao {
                     GROUP BY id
                     ORDER BY form ASC"""
     )
-    suspend fun findLexemes(query: String): List<Long>
+    suspend fun findLexemes(query: String): List<String>
 
     /**
      * Find all [lexemes][Lexeme] whose [form][Lexeme.form] or
@@ -126,5 +126,5 @@ interface DictionaryEntryDao {
         query: String,
         categoryId: String,
         restriction: String
-    ): List<Long>
+    ): List<String>
 }

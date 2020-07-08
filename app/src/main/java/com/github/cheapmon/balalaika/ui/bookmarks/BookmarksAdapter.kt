@@ -61,7 +61,7 @@ class BookmarksAdapter(
             oldItem: Lexeme,
             newItem: Lexeme
         ): Boolean {
-            return oldItem.lexemeId == newItem.lexemeId
+            return oldItem.id == newItem.id
         }
     }
 

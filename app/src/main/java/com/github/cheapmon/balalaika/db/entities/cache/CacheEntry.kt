@@ -37,5 +37,5 @@ data class CacheEntry(
     @PrimaryKey @ColumnInfo(name = "id") val cacheEntryId: Long,
     /** Identifier of a [lexeme][Lexeme] */
     @ColumnInfo(name = "lexeme_id")
-    val lexemeId: Long
+    val lexemeId: String
 )

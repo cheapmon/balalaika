@@ -34,7 +34,7 @@ class BookmarksViewModel @ViewModelInject constructor(
     val lexemes = repository.bookmarks.asLiveData()
 
     /** Remove single bookmark */
-    fun removeBookmark(lexemeId: Long) {
+    fun removeBookmark(lexemeId: String) {
         viewModelScope.launch { repository.toggleBookmark(lexemeId) }
     }
 

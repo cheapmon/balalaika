@@ -140,7 +140,7 @@ class SearchFragment : Fragment(), SearchAdapter.Listener {
     /** Show entry in dictionary */
     override fun onClickItem(lexeme: Lexeme) {
         viewModel.addToHistory()
-        val directions = SearchFragmentDirections.actionNavSearchToNavHome(lexeme.externalId)
+        val directions = SearchFragmentDirections.actionNavSearchToNavHome(lexeme.id)
         findNavController().navigate(directions)
     }
 

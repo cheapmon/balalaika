@@ -28,9 +28,6 @@ import com.github.cheapmon.balalaika.db.entities.lexeme.Lexeme
  *
  * To keep data categories flexible, properties are not saved on the lexeme itself, but in a
  * different table. This also enables 1:n-associations.
- *
- * For additional information on Balalaika's data model, please refer to the
- * [Import documentation][com.github.cheapmon.balalaika.db.insert].
  */
 @Entity(
     foreignKeys = [
@@ -54,7 +51,7 @@ data class Property(
     /** [Data category][Category] associated with this property */
     @ColumnInfo(name = "category_id") val categoryId: String,
     /** [Lexeme] this property belongs to */
-    @ColumnInfo(name = "lexeme_id") val lexemeId: Long,
+    @ColumnInfo(name = "lexeme_id") val lexemeId: String,
     /** Serialized property value */
     @ColumnInfo(name = "value") val value: String
 )

@@ -52,7 +52,7 @@ class DictionaryViewModel @ViewModelInject constructor(
     suspend fun getIdOf(externalId: String?): Long? = repository.getIdOf(externalId)
 
     /** Toggle bookmark state for a lexeme */
-    fun toggleBookmark(lexemeId: Long) {
+    fun toggleBookmark(lexemeId: String) {
         viewModelScope.launch { repository.toggleBookmark(lexemeId) }
     }
 

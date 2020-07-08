@@ -30,30 +30,17 @@ import com.github.cheapmon.balalaika.ui.dictionary.DictionaryFragment
  * difference is that full forms hold an additional [base][baseId] lexeme they depend on
  * (e.g. _happier_ points to _happy_). This can be applied to most languages.
  *
- * For additional information on Balalaika's data model, please refer to the
- * [Import documentation][com.github.cheapmon.balalaika.db.insert].
- *
  * @see DictionaryFragment
  */
 @Entity(
     foreignKeys = [
         ForeignKey(entity = Lexeme::class, parentColumns = ["id"], childColumns = ["base_id"])
     ],
-    indices = [
-        Index(value = ["external_id"], unique = true),
-        Index(value = ["base_id"])
-    ]
+    indices = [Index(value = ["base_id"])]
 )
 data class Lexeme(
-    /**
-     * Primary key of this lexeme
-     *
-     * _Note_: A default value of `0` and `autoGenerate = true` effectively corresponds to
-     * auto increment.
-     */
-    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") val lexemeId: Long = 0,
     /** Unique identifier of this lexeme from sources */
-    @ColumnInfo(name = "external_id") val externalId: String,
+    @PrimaryKey val id: String,
     /**
      * Orthographic form of this lexeme
      *
@@ -61,7 +48,7 @@ data class Lexeme(
      */
     @ColumnInfo(name = "form") val form: String,
     /** Optional base of this lexeme */
-    @ColumnInfo(name = "base_id") val baseId: Long?,
+    @ColumnInfo(name = "base_id") val baseId: String?,
     /**
      * Bookmark state of this lexeme
      *

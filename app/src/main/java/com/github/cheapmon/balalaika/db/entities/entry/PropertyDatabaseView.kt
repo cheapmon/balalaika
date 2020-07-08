@@ -38,7 +38,6 @@ import com.github.cheapmon.balalaika.db.entities.property.Property
 @DatabaseView(
     """SELECT lexeme.*,
             base.id AS "b_id",
-            base.external_id AS "b_external_id", 
             base.form AS "b_form", 
             base.base_id AS "b_base_id",
             base.is_bookmark AS "b_is_bookmark", 

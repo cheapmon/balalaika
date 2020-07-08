@@ -36,5 +36,5 @@ data class SearchCacheEntry(
     @PrimaryKey @ColumnInfo(name = "id") val searchCacheEntryId: Long,
     /** Identifier of a [lexeme][Lexeme] */
     @ColumnInfo(name = "lexeme_id")
-    val lexemeId: Long
+    val lexemeId: String
 )

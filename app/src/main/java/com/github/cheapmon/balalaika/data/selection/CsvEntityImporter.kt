@@ -38,7 +38,6 @@ class CsvEntityImporter @Inject constructor(
     @ApplicationContext private val context: Context,
     private val db: AppDatabase
 ) {
-    private val lexemeIdCache: HashMap<String, Long> = hashMapOf()
     private val dictionaryViewIdCache: HashMap<String, Long> = hashMapOf()
 
     fun import(contents: DictionaryContents): IO<Unit> = IO.effect {
@@ -69,23 +68,18 @@ class CsvEntityImporter @Inject constructor(
     }
 
     private fun readLexemes(contents: DictionaryContents): List<Lexeme> {
-        var count = 1L
         val fromLexeme = records(contents.lexemes).map {
-            lexemeIdCache[it["id"]] = count
             Lexeme(
-                lexemeId = count++,
-                externalId = it["id"],
+                id = it["id"],
                 form = it["form"],
                 baseId = null
             )
         }
         val fromFullForm = records(contents.fullForms).map {
-            lexemeIdCache[it["id"]] = count
             Lexeme(
-                lexemeId = count++,
-                externalId = it["id"],
+                id = it["id"],
                 form = it["form"],
-                baseId = lexemeIdCache[it["base"]]
+                baseId = it["base"]
             )
         }
         return (fromLexeme + fromFullForm)
@@ -99,7 +93,7 @@ class CsvEntityImporter @Inject constructor(
                 }.map { (id, value) ->
                     Property(
                         categoryId = id,
-                        lexemeId = lexemeIdCache[record["id"]] ?: -1,
+                        lexemeId = record["id"],
                         value = value
                     )
                 }
@@ -111,7 +105,7 @@ class CsvEntityImporter @Inject constructor(
                 }.map { (id, value) ->
                     Property(
                         categoryId = id,
-                        lexemeId = lexemeIdCache[record["id"]] ?: -1,
+                        lexemeId = record["id"],
                         value = value
                     )
                 }
@@ -121,12 +115,11 @@ class CsvEntityImporter @Inject constructor(
             .map { record ->
                 Property(
                     categoryId = record["category"],
-                    lexemeId = lexemeIdCache[record["id"]] ?: -1,
+                    lexemeId = record["id"],
                     value = record["value"]
                 )
             }
         return (fromLexeme + fromFullForm + fromProperty)
-            .filterNot { it.lexemeId == -1L }
     }
 
     private fun readDictionaryViews(contents: DictionaryContents): List<DictionaryView> {

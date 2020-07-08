@@ -215,7 +215,7 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
 
     /** Add or remove an entry to bookmarks */
     override fun onClickBookmarkButton(entry: DictionaryEntry, isBookmark: Boolean) {
-        viewModel.toggleBookmark(entry.lexemeWithBase.lexeme.lexemeId)
+        viewModel.toggleBookmark(entry.lexemeWithBase.lexeme.id)
         val message = if (isBookmark) {
             getString(R.string.dictionary_bookmark_remove, entry.lexemeWithBase.lexeme.form)
         } else {
@@ -226,7 +226,7 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
 
     /** Go to base of a lexeme */
     override fun onClickBaseButton(entry: DictionaryEntry) =
-        scrollTo(entry.lexemeWithBase.base?.externalId)
+        scrollTo(entry.lexemeWithBase.base?.id)
 
     /** Play audio file */
     override fun onClickAudioButton(resId: Int) {
