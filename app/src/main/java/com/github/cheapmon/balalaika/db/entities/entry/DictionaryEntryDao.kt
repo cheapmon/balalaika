@@ -61,7 +61,7 @@ interface DictionaryEntryDao {
                     GROUP BY id
                     ORDER BY form ASC, c_sequence ASC"""
     )
-    suspend fun getLexemes(dictionaryViewId: Long): List<String>
+    suspend fun getLexemes(dictionaryViewId: String): List<String>
 
     /**
      * Get all [lexemes][Lexeme], depending on a certain [dictionary view][DictionaryView] and
@@ -85,7 +85,7 @@ interface DictionaryEntryDao {
                     ORDER BY o_value ASC, form ASC, c_sequence ASC"""
     )
     suspend fun getLexemes(
-        dictionaryViewId: Long,
+        dictionaryViewId: String,
         categoryId: String
     ): List<String>
 

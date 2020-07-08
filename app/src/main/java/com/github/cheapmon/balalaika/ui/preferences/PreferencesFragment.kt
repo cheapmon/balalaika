@@ -55,7 +55,7 @@ class PreferencesFragment : PreferenceFragmentCompat() {
             lifecycleScope.launch {
                 val views = viewModel.getDictionaryViews()
                 val names = views.map { it.dictionaryView.name }.toTypedArray()
-                val ids = views.map { it.dictionaryView.dictionaryViewId.toString() }.toTypedArray()
+                val ids = views.map { it.dictionaryView.id }.toTypedArray()
                 entries = names
                 entryValues = ids
             }

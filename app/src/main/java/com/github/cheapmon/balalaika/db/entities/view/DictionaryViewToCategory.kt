@@ -46,7 +46,7 @@ import com.github.cheapmon.balalaika.db.entities.category.Category
 )
 data class DictionaryViewToCategory(
     /** [Dictionary view][DictionaryView] */
-    @ColumnInfo(name = "dictionary_view_id") val dictionaryViewId: Long,
+    @ColumnInfo(name = "dictionary_view_id") val dictionaryViewId: String,
     /** [Category] associated with this dictionary view */
     @ColumnInfo(name = "category_id") val categoryId: String
 )

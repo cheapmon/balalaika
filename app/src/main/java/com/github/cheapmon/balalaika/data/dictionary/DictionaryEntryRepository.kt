@@ -64,7 +64,7 @@ class DictionaryEntryRepository @Inject constructor(
     /** Dummy [category][Category] used when no category has been selected in the user interface */
     private val defaultCategory = Category(
         constants.DEFAULT_CATEGORY_ID,
-        "default",
+        "Default",
         WidgetType.PLAIN,
         R.drawable.ic_circle,
         -1,
@@ -99,7 +99,7 @@ class DictionaryEntryRepository @Inject constructor(
         .flatMapLatest { (d, c, i) -> getDictionary(d, c, i) }
 
     /** Set dictionary view */
-    fun setDictionaryView(id: Long) = _dictionaryView.offer(id)
+    fun setDictionaryView(id: String) = _dictionaryView.offer(id)
 
     /** Set dictionary ordering */
     fun setCategory(id: String) = _category.offer(id)
@@ -108,7 +108,7 @@ class DictionaryEntryRepository @Inject constructor(
     fun setInitialKey(id: Long?) = _initialKey.offer(id)
 
     private suspend fun getDictionary(
-        dictionaryViewId: Long,
+        dictionaryViewId: String,
         categoryId: String,
         initialKey: Long?
     ): Flow<PagingData<DictionaryEntry>> {
@@ -128,7 +128,7 @@ class DictionaryEntryRepository @Inject constructor(
         ).flow
     }
 
-    private suspend fun refreshCache(dictionaryViewId: Long, categoryId: String) {
+    private suspend fun refreshCache(dictionaryViewId: String, categoryId: String) {
         val entries = if (categoryId == constants.DEFAULT_CATEGORY_ID) {
             dictionaryEntryDao.getLexemes(dictionaryViewId)
         } else {

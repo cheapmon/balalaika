@@ -37,7 +37,7 @@ class DictionaryPagingSource(
     private val cacheEntryDao: CacheEntryDao,
     private val lexemeDao: LexemeDao,
     private val propertyDao: PropertyDao,
-    private val dictionaryViewId: Long
+    private val dictionaryViewId: String
 ) : PagingSource<Long, DictionaryEntry>() {
     private val startId = constants.PAGING_START_INDEX
 

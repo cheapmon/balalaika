@@ -31,22 +31,12 @@ import com.github.cheapmon.balalaika.db.entities.entry.PropertyDatabaseView
  * For example, for certain translation tasks it may suffice to only show the lexeme and the
  * translation itself.
  *
- * For additional information on Balalaika's data model, please refer to the
- * [Import documentation][com.github.cheapmon.balalaika.db.insert].
- *
  * @see PropertyDatabaseView
  */
 @Entity(tableName = "dictionary_view")
 data class DictionaryView(
-    /**
-     * Primary key of this dictionary view
-     *
-     * _Note_: A default value of `0` and `autoGenerate = true` effectively corresponds to
-     * auto increment.
-     */
-    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") val dictionaryViewId: Long = 0,
     /** Unique identifier of this dictionary view from sources */
-    @ColumnInfo(name = "external_id") val externalId: String,
+    @PrimaryKey val id: String,
     /** Name of this dictionary view */
     @ColumnInfo(name = "name") val name: String
 )

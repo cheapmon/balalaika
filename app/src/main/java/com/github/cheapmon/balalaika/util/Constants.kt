@@ -41,7 +41,7 @@ class Constants @Inject constructor(
     val VIEW_KEY = context.getString(R.string.preferences_key_view)
 
     /** Default dictionary view */
-    val DEFAULT_DICTIONARY_VIEW_ID = 1L
+    val DEFAULT_DICTIONARY_VIEW_ID = "all"
 
     /** Paging start index */
     val PAGING_START_INDEX = 1L

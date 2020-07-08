@@ -90,9 +90,9 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
             ?: constants.DEFAULT_CATEGORY_ID
         storage.putString(constants.ORDER_KEY, categoryId)
         viewModel.setCategory(categoryId)
-        val dictionaryViewId = storage.getString(constants.VIEW_KEY, null)?.toLong()
+        val dictionaryViewId = storage.getString(constants.VIEW_KEY, null)
             ?: constants.DEFAULT_DICTIONARY_VIEW_ID
-        storage.putString(constants.VIEW_KEY, dictionaryViewId.toString())
+        storage.putString(constants.VIEW_KEY, dictionaryViewId)
         viewModel.setDictionaryView(dictionaryViewId)
     }
 
@@ -189,7 +189,7 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
         lifecycleScope.launch {
             val dictionaryViews = viewModel.getDictionaryViews()
             val names = dictionaryViews.map { it.dictionaryView.name }.toTypedArray()
-            val ids = dictionaryViews.map { it.dictionaryView.dictionaryViewId.toString() }
+            val ids = dictionaryViews.map { it.dictionaryView.id }
             val selected = ids.indexOfFirst {
                 it == storage.getString(constants.VIEW_KEY, null)
             }
@@ -197,8 +197,8 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
                 .setIcon(R.drawable.ic_view)
                 .setTitle(R.string.menu_setup_view)
                 .setSingleChoiceItems(names, selected) { _, which ->
-                    val id = dictionaryViews[which].dictionaryView.dictionaryViewId
-                    storage.putString(constants.VIEW_KEY, id.toString())
+                    val id = dictionaryViews[which].dictionaryView.id
+                    storage.putString(constants.VIEW_KEY, id)
                     viewModel.setDictionaryView(id)
                 }.setPositiveButton(R.string.affirm, null)
                 .show()
