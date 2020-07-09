@@ -38,8 +38,8 @@ import com.github.cheapmon.balalaika.ui.history.HistoryFragment
     foreignKeys = [
         ForeignKey(
             entity = Dictionary::class,
-            parentColumns = ["dictionary_id"],
-            childColumns = ["id"]
+            parentColumns = ["id"],
+            childColumns = ["dictionary_id"]
         ),
         ForeignKey(
             entity = Category::class,

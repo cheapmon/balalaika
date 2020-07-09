@@ -78,6 +78,11 @@ class DatabaseModule {
     /** @suppress */
     @ActivityScoped
     @Provides
+    fun provideConfigurations(appDatabase: AppDatabase) = appDatabase.configurations()
+
+    /** @suppress */
+    @ActivityScoped
+    @Provides
     fun provideCacheDatabase(@ApplicationContext context: Context) =
         Room.inMemoryDatabaseBuilder(context, CacheDatabase::class.java).build()
 
