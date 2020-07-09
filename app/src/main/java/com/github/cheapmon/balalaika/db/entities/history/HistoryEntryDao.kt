@@ -32,11 +32,21 @@ interface HistoryEntryDao {
      * This also retrieves the associated [category][Category] if the search has been restricted
      */
     @Transaction
-    @Query("SELECT * FROM search_history")
+    @Query(
+        """SELECT search_history.* FROM search_history
+                JOIN dictionary ON search_history.dictionary_id = dictionary.id
+                WHERE dictionary.is_active = 1"""
+    )
     fun getAllWithCategory(): Flow<List<HistoryEntryWithCategory>>
 
     /** Remove all [history entries][HistoryEntry] from the database */
-    @Query("DELETE FROM search_history")
+    @Transaction
+    @Query(
+        """DELETE FROM search_history
+                WHERE id IN (SELECT search_history.id FROM search_history
+                JOIN dictionary ON search_history.dictionary_id = dictionary.id
+                WHERE dictionary.is_active = 1)"""
+    )
     suspend fun clear()
 
     /** Insert all [history entries][HistoryEntry] into the database */
@@ -44,7 +54,14 @@ interface HistoryEntryDao {
     suspend fun insertAll(vararg historyEntries: HistoryEntry)
 
     /** Remove all [history entries][HistoryEntry] with a similar [query] from the database */
-    @Query("DELETE FROM search_history WHERE `query` = (:query)")
+    @Transaction
+    @Query(
+        """DELETE FROM search_history
+                WHERE `query` = (:query)
+                AND id IN (SELECT search_history.id FROM search_history
+                JOIN dictionary ON search_history.dictionary_id = dictionary.id
+                WHERE dictionary.is_active = 1)"""
+    )
     suspend fun removeSimilar(query: String)
 
     /** Remove a single [history entry][HistoryEntry] from the database */

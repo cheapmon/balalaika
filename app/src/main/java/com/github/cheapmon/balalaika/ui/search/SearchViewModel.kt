@@ -53,15 +53,17 @@ class SearchViewModel @ViewModelInject constructor(
         viewModelScope.launch {
             val query = this@SearchViewModel.query.first()
             val restriction = this@SearchViewModel.restriction.first()
+            val dictionary = searchRepository.getActiveDictionary() ?: return@launch
             if (query.isBlank()) return@launch
             val entry = when (restriction) {
                 is SearchRestriction.None ->
-                    HistoryEntry(query = query)
+                    HistoryEntry(query = query, dictionaryId = dictionary.id)
                 is SearchRestriction.Some ->
                     HistoryEntry(
                         query = query,
                         categoryId = restriction.category.id,
-                        restriction = restriction.restriction
+                        restriction = restriction.restriction,
+                        dictionaryId = dictionary.id
                     )
             }
             historyRepository.removeSimilarEntries(entry)

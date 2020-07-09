@@ -20,6 +20,8 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.github.cheapmon.balalaika.db.entities.cache.CacheEntryDao
 import com.github.cheapmon.balalaika.db.entities.cache.SearchCacheEntry
+import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
+import com.github.cheapmon.balalaika.db.entities.dictionary.DictionaryDao
 import com.github.cheapmon.balalaika.db.entities.entry.DictionaryEntry
 import com.github.cheapmon.balalaika.db.entities.entry.DictionaryEntryDao
 import com.github.cheapmon.balalaika.db.entities.history.SearchRestriction
@@ -47,6 +49,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 class SearchRepository @Inject constructor(
     private val constants: Constants,
     private val cacheEntryDao: CacheEntryDao,
+    private val dictionaryDao: DictionaryDao,
     private val dictionaryEntryDao: DictionaryEntryDao,
     private val lexemeDao: LexemeDao,
     private val propertyDao: PropertyDao
@@ -105,4 +108,6 @@ class SearchRepository @Inject constructor(
         cacheEntryDao.clearSearchCache()
         cacheEntryDao.insertIntoSearchCache(entries)
     }
+
+    suspend fun getActiveDictionary(): Dictionary? = dictionaryDao.getActive()
 }

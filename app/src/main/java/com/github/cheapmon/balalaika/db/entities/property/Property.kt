@@ -21,6 +21,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.github.cheapmon.balalaika.db.entities.category.Category
+import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.db.entities.lexeme.Lexeme
 
 /**
@@ -33,12 +34,25 @@ import com.github.cheapmon.balalaika.db.entities.lexeme.Lexeme
     foreignKeys = [
         ForeignKey(
             entity = Category::class,
-            parentColumns = ["id"],
-            childColumns = ["category_id"]
+            parentColumns = ["id", "dictionary_id"],
+            childColumns = ["category_id", "dictionary_id"]
         ),
-        ForeignKey(entity = Lexeme::class, parentColumns = ["id"], childColumns = ["lexeme_id"])
+        ForeignKey(
+            entity = Dictionary::class,
+            parentColumns = ["id"],
+            childColumns = ["dictionary_id"]
+        ),
+        ForeignKey(
+            entity = Lexeme::class,
+            parentColumns = ["id", "dictionary_id"],
+            childColumns = ["lexeme_id", "dictionary_id"]
+        )
     ],
-    indices = [Index(value = ["category_id"]), Index(value = ["lexeme_id"])]
+    indices = [
+        Index(value = ["category_id", "dictionary_id"]),
+        Index(value = ["lexeme_id", "dictionary_id"]),
+        Index(value = ["dictionary_id"])
+    ]
 )
 data class Property(
     /**
@@ -50,6 +64,8 @@ data class Property(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") val propertyId: Long = 0,
     /** [Data category][Category] associated with this property */
     @ColumnInfo(name = "category_id") val categoryId: String,
+    /** [Dictionary] associated with this property */
+    @ColumnInfo(name = "dictionary_id") val dictionaryId: String,
     /** [Lexeme] this property belongs to */
     @ColumnInfo(name = "lexeme_id") val lexemeId: String,
     /** Serialized property value */

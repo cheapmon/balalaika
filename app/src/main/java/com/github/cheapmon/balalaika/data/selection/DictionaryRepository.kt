@@ -48,6 +48,7 @@ class DictionaryRepository @Inject constructor(
         get() = _inProgress
 
     fun toggleActive(dictionary: Dictionary) {
+        // TODO: Adjust preferences
         launch {
             if (dictionary.isActive) {
                 dictionaryDao.setInactive(dictionary.id)

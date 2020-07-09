@@ -17,6 +17,7 @@ package com.github.cheapmon.balalaika.db.entities.property
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import com.github.cheapmon.balalaika.db.entities.lexeme.Lexeme
@@ -44,6 +45,6 @@ interface PropertyDao {
     ): List<PropertyWithCategory>
 
     /** Insert all [properties][Property] into the database */
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(properties: List<Property>)
 }

@@ -19,8 +19,8 @@ import android.graphics.drawable.Drawable
 import androidx.annotation.DrawableRes
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.Index
-import androidx.room.PrimaryKey
+import androidx.room.ForeignKey
+import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.util.ResourceUtil
 
 /**
@@ -47,13 +47,20 @@ import com.github.cheapmon.balalaika.util.ResourceUtil
  * @see WidgetType
  */
 @Entity(
-    indices = [
-        Index(value = ["sequence"], unique = true)
+    primaryKeys = ["id", "dictionary_id"],
+    foreignKeys = [
+        ForeignKey(
+            entity = Dictionary::class,
+            parentColumns = ["id"],
+            childColumns = ["dictionary_id"]
+        )
     ]
 )
 data class Category(
     /** Unique primary identifier of this category from sources */
-    @PrimaryKey val id: String = "",
+    val id: String,
+    /** Dictionary this category belongs to */
+    @ColumnInfo(name = "dictionary_id", index = true) val dictionaryId: String,
     /** Display name of this category for the user interface */
     @ColumnInfo(name = "name") val name: String,
     /**

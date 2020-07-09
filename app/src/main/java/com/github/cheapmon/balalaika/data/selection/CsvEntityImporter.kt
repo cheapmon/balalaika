@@ -39,18 +39,20 @@ class CsvEntityImporter @Inject constructor(
     private val db: AppDatabase,
     private val constants: Constants
 ) {
-    fun import(contents: DictionaryContents): IO<Unit> = IO.effect {
+    fun import(dictionaryId: String, contents: DictionaryContents): IO<Unit> = IO.effect {
         db.withTransaction {
             // TODO: Remove previous contents
-            db.categories().insertAll(readCategories(contents))
-            db.lexemes().insertAll(readLexemes(contents))
-            db.properties().insertAll(readProperties(contents))
-            db.dictionaryViews().insertViews(readDictionaryViews(contents))
-            db.dictionaryViews().insertRelation(readDictionaryViewToCategories(contents))
+            db.categories().insertAll(readCategories(dictionaryId, contents))
+            db.lexemes().insertAll(readLexemes(dictionaryId, contents))
+            db.properties().insertAll(readProperties(dictionaryId, contents))
+            db.dictionaryViews().insertViews(readDictionaryViews(dictionaryId, contents))
+            db.dictionaryViews().insertRelation(
+                readDictionaryViewToCategories(dictionaryId, contents)
+            )
         }
     }
 
-    private fun readCategories(contents: DictionaryContents): List<Category> {
+    private fun readCategories(dictionaryId: String, contents: DictionaryContents): List<Category> {
         return records(contents.categories).map {
             Category(
                 id = it["id"],
@@ -61,15 +63,17 @@ class CsvEntityImporter @Inject constructor(
                 iconId = ResourceUtil.drawable(context, it["icon"]),
                 sequence = it["sequence"].toInt(),
                 hidden = it["hidden"] == "1",
-                orderBy = it["order_by"] == "1"
+                orderBy = it["order_by"] == "1",
+                dictionaryId = dictionaryId
             )
         }
     }
 
-    private fun readLexemes(contents: DictionaryContents): List<Lexeme> {
+    private fun readLexemes(dictionaryId: String, contents: DictionaryContents): List<Lexeme> {
         val fromLexeme = records(contents.lexemes).map {
             Lexeme(
                 id = it["id"],
+                dictionaryId = dictionaryId,
                 form = it["form"],
                 baseId = null
             )
@@ -77,6 +81,7 @@ class CsvEntityImporter @Inject constructor(
         val fromFullForm = records(contents.fullForms).map {
             Lexeme(
                 id = it["id"],
+                dictionaryId = dictionaryId,
                 form = it["form"],
                 baseId = it["base"]
             )
@@ -84,7 +89,7 @@ class CsvEntityImporter @Inject constructor(
         return (fromLexeme + fromFullForm)
     }
 
-    private fun readProperties(contents: DictionaryContents): List<Property> {
+    private fun readProperties(dictionaryId: String, contents: DictionaryContents): List<Property> {
         val fromLexeme = records(contents.lexemes)
             .flatMap { record ->
                 record.toMap().filter { (key, value) ->
@@ -92,6 +97,7 @@ class CsvEntityImporter @Inject constructor(
                 }.map { (id, value) ->
                     Property(
                         categoryId = id,
+                        dictionaryId = dictionaryId,
                         lexemeId = record["id"],
                         value = value
                     )
@@ -104,6 +110,7 @@ class CsvEntityImporter @Inject constructor(
                 }.map { (id, value) ->
                     Property(
                         categoryId = id,
+                        dictionaryId = dictionaryId,
                         lexemeId = record["id"],
                         value = value
                     )
@@ -114,6 +121,7 @@ class CsvEntityImporter @Inject constructor(
             .map { record ->
                 Property(
                     categoryId = record["category"],
+                    dictionaryId = dictionaryId,
                     lexemeId = record["id"],
                     value = record["value"]
                 )
@@ -121,20 +129,29 @@ class CsvEntityImporter @Inject constructor(
         return (fromLexeme + fromFullForm + fromProperty)
     }
 
-    private fun readDictionaryViews(contents: DictionaryContents): List<DictionaryView> {
-        val default = DictionaryView(id = constants.DEFAULT_DICTIONARY_VIEW_ID, name = "All")
+    private fun readDictionaryViews(
+        dictionaryId: String,
+        contents: DictionaryContents
+    ): List<DictionaryView> {
+        val default = DictionaryView(
+            id = constants.DEFAULT_DICTIONARY_VIEW_ID,
+            name = "All",
+            dictionaryId = dictionaryId
+        )
         return listOf(default) + records(contents.views).map { record ->
-            DictionaryView(id = record["id"], name = record["name"])
+            DictionaryView(id = record["id"], name = record["name"], dictionaryId = dictionaryId)
         }
     }
 
     private fun readDictionaryViewToCategories(
+        dictionaryId: String,
         contents: DictionaryContents
     ): List<DictionaryViewToCategory> {
         val default = records(contents.categories).map { record ->
             DictionaryViewToCategory(
                 dictionaryViewId = constants.DEFAULT_DICTIONARY_VIEW_ID,
-                categoryId = record["id"]
+                categoryId = record["id"],
+                dictionaryId = dictionaryId
             )
         }
         return default + records(contents.views).flatMap { record ->
@@ -143,7 +160,8 @@ class CsvEntityImporter @Inject constructor(
                 .map { (id, _) ->
                     DictionaryViewToCategory(
                         dictionaryViewId = record["id"],
-                        categoryId = id
+                        categoryId = id,
+                        dictionaryId = dictionaryId
                     )
                 }
         }

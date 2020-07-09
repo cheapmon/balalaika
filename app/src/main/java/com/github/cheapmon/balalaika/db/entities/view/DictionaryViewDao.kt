@@ -29,7 +29,12 @@ interface DictionaryViewDao {
      * Get all [dictionary views][DictionaryView] and their associated [data categories][Category]
      */
     @Transaction
-    @Query("SELECT * FROM dictionary_view")
+    @Query(
+        """SELECT dictionary_view.*
+                FROM dictionary_view
+                JOIN dictionary ON dictionary_view.dictionary_id = dictionary.id 
+                WHERE dictionary.is_active = 1"""
+    )
     fun getAllWithCategories(): Flow<List<DictionaryViewWithCategories>>
 
     /** Insert all [dictionary views][DictionaryView] into the database */

@@ -64,6 +64,7 @@ class DictionaryEntryRepository @Inject constructor(
     /** Dummy [category][Category] used when no category has been selected in the user interface */
     private val defaultCategory = Category(
         constants.DEFAULT_CATEGORY_ID,
+        "",
         "Default",
         WidgetType.PLAIN,
         R.drawable.ic_circle,

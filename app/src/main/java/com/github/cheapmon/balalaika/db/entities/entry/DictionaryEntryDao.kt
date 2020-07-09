@@ -17,6 +17,7 @@ package com.github.cheapmon.balalaika.db.entities.entry
 
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.Transaction
 import com.github.cheapmon.balalaika.db.entities.category.Category
 import com.github.cheapmon.balalaika.db.entities.history.SearchRestriction
 import com.github.cheapmon.balalaika.db.entities.lexeme.Lexeme
@@ -53,11 +54,13 @@ interface DictionaryEntryDao {
      *
      * @see DictionaryFragment
      */
+    @Transaction
     @Query(
         """SELECT id FROM PropertyDatabaseView
                     WHERE c_id IN (SELECT category_id FROM dictionary_view_to_category
                     WHERE dictionary_view_id = (:dictionaryViewId))
                     AND c_hidden = 0
+                    AND d_is_active = 1
                     GROUP BY id
                     ORDER BY form ASC, c_sequence ASC"""
     )
@@ -73,6 +76,7 @@ interface DictionaryEntryDao {
      *
      * @see DictionaryFragment
      */
+    @Transaction
     @Query(
         """SELECT id
                     FROM PropertyDatabaseView
@@ -81,6 +85,7 @@ interface DictionaryEntryDao {
                     WHERE c_id IN (SELECT category_id FROM dictionary_view_to_category
                     WHERE dictionary_view_id = (:dictionaryViewId))
                     AND c_hidden = 0
+                    AND d_is_active = 1
                     GROUP BY id
                     ORDER BY o_value ASC, form ASC, c_sequence ASC"""
     )
@@ -95,11 +100,13 @@ interface DictionaryEntryDao {
      *
      * @see SearchFragment
      */
+    @Transaction
     @Query(
         """SELECT id FROM PropertyDatabaseView
                     WHERE (form LIKE '%' || (:query) || '%'
                     OR p_value LIKE '%' || (:query) || '%')
                     AND c_hidden = 0
+                    AND d_is_active = 1
                     GROUP BY id
                     ORDER BY form ASC"""
     )
@@ -112,6 +119,7 @@ interface DictionaryEntryDao {
      *
      * @see SearchFragment
      */
+    @Transaction
     @Query(
         """SELECT id FROM PropertyDatabaseView
                     WHERE (form LIKE '%' || (:query) || '%'
@@ -119,6 +127,7 @@ interface DictionaryEntryDao {
                     AND id IN (SELECT DISTINCT id FROM PropertyDatabaseView
                     WHERE c_id = (:categoryId) AND p_value LIKE '%' || (:restriction) || '%')
                     AND c_hidden = 0
+                    AND d_is_active = 1
                     GROUP BY id
                     ORDER BY form ASC"""
     )

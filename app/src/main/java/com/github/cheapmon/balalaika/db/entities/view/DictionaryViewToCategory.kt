@@ -20,6 +20,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import com.github.cheapmon.balalaika.db.entities.category.Category
+import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 
 /**
  * Relation between [dictionary views][DictionaryView] and their associated
@@ -27,26 +28,34 @@ import com.github.cheapmon.balalaika.db.entities.category.Category
  */
 @Entity(
     tableName = "dictionary_view_to_category",
-    primaryKeys = ["dictionary_view_id", "category_id"],
+    primaryKeys = ["dictionary_view_id", "category_id", "dictionary_id"],
     foreignKeys = [
         ForeignKey(
             entity = DictionaryView::class,
-            parentColumns = ["id"],
-            childColumns = ["dictionary_view_id"]
+            parentColumns = ["id", "dictionary_id"],
+            childColumns = ["dictionary_view_id", "dictionary_id"]
         ),
         ForeignKey(
             entity = Category::class,
+            parentColumns = ["id", "dictionary_id"],
+            childColumns = ["category_id", "dictionary_id"]
+        ),
+        ForeignKey(
+            entity = Dictionary::class,
             parentColumns = ["id"],
-            childColumns = ["category_id"]
+            childColumns = ["dictionary_id"]
         )
     ],
-    indices = [Index(value = ["dictionary_view_id"]), Index(
-        value = ["category_id"]
-    )]
+    indices = [
+        Index("dictionary_view_id", "dictionary_id"),
+        Index("category_id", "dictionary_id")
+    ]
 )
 data class DictionaryViewToCategory(
     /** [Dictionary view][DictionaryView] */
     @ColumnInfo(name = "dictionary_view_id") val dictionaryViewId: String,
     /** [Category] associated with this dictionary view */
-    @ColumnInfo(name = "category_id") val categoryId: String
+    @ColumnInfo(name = "category_id") val categoryId: String,
+    /** [Dictionary] associated with this dictionary view */
+    @ColumnInfo(name = "dictionary_id", index = true) val dictionaryId: String
 )

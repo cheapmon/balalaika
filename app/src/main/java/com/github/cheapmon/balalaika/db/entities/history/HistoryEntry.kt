@@ -21,6 +21,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.github.cheapmon.balalaika.db.entities.category.Category
+import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.ui.history.HistoryFragment
 
 /**
@@ -36,12 +37,17 @@ import com.github.cheapmon.balalaika.ui.history.HistoryFragment
     tableName = "search_history",
     foreignKeys = [
         ForeignKey(
+            entity = Dictionary::class,
+            parentColumns = ["dictionary_id"],
+            childColumns = ["id"]
+        ),
+        ForeignKey(
             entity = Category::class,
-            parentColumns = ["id"],
-            childColumns = ["category_id"]
+            parentColumns = ["id", "dictionary_id"],
+            childColumns = ["category_id", "dictionary_id"]
         )
     ],
-    indices = [Index(value = ["category_id"])]
+    indices = [Index(value = ["category_id", "dictionary_id"])]
 )
 data class HistoryEntry(
     /**
@@ -53,6 +59,8 @@ data class HistoryEntry(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") val historyEntryId: Long = 0,
     /** Optional [category][Category] of this entry if the search has been restricted */
     @ColumnInfo(name = "category_id") val categoryId: String? = null,
+    /** Optional [dictionary][Dictionary] this entry belongs to */
+    @ColumnInfo(name = "dictionary_id", index = true) val dictionaryId: String,
     /** Optional restriction of this entry */
     @ColumnInfo(name = "restriction") val restriction: String? = null,
     /** Search query */

@@ -18,6 +18,7 @@ package com.github.cheapmon.balalaika.db.entities.entry
 import androidx.room.DatabaseView
 import androidx.room.Embedded
 import com.github.cheapmon.balalaika.db.entities.category.Category
+import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.db.entities.lexeme.Lexeme
 import com.github.cheapmon.balalaika.db.entities.property.Property
 
@@ -51,11 +52,22 @@ import com.github.cheapmon.balalaika.db.entities.property.Property
             category.icon_id AS "c_icon_id", 
             category.sequence AS "c_sequence",
             category.hidden AS "c_hidden",
-            category.order_by AS "c_order_by"
+            category.order_by AS "c_order_by",
+            dictionary.id AS "d_id",
+            dictionary.version AS "d_version",
+            dictionary.name AS "d_name",
+            dictionary.summary AS "d_summary",
+            dictionary.authors AS "d_authors",
+            dictionary.additional_info AS "d_addition_info",
+            dictionary.is_active AS "d_is_active",
+            dictionary.is_installed AS "d_is_installed",
+            dictionary.is_updatable AS "d_is_updatable",
+            dictionary.provider AS "d_provider"
             FROM lexeme
             LEFT JOIN lexeme AS base ON lexeme.base_id = base.id
             LEFT JOIN property ON lexeme.id = property.lexeme_id 
-            LEFT JOIN category ON property.category_id = category.id"""
+            LEFT JOIN category ON property.category_id = category.id
+            LEFT JOIN dictionary ON category.dictionary_id = dictionary.id"""
 )
 data class PropertyDatabaseView(
     /** [Lexeme] associated with [property] */
@@ -65,5 +77,7 @@ data class PropertyDatabaseView(
     /** Single [Property] of a dictionary entry */
     @Embedded(prefix = "p_") val property: Property?,
     /** [Data category][Category] associated with [property] */
-    @Embedded(prefix = "c_") val category: Category?
+    @Embedded(prefix = "c_") val category: Category?,
+    /** [Dictionary] associated with [property] */
+    @Embedded(prefix = "d_") val dictionary: Dictionary?
 )

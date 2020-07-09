@@ -68,7 +68,7 @@ class DictionaryMediator @Inject constructor(
             val input = !provider.getDictionary(dictionary.id)
             val zipFile = !extractor.saveZip(dictionary.id, input)
             val contents = !extractor.extract(zipFile)
-            !importer.import(contents)
+            !importer.import(dictionary.id, contents)
         }
     }
 }

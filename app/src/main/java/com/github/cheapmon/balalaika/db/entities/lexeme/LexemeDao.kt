@@ -30,7 +30,14 @@ interface LexemeDao {
     suspend fun getLexemeById(id: String): LexemeWithBase?
 
     /** Get all bookmarked [lexemes][Lexeme] */
-    @Query("SELECT * FROM lexeme WHERE is_bookmark = 1")
+    @Transaction
+    @Query(
+        """SELECT lexeme.id, lexeme.dictionary_id, lexeme.form, lexeme.base_id,
+                lexeme.is_bookmark
+                FROM lexeme
+                JOIN dictionary ON lexeme.dictionary_id = dictionary.id
+                WHERE dictionary.is_active = 1 AND lexeme.is_bookmark = 1"""
+    )
     fun getBookmarks(): Flow<List<Lexeme>>
 
     /** Toggle bookmark state for a [lexeme][Lexeme] */
@@ -38,7 +45,11 @@ interface LexemeDao {
     suspend fun toggleBookmark(id: String)
 
     /** Remove all bookmarks */
-    @Query("UPDATE lexeme SET is_bookmark = 0 WHERE is_bookmark = 1")
+    @Transaction
+    @Query(
+        """UPDATE lexeme SET is_bookmark = 0 WHERE is_bookmark = 1
+                AND dictionary_id IN (SELECT id FROM dictionary WHERE is_active = 1)"""
+    )
     suspend fun clearBookmarks()
 
     /** Insert all [lexemes][Lexeme] into the database */

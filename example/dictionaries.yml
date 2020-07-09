@@ -1,6 +1,6 @@
 dictionaries:
   - name: Sample dictionary
-    externalId: sample
+    id: sample
     version: 1
     authors: "Paul Hemetsberger"
     summary: "dict.cc is not only an online dictionary. It's an attempt to create a platform where

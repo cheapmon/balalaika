@@ -18,13 +18,19 @@ package com.github.cheapmon.balalaika.db.entities.category
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
 
 /** Database link for [data categories][Category] */
 @Dao
 interface CategoryDao {
     /** Get all data categories that can be used to order dictionary entries */
-    @Query("SELECT * FROM category WHERE order_by = 1")
+    @Transaction
+    @Query(
+        """SELECT * FROM category
+                JOIN dictionary ON category.dictionary_id = dictionary.id
+                WHERE dictionary.is_active AND order_by = 1"""
+    )
     fun getSortable(): Flow<List<Category>>
 
     /** Insert all data categories into the database */

@@ -19,7 +19,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
-import androidx.room.PrimaryKey
+import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.ui.bookmarks.BookmarksFragment
 import com.github.cheapmon.balalaika.ui.dictionary.DictionaryFragment
 
@@ -33,14 +33,26 @@ import com.github.cheapmon.balalaika.ui.dictionary.DictionaryFragment
  * @see DictionaryFragment
  */
 @Entity(
+    primaryKeys = ["id", "dictionary_id"],
     foreignKeys = [
-        ForeignKey(entity = Lexeme::class, parentColumns = ["id"], childColumns = ["base_id"])
+        ForeignKey(
+            entity = Lexeme::class,
+            parentColumns = ["id", "dictionary_id"],
+            childColumns = ["base_id", "dictionary_id"]
+        ),
+        ForeignKey(
+            entity = Dictionary::class,
+            parentColumns = ["id"],
+            childColumns = ["dictionary_id"]
+        )
     ],
-    indices = [Index(value = ["base_id"])]
+    indices = [Index("base_id", "dictionary_id")]
 )
 data class Lexeme(
-    /** Unique identifier of this lexeme from sources */
-    @PrimaryKey val id: String,
+    /** Identifier of this lexeme from sources */
+    @ColumnInfo(index = true) val id: String,
+    /** Dictionary this lexeme belongs to */
+    @ColumnInfo(name = "dictionary_id", index = true) val dictionaryId: String,
     /**
      * Orthographic form of this lexeme
      *
@@ -48,7 +60,7 @@ data class Lexeme(
      */
     @ColumnInfo(name = "form") val form: String,
     /** Optional base of this lexeme */
-    @ColumnInfo(name = "base_id") val baseId: String?,
+    @ColumnInfo(name = "base_id", index = true) val baseId: String?,
     /**
      * Bookmark state of this lexeme
      *
