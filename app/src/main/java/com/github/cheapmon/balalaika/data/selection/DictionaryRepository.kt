@@ -15,7 +15,9 @@
  */
 package com.github.cheapmon.balalaika.data.selection
 
+import androidx.room.withTransaction
 import arrow.core.Either
+import com.github.cheapmon.balalaika.db.AppDatabase
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.db.entities.dictionary.DictionaryDao
 import com.github.cheapmon.balalaika.util.logger
@@ -31,6 +33,7 @@ import kotlinx.coroutines.launch
 
 @ActivityScoped
 class DictionaryRepository @Inject constructor(
+    private val db: AppDatabase,
     private val dictionaryDao: DictionaryDao,
     private val mediator: DictionaryMediator
 ) : CoroutineScope {
@@ -50,7 +53,6 @@ class DictionaryRepository @Inject constructor(
         get() = _inProgress
 
     fun toggleActive(dictionary: Dictionary) {
-        // TODO: Adjust preferences
         launch {
             if (dictionary.isActive) {
                 dictionaryDao.setInactive(dictionary.id)
@@ -64,6 +66,7 @@ class DictionaryRepository @Inject constructor(
         launch {
             showProgess {
                 dictionaryDao.setInstalled(dictionary.id)
+                removeEntities(dictionary.id)
                 val result = mediator.installDictionary(dictionary).attempt().suspended()
                 if (result is Either.Left) logger { error(result.a) }
             }
@@ -73,10 +76,9 @@ class DictionaryRepository @Inject constructor(
     fun removeDictionary(id: String) {
         launch {
             showProgess {
-                dictionaryDao.setInactive(id)
-                dictionaryDao.setUninstalled(id)
-                dictionaryDao.setUnupdatable(id)
-                // TODO: Remove everything else
+                removeEntities(id)
+                db.dictionaries().remove(id)
+                refresh()
             }
         }
     }
@@ -90,5 +92,17 @@ class DictionaryRepository @Inject constructor(
         _inProgress.value = true
         block()
         _inProgress.value = false
+    }
+
+    private suspend fun removeEntities(dictionaryId: String) {
+        db.withTransaction {
+            db.historyEntries().removeInDictionary(dictionaryId)
+            db.configurations().removeConfigFor(dictionaryId)
+            db.dictionaryViews().removeRelations(dictionaryId)
+            db.dictionaryViews().removeViews(dictionaryId)
+            db.properties().removeInDictionary(dictionaryId)
+            db.lexemes().removeInDictionary(dictionaryId)
+            db.categories().removeInDictionary(dictionaryId)
+        }
     }
 }

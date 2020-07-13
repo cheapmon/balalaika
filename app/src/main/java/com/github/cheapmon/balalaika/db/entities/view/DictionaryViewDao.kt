@@ -44,4 +44,10 @@ interface DictionaryViewDao {
     /** Insert all [dictionary view relations][DictionaryViewToCategory] into the database */
     @Insert
     suspend fun insertRelation(dictionaryViewToCategory: List<DictionaryViewToCategory>)
+
+    @Query("""DELETE FROM dictionary_view WHERE dictionary_id = (:dictionaryId)""")
+    suspend fun removeViews(dictionaryId: String)
+
+    @Query("""DELETE FROM dictionary_view_to_category WHERE dictionary_id = (:dictionaryId)""")
+    suspend fun removeRelations(dictionaryId: String)
 }

@@ -43,7 +43,6 @@ class CsvEntityImporter @Inject constructor(
 ) {
     fun import(dictionaryId: String, contents: DictionaryContents): IO<Unit> = IO.effect {
         db.withTransaction {
-            // TODO: Remove previous contents
             db.categories().insertAll(readCategories(dictionaryId, contents))
             db.lexemes().insertAll(readLexemes(dictionaryId, contents))
             db.properties().insertAll(readProperties(dictionaryId, contents))

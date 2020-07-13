@@ -67,4 +67,7 @@ interface HistoryEntryDao {
     /** Remove a single [history entry][HistoryEntry] from the database */
     @Delete
     suspend fun remove(historyEntry: HistoryEntry)
+
+    @Query("""DELETE FROM search_history WHERE dictionary_id = (:dictionaryId)""")
+    suspend fun removeInDictionary(dictionaryId: String)
 }

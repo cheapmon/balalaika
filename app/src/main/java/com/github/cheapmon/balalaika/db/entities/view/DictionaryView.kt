@@ -17,7 +17,9 @@ package com.github.cheapmon.balalaika.db.entities.view
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import com.github.cheapmon.balalaika.db.entities.category.Category
+import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.db.entities.entry.PropertyDatabaseView
 
 /**
@@ -34,7 +36,14 @@ import com.github.cheapmon.balalaika.db.entities.entry.PropertyDatabaseView
  */
 @Entity(
     tableName = "dictionary_view",
-    primaryKeys = ["id", "dictionary_id"]
+    primaryKeys = ["id", "dictionary_id"],
+    foreignKeys = [
+        ForeignKey(
+            entity = Dictionary::class,
+            parentColumns = ["id"],
+            childColumns = ["dictionary_id"]
+        )
+    ]
 )
 data class DictionaryView(
     /** Identifier of this dictionary view from sources */

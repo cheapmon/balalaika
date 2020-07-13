@@ -47,4 +47,7 @@ interface PropertyDao {
     /** Insert all [properties][Property] into the database */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(properties: List<Property>)
+
+    @Query("""DELETE FROM property WHERE dictionary_id = (:dictionaryId)""")
+    suspend fun removeInDictionary(dictionaryId: String)
 }
