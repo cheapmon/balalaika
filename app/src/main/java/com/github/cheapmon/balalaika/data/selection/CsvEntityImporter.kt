@@ -18,9 +18,11 @@ package com.github.cheapmon.balalaika.data.selection
 import android.content.Context
 import androidx.room.withTransaction
 import arrow.fx.IO
+import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.db.AppDatabase
 import com.github.cheapmon.balalaika.db.entities.category.Category
 import com.github.cheapmon.balalaika.db.entities.category.WidgetType
+import com.github.cheapmon.balalaika.db.entities.config.DictionaryConfig
 import com.github.cheapmon.balalaika.db.entities.lexeme.Lexeme
 import com.github.cheapmon.balalaika.db.entities.property.Property
 import com.github.cheapmon.balalaika.db.entities.view.DictionaryView
@@ -49,11 +51,22 @@ class CsvEntityImporter @Inject constructor(
             db.dictionaryViews().insertRelation(
                 readDictionaryViewToCategories(dictionaryId, contents)
             )
+            db.configurations().insert(generateDefaultConfiguration(dictionaryId))
         }
     }
 
     private fun readCategories(dictionaryId: String, contents: DictionaryContents): List<Category> {
-        return records(contents.categories).map {
+        val default = Category(
+            id = constants.DEFAULT_CATEGORY_ID,
+            dictionaryId = dictionaryId,
+            name = "Default",
+            widget = WidgetType.PLAIN,
+            iconId = R.drawable.ic_circle,
+            sequence = -1,
+            hidden = true,
+            orderBy = true
+        )
+        return listOf(default) + records(contents.categories).map {
             Category(
                 id = it["id"],
                 name = it["name"],
@@ -165,6 +178,14 @@ class CsvEntityImporter @Inject constructor(
                     )
                 }
         }
+    }
+
+    private fun generateDefaultConfiguration(dictionaryId: String): DictionaryConfig {
+        return DictionaryConfig(
+            id = dictionaryId,
+            orderBy = constants.DEFAULT_CATEGORY_ID,
+            filterBy = constants.DEFAULT_DICTIONARY_VIEW_ID
+        )
     }
 
     private fun records(input: String) =

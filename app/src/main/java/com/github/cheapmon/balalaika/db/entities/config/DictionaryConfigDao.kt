@@ -20,11 +20,12 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface DictionaryConfigDao {
     @Query("""SELECT * FROM config WHERE id = (:dictionaryId) LIMIT 1""")
-    suspend fun getConfigFor(dictionaryId: String): DictionaryConfig?
+    fun getConfigFor(dictionaryId: String): Flow<DictionaryConfig?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(config: DictionaryConfig)

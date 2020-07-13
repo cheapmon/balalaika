@@ -30,7 +30,7 @@ interface DictionaryDao {
     fun findById(id: String): Flow<Dictionary?>
 
     @Query("SELECT * FROM dictionary WHERE is_active LIMIT 1")
-    suspend fun getActive(): Dictionary?
+    fun getActive(): Flow<Dictionary?>
 
     @Query("""UPDATE dictionary SET is_active = (id == (:id))""")
     suspend fun setActive(id: String)

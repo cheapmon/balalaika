@@ -15,30 +15,18 @@
  */
 package com.github.cheapmon.balalaika.util
 
-import android.content.Context
-import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.core.storage.Storage
-import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
 /** Application-wide constants */
 @Suppress("PropertyName")
 @Singleton
-class Constants @Inject constructor(
-    @ApplicationContext context: Context
-) {
+class Constants @Inject constructor() {
     /** Assets file with dictionary list */
     val DICTIONARY_FILE: String = "dictionaries.yml"
 
-    /** Key used in [storage][Storage] to save dictionary order */
-    val ORDER_KEY = context.getString(R.string.preferences_key_order)
-
     /** Default dictionary order */
     val DEFAULT_CATEGORY_ID = "default"
-
-    /** Key used in [storage][Storage] to save dictionary view */
-    val VIEW_KEY = context.getString(R.string.preferences_key_view)
 
     /** Default dictionary view */
     val DEFAULT_DICTIONARY_VIEW_ID = "all"

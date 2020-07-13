@@ -37,6 +37,7 @@ import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 
 /**
@@ -109,5 +110,5 @@ class SearchRepository @Inject constructor(
         cacheEntryDao.insertIntoSearchCache(entries)
     }
 
-    suspend fun getActiveDictionary(): Dictionary? = dictionaryDao.getActive()
+    suspend fun getActiveDictionary(): Dictionary? = dictionaryDao.getActive().first()
 }

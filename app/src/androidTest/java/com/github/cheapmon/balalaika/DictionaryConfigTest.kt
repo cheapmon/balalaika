@@ -29,6 +29,7 @@ import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.db.entities.view.DictionaryView
 import com.github.cheapmon.balalaika.db.entities.view.DictionaryViewToCategory
 import java.io.IOException
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -126,7 +127,7 @@ class DictionaryConfigTest {
             DictionaryConfig(id = "dic_a", orderBy = "cat_b", filterBy = "all")
         )
         assertEquals(
-            db.configurations().getConfigFor("dic_a"),
+            db.configurations().getConfigFor("dic_a").first(),
             DictionaryConfig(id = "dic_a", orderBy = "cat_b", filterBy = "all")
         )
     }
@@ -155,7 +156,7 @@ class DictionaryConfigTest {
             DictionaryConfig(id = "dic_a", orderBy = "cat_b", filterBy = "all")
         )
         assertEquals(
-            db.configurations().getConfigFor("dic_a"),
+            db.configurations().getConfigFor("dic_a").first(),
             DictionaryConfig(id = "dic_a", orderBy = "cat_b", filterBy = "all")
         )
     }
@@ -167,10 +168,10 @@ class DictionaryConfigTest {
             DictionaryConfig(id = "dic_a", orderBy = "cat_a", filterBy = "all")
         )
         assertEquals(
-            db.configurations().getConfigFor("dic_a"),
+            db.configurations().getConfigFor("dic_a").first(),
             DictionaryConfig(id = "dic_a", orderBy = "cat_a", filterBy = "all")
         )
-        assertNull(db.configurations().getConfigFor("garbage"))
+        assertNull(db.configurations().getConfigFor("garbage").first())
     }
 
     @Test
@@ -179,8 +180,8 @@ class DictionaryConfigTest {
         db.configurations().insert(
             DictionaryConfig(id = "dic_a", orderBy = "cat_a", filterBy = "all")
         )
-        assertNotNull(db.configurations().getConfigFor("dic_a"))
+        assertNotNull(db.configurations().getConfigFor("dic_a").first())
         db.configurations().removeConfigFor("dic_a")
-        assertNull(db.configurations().getConfigFor("dic_a"))
+        assertNull(db.configurations().getConfigFor("dic_a").first())
     }
 }

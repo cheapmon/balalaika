@@ -15,8 +15,10 @@
  */
 package com.github.cheapmon.balalaika.data.selection
 
+import arrow.core.Either
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.db.entities.dictionary.DictionaryDao
+import com.github.cheapmon.balalaika.util.logger
 import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
@@ -62,7 +64,8 @@ class DictionaryRepository @Inject constructor(
         launch {
             showProgess {
                 dictionaryDao.setInstalled(dictionary.id)
-                mediator.installDictionary(dictionary).attempt().suspended()
+                val result = mediator.installDictionary(dictionary).attempt().suspended()
+                if (result is Either.Left) logger { error(result.a) }
             }
         }
     }

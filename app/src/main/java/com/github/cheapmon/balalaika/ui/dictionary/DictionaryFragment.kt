@@ -35,19 +35,17 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.core.storage.Storage
 import com.github.cheapmon.balalaika.databinding.FragmentDictionaryBinding
 import com.github.cheapmon.balalaika.db.entities.entry.DictionaryEntry
 import com.github.cheapmon.balalaika.db.entities.history.SearchRestriction
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetListener
-import com.github.cheapmon.balalaika.util.Constants
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 /**
@@ -67,34 +65,12 @@ import kotlinx.coroutines.launch
 class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListener {
     private val viewModel: DictionaryViewModel by viewModels()
 
-    /** @suppress */
-    @Inject
-    lateinit var storage: Storage
-
-    /** @suppress */
-    @Inject
-    lateinit var constants: Constants
-
     private val args: DictionaryFragmentArgs by navArgs()
 
     private lateinit var binding: FragmentDictionaryBinding
     private lateinit var recyclerView: RecyclerView
     private lateinit var dictionaryLayoutManager: LinearLayoutManager
     private lateinit var dictionaryAdapter: DictionaryAdapter
-
-    /** Set default values for the dictionary view and the dictionary ordering */
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        val categoryId = storage.getString(constants.ORDER_KEY, null)
-            ?: constants.DEFAULT_CATEGORY_ID
-        storage.putString(constants.ORDER_KEY, categoryId)
-        viewModel.setCategory(categoryId)
-        val dictionaryViewId = storage.getString(constants.VIEW_KEY, null)
-            ?: constants.DEFAULT_DICTIONARY_VIEW_ID
-        storage.putString(constants.VIEW_KEY, dictionaryViewId)
-        viewModel.setDictionaryView(dictionaryViewId)
-    }
 
     /** Prepare view and load data */
     override fun onCreateView(
@@ -169,16 +145,12 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
         lifecycleScope.launch {
             val categories = viewModel.getCategories()
             val names = categories.map { it.name }.toTypedArray()
-            val ids = categories.map { it.id }
-            val selected = ids.indexOfFirst {
-                it == storage.getString(constants.ORDER_KEY, null)
-            }
+            val selected = categories.indexOfFirst { it.id == viewModel.category.first() }
             MaterialAlertDialogBuilder(requireContext())
                 .setIcon(R.drawable.ic_sort)
                 .setTitle(R.string.menu_order_by)
                 .setSingleChoiceItems(names, selected) { _, which ->
                     val id = categories[which].id
-                    storage.putString(constants.ORDER_KEY, id)
                     viewModel.setCategory(id)
                 }.setPositiveButton(R.string.affirm, null)
                 .show()
@@ -189,16 +161,14 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
         lifecycleScope.launch {
             val dictionaryViews = viewModel.getDictionaryViews()
             val names = dictionaryViews.map { it.dictionaryView.name }.toTypedArray()
-            val ids = dictionaryViews.map { it.dictionaryView.id }
-            val selected = ids.indexOfFirst {
-                it == storage.getString(constants.VIEW_KEY, null)
+            val selected = dictionaryViews.indexOfFirst {
+                it.dictionaryView.id == viewModel.dictionaryView.first()
             }
             MaterialAlertDialogBuilder(requireContext())
                 .setIcon(R.drawable.ic_view)
                 .setTitle(R.string.menu_setup_view)
                 .setSingleChoiceItems(names, selected) { _, which ->
                     val id = dictionaryViews[which].dictionaryView.id
-                    storage.putString(constants.VIEW_KEY, id)
                     viewModel.setDictionaryView(id)
                 }.setPositiveButton(R.string.affirm, null)
                 .show()
