@@ -18,7 +18,9 @@ package com.github.cheapmon.balalaika.db.entities.dictionary
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 @Entity(tableName = "dictionary")
 data class Dictionary(
     @PrimaryKey val id: String = "",
