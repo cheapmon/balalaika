@@ -20,7 +20,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface DictionaryApi {
-    @GET("dictionaries")
+    @GET("dictionary")
     suspend fun listDictionaries(): List<DictionaryInfo>
 
     @GET("dictionary/{id}")
