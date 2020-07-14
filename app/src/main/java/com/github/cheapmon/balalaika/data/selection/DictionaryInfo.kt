@@ -15,14 +15,25 @@
  */
 package com.github.cheapmon.balalaika.data.selection
 
-import okhttp3.ResponseBody
-import retrofit2.http.GET
-import retrofit2.http.Path
+import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
+import com.squareup.moshi.JsonClass
 
-interface DictionaryApi {
-    @GET("dictionaries")
-    suspend fun listDictionaries(): List<DictionaryInfo>
-
-    @GET("dictionary/{id}")
-    suspend fun getDictionary(@Path("id") id: String): ResponseBody
+@JsonClass(generateAdapter = true)
+data class DictionaryInfo(
+    val id: String,
+    val version: Int,
+    val name: String,
+    val summary: String,
+    val authors: String,
+    val additionalInfo: String
+) {
+    fun toDictionary() =
+        Dictionary(
+            id = id,
+            version = version,
+            name = name,
+            summary = summary,
+            authors = authors,
+            additionalInfo = additionalInfo
+        )
 }

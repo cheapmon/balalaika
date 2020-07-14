@@ -29,7 +29,9 @@ class ServerDictionaryProvider @Inject constructor(
     private val api: DictionaryApi
 ) : DictionaryProvider {
     override fun getDictionaryList(): IO<List<Dictionary>> = IO.effect {
-        withTimeout(constants.REMOTE_TIMEOUT) { api.listDictionaries() }
+        withTimeout(constants.REMOTE_TIMEOUT) {
+            api.listDictionaries().map { it.toDictionary() }
+        }
     }
 
     override fun getDictionary(id: String): IO<ByteArray> = IO.fx {
