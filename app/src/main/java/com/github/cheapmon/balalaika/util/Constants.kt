@@ -42,4 +42,8 @@ class Constants @Inject constructor() {
 
     /** Timeout (ms) for loading from the filesystem */
     val LOCAL_TIMEOUT: Long = 1000
+
+    /** Base URL of dictionary API */
+    // TODO: Setup
+    val SERVER_URL: String = "https://example.org/"
 }

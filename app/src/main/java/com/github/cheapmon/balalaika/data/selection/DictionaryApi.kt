@@ -15,25 +15,15 @@
  */
 package com.github.cheapmon.balalaika.data.selection
 
-import arrow.fx.IO
-import arrow.fx.extensions.fx
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
-import com.github.cheapmon.balalaika.util.Constants
-import dagger.hilt.android.scopes.ActivityScoped
-import javax.inject.Inject
-import kotlinx.coroutines.withTimeout
+import okhttp3.ResponseBody
+import retrofit2.http.GET
+import retrofit2.http.Path
 
-@ActivityScoped
-class ServerDictionaryProvider @Inject constructor(
-    private val constants: Constants,
-    private val api: DictionaryApi
-) : DictionaryProvider {
-    override fun getDictionaryList(): IO<List<Dictionary>> = IO.effect {
-        withTimeout(constants.REMOTE_TIMEOUT) { api.listDictionaries() }
-    }
+interface DictionaryApi {
+    @GET("dictionaries")
+    suspend fun listDictionaries(): List<Dictionary>
 
-    override fun getDictionary(id: String): IO<ByteArray> = IO.fx {
-        // withTimeout(constants.REMOTE_TIMEOUT) { api.getDictionary(id) }
-        throw NotImplementedError()
-    }
+    @GET("dictionary/{id}")
+    suspend fun getDictionary(@Path("id") id: String): ResponseBody
 }

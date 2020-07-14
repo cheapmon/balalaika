@@ -36,3 +36,7 @@ annotation class MainImmediateDispatcher
 @Retention(AnnotationRetention.BINARY)
 @Qualifier
 annotation class ApplicationScope
+
+@Retention(AnnotationRetention.BINARY)
+@Qualifier
+annotation class ServerUrl

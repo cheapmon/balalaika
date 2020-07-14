@@ -15,9 +15,10 @@
  */
 package com.github.cheapmon.balalaika
 
-import arrow.core.getOrElse
-import com.github.cheapmon.balalaika.data.selection.YamlDictionaryParser
+import com.github.cheapmon.balalaika.data.selection.JsonDictionaryParser
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
+import com.squareup.moshi.JsonEncodingException
+import com.squareup.moshi.Moshi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert.assertEquals
@@ -25,88 +26,101 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class DictionaryParserTest {
+    private val dispatcher = TestCoroutineDispatcher()
+
     private suspend fun loadFrom(contents: String) =
-        YamlDictionaryParser(TestCoroutineDispatcher()).parse(contents)
-            .attempt()
-            .suspended()
+        JsonDictionaryParser(dispatcher, Moshi.Builder().build()).parse(contents)
 
     @Test
     fun `parses empty file`() = runBlockingTest {
-        val response = loadFrom("dictionaries: []")
-        assertTrue(response.isRight())
-        assertTrue(response.fold({ false }, { it.isEmpty() }))
+        val response = loadFrom("[]")
+        assertTrue(response.isEmpty())
     }
 
-    @Test
+    @Test(expected = JsonEncodingException::class)
     fun `does not parse broken file`() = runBlockingTest {
-        listOf("{", "}", ";").forEach { contents ->
-            val response = loadFrom(contents)
-            assertTrue(response.isLeft())
-        }
+        loadFrom("&&;")
     }
 
     @Test
     fun `parses single entry`() = runBlockingTest {
-        val response = loadFrom(
+        val list = loadFrom(
             """
-            dictionaries:
-              - id: dict_a
-                version: 1
-                name: Dictionary A
-                summary: This is dictionary A
-                authors: Some guy and another guy
-                isActive: true
+            [{
+                "id": "dict_a",
+                "version": 1,
+                "name": "Dictionary A",
+                "summary": "This is dictionary A",
+                "authors": "Some guy and another guy",
+                "additionalInfo": "",
+                "isActive": true
+            }]
             """
         )
-        assertTrue(response.isRight())
-        val list = response.getOrElse { throw IllegalStateException() }
         assertEquals(list.size, 1)
         assertEquals(
-            list, listOf(
-                Dictionary(
-                    id = "dict_a",
-                    version = 1,
-                    name = "Dictionary A",
-                    summary = "This is dictionary A",
-                    authors = "Some guy and another guy"
-                )
-            )
-        )
-    }
-
-    @Test
-    fun `parses multiple entries`() = runBlockingTest {
-        val response = loadFrom(
-            """
-            dictionaries:
-              - id: dict_a
-                version: 1
-                name: Dictionary A
-                summary: This is dictionary A
-                authors: Some guy and another guy
-                isActive: true
-              - id: dict_b
-                name: Dictionary B
-            """
-        )
-        assertTrue(response.isRight())
-        val list = response.getOrElse { throw IllegalStateException() }
-        assertEquals(list.size, 2)
-        assertEquals(
-            list, listOf(
+            listOf(
                 Dictionary(
                     id = "dict_a",
                     version = 1,
                     name = "Dictionary A",
                     summary = "This is dictionary A",
                     authors = "Some guy and another guy",
+                    additionalInfo = "",
+                    isActive = false
+                )
+            ), list
+        )
+    }
+
+    @Test
+    fun `parses multiple entries`() = runBlockingTest {
+        val list = loadFrom(
+            """
+            [
+                {
+                    "id": "dict_a",
+                    "version": 1,
+                    "name": "Dictionary A",
+                    "summary": "This is dictionary A",
+                    "authors": "Some guy and another guy",
+                    "additionalInfo": "",
+                    "isActive": true
+                },
+                {
+                    "id": "dict_b",
+                    "version": 2,
+                    "name": "Dictionary B",
+                    "summary": "This is dictionary B",
+                    "authors": "No one",
+                    "additionalInfo": "Info",
+                    "isInstalled": true
+                }
+            ]
+            """
+        )
+        assertEquals(list.size, 2)
+        assertEquals(
+            listOf(
+                Dictionary(
+                    id = "dict_a",
+                    version = 1,
+                    name = "Dictionary A",
+                    summary = "This is dictionary A",
+                    authors = "Some guy and another guy",
+                    additionalInfo = "",
                     isActive = false
                 ),
                 Dictionary(
                     id = "dict_b",
-                    name = "Dictionary B"
+                    version = 2,
+                    name = "Dictionary B",
+                    summary = "This is dictionary B",
+                    authors = "No one",
+                    additionalInfo = "Info",
+                    isInstalled = false
                 )
-            )
+            ), list
         )
     }
 }

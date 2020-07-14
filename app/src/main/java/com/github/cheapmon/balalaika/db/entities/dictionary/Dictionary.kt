@@ -18,17 +18,15 @@ package com.github.cheapmon.balalaika.db.entities.dictionary
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.squareup.moshi.JsonClass
 
-@JsonClass(generateAdapter = true)
 @Entity(tableName = "dictionary")
 data class Dictionary(
-    @PrimaryKey val id: String = "",
-    val version: Int = 0,
-    val name: String = "",
-    val summary: String = "",
-    val authors: String = "",
-    @ColumnInfo(name = "additional_info") val additionalInfo: String = "",
+    @PrimaryKey val id: String,
+    val version: Int,
+    val name: String,
+    val summary: String,
+    val authors: String,
+    @ColumnInfo(name = "additional_info") val additionalInfo: String,
     @ColumnInfo(name = "is_active") val isActive: Boolean = false,
     @ColumnInfo(name = "is_installed") val isInstalled: Boolean = false,
     @ColumnInfo(name = "is_updatable") val isUpdatable: Boolean = false,

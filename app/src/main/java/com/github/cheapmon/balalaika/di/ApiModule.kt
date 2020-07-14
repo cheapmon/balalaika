@@ -15,31 +15,39 @@
  */
 package com.github.cheapmon.balalaika.di
 
-import com.github.cheapmon.balalaika.data.selection.DictionaryProvider
-import com.github.cheapmon.balalaika.data.selection.ResourcesDictionaryProvider
-import com.github.cheapmon.balalaika.data.selection.ServerDictionaryProvider
+import com.github.cheapmon.balalaika.data.selection.DictionaryApi
+import com.github.cheapmon.balalaika.util.Constants
+import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.scopes.ActivityScoped
-import dagger.multibindings.IntoMap
-import dagger.multibindings.StringKey
+import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
 
 @Module
 @InstallIn(ActivityComponent::class)
-class DictionaryModule {
+class ApiModule {
     @ActivityScoped
     @Provides
-    @IntoMap
-    @StringKey("RESOURCES")
-    fun provideResourcesProvider(provider: ResourcesDictionaryProvider): DictionaryProvider =
-        provider
+    @ServerUrl
+    fun provideServerUrl(constants: Constants): String = constants.SERVER_URL
 
     @ActivityScoped
     @Provides
-    @IntoMap
-    @StringKey("SERVER")
-    fun provideServerProvider(provider: ServerDictionaryProvider): DictionaryProvider =
-        provider
+    fun provideMoshi(): Moshi = Moshi.Builder().build()
+
+    @ActivityScoped
+    @Provides
+    fun provideRetrofit(@ServerUrl url: String, moshi: Moshi): Retrofit =
+        Retrofit.Builder()
+            .baseUrl(url)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .build()
+
+    @ActivityScoped
+    @Provides
+    fun provideDictionaryApi(retrofit: Retrofit): DictionaryApi =
+        retrofit.create(DictionaryApi::class.java)
 }

@@ -51,7 +51,26 @@ class DictionaryConfigTest {
     fun createDb() = runBlockingTest {
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java).build()
-        db.dictionaries().insertAll(listOf(Dictionary(id = "dic_a"), Dictionary(id = "dic_b")))
+        db.dictionaries().insertAll(
+            listOf(
+                Dictionary(
+                    id = "dic_a",
+                    version = 0,
+                    name = "Dictionary A",
+                    summary = "",
+                    authors = "",
+                    additionalInfo = ""
+                ),
+                Dictionary(
+                    id = "dic_b",
+                    version = 0,
+                    name = "Dictionary B",
+                    summary = "",
+                    authors = "",
+                    additionalInfo = ""
+                )
+            )
+        )
         db.categories().insertAll(
             listOf(
                 Category(
