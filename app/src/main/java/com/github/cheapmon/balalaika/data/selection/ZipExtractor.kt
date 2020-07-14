@@ -16,8 +16,6 @@
 package com.github.cheapmon.balalaika.data.selection
 
 import android.content.Context
-import arrow.fx.IO
-import arrow.fx.extensions.fx
 import com.github.cheapmon.balalaika.di.IoDispatcher
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.ByteArrayInputStream
@@ -25,14 +23,14 @@ import java.util.zip.ZipFile
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 
 @Singleton
 class ZipExtractor @Inject constructor(
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
     @ApplicationContext private val context: Context
 ) {
-    fun saveZip(fileName: String, bytes: ByteArray): IO<ZipFile> = IO.fx {
-        continueOn(dispatcher)
+    suspend fun saveZip(fileName: String, bytes: ByteArray): ZipFile = withContext(dispatcher) {
         val file = context.filesDir.resolve(fileName)
         file.outputStream().use { out ->
             ByteArrayInputStream(bytes).use { it.copyTo(out) }
@@ -40,8 +38,7 @@ class ZipExtractor @Inject constructor(
         ZipFile(file)
     }
 
-    fun extract(zip: ZipFile): IO<DictionaryContents> = IO.fx {
-        continueOn(dispatcher)
+    suspend fun extract(zip: ZipFile): DictionaryContents = withContext(dispatcher) {
         val entries = zip.use { file ->
             file.entries().asSequence().map { entry ->
                 Pair(
@@ -65,10 +62,8 @@ class ZipExtractor @Inject constructor(
         contents
     }
 
-    fun removeZip(fileName: String): IO<Unit> = IO.fx {
-        continueOn(dispatcher)
+    suspend fun removeZip(fileName: String) = withContext(dispatcher) {
         context.filesDir.resolve(fileName).delete()
-        Unit
     }
 
     private fun failForFile(name: String): Nothing =

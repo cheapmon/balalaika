@@ -23,7 +23,7 @@ import javax.inject.Singleton
 @Singleton
 class Constants @Inject constructor() {
     /** Assets file with dictionary list */
-    val DICTIONARY_FILE: String = "dictionaries.yml"
+    val DICTIONARY_FILE: String = "dictionaries.json"
 
     /** Default dictionary order */
     val DEFAULT_CATEGORY_ID = "default"

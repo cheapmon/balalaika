@@ -11,3 +11,5 @@ dictionaries:
        to the maintainer of dict.cc (Paul Hemetsberger), the resulting vocabulary database can be
        downloaded anytime."
     additionalInfo: "https://www.dict.cc/?s=about%3A&l=e"
+  - name: Xho
+    id: xho

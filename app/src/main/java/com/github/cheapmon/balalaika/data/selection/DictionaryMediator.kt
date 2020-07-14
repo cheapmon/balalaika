@@ -15,11 +15,11 @@
  */
 package com.github.cheapmon.balalaika.data.selection
 
-import arrow.core.getOrElse
+import arrow.core.Either
 import arrow.fx.IO
-import arrow.fx.extensions.fx
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.db.entities.dictionary.DictionaryDao
+import com.github.cheapmon.balalaika.util.logger
 import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
 import kotlinx.coroutines.flow.first
@@ -34,8 +34,13 @@ class DictionaryMediator @Inject constructor(
     suspend fun updateDictionaryList() {
         val d = dao.getAll().first()
         val p = providers.entries.flatMap { (k, v) ->
-            v.getDictionaryList().attempt().suspended().getOrElse { emptyList() }
-                .map { it.copy(provider = k) }
+            when (val io = IO.effect { v.getDictionaryList() }.attempt().suspended()) {
+                is Either.Left -> {
+                    logger { error("Provider $k failed loading dictionaries with\n${io.a}") }
+                    emptyList()
+                }
+                is Either.Right -> io.b.map { it.copy(provider = k) }
+            }
         }
         p.groupBy { it.id }
             .forEach { (id, list) ->
@@ -60,15 +65,16 @@ class DictionaryMediator @Inject constructor(
             }
     }
 
-    fun installDictionary(dictionary: Dictionary): IO<Unit> = IO.fx {
+    fun installDictionary(dictionary: Dictionary) = IO.effect {
         val provider = providers[dictionary.provider]
         if (provider == null) {
-            throw IllegalStateException("No provider specified")
+            throw IllegalStateException("No provider specified: $dictionary")
         } else {
-            val input = !provider.getDictionary(dictionary.id)
-            val zipFile = !extractor.saveZip(dictionary.id, input)
-            val contents = !extractor.extract(zipFile)
-            !importer.import(dictionary.id, contents)
+            val input = provider.getDictionary(dictionary.id)
+            val zipFile = extractor.saveZip(dictionary.id, input)
+            val contents = extractor.extract(zipFile)
+            importer.import(dictionary.id, contents)
+            extractor.removeZip(dictionary.id)
         }
     }
 }

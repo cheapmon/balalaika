@@ -17,7 +17,6 @@ package com.github.cheapmon.balalaika.data.selection
 
 import android.content.Context
 import androidx.room.withTransaction
-import arrow.fx.IO
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.db.AppDatabase
 import com.github.cheapmon.balalaika.db.entities.category.Category
@@ -41,7 +40,7 @@ class CsvEntityImporter @Inject constructor(
     private val db: AppDatabase,
     private val constants: Constants
 ) {
-    fun import(dictionaryId: String, contents: DictionaryContents): IO<Unit> = IO.effect {
+    suspend fun import(dictionaryId: String, contents: DictionaryContents) {
         db.withTransaction {
             db.categories().insertAll(readCategories(dictionaryId, contents))
             db.lexemes().insertAll(readLexemes(dictionaryId, contents))

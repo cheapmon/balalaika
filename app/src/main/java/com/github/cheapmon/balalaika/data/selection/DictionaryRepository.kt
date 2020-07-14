@@ -68,7 +68,9 @@ class DictionaryRepository @Inject constructor(
                 dictionaryDao.setInstalled(dictionary.id)
                 removeEntities(dictionary.id)
                 val result = mediator.installDictionary(dictionary).attempt().suspended()
-                if (result is Either.Left) logger { error(result.a) }
+                if (result is Either.Left) logger {
+                    error("Installing dictionary $dictionary failed with:\n${result.a}")
+                }
             }
         }
     }

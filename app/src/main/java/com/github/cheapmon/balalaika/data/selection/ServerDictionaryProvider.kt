@@ -15,8 +15,6 @@
  */
 package com.github.cheapmon.balalaika.data.selection
 
-import arrow.fx.IO
-import arrow.fx.extensions.fx
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.util.Constants
 import dagger.hilt.android.scopes.ActivityScoped
@@ -28,14 +26,12 @@ class ServerDictionaryProvider @Inject constructor(
     private val constants: Constants,
     private val api: DictionaryApi
 ) : DictionaryProvider {
-    override fun getDictionaryList(): IO<List<Dictionary>> = IO.effect {
+    override suspend fun getDictionaryList(): List<Dictionary> =
         withTimeout(constants.REMOTE_TIMEOUT) {
             api.listDictionaries().map { it.toDictionary() }
         }
-    }
 
-    override fun getDictionary(id: String): IO<ByteArray> = IO.fx {
-        // withTimeout(constants.REMOTE_TIMEOUT) { api.getDictionary(id) }
-        throw NotImplementedError()
+    override suspend fun getDictionary(id: String): ByteArray {
+        return withTimeout(constants.REMOTE_TIMEOUT) { api.getDictionary(id).bytes() }
     }
 }

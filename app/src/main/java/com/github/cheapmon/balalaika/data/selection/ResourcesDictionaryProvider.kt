@@ -16,11 +16,12 @@
 package com.github.cheapmon.balalaika.data.selection
 
 import android.content.Context
-import arrow.fx.IO
-import arrow.fx.extensions.fx
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.di.IoDispatcher
 import com.github.cheapmon.balalaika.util.Constants
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ActivityScoped
 import java.io.FileNotFoundException
@@ -34,7 +35,7 @@ class ResourcesDictionaryProvider @Inject constructor(
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
     @ApplicationContext private val context: Context,
     private val constants: Constants,
-    private val parser: YamlDictionaryParser
+    private val moshi: Moshi
 ) : DictionaryProvider {
     private val dictionaryList = context.assets.open(constants.DICTIONARY_FILE)
         .bufferedReader()
@@ -43,17 +44,16 @@ class ResourcesDictionaryProvider @Inject constructor(
         .orEmpty()
         .filter { it.endsWith(".zip") }
 
-    override fun getDictionaryList(): IO<List<Dictionary>> = IO.fx {
-        !!effect {
-            withTimeout(constants.LOCAL_TIMEOUT) {
-                parser.parse(dictionaryList)
-            }
+    override suspend fun getDictionaryList(): List<Dictionary> =
+        withTimeout(constants.LOCAL_TIMEOUT) {
+            val type = Types.newParameterizedType(List::class.java, DictionaryInfo::class.java)
+            val adapter: JsonAdapter<List<DictionaryInfo>> = moshi.adapter(type)
+            adapter.fromJson(dictionaryList).orEmpty().map { it.toDictionary() }
         }
-    }
 
-    override fun getDictionary(id: String): IO<ByteArray> = IO.effect {
+    override suspend fun getDictionary(id: String): ByteArray {
         val fileName = zipFiles.find { it.startsWith(id) }
             ?: throw FileNotFoundException()
-        withContext(dispatcher) { context.assets.open(fileName).use { it.readBytes() } }
+        return withContext(dispatcher) { context.assets.open(fileName).use { it.readBytes() } }
     }
 }

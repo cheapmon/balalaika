@@ -15,10 +15,9 @@
  */
 package com.github.cheapmon.balalaika.data.selection
 
-import arrow.fx.IO
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 
 interface DictionaryProvider {
-    fun getDictionaryList(): IO<List<Dictionary>>
-    fun getDictionary(id: String): IO<ByteArray>
+    suspend fun getDictionaryList(): List<Dictionary>
+    suspend fun getDictionary(id: String): ByteArray
 }
