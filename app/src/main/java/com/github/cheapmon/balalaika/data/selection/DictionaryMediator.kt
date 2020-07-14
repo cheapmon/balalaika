@@ -51,6 +51,8 @@ class DictionaryMediator @Inject constructor(
                     current != null -> {
                         if (current.version < newest.version) {
                             dao.setUpdatable(current.id)
+                        } else {
+                            dao.setUnupdatable(current.id)
                         }
                     }
                     else -> {
