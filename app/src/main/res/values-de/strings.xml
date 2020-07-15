@@ -120,4 +120,6 @@
     <string name="selection_confirm_remove">Dieses Wörterbuch löschen?</string>
     <string name="selection_loading_success">%1$d Wörterbücher gefunden</string>
     <string name="selection_loading_failed">Wörterbücher konnten nicht geladen werden</string>
+    <string name="selection_labels">Label</string>
+    <string name="selection_no_labels">Keine</string>
 </resources>
