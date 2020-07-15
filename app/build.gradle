@@ -35,7 +35,6 @@ android {
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
-        multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -160,18 +159,12 @@ dependencies {
     implementation "io.arrow-kt:arrow-fx:$arrow_version"
     implementation "io.arrow-kt:arrow-syntax:$arrow_version"
 
-    // Multidex support
-    implementation 'com.android.support:multidex:1.0.3'
-
-    // Import
-    implementation "org.apache.commons:commons-csv:1.8"
-    implementation "org.yaml:snakeyaml:1.26:android"
-
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
     implementation "com.squareup.moshi:moshi:1.9.3"
     kapt "com.squareup.moshi:moshi-kotlin-codegen:1.9.3"
+    implementation "org.apache.commons:commons-csv:1.8"
     testImplementation "com.squareup.okhttp3:mockwebserver:4.8.0"
 
     // Testing
