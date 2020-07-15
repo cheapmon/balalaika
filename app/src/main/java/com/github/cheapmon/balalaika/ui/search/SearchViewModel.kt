@@ -19,6 +19,7 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
+import com.github.cheapmon.balalaika.data.dictionary.DictionaryEntryRepository
 import com.github.cheapmon.balalaika.data.history.HistoryRepository
 import com.github.cheapmon.balalaika.data.search.SearchRepository
 import com.github.cheapmon.balalaika.db.entities.history.HistoryEntry
@@ -29,6 +30,7 @@ import kotlinx.coroutines.launch
 /** View model for [SearchFragment] */
 class SearchViewModel @ViewModelInject constructor(
     private val searchRepository: SearchRepository,
+    dictionaryEntryRepository: DictionaryEntryRepository,
     private val historyRepository: HistoryRepository
 ) : ViewModel() {
     /** Current search query */
@@ -39,6 +41,9 @@ class SearchViewModel @ViewModelInject constructor(
 
     /** Current dictionary, depending on the user configuration */
     val dictionary = searchRepository.dictionary.cachedIn(viewModelScope)
+
+    /** Current active dictionary */
+    val currentDictionary = dictionaryEntryRepository.currentDictionary
 
     /** Set the search query */
     fun setQuery(query: String) =

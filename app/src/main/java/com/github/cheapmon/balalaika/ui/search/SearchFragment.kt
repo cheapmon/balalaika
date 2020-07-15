@@ -121,14 +121,10 @@ class SearchFragment : Fragment(), SearchAdapter.Listener {
                     }.exhaustive
                 }
             }
+            launch {
+                viewModel.currentDictionary.collectLatest { binding.empty = it == null }
+            }
         }
-        /*if (itemCount == 0) {
-            binding.searchEmptyIcon.visibility = View.VISIBLE
-            binding.searchEmptyText.visibility = View.VISIBLE
-        } else {
-            binding.searchEmptyIcon.visibility = View.GONE
-            binding.searchEmptyText.visibility = View.GONE
-        }*/
     }
 
     /** Process fragment arguments */
