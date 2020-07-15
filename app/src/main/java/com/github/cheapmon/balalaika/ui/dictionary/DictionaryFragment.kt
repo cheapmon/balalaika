@@ -155,14 +155,24 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
             val categories = viewModel.getCategories()
             val names = categories.map { it.name }.toTypedArray()
             val selected = categories.indexOfFirst { it.id == viewModel.category.first() }
-            MaterialAlertDialogBuilder(requireContext())
-                .setIcon(R.drawable.ic_sort)
-                .setTitle(R.string.menu_order_by)
-                .setSingleChoiceItems(names, selected) { _, which ->
-                    val id = categories[which].id
-                    viewModel.setCategory(id)
-                }.setPositiveButton(R.string.affirm, null)
-                .show()
+            val dictionary = viewModel.currentDictionary.first()
+            if (dictionary != null) {
+                MaterialAlertDialogBuilder(requireContext())
+                    .setIcon(R.drawable.ic_sort)
+                    .setTitle(R.string.menu_order_by)
+                    .setSingleChoiceItems(names, selected) { _, which ->
+                        val id = categories[which].id
+                        viewModel.setCategory(id)
+                    }.setPositiveButton(R.string.affirm, null)
+                    .show()
+            } else {
+                MaterialAlertDialogBuilder(requireContext())
+                    .setIcon(R.drawable.ic_sort)
+                    .setTitle(R.string.menu_order_by)
+                    .setMessage(R.string.dictionary_empty)
+                    .setPositiveButton(R.string.affirm, null)
+                    .show()
+            }
         }
     }
 
@@ -173,14 +183,24 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
             val selected = dictionaryViews.indexOfFirst {
                 it.dictionaryView.id == viewModel.dictionaryView.first()
             }
-            MaterialAlertDialogBuilder(requireContext())
-                .setIcon(R.drawable.ic_view)
-                .setTitle(R.string.menu_setup_view)
-                .setSingleChoiceItems(names, selected) { _, which ->
-                    val id = dictionaryViews[which].dictionaryView.id
-                    viewModel.setDictionaryView(id)
-                }.setPositiveButton(R.string.affirm, null)
-                .show()
+            val dictionary = viewModel.currentDictionary.first()
+            if (dictionary != null) {
+                MaterialAlertDialogBuilder(requireContext())
+                    .setIcon(R.drawable.ic_view)
+                    .setTitle(R.string.menu_setup_view)
+                    .setSingleChoiceItems(names, selected) { _, which ->
+                        val id = dictionaryViews[which].dictionaryView.id
+                        viewModel.setDictionaryView(id)
+                    }.setPositiveButton(R.string.affirm, null)
+                    .show()
+            } else {
+                MaterialAlertDialogBuilder(requireContext())
+                    .setIcon(R.drawable.ic_view)
+                    .setTitle(R.string.menu_setup_view)
+                    .setMessage(R.string.dictionary_empty)
+                    .setPositiveButton(R.string.affirm, null)
+                    .show()
+            }
         }
     }
 
