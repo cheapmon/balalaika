@@ -115,6 +115,7 @@
     <string name="selection_is_updatable">updates</string>
     <string name="selection_confirm_activate">Activate this dictionary?</string>
     <string name="selection_confirm_deactivate">Deactivate this dictionary?</string>
+    <string name="selection_confirm_update">Update this dictionary?</string>
     <string name="selection_confirm_add">Add %1$s to library?</string>
     <string name="selection_confirm_remove">Remove this dictionary?</string>
     <string name="selection_loading_success">Found %1$d dictionaries</string>

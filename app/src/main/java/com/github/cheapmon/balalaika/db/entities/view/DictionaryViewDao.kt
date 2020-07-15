@@ -50,4 +50,7 @@ interface DictionaryViewDao {
 
     @Query("""DELETE FROM dictionary_view_to_category WHERE dictionary_id = (:dictionaryId)""")
     suspend fun removeRelations(dictionaryId: String)
+
+    @Query("""SELECT * FROM dictionary_view WHERE id = (:id) LIMIT 1""")
+    suspend fun findById(id: String): DictionaryView?
 }

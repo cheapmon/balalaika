@@ -49,7 +49,7 @@ class DictionaryMediator @Inject constructor(
                 val current = d.find { it.id == id }
                 when {
                     current != null -> {
-                        if (current.version < newest.version) {
+                        if (current.isInstalled && current.version < newest.version) {
                             dao.setUpdatable(current.id)
                         } else {
                             dao.setUnupdatable(current.id)

@@ -30,4 +30,6 @@ class SelectionDetailViewModel @ViewModelInject constructor(
     fun addDictionary(dictionary: Dictionary) = repository.addDictionary(dictionary)
 
     fun removeDictionary(id: String) = repository.removeDictionary(id)
+
+    fun updateDictionary(dictionary: Dictionary) = repository.updateDictionary(dictionary)
 }

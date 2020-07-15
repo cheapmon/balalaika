@@ -18,8 +18,10 @@ package com.github.cheapmon.balalaika.data.selection
 import androidx.room.withTransaction
 import arrow.core.Either
 import com.github.cheapmon.balalaika.db.AppDatabase
+import com.github.cheapmon.balalaika.db.entities.config.DictionaryConfig
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.db.entities.dictionary.DictionaryDao
+import com.github.cheapmon.balalaika.util.Constants
 import com.github.cheapmon.balalaika.util.logger
 import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
@@ -29,10 +31,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @ActivityScoped
 class DictionaryRepository @Inject constructor(
+    private val constants: Constants,
     private val db: AppDatabase,
     private val dictionaryDao: DictionaryDao,
     private val mediator: DictionaryMediator
@@ -63,24 +67,49 @@ class DictionaryRepository @Inject constructor(
     }
 
     fun addDictionary(dictionary: Dictionary) {
-        launch {
-            showProgess {
-                dictionaryDao.setInstalled(dictionary.id)
-                removeEntities(dictionary.id)
-                val result = mediator.installDictionary(dictionary).attempt().suspended()
-                if (result is Either.Left) logger {
-                    error("Installing dictionary $dictionary failed with:\n${result.a}")
-                }
+        showProgess {
+            dictionaryDao.setInstalled(dictionary.id)
+            removeEntities(dictionary.id)
+            val result = mediator.installDictionary(dictionary).attempt().suspended()
+            if (result is Either.Left) logger {
+                error("Installing dictionary $dictionary failed with:\n${result.a}")
             }
         }
     }
 
     fun removeDictionary(id: String) {
-        launch {
-            showProgess {
-                removeEntities(id)
-                db.dictionaries().remove(id)
-                refresh()
+        showProgess {
+            removeEntities(id)
+            db.dictionaries().remove(id)
+            refresh()
+        }
+    }
+
+    fun updateDictionary(dictionary: Dictionary) {
+        showProgess {
+            val configuration = db.configurations().getConfigFor(dictionary.id).first()
+            db.withTransaction {
+                db.configurations().removeConfigFor(dictionary.id)
+                db.dictionaryViews().removeRelations(dictionary.id)
+                db.dictionaryViews().removeViews(dictionary.id)
+                db.properties().removeInDictionary(dictionary.id)
+                db.lexemes().removeInDictionary(dictionary.id)
+                db.categories().removeInDictionary(dictionary.id)
+            }
+            val result = mediator.installDictionary(dictionary).attempt().suspended()
+            if (result is Either.Left) logger {
+                error("Updating dictionary $dictionary failed with:\n${result.a}")
+            } else {
+                var orderBy = configuration?.orderBy
+                if (orderBy == null || db.categories().findById(orderBy) == null) {
+                    orderBy = constants.DEFAULT_CATEGORY_ID
+                }
+                var filterBy = configuration?.filterBy
+                if (filterBy == null || db.dictionaryViews().findById(filterBy) == null) {
+                    filterBy = constants.DEFAULT_DICTIONARY_VIEW_ID
+                }
+                db.configurations().insert(DictionaryConfig(dictionary.id, orderBy, filterBy))
+                db.dictionaries().setUnupdatable(dictionary.id)
             }
         }
     }
@@ -90,10 +119,12 @@ class DictionaryRepository @Inject constructor(
         refreshJob = launch { mediator.updateDictionaryList() }
     }
 
-    private suspend fun showProgess(block: suspend () -> Unit) {
-        _inProgress.value = true
-        block()
-        _inProgress.value = false
+    private fun showProgess(block: suspend () -> Unit) {
+        launch {
+            _inProgress.value = true
+            block()
+            _inProgress.value = false
+        }
     }
 
     private suspend fun removeEntities(dictionaryId: String) {

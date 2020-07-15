@@ -159,7 +159,6 @@ dependencies {
     // Functional programming
     implementation "io.arrow-kt:arrow-fx:$arrow_version"
     implementation "io.arrow-kt:arrow-syntax:$arrow_version"
-    kapt "io.arrow-kt:arrow-meta:$arrow_version"
 
     // Multidex support
     implementation 'com.android.support:multidex:1.0.3'

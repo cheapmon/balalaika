@@ -44,7 +44,8 @@ import com.github.cheapmon.balalaika.ui.history.HistoryFragment
         ForeignKey(
             entity = Category::class,
             parentColumns = ["id", "dictionary_id"],
-            childColumns = ["category_id", "dictionary_id"]
+            childColumns = ["category_id", "dictionary_id"],
+            onDelete = ForeignKey.CASCADE
         )
     ],
     indices = [Index(value = ["category_id", "dictionary_id"])]

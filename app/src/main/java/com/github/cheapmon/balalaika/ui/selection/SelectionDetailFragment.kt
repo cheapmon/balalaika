@@ -31,7 +31,6 @@ import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.databinding.FragmentSelectionDetailBinding
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -93,7 +92,15 @@ class SelectionDetailFragment : Fragment() {
         }
 
         fun onClickUpdateButton(dictionary: Dictionary) {
-            Snackbar.make(binding.root, "Not implemented yet", Snackbar.LENGTH_SHORT).show()
+            MaterialAlertDialogBuilder(requireContext())
+                .setMessage(R.string.selection_confirm_update)
+                .setPositiveButton(R.string.affirm) { _, _ ->
+                    viewModel.updateDictionary(dictionary)
+                    val directions =
+                        SelectionDetailFragmentDirections.actionNavSelectionDetailToNavSelection()
+                    findNavController().navigate(directions)
+                }.setNegativeButton(R.string.cancel, null)
+                .show()
         }
 
         fun onClickAddButton(dictionary: Dictionary) {
