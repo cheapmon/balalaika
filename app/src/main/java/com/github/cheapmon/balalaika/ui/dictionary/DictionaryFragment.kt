@@ -88,6 +88,10 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
                 adapter = dictionaryAdapter
                 setHasFixedSize(true)
             }
+            dictionaryEmptyButton.setOnClickListener {
+                val directions = DictionaryFragmentDirections.selectDictionary()
+                findNavController().navigate(directions)
+            }
         }
         bindUi()
         indicateProgress()
@@ -97,7 +101,12 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
 
     private fun bindUi() {
         lifecycleScope.launch {
-            viewModel.dictionary.collectLatest { data -> dictionaryAdapter.submitData(data) }
+            launch {
+                viewModel.dictionary.collectLatest { data -> dictionaryAdapter.submitData(data) }
+            }
+            launch {
+                viewModel.currentDictionary.collectLatest { binding.empty = it == null }
+            }
         }
     }
 

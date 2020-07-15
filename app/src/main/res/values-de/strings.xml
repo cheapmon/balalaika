@@ -69,6 +69,8 @@
     <string name="dictionary_playback_failed">Wiedergabe fehlgeschlagen</string>
     <string name="dictionary_bookmark_add">%1$s zu Lesezeichen hinzugefügt</string>
     <string name="dictionary_bookmark_remove">%1$s aus Lesezeichen entfernt</string>
+    <string name="dictionary_empty">Kein Wörterbuch ausgewählt</string>
+    <string name="dictionary_select_dictionary">Wörterbücher installieren</string>
 
     <!-- Bookmarks fragment -->
     <string name="bookmarks_item_removed">Lesezeichen entfernt</string>

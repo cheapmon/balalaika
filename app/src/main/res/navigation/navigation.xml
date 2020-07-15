@@ -32,6 +32,11 @@
             android:defaultValue="@null"
             app:argType="string"
             app:nullable="true" />
+        <action
+            android:id="@+id/select_dictionary"
+            app:destination="@id/nav_selection"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:popUpTo="@id/nav_selection" />
     </fragment>
     <fragment
         android:id="@+id/nav_search"

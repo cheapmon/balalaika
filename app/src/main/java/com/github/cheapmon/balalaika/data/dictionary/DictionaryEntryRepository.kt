@@ -99,6 +99,9 @@ class DictionaryEntryRepository @Inject constructor(
     val dictionary = combine(dictionaryView, category, initialKey) { d, c, i -> Triple(d, c, i) }
         .flatMapLatest { (d, c, i) -> getDictionary(d, c, i) }
 
+    /** Current active dictionary */
+    val currentDictionary = dictionaryDao.getActive()
+
     /** Set dictionary view */
     fun setDictionaryView(id: String) = launch {
         val config = config.first() ?: return@launch

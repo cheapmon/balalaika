@@ -38,6 +38,7 @@ class DictionaryViewModel @ViewModelInject constructor(
      * - Initial entry
      */
     val dictionary = repository.dictionary.cachedIn(viewModelScope)
+    val currentDictionary = repository.currentDictionary
 
     val dictionaryView = repository.dictionaryView
     val category = repository.category

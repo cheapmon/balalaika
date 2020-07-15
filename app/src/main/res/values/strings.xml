@@ -69,6 +69,8 @@
     <string name="dictionary_playback_failed">Playback failed</string>
     <string name="dictionary_bookmark_add">%1$s was added to bookmarks</string>
     <string name="dictionary_bookmark_remove">%1$s was removed from bookmarks</string>
+    <string name="dictionary_empty">No active dictionaries</string>
+    <string name="dictionary_select_dictionary">Select a dictionary</string>
 
     <!-- Bookmarks fragment -->
     <string name="bookmarks_item_removed">Bookmark was removed</string>
