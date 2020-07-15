@@ -38,9 +38,14 @@ class DictionaryViewModel @ViewModelInject constructor(
      * - Initial entry
      */
     val dictionary = repository.dictionary.cachedIn(viewModelScope)
+
+    /** Current active dictionary */
     val currentDictionary = repository.currentDictionary
 
+    /** Current selected dictionary view */
     val dictionaryView = repository.dictionaryView
+
+    /** Current selected category to order by */
     val category = repository.category
 
     /** Set the dictionary view */

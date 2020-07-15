@@ -21,6 +21,7 @@ import com.github.cheapmon.balalaika.db.AppDatabase
 import com.github.cheapmon.balalaika.db.entities.config.DictionaryConfig
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.db.entities.dictionary.DictionaryDao
+import com.github.cheapmon.balalaika.ui.selection.SelectionFragment
 import com.github.cheapmon.balalaika.util.Constants
 import com.github.cheapmon.balalaika.util.logger
 import dagger.hilt.android.scopes.ActivityScoped
@@ -34,6 +35,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
+/**
+ * Dictionary data handling
+ *
+ * @see SelectionFragment
+ */
 @ActivityScoped
 class DictionaryRepository @Inject constructor(
     private val constants: Constants,
@@ -41,6 +47,7 @@ class DictionaryRepository @Inject constructor(
     private val dictionaryDao: DictionaryDao,
     private val mediator: DictionaryMediator
 ) : CoroutineScope {
+    /** @suppress */
     override val coroutineContext: CoroutineContext = Dispatchers.IO
     private var refreshJob: Job? = null
 
@@ -48,14 +55,18 @@ class DictionaryRepository @Inject constructor(
         refresh()
     }
 
+    /** All available dictionaries */
     val dictionaries = dictionaryDao.getAll()
 
+    /** Get a single dictionary from the database */
     fun getDictionary(id: String) = dictionaryDao.findById(id)
 
     private val _inProgress = MutableStateFlow(false)
+    /** Data loading progress */
     val inProgress: StateFlow<Boolean>
         get() = _inProgress
 
+    /** (De)activate a dictionary */
     fun toggleActive(dictionary: Dictionary) {
         launch {
             if (dictionary.isActive) {
@@ -66,6 +77,7 @@ class DictionaryRepository @Inject constructor(
         }
     }
 
+    /** Install a dictionary */
     fun addDictionary(dictionary: Dictionary) {
         showProgess {
             dictionaryDao.setInstalled(dictionary.id)
@@ -77,6 +89,7 @@ class DictionaryRepository @Inject constructor(
         }
     }
 
+    /** Remove a dictionary */
     fun removeDictionary(id: String) {
         showProgess {
             removeEntities(id)
@@ -85,6 +98,19 @@ class DictionaryRepository @Inject constructor(
         }
     }
 
+    /**
+     * Update a dictionary and its contents in the database
+     *
+     * At the moment we use a very simple approach to update the database: Existing entities are
+     * removed and new entities imported. Additionally, three things need to be fixed:
+     * - Bookmarks
+     * - Search history
+     * - Dictionary configuration
+     *
+     * Bookmarks are implicitly handled because they are saved directly on the lexeme. The search
+     * history cascades any changes done to the table. The dictionary configuration is replaced
+     * by defaults if the assigned category or dictionary view is missing.
+     */
     fun updateDictionary(dictionary: Dictionary) {
         showProgess {
             val configuration = db.configurations().getConfigFor(dictionary.id).first()
@@ -100,6 +126,7 @@ class DictionaryRepository @Inject constructor(
             if (result is Either.Left) logger {
                 error("Updating dictionary $dictionary failed with:\n${result.a}")
             } else {
+                // Ensure that configuration uses correct foreign keys
                 var orderBy = configuration?.orderBy
                 if (orderBy == null || db.categories().findById(orderBy) == null) {
                     orderBy = constants.DEFAULT_CATEGORY_ID
@@ -114,6 +141,7 @@ class DictionaryRepository @Inject constructor(
         }
     }
 
+    /** Update the dictionary list in the database */
     fun refresh() {
         refreshJob?.cancel()
         refreshJob = launch { mediator.updateDictionaryList() }

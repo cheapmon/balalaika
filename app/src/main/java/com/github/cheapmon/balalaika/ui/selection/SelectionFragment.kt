@@ -36,6 +36,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+/** Fragment for displaying available dictionaries for multiple sources */
 @AndroidEntryPoint
 class SelectionFragment : Fragment(), SelectionAdapter.Listener,
     SwipeRefreshLayout.OnRefreshListener {
@@ -47,7 +48,7 @@ class SelectionFragment : Fragment(), SelectionAdapter.Listener,
     private lateinit var selectionAdapter: SelectionAdapter
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
-    /** Create view */
+    /** Create view and bind data */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -95,6 +96,7 @@ class SelectionFragment : Fragment(), SelectionAdapter.Listener,
         findNavController().navigate(directions)
     }
 
+    /** Refresh data */
     override fun onRefresh() {
         swipeRefreshLayout.isRefreshing = true
         viewModel.refresh()

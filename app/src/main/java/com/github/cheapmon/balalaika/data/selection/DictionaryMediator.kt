@@ -24,6 +24,22 @@ import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
 import kotlinx.coroutines.flow.first
 
+/**
+ * Mediator to merge [dictionaries][Dictionary] from different [sources][DictionaryProvider]
+ *
+ * All available providers are queried for a dictionary list, and all dictionaries are collected
+ * into a single list. The resolution strategy is as follows:
+ * - If a dictionary hasn't been seen before, it is added into the database without any changes.
+ * - If there are multiple instances of the same dictionary, only the newest is kept.
+ *
+ * Any errors encountered while querying the providers are logged to the console and ignored
+ * otherwise.
+ *
+ * _Note_: We annotate each dictionary with the provider that produced it so that we know which
+ * provider to use for installation of the respective dictionary.
+ *
+ * @see DictionaryApi
+ */
 @ActivityScoped
 class DictionaryMediator @Inject constructor(
     private val dao: DictionaryDao,
@@ -31,6 +47,7 @@ class DictionaryMediator @Inject constructor(
     private val extractor: ZipExtractor,
     private val importer: CsvEntityImporter
 ) {
+    /** Update [dictionary list][Dictionary] */
     suspend fun updateDictionaryList() {
         val d = dao.getAll().first()
         val p = providers.entries.flatMap { (k, v) ->
@@ -67,7 +84,24 @@ class DictionaryMediator @Inject constructor(
             }
     }
 
-    fun installDictionary(dictionary: Dictionary) = IO.effect {
+    /**
+     * Install a [dictionary][Dictionary] into the application using its
+     * [provider][DictionaryApi]
+     *
+     * Installation consists of the following steps:
+     * 1. Download of a `.zip` file from the local or remote source
+     * 2. Extraction of `.csv` file contents from the `.zip` file
+     * 3. Parsing and import of entities into the database
+     *
+     * Errors encountered while installing the dictionary are logged to the console and ignored
+     * otherwise.
+     *
+     * _Note_: `IO` results are lazily evaluated.
+     *
+     * @see ZipExtractor
+     * @see CsvEntityImporter
+     */
+    fun installDictionary(dictionary: Dictionary): IO<Boolean> = IO.effect {
         val provider = providers[dictionary.provider]
         if (provider == null) {
             throw IllegalStateException("No provider specified: $dictionary")

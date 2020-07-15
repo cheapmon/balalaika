@@ -20,10 +20,21 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.github.cheapmon.balalaika.data.selection.CsvEntityImporter
 import com.github.cheapmon.balalaika.db.entities.category.Category
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.db.entities.view.DictionaryView
 
+/**
+ * Application configuration for the display of a [dictionary][Dictionary]
+ *
+ * When another dictionary is activated, two pieces of information need to be saved:
+ * - The selected [dictionary view][DictionaryView]
+ * - The selected [category][Category] to order dictionary entries by
+ *
+ * For each dictionary, there always exists one dictionary configuration.
+ * See [CsvEntityImporter.import] for more information.
+ */
 @Entity(
     tableName = "config",
     foreignKeys = [
@@ -49,7 +60,10 @@ import com.github.cheapmon.balalaika.db.entities.view.DictionaryView
     ]
 )
 data class DictionaryConfig(
+    /** [Dictionary] this configuration belongs to */
     @PrimaryKey val id: String,
+    /** [Category] identifier of this configuration */
     @ColumnInfo(name = "order_by") val orderBy: String,
+    /** [DictionaryView] identifier of this configuration */
     @ColumnInfo(name = "filter_by") val filterBy: String
 )

@@ -19,15 +19,16 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import com.github.cheapmon.balalaika.data.selection.DictionaryRepository
 
-/**
- * View model for [SelectionFragment]
- */
+/** View model for [SelectionFragment] */
 class SelectionViewModel @ViewModelInject constructor(
     private val repository: DictionaryRepository
 ) : ViewModel() {
+    /** All available dictionaries */
     val dictionaries = repository.dictionaries
+    /** Progress of current operation */
     val inProgress = repository.inProgress
 
+    /** Refresh dictionary list from sources */
     fun refresh() {
         repository.refresh()
     }

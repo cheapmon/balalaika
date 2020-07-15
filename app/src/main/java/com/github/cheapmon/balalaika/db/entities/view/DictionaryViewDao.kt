@@ -45,12 +45,15 @@ interface DictionaryViewDao {
     @Insert
     suspend fun insertRelation(dictionaryViewToCategory: List<DictionaryViewToCategory>)
 
+    /** Remove all dictionary views associated with a dictionary */
     @Query("""DELETE FROM dictionary_view WHERE dictionary_id = (:dictionaryId)""")
     suspend fun removeViews(dictionaryId: String)
 
+    /** Remove all dictionary view relations associated with a dictionary */
     @Query("""DELETE FROM dictionary_view_to_category WHERE dictionary_id = (:dictionaryId)""")
     suspend fun removeRelations(dictionaryId: String)
 
+    /** Find a dictionary view by its id */
     @Query("""SELECT * FROM dictionary_view WHERE id = (:id) LIMIT 1""")
     suspend fun findById(id: String): DictionaryView?
 }

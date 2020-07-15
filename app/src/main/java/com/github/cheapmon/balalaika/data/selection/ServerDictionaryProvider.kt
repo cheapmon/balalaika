@@ -21,6 +21,7 @@ import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
 import kotlinx.coroutines.withTimeout
 
+/** [Dictionary provider][DictionaryProvider] for remote files */
 @ActivityScoped
 class ServerDictionaryProvider @Inject constructor(
     private val constants: Constants,

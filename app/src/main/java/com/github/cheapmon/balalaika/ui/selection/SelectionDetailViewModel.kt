@@ -20,16 +20,22 @@ import androidx.lifecycle.ViewModel
 import com.github.cheapmon.balalaika.data.selection.DictionaryRepository
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 
+/** View model for [SelectionDetailFragment] */
 class SelectionDetailViewModel @ViewModelInject constructor(
     private val repository: DictionaryRepository
 ) : ViewModel() {
+    /** Get a single dictionary */
     fun getDictionary(id: String) = repository.getDictionary(id)
 
+    /** (De)activate a dictionary */
     fun toggleActive(dictionary: Dictionary) = repository.toggleActive(dictionary)
 
+    /** Install a dictionary into the library */
     fun addDictionary(dictionary: Dictionary) = repository.addDictionary(dictionary)
 
+    /** Remove a dictionary from the library */
     fun removeDictionary(id: String) = repository.removeDictionary(id)
 
+    /** Update a dictionary in the library */
     fun updateDictionary(dictionary: Dictionary) = repository.updateDictionary(dictionary)
 }

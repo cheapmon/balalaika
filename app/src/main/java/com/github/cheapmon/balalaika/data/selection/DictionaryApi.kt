@@ -19,10 +19,42 @@ import okhttp3.ResponseBody
 import retrofit2.http.GET
 import retrofit2.http.Path
 
+/**
+ * Read dictionaries from a remote REST API
+ */
 interface DictionaryApi {
+    /**
+     * List of available dictionaries
+     *
+     * Dictionaries are provided as a simple JSON file, e.g.:
+     * ```json
+     * [
+     *   {
+     *     "name": "Sample dictionary",
+     *     "id": "sample",
+     *     "version": 1,
+     *     "authors": "",
+     *     "summary": "",
+     *     "additionalInfo": ""
+     *   }
+     * ]
+     * ```
+     */
     @GET("dictionary")
     suspend fun listDictionaries(): List<DictionaryInfo>
 
+    /**
+     * `.zip` file with dictionary contents
+     *
+     * The `.zip` file contains five `.csv` files:
+     * 1. `categories.csv`
+     * 2. `lexemes.csv`
+     * 3. `full_forms.csv`
+     * 4. `properties.csv`
+     * 5. `views.csv`
+     *
+     * @see CsvEntityImporter
+     */
     @GET("dictionary/{id}")
     suspend fun getDictionary(@Path("id") id: String): ResponseBody
 }

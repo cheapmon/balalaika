@@ -40,6 +40,16 @@ class CsvEntityImporter @Inject constructor(
     private val db: AppDatabase,
     private val constants: Constants
 ) {
+    /**
+     * Read `.csv` files and import entities into the database
+     *
+     * Additional to the entities a few defaults are generated:
+     * - Default category to sort by (sorts by lexeme form)
+     * - Default dictionary view (shows all data categories)
+     * - Default dictionary configuration consisting of the default category and dictionary view
+     *
+     * _Note_: Uses `withTransaction` to ensure source file validity.
+     */
     suspend fun import(dictionaryId: String, contents: DictionaryContents) {
         db.withTransaction {
             db.categories().insertAll(readCategories(dictionaryId, contents))

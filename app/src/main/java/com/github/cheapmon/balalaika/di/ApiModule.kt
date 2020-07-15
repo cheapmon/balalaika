@@ -26,18 +26,22 @@ import dagger.hilt.android.scopes.ActivityScoped
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
+/** API dependency injection module */
 @Module
 @InstallIn(ActivityComponent::class)
 class ApiModule {
+    /** @suppress */
     @ActivityScoped
     @Provides
     @ServerUrl
     fun provideServerUrl(constants: Constants): String = constants.SERVER_URL
 
+    /** @suppress */
     @ActivityScoped
     @Provides
     fun provideMoshi(): Moshi = Moshi.Builder().build()
 
+    /** @suppress */
     @ActivityScoped
     @Provides
     fun provideRetrofit(@ServerUrl url: String, moshi: Moshi): Retrofit =
@@ -46,6 +50,7 @@ class ApiModule {
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
 
+    /** @suppress */
     @ActivityScoped
     @Provides
     fun provideDictionaryApi(retrofit: Retrofit): DictionaryApi =

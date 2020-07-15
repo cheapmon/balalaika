@@ -17,26 +17,32 @@ package com.github.cheapmon.balalaika.di
 
 import javax.inject.Qualifier
 
+/** Denotes the default dispatcher for this application */
 @Retention(AnnotationRetention.BINARY)
 @Qualifier
 annotation class DefaultDispatcher
 
+/** Denotes the IO dispatcher for this application */
 @Retention(AnnotationRetention.BINARY)
 @Qualifier
 annotation class IoDispatcher
 
+/** Denotes the main dispatcher for this application */
 @Retention(AnnotationRetention.BINARY)
 @Qualifier
 annotation class MainDispatcher
 
+/** Denotes the main immediate dispatcher for this application */
 @Retention(AnnotationRetention.BINARY)
 @Qualifier
 annotation class MainImmediateDispatcher
 
+/** Denotes the main coroutine scope for this application */
 @Retention(AnnotationRetention.BINARY)
 @Qualifier
 annotation class ApplicationScope
 
+/** Denotes a string to contain the main server URL */
 @Retention(AnnotationRetention.BINARY)
 @Qualifier
 annotation class ServerUrl

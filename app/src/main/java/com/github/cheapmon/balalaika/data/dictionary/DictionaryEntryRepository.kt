@@ -71,12 +71,17 @@ class DictionaryEntryRepository @Inject constructor(
     private val configDao: DictionaryConfigDao,
     private val cacheEntryDao: CacheEntryDao
 ) : CoroutineScope {
+    /** @suppress */
     override val coroutineContext: CoroutineContext = dispatcher
 
     private val config = dictionaryDao.getActive()
         .filterNotNull()
         .flatMapLatest { configDao.getConfigFor(it.id) }
+
+    /** Current selected dictionary view */
     val dictionaryView = config.filterNotNull().map { it.filterBy }
+
+    /** Current selected category to order by */
     val category = config.filterNotNull().map { it.orderBy }
 
     private val _initialKey = ConflatedBroadcastChannel<Long?>(null)

@@ -25,11 +25,13 @@ import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
+/** `.zip` file extraction */
 @Singleton
 class ZipExtractor @Inject constructor(
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
     @ApplicationContext private val context: Context
 ) {
+    /** Copy raw [bytes] of a `.zip` file to local storage */
     suspend fun saveZip(fileName: String, bytes: ByteArray): ZipFile = withContext(dispatcher) {
         val file = context.filesDir.resolve(fileName)
         file.outputStream().use { out ->
@@ -38,6 +40,7 @@ class ZipExtractor @Inject constructor(
         ZipFile(file)
     }
 
+    /** Extract `.csv` file contents from a `.zip` file */
     suspend fun extract(zip: ZipFile): DictionaryContents = withContext(dispatcher) {
         val entries = zip.use { file ->
             file.entries().asSequence().map { entry ->
@@ -62,7 +65,8 @@ class ZipExtractor @Inject constructor(
         contents
     }
 
-    suspend fun removeZip(fileName: String) = withContext(dispatcher) {
+    /** Remove `.zip` file from local storage */
+    suspend fun removeZip(fileName: String): Boolean = withContext(dispatcher) {
         context.filesDir.resolve(fileName).delete()
     }
 

@@ -56,6 +56,7 @@ interface LexemeDao {
     @Insert
     suspend fun insertAll(lexemes: List<Lexeme>)
 
+    /** Remove all lexemes associated with a dictionary */
     @Query("""DELETE FROM lexeme WHERE dictionary_id = (:dictionaryId)""")
     suspend fun removeInDictionary(dictionaryId: String)
 }

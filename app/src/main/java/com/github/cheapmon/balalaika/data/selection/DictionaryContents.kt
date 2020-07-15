@@ -15,10 +15,18 @@
  */
 package com.github.cheapmon.balalaika.data.selection
 
+/**
+ * Wrapper for sending `.csv` contents
+ */
 data class DictionaryContents(
+    /** `categories.csv` file contents */
     val categories: String,
+    /** `lexemes.csv` file contents */
     val lexemes: String,
+    /** `full_forms.csv` file contents */
     val fullForms: String,
+    /** `properties.csv` file contents */
     val properties: String,
+    /** `views.csv` file contents */
     val views: String
 )

@@ -26,9 +26,11 @@ import dagger.hilt.android.scopes.ActivityScoped
 import dagger.multibindings.IntoMap
 import dagger.multibindings.StringKey
 
+/** [Dictionary provider][DictionaryProvider] dependency injection module */
 @Module
 @InstallIn(ActivityComponent::class)
 class DictionaryModule {
+    /** @suppress */
     @ActivityScoped
     @Provides
     @IntoMap
@@ -36,6 +38,7 @@ class DictionaryModule {
     fun provideResourcesProvider(provider: ResourcesDictionaryProvider): DictionaryProvider =
         provider
 
+    /** @suppress */
     @ActivityScoped
     @Provides
     @IntoMap

@@ -18,7 +18,21 @@ package com.github.cheapmon.balalaika.util
 import android.view.View
 import androidx.databinding.BindingAdapter
 
+/** Adapters for the data binding library */
 object BindingAdapters {
+    /**
+     * Enables setting the visibility of a view using a boolean
+     *
+     * Example:
+     * ```xml
+     * <data>
+     *     <variable name="is_visible" type="Boolean" />
+     * </data>
+     *
+     * <TextView
+     *   android:visibility="@{is_visible}" />
+     * ```
+     */
     @JvmStatic
     @BindingAdapter("android:visibility")
     fun setVisiblity(view: View, value: Boolean) {

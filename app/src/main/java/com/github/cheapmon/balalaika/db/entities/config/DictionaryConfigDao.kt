@@ -22,17 +22,22 @@ import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
+/** Database link for [dictionary configurations][DictionaryConfig] */
 @Dao
 interface DictionaryConfigDao {
+    /** Get the configuration for a dictionary */
     @Query("""SELECT * FROM config WHERE id = (:dictionaryId) LIMIT 1""")
     fun getConfigFor(dictionaryId: String): Flow<DictionaryConfig?>
 
+    /** Insert a configuration into the database */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(config: DictionaryConfig)
 
+    /** Update the configuration for a dictionary */
     @Update
     suspend fun update(config: DictionaryConfig)
 
+    /** Remove the configuration for a dictionary */
     @Query("""DELETE FROM config WHERE id = (:dictionaryId)""")
     suspend fun removeConfigFor(dictionaryId: String)
 }

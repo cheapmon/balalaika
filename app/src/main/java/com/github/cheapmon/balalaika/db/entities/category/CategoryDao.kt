@@ -41,6 +41,7 @@ interface CategoryDao {
     @Query("""DELETE FROM category WHERE dictionary_id = (:dictionaryId)""")
     suspend fun removeInDictionary(dictionaryId: String)
 
+    /** Find a data category by its id */
     @Query("""SELECT * FROM category WHERE id = (:id) LIMIT 1""")
     suspend fun findById(id: String): Category?
 }

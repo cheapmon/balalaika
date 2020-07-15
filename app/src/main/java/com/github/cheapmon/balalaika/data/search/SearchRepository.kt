@@ -110,5 +110,6 @@ class SearchRepository @Inject constructor(
         cacheEntryDao.insertIntoSearchCache(entries)
     }
 
+    /** Get the currently active dictionary */
     suspend fun getActiveDictionary(): Dictionary? = dictionaryDao.getActive().first()
 }

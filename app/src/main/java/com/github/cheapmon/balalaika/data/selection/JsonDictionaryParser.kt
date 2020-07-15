@@ -25,11 +25,20 @@ import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
+/**
+ * Parse a dictionary list from JSON
+ *
+ * Uses Moshi for deserialization. This is specifically meant for local files, since Retrofit
+ * is used for remote sources.
+ *
+ * @see DictionaryApi
+ */
 @ActivityScoped
 class JsonDictionaryParser @Inject constructor(
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
     private val moshi: Moshi
 ) {
+    /** Parse dictionary list */
     suspend fun parse(contents: String): List<Dictionary> {
         return withContext(dispatcher) {
             val type = Types.newParameterizedType(List::class.java, DictionaryInfo::class.java)

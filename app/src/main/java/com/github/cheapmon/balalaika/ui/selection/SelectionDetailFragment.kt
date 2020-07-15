@@ -35,6 +35,16 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
+/**
+ * Fragment for displaying information about a dictionary
+ *
+ * The user can:
+ * - Activate a dictionary
+ * - Deactivate a dictionary
+ * - Update a dictionary
+ * - Add a dictionary to the library
+ * - Remove a dictionary from the library
+ */
 @AndroidEntryPoint
 class SelectionDetailFragment : Fragment() {
     private lateinit var binding: FragmentSelectionDetailBinding
@@ -42,6 +52,7 @@ class SelectionDetailFragment : Fragment() {
     private val args: SelectionDetailFragmentArgs by navArgs()
     private val viewModel: SelectionDetailViewModel by viewModels()
 
+    /** Create view and bind data */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -66,6 +77,7 @@ class SelectionDetailFragment : Fragment() {
         }
     }
 
+    /** @suppress */
     inner class Listener {
         fun onClickActivateButton(dictionary: Dictionary) {
             MaterialAlertDialogBuilder(requireContext())

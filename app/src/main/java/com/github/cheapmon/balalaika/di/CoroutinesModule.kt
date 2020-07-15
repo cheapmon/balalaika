@@ -22,21 +22,26 @@ import dagger.hilt.android.components.ApplicationComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
+/** Coroutines dependency injection module */
 @Module
 @InstallIn(ApplicationComponent::class)
 class CoroutinesModule {
+    /** @suppress */
     @DefaultDispatcher
     @Provides
     fun providesDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
 
+    /** @suppress */
     @IoDispatcher
     @Provides
     fun providesIoDispatcher(): CoroutineDispatcher = Dispatchers.IO
 
+    /** @suppress */
     @MainDispatcher
     @Provides
     fun providesMainDispatcher(): CoroutineDispatcher = Dispatchers.Main
 
+    /** @suppress */
     @MainImmediateDispatcher
     @Provides
     fun providesMainImmediateDispatcher(): CoroutineDispatcher = Dispatchers.Main.immediate

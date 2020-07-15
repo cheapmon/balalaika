@@ -30,6 +30,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 
+/** [Dictionary provider][DictionaryProvider] for local asset files */
 @ActivityScoped
 class ResourcesDictionaryProvider @Inject constructor(
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
