@@ -35,7 +35,7 @@ object BindingAdapters {
      */
     @JvmStatic
     @BindingAdapter("android:visibility")
-    fun setVisiblity(view: View, value: Boolean) {
+    fun setVisibility(view: View, value: Boolean) {
         view.visibility = if (value) View.VISIBLE else View.GONE
     }
 }

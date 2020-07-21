@@ -27,8 +27,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 class ApiTest {
-    lateinit var server: MockWebServer
-    lateinit var api: DictionaryApi
+    private lateinit var server: MockWebServer
+    private lateinit var api: DictionaryApi
 
     @Before
     fun before() {

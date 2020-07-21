@@ -79,7 +79,7 @@ class DictionaryRepository @Inject constructor(
 
     /** Install a dictionary */
     fun addDictionary(dictionary: Dictionary) {
-        showProgess {
+        showProgress {
             dictionaryDao.setInstalled(dictionary.id)
             removeEntities(dictionary.id)
             val result = mediator.installDictionary(dictionary).attempt().suspended()
@@ -91,7 +91,7 @@ class DictionaryRepository @Inject constructor(
 
     /** Remove a dictionary */
     fun removeDictionary(id: String) {
-        showProgess {
+        showProgress {
             removeEntities(id)
             db.dictionaries().remove(id)
             refresh()
@@ -112,7 +112,7 @@ class DictionaryRepository @Inject constructor(
      * by defaults if the assigned category or dictionary view is missing.
      */
     fun updateDictionary(dictionary: Dictionary) {
-        showProgess {
+        showProgress {
             val configuration = db.configurations().getConfigFor(dictionary.id).first()
             db.withTransaction {
                 db.configurations().removeConfigFor(dictionary.id)
@@ -147,7 +147,7 @@ class DictionaryRepository @Inject constructor(
         refreshJob = launch { mediator.updateDictionaryList() }
     }
 
-    private fun showProgess(block: suspend () -> Unit) {
+    private fun showProgress(block: suspend () -> Unit) {
         launch {
             _inProgress.value = true
             block()
