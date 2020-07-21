@@ -19,9 +19,6 @@ import android.content.Context
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.di.IoDispatcher
 import com.github.cheapmon.balalaika.util.Constants
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ActivityScoped
 import java.io.FileNotFoundException
@@ -36,7 +33,7 @@ class ResourcesDictionaryProvider @Inject constructor(
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
     @ApplicationContext private val context: Context,
     private val constants: Constants,
-    private val moshi: Moshi
+    private val parser: JsonDictionaryParser
 ) : DictionaryProvider {
     private val dictionaryList = context.assets.open(constants.DICTIONARY_FILE)
         .bufferedReader()
@@ -47,10 +44,8 @@ class ResourcesDictionaryProvider @Inject constructor(
 
     override suspend fun getDictionaryList(): List<Dictionary> =
         withTimeout(constants.LOCAL_TIMEOUT) {
-            val type = Types.newParameterizedType(List::class.java, DictionaryInfo::class.java)
-            val adapter: JsonAdapter<List<DictionaryInfo>> = moshi.adapter(type)
-            adapter.fromJson(dictionaryList).orEmpty().map { it.toDictionary() }
-        }
+            parser.parse(dictionaryList)
+        }.map { it.toDictionary() }
 
     override suspend fun getDictionary(id: String): ByteArray {
         val fileName = zipFiles.find { it.startsWith(id) }

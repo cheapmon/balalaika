@@ -29,10 +29,10 @@ class ServerDictionaryProvider @Inject constructor(
 ) : DictionaryProvider {
     override suspend fun getDictionaryList(): List<Dictionary> =
         withTimeout(constants.REMOTE_TIMEOUT) {
-            api.listDictionaries().map { it.toDictionary() }
-        }
+            api.listDictionaries()
+        }.map { it.toDictionary() }
 
     override suspend fun getDictionary(id: String): ByteArray {
-        return withTimeout(constants.REMOTE_TIMEOUT) { api.getDictionary(id).bytes() }
+        return withTimeout(constants.REMOTE_TIMEOUT) { api.getDictionary(id) }.bytes()
     }
 }

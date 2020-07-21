@@ -15,7 +15,6 @@
  */
 package com.github.cheapmon.balalaika.data.selection
 
-import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.di.IoDispatcher
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
@@ -39,11 +38,11 @@ class JsonDictionaryParser @Inject constructor(
     private val moshi: Moshi
 ) {
     /** Parse dictionary list */
-    suspend fun parse(contents: String): List<Dictionary> {
+    suspend fun parse(contents: String): List<DictionaryInfo> {
         return withContext(dispatcher) {
             val type = Types.newParameterizedType(List::class.java, DictionaryInfo::class.java)
             val adapter: JsonAdapter<List<DictionaryInfo>> = moshi.adapter(type)
-            adapter.fromJson(contents).orEmpty().map { it.toDictionary() }
+            adapter.fromJson(contents).orEmpty()
         }
     }
 }
