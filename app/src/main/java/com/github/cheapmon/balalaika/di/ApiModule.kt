@@ -23,6 +23,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.scopes.ActivityScoped
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
@@ -39,14 +41,24 @@ class ApiModule {
     /** @suppress */
     @ActivityScoped
     @Provides
+    fun provideHttpClient(): OkHttpClient = OkHttpClient.Builder()
+        .addInterceptor(HttpLoggingInterceptor().apply {
+            setLevel(HttpLoggingInterceptor.Level.BASIC)
+        })
+        .build()
+
+    /** @suppress */
+    @ActivityScoped
+    @Provides
     fun provideMoshi(): Moshi = Moshi.Builder().build()
 
     /** @suppress */
     @ActivityScoped
     @Provides
-    fun provideRetrofit(@ServerUrl url: String, moshi: Moshi): Retrofit =
+    fun provideRetrofit(@ServerUrl url: String, client: OkHttpClient, moshi: Moshi): Retrofit =
         Retrofit.Builder()
             .baseUrl(url)
+            .client(client)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
 
