@@ -15,8 +15,8 @@
  */
 package com.github.cheapmon.balalaika
 
+import com.github.cheapmon.balalaika.data.selection.DictionaryInfo
 import com.github.cheapmon.balalaika.data.selection.JsonDictionaryParser
-import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.squareup.moshi.JsonEncodingException
 import com.squareup.moshi.Moshi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -60,14 +60,13 @@ class DictionaryParserTest {
         assertEquals(list.size, 1)
         assertEquals(
             listOf(
-                Dictionary(
+                DictionaryInfo(
                     id = "dict_a",
                     version = 1,
                     name = "Dictionary A",
                     summary = "This is dictionary A",
                     authors = "Some guy and another guy",
-                    additionalInfo = "",
-                    isActive = false
+                    additionalInfo = ""
                 )
             ), list
         )
@@ -102,23 +101,21 @@ class DictionaryParserTest {
         assertEquals(list.size, 2)
         assertEquals(
             listOf(
-                Dictionary(
+                DictionaryInfo(
                     id = "dict_a",
                     version = 1,
                     name = "Dictionary A",
                     summary = "This is dictionary A",
                     authors = "Some guy and another guy",
-                    additionalInfo = "",
-                    isActive = false
+                    additionalInfo = ""
                 ),
-                Dictionary(
+                DictionaryInfo(
                     id = "dict_b",
                     version = 2,
                     name = "Dictionary B",
                     summary = "This is dictionary B",
                     authors = "No one",
-                    additionalInfo = "Info",
-                    isInstalled = false
+                    additionalInfo = "Info"
                 )
             ), list
         )
