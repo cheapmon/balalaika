@@ -20,8 +20,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme
 import com.github.cheapmon.balalaika.databinding.FragmentBookmarksItemBinding
+import com.github.cheapmon.balalaika.db.entities.lexeme.Lexeme
 
 /** Adapter for [BookmarksFragment] */
 class BookmarksAdapter(
@@ -61,7 +61,7 @@ class BookmarksAdapter(
             oldItem: Lexeme,
             newItem: Lexeme
         ): Boolean {
-            return oldItem.lexemeId == newItem.lexemeId
+            return oldItem.id == newItem.id
         }
     }
 
@@ -74,4 +74,3 @@ class BookmarksAdapter(
         fun onClickRedoButton(lexeme: Lexeme)
     }
 }
-

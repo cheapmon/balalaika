@@ -19,7 +19,12 @@ import android.content.Intent
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -30,22 +35,18 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.data.entities.entry.DictionaryEntry
-import com.github.cheapmon.balalaika.data.entities.history.SearchRestriction
-import com.github.cheapmon.balalaika.data.storage.Storage
 import com.github.cheapmon.balalaika.databinding.FragmentDictionaryBinding
+import com.github.cheapmon.balalaika.db.entities.entry.DictionaryEntry
+import com.github.cheapmon.balalaika.db.entities.history.SearchRestriction
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetListener
-import com.github.cheapmon.balalaika.util.Constants
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /**
  * Fragment for dictionary usage
@@ -64,36 +65,12 @@ import javax.inject.Inject
 class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListener {
     private val viewModel: DictionaryViewModel by viewModels()
 
-    /** @suppress */
-    @Inject
-    lateinit var storage: Storage
-
-    /** @suppress */
-    @Inject
-    lateinit var constants: Constants
-
     private val args: DictionaryFragmentArgs by navArgs()
 
     private lateinit var binding: FragmentDictionaryBinding
     private lateinit var recyclerView: RecyclerView
     private lateinit var dictionaryLayoutManager: LinearLayoutManager
     private lateinit var dictionaryAdapter: DictionaryAdapter
-
-    private lateinit var job: Job
-
-    /** Set default values for the dictionary view and the dictionary ordering */
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        val categoryId = storage.getString(constants.ORDER_KEY, null)?.toLong()
-            ?: constants.DEFAULT_CATEGORY_ID
-        storage.putString(constants.ORDER_KEY, categoryId.toString())
-        viewModel.setCategory(categoryId)
-        val dictionaryViewId = storage.getString(constants.VIEW_KEY, null)?.toLong()
-            ?: constants.DEFAULT_DICTIONARY_VIEW_ID
-        storage.putString(constants.VIEW_KEY, dictionaryViewId.toString())
-        viewModel.setDictionaryView(dictionaryViewId)
-    }
 
     /** Prepare view and load data */
     override fun onCreateView(
@@ -111,32 +88,34 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
                 adapter = dictionaryAdapter
                 setHasFixedSize(true)
             }
+            dictionaryEmptyButton.setOnClickListener {
+                val directions = DictionaryFragmentDirections.selectDictionary()
+                findNavController().navigate(directions)
+            }
         }
         bindUi()
         indicateProgress()
-        scrollTo(args.externalId)
+        scrollTo(args.id)
         return binding.root
     }
 
-
     private fun bindUi() {
-        job = lifecycleScope.launch {
-            viewModel.dictionary.collectLatest { data -> dictionaryAdapter.submitData(data) }
+        lifecycleScope.launch {
+            launch {
+                viewModel.dictionary.collectLatest { data -> dictionaryAdapter.submitData(data) }
+            }
+            launch {
+                viewModel.currentDictionary.collectLatest { binding.empty = it == null }
+            }
         }
     }
 
     private fun indicateProgress() {
         lifecycleScope.launch {
-            dictionaryAdapter.loadStateFlow.combine(viewModel.importFlow) { loadState, done ->
-                (loadState.refresh is LoadState.Loading) || !done
-            }.collect { inProgress -> binding.inProgress = inProgress }
+            dictionaryAdapter.loadStateFlow.collect { loadState ->
+                binding.inProgress = loadState.refresh is LoadState.Loading
+            }
         }
-    }
-
-    /** Cancel dictionary loading */
-    override fun onDestroy() {
-        super.onDestroy()
-        job.cancel()
     }
 
     /** Create options menu */
@@ -175,19 +154,25 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
         lifecycleScope.launch {
             val categories = viewModel.getCategories()
             val names = categories.map { it.name }.toTypedArray()
-            val ids = categories.map { it.categoryId.toString() }
-            val selected = ids.indexOfFirst {
-                it == storage.getString(constants.ORDER_KEY, null)
+            val selected = categories.indexOfFirst { it.id == viewModel.category.first() }
+            val dictionary = viewModel.currentDictionary.first()
+            if (dictionary != null) {
+                MaterialAlertDialogBuilder(requireContext())
+                    .setIcon(R.drawable.ic_sort)
+                    .setTitle(R.string.menu_order_by)
+                    .setSingleChoiceItems(names, selected) { _, which ->
+                        val id = categories[which].id
+                        viewModel.setCategory(id)
+                    }.setPositiveButton(R.string.affirm, null)
+                    .show()
+            } else {
+                MaterialAlertDialogBuilder(requireContext())
+                    .setIcon(R.drawable.ic_sort)
+                    .setTitle(R.string.menu_order_by)
+                    .setMessage(R.string.dictionary_empty)
+                    .setPositiveButton(R.string.affirm, null)
+                    .show()
             }
-            MaterialAlertDialogBuilder(requireContext())
-                .setIcon(R.drawable.ic_sort)
-                .setTitle(R.string.menu_order_by)
-                .setSingleChoiceItems(names, selected) { _, which ->
-                    val id = categories[which].categoryId
-                    storage.putString(constants.ORDER_KEY, id.toString())
-                    viewModel.setCategory(id)
-                }.setPositiveButton(R.string.affirm, null)
-                .show()
         }
     }
 
@@ -195,33 +180,41 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
         lifecycleScope.launch {
             val dictionaryViews = viewModel.getDictionaryViews()
             val names = dictionaryViews.map { it.dictionaryView.name }.toTypedArray()
-            val ids = dictionaryViews.map { it.dictionaryView.dictionaryViewId.toString() }
-            val selected = ids.indexOfFirst {
-                it == storage.getString(constants.VIEW_KEY, null)
+            val selected = dictionaryViews.indexOfFirst {
+                it.dictionaryView.id == viewModel.dictionaryView.first()
             }
-            MaterialAlertDialogBuilder(requireContext())
-                .setIcon(R.drawable.ic_view)
-                .setTitle(R.string.menu_setup_view)
-                .setSingleChoiceItems(names, selected) { _, which ->
-                    val id = dictionaryViews[which].dictionaryView.dictionaryViewId
-                    storage.putString(constants.VIEW_KEY, id.toString())
-                    viewModel.setDictionaryView(id)
-                }.setPositiveButton(R.string.affirm, null)
-                .show()
+            val dictionary = viewModel.currentDictionary.first()
+            if (dictionary != null) {
+                MaterialAlertDialogBuilder(requireContext())
+                    .setIcon(R.drawable.ic_view)
+                    .setTitle(R.string.menu_setup_view)
+                    .setSingleChoiceItems(names, selected) { _, which ->
+                        val id = dictionaryViews[which].dictionaryView.id
+                        viewModel.setDictionaryView(id)
+                    }.setPositiveButton(R.string.affirm, null)
+                    .show()
+            } else {
+                MaterialAlertDialogBuilder(requireContext())
+                    .setIcon(R.drawable.ic_view)
+                    .setTitle(R.string.menu_setup_view)
+                    .setMessage(R.string.dictionary_empty)
+                    .setPositiveButton(R.string.affirm, null)
+                    .show()
+            }
         }
     }
 
     /** Scroll to a dictionary entry */
-    private fun scrollTo(externalId: String?) {
+    private fun scrollTo(id: String?) {
         lifecycleScope.launch {
-            val initialKey = viewModel.getIdOf(externalId)
+            val initialKey = viewModel.getIdOf(id)
             viewModel.setInitialKey(initialKey)
         }
     }
 
     /** Add or remove an entry to bookmarks */
     override fun onClickBookmarkButton(entry: DictionaryEntry, isBookmark: Boolean) {
-        viewModel.toggleBookmark(entry.lexemeWithBase.lexeme.lexemeId)
+        viewModel.toggleBookmark(entry.lexemeWithBase.lexeme.id)
         val message = if (isBookmark) {
             getString(R.string.dictionary_bookmark_remove, entry.lexemeWithBase.lexeme.form)
         } else {
@@ -232,7 +225,7 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
 
     /** Go to base of a lexeme */
     override fun onClickBaseButton(entry: DictionaryEntry) =
-        scrollTo(entry.lexemeWithBase.base?.externalId)
+        scrollTo(entry.lexemeWithBase.base?.id)
 
     /** Play audio file */
     override fun onClickAudioButton(resId: Int) {
@@ -258,7 +251,7 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
     }
 
     /** Scroll to a dictionary entry */
-    override fun onClickScrollButton(externalId: String) = scrollTo(externalId)
+    override fun onClickScrollButton(id: String) = scrollTo(id)
 
     /** Open link in browser */
     override fun onClickLinkButton(link: String) {

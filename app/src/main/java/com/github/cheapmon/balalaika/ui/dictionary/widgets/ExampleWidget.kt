@@ -21,10 +21,10 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.data.entities.category.Category
-import com.github.cheapmon.balalaika.data.entities.category.WidgetType
-import com.github.cheapmon.balalaika.data.entities.property.PropertyWithCategory
 import com.github.cheapmon.balalaika.databinding.HelperExampleBinding
+import com.github.cheapmon.balalaika.db.entities.category.Category
+import com.github.cheapmon.balalaika.db.entities.category.WidgetType
+import com.github.cheapmon.balalaika.db.entities.property.PropertyWithCategory
 
 /**
  * Widget for example sentences and full-text information

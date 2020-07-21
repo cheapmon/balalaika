@@ -18,6 +18,7 @@
     <string name="app_name">Balalaika</string>
     <string name="cancel">Abbrechen</string>
     <string name="affirm">OK</string>
+    <string name="retry">Wiederholen</string>
 
     <!-- Navigation drawer -->
     <string name="nav_header_desc">Navigation</string>
@@ -31,6 +32,8 @@
     <string name="menu_sources">Quellen</string>
     <string name="menu_order_by">Sortieren</string>
     <string name="menu_setup_view">Sicht einstellen</string>
+    <string name="menu_selection">Meine Wörterbücher</string>
+    <string name="menu_selection_detail">Wörterbuch</string>
 
     <!-- Descriptions for accessibility -->
     <string name="desc_history_item_icon">Verlaufseintrag</string>
@@ -66,6 +69,8 @@
     <string name="dictionary_playback_failed">Wiedergabe fehlgeschlagen</string>
     <string name="dictionary_bookmark_add">%1$s zu Lesezeichen hinzugefügt</string>
     <string name="dictionary_bookmark_remove">%1$s aus Lesezeichen entfernt</string>
+    <string name="dictionary_empty">Kein Wörterbuch ausgewählt</string>
+    <string name="dictionary_select_dictionary">Wörterbücher installieren</string>
 
     <!-- Bookmarks fragment -->
     <string name="bookmarks_item_removed">Lesezeichen entfernt</string>
@@ -92,4 +97,31 @@
     <string name="preferences_source_open">Lizenz öffnen</string>
     <string name="preferences_media">Medien</string>
     <string name="preferences_icon_title">Balalaika Icon erstellt von</string>
+
+    <!-- Dictionary selection fragment -->
+    <string name="selection_empty">Keine Wörterbücher</string>
+    <string name="selection_summary_title">Zusammenfassung</string>
+    <string name="selection_tab_list">Wörterbücher</string>
+    <string name="selection_tab_download">Download</string>
+    <string name="selection_authors_title">Autoren</string>
+    <string name="selection_info_title">Weitere Informationen</string>
+    <string name="selection_action_activate">Aktivieren</string>
+    <string name="selection_action_deactivate">Deaktivieren</string>
+    <string name="selection_action_update">Updates installieren</string>
+    <string name="selection_action_add">Zu Bibliothek hinzufügen</string>
+    <string name="selection_action_remove">Aus Bibliothek entfernen</string>
+    <string name="selection_version_title">Version</string>
+    <string name="selection_is_active">aktiv</string>
+    <string name="selection_is_installable">neu</string>
+    <string name="selection_is_installed">Bibliothek</string>
+    <string name="selection_is_updatable">Updates</string>
+    <string name="selection_confirm_activate">Dieses Wörterbuch aktivieren?</string>
+    <string name="selection_confirm_deactivate">Dieses Wörterbuch deaktivieren?</string>
+    <string name="selection_confirm_update">Updates für dieses Wörterbuch herunterladen?</string>
+    <string name="selection_confirm_add">%1$s hinzufügen?</string>
+    <string name="selection_confirm_remove">Dieses Wörterbuch löschen?</string>
+    <string name="selection_loading_success">%1$d Wörterbücher gefunden</string>
+    <string name="selection_loading_failed">Wörterbücher konnten nicht geladen werden</string>
+    <string name="selection_labels">Label</string>
+    <string name="selection_no_labels">Keine</string>
 </resources>

@@ -19,22 +19,22 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.github.cheapmon.balalaika.data.repositories.DictionaryRepository
+import com.github.cheapmon.balalaika.data.dictionary.DictionaryEntryRepository
 import kotlinx.coroutines.launch
 
 /**
  * View model for [BookmarksFragment]
  *
- * @see DictionaryRepository
+ * @see DictionaryEntryRepository
  */
 class BookmarksViewModel @ViewModelInject constructor(
-    private val repository: DictionaryRepository
+    private val repository: DictionaryEntryRepository
 ) : ViewModel() {
     /** All lexemes that are currently bookmarked */
     val lexemes = repository.bookmarks.asLiveData()
 
     /** Remove single bookmark */
-    fun removeBookmark(lexemeId: Long) {
+    fun removeBookmark(lexemeId: String) {
         viewModelScope.launch { repository.toggleBookmark(lexemeId) }
     }
 

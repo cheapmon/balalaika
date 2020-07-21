@@ -19,50 +19,31 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.github.cheapmon.balalaika.data.entities.history.HistoryEntry
-import com.github.cheapmon.balalaika.data.entities.history.SearchRestriction
-import com.github.cheapmon.balalaika.data.insert.ImportUtil
-import com.github.cheapmon.balalaika.data.repositories.HistoryRepository
-import com.github.cheapmon.balalaika.data.repositories.SearchRepository
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
+import com.github.cheapmon.balalaika.data.dictionary.DictionaryEntryRepository
+import com.github.cheapmon.balalaika.data.history.HistoryRepository
+import com.github.cheapmon.balalaika.data.search.SearchRepository
+import com.github.cheapmon.balalaika.db.entities.history.HistoryEntry
+import com.github.cheapmon.balalaika.db.entities.history.SearchRestriction
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
 /** View model for [SearchFragment] */
 class SearchViewModel @ViewModelInject constructor(
     private val searchRepository: SearchRepository,
-    private val historyRepository: HistoryRepository,
-    private val importUtil: ImportUtil
+    dictionaryEntryRepository: DictionaryEntryRepository,
+    private val historyRepository: HistoryRepository
 ) : ViewModel() {
-    /**
-     * Current state of import operations
-     *
-     * Calls the [import utility][ImportUtil] and emits `true` when finished.
-     */
-    val importFlow: Flow<Boolean> = flow {
-        emit(false)
-        importUtil.import()
-        emit(true)
-    }
-
     /** Current search query */
     val query = searchRepository.query
 
     /** Current search restriction */
     val restriction = searchRepository.restriction
 
-    /**
-     * Current dictionary, depending on the user configuration
-     *
-     * _Note_: This ensures that the dictionary is up-to-date by checking that any import
-     * operations have been finished.
-     */
-    val dictionary = flow {
-        val result = searchRepository.dictionary.cachedIn(viewModelScope)
-        importFlow.collect { done -> if (done) result.collect { value -> emit(value) } }
-    }
+    /** Current dictionary, depending on the user configuration */
+    val dictionary = searchRepository.dictionary.cachedIn(viewModelScope)
+
+    /** Current active dictionary */
+    val currentDictionary = dictionaryEntryRepository.currentDictionary
 
     /** Set the search query */
     fun setQuery(query: String) =
@@ -77,15 +58,17 @@ class SearchViewModel @ViewModelInject constructor(
         viewModelScope.launch {
             val query = this@SearchViewModel.query.first()
             val restriction = this@SearchViewModel.restriction.first()
+            val dictionary = searchRepository.getActiveDictionary() ?: return@launch
             if (query.isBlank()) return@launch
             val entry = when (restriction) {
                 is SearchRestriction.None ->
-                    HistoryEntry(query = query)
+                    HistoryEntry(query = query, dictionaryId = dictionary.id)
                 is SearchRestriction.Some ->
                     HistoryEntry(
                         query = query,
-                        categoryId = restriction.category.categoryId,
-                        restriction = restriction.restriction
+                        categoryId = restriction.category.id,
+                        restriction = restriction.restriction,
+                        dictionaryId = dictionary.id
                     )
             }
             historyRepository.removeSimilarEntries(entry)

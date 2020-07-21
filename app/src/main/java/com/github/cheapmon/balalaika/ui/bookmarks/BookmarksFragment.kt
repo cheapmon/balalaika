@@ -16,7 +16,12 @@
 package com.github.cheapmon.balalaika.ui.bookmarks
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -26,8 +31,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme
 import com.github.cheapmon.balalaika.databinding.FragmentBookmarksBinding
+import com.github.cheapmon.balalaika.db.entities.lexeme.Lexeme
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -83,7 +88,7 @@ class BookmarksFragment : Fragment(), BookmarksAdapter.Listener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.bookmarks_clear -> {
-                MaterialAlertDialogBuilder(context)
+                MaterialAlertDialogBuilder(requireContext())
                     .setTitle(R.string.bookmarks_clear_title)
                     .setPositiveButton(R.string.bookmarks_clear_affirm) { _, _ -> clearBookmarks() }
                     .setNegativeButton(R.string.bookmarks_clear_cancel, null)
@@ -116,7 +121,7 @@ class BookmarksFragment : Fragment(), BookmarksAdapter.Listener {
 
     /** Remove single bookmark */
     override fun onClickDeleteButton(lexeme: Lexeme) {
-        viewModel.removeBookmark(lexeme.lexemeId)
+        viewModel.removeBookmark(lexeme.id)
         Snackbar.make(binding.root, R.string.bookmarks_item_removed, Snackbar.LENGTH_SHORT)
             .show()
     }
@@ -124,7 +129,7 @@ class BookmarksFragment : Fragment(), BookmarksAdapter.Listener {
     /** Show bookmarked entry in dictionary */
     override fun onClickRedoButton(lexeme: Lexeme) {
         val directions =
-            BookmarksFragmentDirections.actionNavBookmarksToNavHome(lexeme.externalId)
+            BookmarksFragmentDirections.actionNavBookmarksToNavHome(lexeme.id)
         findNavController().navigate(directions)
     }
 }

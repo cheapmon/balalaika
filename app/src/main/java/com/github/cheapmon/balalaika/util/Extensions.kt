@@ -17,11 +17,12 @@ package com.github.cheapmon.balalaika.util
 
 import android.content.Context
 import android.text.SpannedString
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.data.entities.entry.PropertyDatabaseView
+import com.github.cheapmon.balalaika.db.entities.entry.PropertyDatabaseView
 import com.github.cheapmon.balalaika.ui.search.SearchAdapter
 
 /**
@@ -47,3 +48,37 @@ fun String.highlight(text: String?, context: Context): SpannedString {
         }
     }
 }
+
+/** Exhaustive matching for `when` in statements */
+val <T> T.exhaustive: T
+    get() = this
+
+/** Logger for any class */
+class Logger(private val name: String) {
+    /** @suppress */
+    fun assert(msg: Any?) = log(Log.ASSERT, msg)
+    /** @suppress */
+    fun debug(msg: Any?) = log(Log.DEBUG, msg)
+    /** @suppress */
+    fun error(msg: Any?) = log(Log.ERROR, msg)
+    /** @suppress */
+    fun info(msg: Any?) = log(Log.INFO, msg)
+    /** @suppress */
+    fun verbose(msg: Any?) = log(Log.VERBOSE, msg)
+    /** @suppress */
+    fun warn(msg: Any?) = log(Log.WARN, msg)
+    private fun log(priority: Int, msg: Any?) = Log.println(priority, name, msg.toString())
+}
+
+/**
+ * Access the [logger][Logger] for a class
+ *
+ * Sample usage:
+ * ```
+ * logger {
+ *   info("Some information")
+ *   debug(someValue)
+ * }
+ * ```
+ */
+inline fun <reified T> T.logger(block: Logger.() -> Unit) = Logger(T::class.java.name).block()

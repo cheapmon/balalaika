@@ -18,12 +18,12 @@ package com.github.cheapmon.balalaika.ui.dictionary.widgets
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import com.github.cheapmon.balalaika.data.entities.category.Category
-import com.github.cheapmon.balalaika.data.entities.category.WidgetType
-import com.github.cheapmon.balalaika.data.entities.history.SearchRestriction
-import com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme
-import com.github.cheapmon.balalaika.data.entities.property.Property
-import com.github.cheapmon.balalaika.data.entities.property.PropertyWithCategory
+import com.github.cheapmon.balalaika.db.entities.category.Category
+import com.github.cheapmon.balalaika.db.entities.category.WidgetType
+import com.github.cheapmon.balalaika.db.entities.history.SearchRestriction
+import com.github.cheapmon.balalaika.db.entities.lexeme.Lexeme
+import com.github.cheapmon.balalaika.db.entities.property.Property
+import com.github.cheapmon.balalaika.db.entities.property.PropertyWithCategory
 
 /**
  * Small user interface element for displaying [properties][Property] of [lexemes][Lexeme]
@@ -75,7 +75,7 @@ interface WidgetListener {
     fun onClickSearchButton(query: String, restriction: SearchRestriction)
 
     /** Callback for when a scroll action button is clicked */
-    fun onClickScrollButton(externalId: String)
+    fun onClickScrollButton(id: String)
 
     /** Callback for when a link action button is clicked */
     fun onClickLinkButton(link: String)

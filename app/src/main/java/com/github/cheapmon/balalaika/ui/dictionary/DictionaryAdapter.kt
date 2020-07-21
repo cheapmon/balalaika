@@ -23,8 +23,8 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.data.entities.entry.DictionaryEntry
 import com.github.cheapmon.balalaika.databinding.FragmentDictionaryItemBinding
+import com.github.cheapmon.balalaika.db.entities.entry.DictionaryEntry
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetListener
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.Widgets
 
@@ -104,7 +104,7 @@ class DictionaryAdapter(
 
     private object DictionaryDiff : DiffUtil.ItemCallback<DictionaryEntry>() {
         override fun areItemsTheSame(oldItem: DictionaryEntry, newItem: DictionaryEntry): Boolean {
-            return oldItem.lexemeWithBase.lexeme.lexemeId == newItem.lexemeWithBase.lexeme.lexemeId
+            return oldItem.lexemeWithBase.lexeme.id == newItem.lexemeWithBase.lexeme.id
         }
 
         override fun areContentsTheSame(

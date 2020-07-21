@@ -18,9 +18,9 @@ package com.github.cheapmon.balalaika.ui.dictionary.widgets
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.data.entities.category.Category
-import com.github.cheapmon.balalaika.data.entities.category.WidgetType
-import com.github.cheapmon.balalaika.data.entities.property.PropertyWithCategory
+import com.github.cheapmon.balalaika.db.entities.category.Category
+import com.github.cheapmon.balalaika.db.entities.category.WidgetType
+import com.github.cheapmon.balalaika.db.entities.property.PropertyWithCategory
 import com.github.cheapmon.balalaika.util.ResourceUtil
 
 /**

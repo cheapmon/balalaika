@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2020 Simon Kaleschke
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,10 +28,15 @@
             android:id="@+id/action_nav_home_to_nav_search"
             app:destination="@id/nav_search" />
         <argument
-            android:name="external_id"
+            android:name="id"
             android:defaultValue="@null"
             app:argType="string"
             app:nullable="true" />
+        <action
+            android:id="@+id/select_dictionary"
+            app:destination="@id/nav_selection"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:popUpTo="@id/nav_selection" />
     </fragment>
     <fragment
         android:id="@+id/nav_search"
@@ -41,9 +45,9 @@
         tools:layout="@layout/fragment_search">
         <argument
             android:name="restriction"
-            app:argType="com.github.cheapmon.balalaika.data.entities.history.SearchRestriction"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            android:defaultValue="@null"
+            app:argType="com.github.cheapmon.balalaika.db.entities.history.SearchRestriction"
+            app:nullable="true" />
         <argument
             android:name="query"
             android:defaultValue="@null"
@@ -74,7 +78,7 @@
     <fragment
         android:id="@+id/nav_preferences"
         android:name="com.github.cheapmon.balalaika.ui.preferences.PreferencesFragment"
-        android:label="@string/menu_preferences" >
+        android:label="@string/menu_preferences">
         <action
             android:id="@+id/action_nav_preferences_to_nav_sources"
             app:destination="@id/nav_sources" />
@@ -83,5 +87,27 @@
         android:id="@+id/nav_sources"
         android:name="com.github.cheapmon.balalaika.ui.preferences.SourcesFragment"
         android:label="@string/menu_sources" />
+    <fragment
+        android:id="@+id/nav_selection_detail"
+        android:name="com.github.cheapmon.balalaika.ui.selection.SelectionDetailFragment"
+        android:label="@string/menu_selection_detail"
+        tools:layout="@layout/fragment_selection_detail">
+        <action
+            android:id="@+id/action_nav_selection_detail_to_nav_selection"
+            app:destination="@id/nav_selection"
+            app:popUpTo="@id/nav_selection" />
+        <argument
+            android:name="id"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_selection"
+        android:name="com.github.cheapmon.balalaika.ui.selection.SelectionFragment"
+        android:label="@string/selection_tab_list"
+        tools:layout="@layout/fragment_selection_list">
+        <action
+            android:id="@+id/action_nav_selection_to_nav_selection_detail"
+            app:destination="@id/nav_selection_detail" />
+    </fragment>
 
 </navigation>

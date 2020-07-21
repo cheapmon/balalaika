@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2020 Simon Kaleschke
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,6 +25,10 @@
             android:icon="@drawable/ic_menu_book"
             android:title="@string/menu_dictionary" />
         <item
+            android:id="@+id/nav_selection"
+            android:icon="@drawable/ic_library"
+            android:title="@string/menu_selection" />
+        <item
             android:id="@+id/nav_bookmarks"
             android:icon="@drawable/ic_bookmark"
             android:title="@string/menu_bookmarks" />
@@ -43,7 +46,8 @@
             android:title="@string/menu_history" />
     </group>
     <group android:id="@+id/group_preferences">
-        <item android:id="@+id/nav_preferences"
+        <item
+            android:id="@+id/nav_preferences"
             android:icon="@drawable/ic_preferences"
             android:title="@string/menu_preferences" />
     </group>

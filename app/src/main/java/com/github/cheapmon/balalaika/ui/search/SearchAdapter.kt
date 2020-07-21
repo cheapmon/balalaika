@@ -21,10 +21,10 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.github.cheapmon.balalaika.data.entities.entry.DictionaryEntry
-import com.github.cheapmon.balalaika.data.entities.history.SearchRestriction
-import com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme
 import com.github.cheapmon.balalaika.databinding.FragmentSearchItemBinding
+import com.github.cheapmon.balalaika.db.entities.entry.DictionaryEntry
+import com.github.cheapmon.balalaika.db.entities.history.SearchRestriction
+import com.github.cheapmon.balalaika.db.entities.lexeme.Lexeme
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetListener
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.Widgets
 import com.github.cheapmon.balalaika.util.highlight
@@ -87,7 +87,7 @@ class SearchAdapter(
             oldItem: DictionaryEntry,
             newItem: DictionaryEntry
         ): Boolean {
-            return oldItem.lexemeWithBase.lexeme.lexemeId == newItem.lexemeWithBase.lexeme.lexemeId
+            return oldItem.lexemeWithBase.lexeme.id == newItem.lexemeWithBase.lexeme.id
         }
 
         override fun areContentsTheSame(
@@ -102,7 +102,7 @@ class SearchAdapter(
     private class WListener : WidgetListener {
         override fun onClickAudioButton(resId: Int) = Unit
         override fun onClickSearchButton(query: String, restriction: SearchRestriction) = Unit
-        override fun onClickScrollButton(externalId: String) = Unit
+        override fun onClickScrollButton(id: String) = Unit
         override fun onClickLinkButton(link: String) = Unit
     }
 

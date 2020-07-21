@@ -50,46 +50,53 @@ Main application classes
 
 
 # Package com.github.cheapmon.balalaika.data
+Application data retrieval, interfaces and resources
+
+# Package com.github.cheapmon.balalaika.data.dictionary
+Data infrastructure for the dictionary user interface
+
+# Package com.github.cheapmon.balalaika.data.history
+Data infrastructure for the search history user interface
+
+# Package com.github.cheapmon.balalaika.data.search
+Data infrastructure for the dictionary search user interface
+
+# Package com.github.cheapmon.balalaika.data.selection
+Data infrastructure for the dictionary selection user interface
+
+
+# Package com.github.cheapmon.balalaika.db
 Models and interfaces for the application database and additional resources
 
-# Package com.github.cheapmon.balalaika.data.config
-Configuration of database version and sources
-
-# Package com.github.cheapmon.balalaika.data.entities
+# Package com.github.cheapmon.balalaika.db.entities
 Entities, relations and their database representation
 
-# Package com.github.cheapmon.balalaika.data.entities.cache
+# Package com.github.cheapmon.balalaika.db.entities.cache
 Cache entry entity and its associated types
 
-# Package com.github.cheapmon.balalaika.data.entities.category
+# Package com.github.cheapmon.balalaika.db.entities.category
 Category entity and its associated types
 
-# Package com.github.cheapmon.balalaika.data.entities.entry
+# Package com.github.cheapmon.balalaika.db.entities.config
+Dictionary configuration entity and its associated types
+
+# Package com.github.cheapmon.balalaika.db.entities.dictionary
+Dictionary entity and its associated types
+
+# Package com.github.cheapmon.balalaika.db.entities.entry
 Dictionary entry entity and its associated types
 
-# Package com.github.cheapmon.balalaika.data.entities.history
+# Package com.github.cheapmon.balalaika.db.entities.history
 History entry entity and its associated types
 
-# Package com.github.cheapmon.balalaika.data.entities.lexeme
+# Package com.github.cheapmon.balalaika.db.entities.lexeme
 Lexeme entity and its associated types
 
-# Package com.github.cheapmon.balalaika.data.entities.property
+# Package com.github.cheapmon.balalaika.db.entities.property
 Property entity and its associated types
 
-# Package com.github.cheapmon.balalaika.data.entities.view
+# Package com.github.cheapmon.balalaika.db.entities.view
 Data view entity and its associated types
-
-# Package com.github.cheapmon.balalaika.data.insert
-Import of input files into the application database
-
-# Package com.github.cheapmon.balalaika.data.repositories
-Repositories for local and remote data sources
-
-# Package com.github.cheapmon.balalaika.data.resources
-Retrieval of raw Android resources
-
-# Package com.github.cheapmon.balalaika.data.storage
-Local key-value storage
 
 
 # Package com.github.cheapmon.balalaika.di
@@ -116,6 +123,9 @@ Preferences fragment and associated classes
 
 # Package com.github.cheapmon.balalaika.ui.search
 Search fragment and associated classes
+
+# Package com.github.cheapmon.balalaika.ui.selection
+Dictionary selection fragment and associated classes
 
 
 # Package com.github.cheapmon.balalaika.util

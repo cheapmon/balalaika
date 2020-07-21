@@ -31,14 +31,14 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.data.entities.history.SearchRestriction
-import com.github.cheapmon.balalaika.data.entities.lexeme.Lexeme
 import com.github.cheapmon.balalaika.databinding.FragmentSearchBinding
+import com.github.cheapmon.balalaika.db.entities.history.SearchRestriction
+import com.github.cheapmon.balalaika.db.entities.lexeme.Lexeme
+import com.github.cheapmon.balalaika.util.exhaustive
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 /**
@@ -87,9 +87,9 @@ class SearchFragment : Fragment(), SearchAdapter.Listener {
 
     private fun indicateProgress() {
         lifecycleScope.launch {
-            searchAdapter.loadStateFlow.combine(viewModel.importFlow) { loadState, done ->
-                (loadState.refresh is LoadState.Loading) || !done
-            }.collect { inProgress -> binding.inProgress = inProgress }
+            searchAdapter.loadStateFlow.collect { loadState ->
+                binding.inProgress = loadState.refresh is LoadState.Loading
+            }
         }
     }
 
@@ -118,17 +118,13 @@ class SearchFragment : Fragment(), SearchAdapter.Listener {
                             )
                             binding.searchRestriction.visibility = View.VISIBLE
                         }
-                    }
+                    }.exhaustive
                 }
             }
+            launch {
+                viewModel.currentDictionary.collectLatest { binding.empty = it == null }
+            }
         }
-        /*if (itemCount == 0) {
-            binding.searchEmptyIcon.visibility = View.VISIBLE
-            binding.searchEmptyText.visibility = View.VISIBLE
-        } else {
-            binding.searchEmptyIcon.visibility = View.GONE
-            binding.searchEmptyText.visibility = View.GONE
-        }*/
     }
 
     /** Process fragment arguments */
@@ -137,11 +133,10 @@ class SearchFragment : Fragment(), SearchAdapter.Listener {
         args.restriction?.let { viewModel.setRestriction(it) }
     }
 
-
     /** Show entry in dictionary */
     override fun onClickItem(lexeme: Lexeme) {
         viewModel.addToHistory()
-        val directions = SearchFragmentDirections.actionNavSearchToNavHome(lexeme.externalId)
+        val directions = SearchFragmentDirections.actionNavSearchToNavHome(lexeme.id)
         findNavController().navigate(directions)
     }
 

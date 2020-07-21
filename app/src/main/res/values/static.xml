@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2020 Simon Kaleschke
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,4 +25,14 @@
     <string name="preferences_license_url" translatable="false">https://github.com/cheapmon/balalaika/blob/master/LICENSE.md</string>
     <string name="preferences_icon_author" translatable="false">Freepik</string>
     <string name="preferences_icon_url" translatable="false">https://www.flaticon.com/authors/freepik</string>
+
+    <!-- Helpers -->
+    <string name="impsum" translatable="false">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed suscipit diam vestibulum
+        convallis accumsan. Integer facilisis, libero ac semper ultrices, elit enim placerat magna,
+        sed pretium purus tortor id felis. Donec mi diam, rutrum vitae mollis ut, auctor egestas
+        enim. Curabitur ipsum turpis, egestas vel arcu ultricies, laoreet auctor felis. Vestibulum
+        quis nunc est. Curabitur at sodales mi, at faucibus elit. Mauris sed finibus elit.
+        Phasellus eget nibh a ex finibus rhoncus et a dolor.
+    </string>
 </resources>

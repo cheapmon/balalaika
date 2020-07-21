@@ -18,6 +18,7 @@
     <string name="app_name">Balalaika</string>
     <string name="cancel">Cancel</string>
     <string name="affirm">OK</string>
+    <string name="retry">Retry</string>
 
     <!-- Navigation drawer -->
     <string name="nav_header_desc">Navigation header</string>
@@ -31,6 +32,8 @@
     <string name="menu_sources">Sources</string>
     <string name="menu_order_by">Order by</string>
     <string name="menu_setup_view">Setup View</string>
+    <string name="menu_selection">My Dictionaries</string>
+    <string name="menu_selection_detail">Dictionary</string>
 
     <!-- Descriptions for accessibility -->
     <string name="desc_history_item_icon">History entry</string>
@@ -66,6 +69,8 @@
     <string name="dictionary_playback_failed">Playback failed</string>
     <string name="dictionary_bookmark_add">%1$s was added to bookmarks</string>
     <string name="dictionary_bookmark_remove">%1$s was removed from bookmarks</string>
+    <string name="dictionary_empty">No active dictionaries</string>
+    <string name="dictionary_select_dictionary">Select a dictionary</string>
 
     <!-- Bookmarks fragment -->
     <string name="bookmarks_item_removed">Bookmark was removed</string>
@@ -92,4 +97,31 @@
     <string name="preferences_source_open">Open License</string>
     <string name="preferences_media">Media</string>
     <string name="preferences_icon_title">Balalaika icon created by</string>
+
+    <!-- Dictionary selection fragment -->
+    <string name="selection_empty">No dictionaries</string>
+    <string name="selection_summary_title">Summary</string>
+    <string name="selection_tab_list">My dictionaries</string>
+    <string name="selection_tab_download">Download</string>
+    <string name="selection_authors_title">Authors</string>
+    <string name="selection_info_title">Additional information</string>
+    <string name="selection_action_activate">Set as active</string>
+    <string name="selection_action_deactivate">Set as inactive</string>
+    <string name="selection_action_update">Update</string>
+    <string name="selection_action_add">Add to Library</string>
+    <string name="selection_action_remove">Remove from library</string>
+    <string name="selection_version_title">Version</string>
+    <string name="selection_is_active">active</string>
+    <string name="selection_is_installable">new</string>
+    <string name="selection_is_installed">library</string>
+    <string name="selection_is_updatable">updates</string>
+    <string name="selection_confirm_activate">Activate this dictionary?</string>
+    <string name="selection_confirm_deactivate">Deactivate this dictionary?</string>
+    <string name="selection_confirm_update">Update this dictionary?</string>
+    <string name="selection_confirm_add">Add %1$s to library?</string>
+    <string name="selection_confirm_remove">Remove this dictionary?</string>
+    <string name="selection_loading_success">Found %1$d dictionaries</string>
+    <string name="selection_loading_failed">Could not load dictionaries</string>
+    <string name="selection_labels">Labels</string>
+    <string name="selection_no_labels">None</string>
 </resources>

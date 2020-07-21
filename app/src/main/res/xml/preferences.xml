@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2020 Simon Kaleschke
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,24 +14,6 @@
   ~ limitations under the License.
   -->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory
-        android:icon="@drawable/ic_menu_book"
-        android:title="@string/preferences_dictionary">
-        <ListPreference
-            android:dialogIcon="@drawable/ic_sort"
-            android:dialogTitle="@string/preferences_order_by_dialog"
-            android:icon="@drawable/ic_sort"
-            android:key="@string/preferences_key_order"
-            android:summary="@string/preferences_order_by_summary"
-            android:title="@string/preferences_order_by_title" />
-        <ListPreference
-            android:dialogIcon="@drawable/ic_view"
-            android:dialogTitle="@string/preferences_view_dialog"
-            android:icon="@drawable/ic_view"
-            android:key="@string/preferences_key_view"
-            android:summary="@string/preferences_view_summary"
-            android:title="@string/preferences_view_title" />
-    </PreferenceCategory>
     <PreferenceCategory
         android:icon="@drawable/ic_info"
         android:title="@string/preferences_about">

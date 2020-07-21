@@ -19,32 +19,16 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.github.cheapmon.balalaika.data.entities.category.Category
-import com.github.cheapmon.balalaika.data.entities.view.DictionaryViewWithCategories
-import com.github.cheapmon.balalaika.data.insert.ImportUtil
-import com.github.cheapmon.balalaika.data.repositories.DictionaryRepository
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
+import com.github.cheapmon.balalaika.data.dictionary.DictionaryEntryRepository
+import com.github.cheapmon.balalaika.db.entities.category.Category
+import com.github.cheapmon.balalaika.db.entities.view.DictionaryViewWithCategories
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
 /** View model for [DictionaryFragment] */
 class DictionaryViewModel @ViewModelInject constructor(
-    private val repository: DictionaryRepository,
-    private val importUtil: ImportUtil
+    private val repository: DictionaryEntryRepository
 ) : ViewModel() {
-    /**
-     * Current state of import operations
-     *
-     * Calls the [import utility][ImportUtil] and emits `true` when finished.
-     */
-    val importFlow: Flow<Boolean> = flow {
-        emit(false)
-        importUtil.import()
-        emit(true)
-    }
-
     /**
      * Adapt dictionary presentation to user configuration
      *
@@ -53,25 +37,31 @@ class DictionaryViewModel @ViewModelInject constructor(
      * - Category to order by
      * - Initial entry
      */
-    val dictionary = flow {
-        val result = repository.dictionary.cachedIn(viewModelScope)
-        importFlow.collect { done -> if (done) result.collect { value -> emit(value) } }
-    }
+    val dictionary = repository.dictionary.cachedIn(viewModelScope)
+
+    /** Current active dictionary */
+    val currentDictionary = repository.currentDictionary
+
+    /** Current selected dictionary view */
+    val dictionaryView = repository.dictionaryView
+
+    /** Current selected category to order by */
+    val category = repository.category
 
     /** Set the dictionary view */
-    fun setDictionaryView(id: Long) = repository.setDictionaryView(id)
+    fun setDictionaryView(id: String) = repository.setDictionaryView(id)
 
     /** Set the dictionary ordering */
-    fun setCategory(id: Long) = repository.setCategory(id)
+    fun setCategory(id: String) = repository.setCategory(id)
 
     /** Set the first entry to display */
     fun setInitialKey(id: Long?) = repository.setInitialKey(id)
 
     /** Get position of lexeme in the current dictionary setup */
-    suspend fun getIdOf(externalId: String?): Long? = repository.getIdOf(externalId)
+    suspend fun getIdOf(id: String?): Long? = repository.getIdOf(id)
 
     /** Toggle bookmark state for a lexeme */
-    fun toggleBookmark(lexemeId: Long) {
+    fun toggleBookmark(lexemeId: String) {
         viewModelScope.launch { repository.toggleBookmark(lexemeId) }
     }
 

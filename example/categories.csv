@@ -1,7 +1,0 @@
-id,name,widget,icon,sequence,hidden,order_by
-cls,Wordclass,plain,ic_circle,0,0,0
-ger,German Translation,key_value,ic_flag,1,0,0
-syn,Synonyms,reference,ic_circle,2,0,0
-cmp,Comparative & Superlative,reference,ic_arrow_up,3,0,0
-dct,Links,url,ic_info,4,0,0
-exa,Examples,example,ic_circle,5,0,0

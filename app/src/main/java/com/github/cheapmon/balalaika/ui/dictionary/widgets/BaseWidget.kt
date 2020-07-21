@@ -21,12 +21,11 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.data.entities.category.Category
-import com.github.cheapmon.balalaika.data.entities.history.SearchRestriction
-import com.github.cheapmon.balalaika.data.entities.property.PropertyWithCategory
 import com.github.cheapmon.balalaika.databinding.HelperButtonBinding
 import com.github.cheapmon.balalaika.databinding.WidgetTemplateBinding
-import com.github.cheapmon.balalaika.util.ResourceUtil
+import com.github.cheapmon.balalaika.db.entities.category.Category
+import com.github.cheapmon.balalaika.db.entities.history.SearchRestriction
+import com.github.cheapmon.balalaika.db.entities.property.PropertyWithCategory
 import com.github.cheapmon.balalaika.util.highlight
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
@@ -113,7 +112,7 @@ open class BaseWidget(
     open fun onClickActionButtonListener(value: String): Unit = Unit
 
     /** Icon for the data category */
-    open val categoryIcon = ResourceUtil.drawable(parent.context, category.iconId)
+    open val categoryIcon = category.iconId
 
     /** Message in the context menu */
     open val menuMessage =
