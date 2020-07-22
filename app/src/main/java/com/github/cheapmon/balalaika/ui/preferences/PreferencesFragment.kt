@@ -18,7 +18,6 @@ package com.github.cheapmon.balalaika.ui.preferences
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.navigation.fragment.findNavController
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.github.cheapmon.balalaika.R
@@ -30,10 +29,10 @@ class PreferencesFragment : PreferenceFragmentCompat() {
     /** Load data and add callbacks */
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
-        findPreference<Preference>("sources")?.apply {
+        findPreference<Preference>("icon")?.apply {
             setOnPreferenceClickListener {
-                val directions = PreferencesFragmentDirections.actionNavPreferencesToNavSources()
-                findNavController().navigate(directions)
+                val uri = Uri.parse(getString(R.string.preferences_icon_url))
+                startActivity(Intent(Intent.ACTION_VIEW, uri))
                 true
             }
         }

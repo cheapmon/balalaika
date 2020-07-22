@@ -15,12 +15,17 @@
   -->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
+        android:icon="@drawable/ic_photo"
+        android:title="@string/preferences_media">
+        <Preference
+            android:icon="@mipmap/ic_launcher_round"
+            android:key="icon"
+            android:summary="@string/preferences_icon_author"
+            android:title="@string/preferences_icon_title" />
+    </PreferenceCategory>
+    <PreferenceCategory
         android:icon="@drawable/ic_info"
         android:title="@string/preferences_about">
-        <Preference
-            android:icon="@drawable/ic_source"
-            android:key="sources"
-            android:title="@string/preferences_sources_title" />
         <Preference
             android:icon="@drawable/ic_person"
             android:key="author"

@@ -28,7 +28,7 @@
     <string name="menu_bookmarks">Lesezeichen</string>
     <string name="menu_search">Wörterbuch durchsuchen</string>
     <string name="menu_history">Suchhistorie</string>
-    <string name="menu_preferences">Einstellungen</string>
+    <string name="menu_about">Über die App</string>
     <string name="menu_sources">Quellen</string>
     <string name="menu_order_by">Sortieren</string>
     <string name="menu_setup_view">Sicht einstellen</string>

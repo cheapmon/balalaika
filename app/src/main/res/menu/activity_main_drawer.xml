@@ -25,18 +25,6 @@
             android:icon="@drawable/ic_menu_book"
             android:title="@string/menu_dictionary" />
         <item
-            android:id="@+id/nav_selection"
-            android:icon="@drawable/ic_library"
-            android:title="@string/menu_selection" />
-        <item
-            android:id="@+id/nav_bookmarks"
-            android:icon="@drawable/ic_bookmark"
-            android:title="@string/menu_bookmarks" />
-    </group>
-    <group
-        android:id="@+id/group_search"
-        android:checkableBehavior="single">
-        <item
             android:id="@+id/nav_search"
             android:icon="@drawable/ic_search"
             android:title="@string/menu_search" />
@@ -44,11 +32,24 @@
             android:id="@+id/nav_history"
             android:icon="@drawable/ic_menu_history"
             android:title="@string/menu_history" />
+
+        <item
+            android:id="@+id/nav_bookmarks"
+            android:icon="@drawable/ic_bookmark"
+            android:title="@string/menu_bookmarks" />
     </group>
-    <group android:id="@+id/group_preferences">
+    <group
+        android:id="@+id/group_selection"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_selection"
+            android:icon="@drawable/ic_library"
+            android:title="@string/menu_selection" />
+    </group>
+    <group android:id="@+id/group_info">
         <item
             android:id="@+id/nav_preferences"
-            android:icon="@drawable/ic_preferences"
-            android:title="@string/menu_preferences" />
+            android:icon="@drawable/ic_info"
+            android:title="@string/menu_about" />
     </group>
 </menu>

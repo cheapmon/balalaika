@@ -35,7 +35,6 @@
         <action
             android:id="@+id/select_dictionary"
             app:destination="@id/nav_selection"
-            app:enterAnim="@anim/fragment_open_enter"
             app:popUpTo="@id/nav_selection" />
     </fragment>
     <fragment
@@ -78,15 +77,7 @@
     <fragment
         android:id="@+id/nav_preferences"
         android:name="com.github.cheapmon.balalaika.ui.preferences.PreferencesFragment"
-        android:label="@string/menu_preferences">
-        <action
-            android:id="@+id/action_nav_preferences_to_nav_sources"
-            app:destination="@id/nav_sources" />
-    </fragment>
-    <fragment
-        android:id="@+id/nav_sources"
-        android:name="com.github.cheapmon.balalaika.ui.preferences.SourcesFragment"
-        android:label="@string/menu_sources" />
+        android:label="@string/menu_about" />
     <fragment
         android:id="@+id/nav_selection_detail"
         android:name="com.github.cheapmon.balalaika.ui.selection.SelectionDetailFragment"
