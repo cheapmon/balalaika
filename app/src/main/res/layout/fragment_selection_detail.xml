@@ -43,31 +43,15 @@
             android:layout_marginVertical="@dimen/activity_vertical_margin"
             android:paddingBottom="16dp">
 
-            <ImageView
-                android:id="@+id/selection_detail_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
-                android:contentDescription="@string/menu_dictionary"
-                app:layout_constraintBottom_toBottomOf="@+id/selection_detail_title"
-                app:layout_constraintEnd_toStartOf="@+id/selection_detail_title"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/selection_detail_title"
-                app:srcCompat="@drawable/ic_library" />
-
             <TextView
                 android:id="@+id/selection_detail_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginEnd="32dp"
                 android:text="@{dictionary.name}"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                android:textStyle="bold"
+                android:textAppearance="?attr/textAppearanceHeadline5"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/selection_detail_guideline_icon"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="This is a very long dictionary name" />
 
@@ -87,8 +71,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:contentDescription="@string/selection_labels"
-                app:layout_constraintEnd_toEndOf="@+id/selection_detail_icon"
-                app:layout_constraintStart_toStartOf="@+id/selection_detail_icon"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/selection_divider_top"
                 app:srcCompat="@drawable/ic_label" />
 
@@ -97,7 +80,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/selection_no_labels"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:textAppearance="?attr/textAppearanceBody2"
                 android:visibility="@{!dictionary.installed}"
                 app:layout_constraintBottom_toBottomOf="@+id/selection_detail_label_icon"
                 app:layout_constraintStart_toStartOf="@+id/selection_detail_guideline_icon"
@@ -117,7 +100,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/selection_is_installed"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                    android:textAppearance="?attr/textAppearanceCaption"
                     android:visibility="@{dictionary.installed}"
                     app:chipIcon="@drawable/ic_library"
                     app:chipIconSize="12dp"
@@ -128,28 +111,28 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/selection_is_active"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                    android:textAppearance="?attr/textAppearanceCaption"
                     android:textColor="@android:color/white"
                     android:visibility="@{dictionary.active}"
                     app:chipIcon="@drawable/ic_checkbox"
                     app:chipIconSize="12dp"
                     app:chipIconTint="@android:color/white"
                     app:chipMinHeight="16dp"
-                    app:chipSurfaceColor="@color/colorPrimary" />
+                    app:chipSurfaceColor="?attr/colorPrimary" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/selection_detail_chip_updatable"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/selection_is_updatable"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                    android:textAppearance="?attr/textAppearanceCaption"
                     android:textColor="@android:color/white"
                     android:visibility="@{dictionary.updatable}"
                     app:chipIcon="@drawable/ic_update"
                     app:chipIconSize="12dp"
                     app:chipIconTint="@android:color/white"
                     app:chipMinHeight="16dp"
-                    app:chipSurfaceColor="@color/colorSecondary" />
+                    app:chipSurfaceColor="?attr/colorSecondary" />
 
             </com.google.android.material.chip.ChipGroup>
 
@@ -158,7 +141,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_begin="56dp" />
+                app:layout_constraintGuide_begin="40dp" />
 
             <ImageView
                 android:id="@+id/selection_detail_author_icon"
@@ -166,8 +149,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:contentDescription="@string/selection_authors_title"
-                app:layout_constraintEnd_toEndOf="@+id/selection_detail_icon"
-                app:layout_constraintStart_toStartOf="@+id/selection_detail_icon"
+                app:layout_constraintEnd_toEndOf="@+id/selection_detail_label_icon"
+                app:layout_constraintStart_toStartOf="@+id/selection_detail_label_icon"
                 app:layout_constraintTop_toBottomOf="@+id/selection_detail_label_text"
                 app:srcCompat="@drawable/ic_author" />
 
@@ -176,8 +159,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/selection_authors_title"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-                android:textStyle="bold"
+                android:textAppearance="?attr/textAppearanceBody1"
                 app:layout_constraintBottom_toBottomOf="@+id/selection_detail_author_icon"
                 app:layout_constraintStart_toStartOf="@+id/selection_detail_guideline_icon"
                 app:layout_constraintTop_toTopOf="@+id/selection_detail_author_icon" />
@@ -188,7 +170,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@{dictionary.authors}"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:textAppearance="?attr/textAppearanceBody2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/selection_detail_guideline_icon"
                 app:layout_constraintTop_toBottomOf="@+id/selection_detail_author_icon"
@@ -200,7 +182,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:contentDescription="@string/selection_summary_title"
-                app:layout_constraintEnd_toStartOf="@+id/selection_detail_guideline_icon"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/selection_detail_author_text"
                 app:srcCompat="@drawable/ic_summary" />
@@ -210,8 +191,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/selection_summary_title"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                android:textStyle="bold"
+                android:textAppearance="?attr/textAppearanceBody1"
                 app:layout_constraintBottom_toBottomOf="@+id/selection_detail_summary_icon"
                 app:layout_constraintStart_toStartOf="@+id/selection_detail_guideline_icon"
                 app:layout_constraintTop_toTopOf="@+id/selection_detail_summary_icon" />
@@ -223,7 +203,7 @@
                 android:layout_marginTop="8dp"
                 android:autoLink="web"
                 android:text="@{dictionary.summary}"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:textAppearance="?attr/textAppearanceBody2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/selection_detail_guideline_icon"
                 app:layout_constraintTop_toBottomOf="@+id/selection_detail_summary_icon"
@@ -235,7 +215,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:contentDescription="@string/selection_info_title"
-                app:layout_constraintEnd_toStartOf="@+id/selection_detail_guideline_icon"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/selection_detail_summary_text"
                 app:srcCompat="@drawable/ic_info" />
@@ -245,8 +224,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/selection_info_title"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                android:textStyle="bold"
+                android:textAppearance="?attr/textAppearanceBody1"
                 app:layout_constraintBottom_toBottomOf="@+id/selection_detail_info_icon"
                 app:layout_constraintStart_toStartOf="@+id/selection_detail_guideline_icon"
                 app:layout_constraintTop_toTopOf="@+id/selection_detail_info_icon" />
@@ -258,7 +236,7 @@
                 android:layout_marginTop="8dp"
                 android:autoLink="web"
                 android:text="@{dictionary.additionalInfo}"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:textAppearance="?attr/textAppearanceBody2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/selection_detail_guideline_icon"
                 app:layout_constraintTop_toBottomOf="@+id/selection_detail_info_icon"
@@ -280,8 +258,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/selection_version_title"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-                android:textStyle="bold"
+                android:textAppearance="?attr/textAppearanceBody1"
                 app:layout_constraintBottom_toBottomOf="@+id/selection_version_icon"
                 app:layout_constraintStart_toStartOf="@+id/selection_detail_guideline_icon"
                 app:layout_constraintTop_toTopOf="@+id/selection_version_icon" />
@@ -291,7 +268,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{String.valueOf('v') + String.valueOf(dictionary.version)}"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:textAppearance="?attr/textAppearanceBody2"
                 app:layout_constraintBottom_toBottomOf="@+id/selection_version_title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/selection_version_title"
@@ -358,16 +335,14 @@
 
                 <Button
                     android:id="@+id/selection_button_remove"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:onClick="@{() -> listener.onClickRemoveButton(dictionary)}"
                     android:text="@string/selection_action_remove"
-                    android:textColor="@color/design_default_color_error"
+                    android:theme="@style/ThemeOverlay.Balalaika.Danger"
                     android:visibility="@{dictionary.installed}"
-                    app:icon="@drawable/ic_delete"
-                    app:iconTint="@color/design_default_color_error"
-                    app:rippleColor="@color/design_default_color_error" />
+                    app:icon="@drawable/ic_delete" />
 
             </LinearLayout>
 

@@ -18,6 +18,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="is_empty"
             type="Boolean" />
@@ -60,6 +61,7 @@
 
         <TextView
             android:id="@+id/selection_empty_text"
+            style="?attr/textAppearanceBody2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"

@@ -27,6 +27,7 @@ import com.github.cheapmon.balalaika.db.entities.category.Category
 import com.github.cheapmon.balalaika.db.entities.history.SearchRestriction
 import com.github.cheapmon.balalaika.db.entities.property.PropertyWithCategory
 import com.github.cheapmon.balalaika.util.highlight
+import com.github.cheapmon.balalaika.util.setIconById
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 /**
@@ -95,7 +96,7 @@ open class BaseWidget(
                 .highlight(searchText, contentView.context)
             // Display action button and add listener
             val icon = if (hasActions) actionIcon(property.property.value) else null
-            if (icon != null) helperButton.setImageResource(icon)
+            if (icon != null) helperButton.setIconById(icon)
             else helperButton.visibility = View.GONE
             helperButton.setOnClickListener { onClickActionButtonListener(property.property.value) }
         }

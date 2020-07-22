@@ -14,7 +14,15 @@
   ~ limitations under the License.
   -->
 <resources>
-    <color name="colorPrimary">#0288D1</color>
-    <color name="colorPrimaryDark">#01579B</color>
-    <color name="colorSecondary">#FF9800</color>
+    <color name="mainColor">#0288d1</color>
+    <color name="mainColorLight">#5eb8ff</color>
+    <color name="mainColorDark">#005b9f</color>
+    <color name="accentColor">#ff9800</color>
+    <color name="accentColorLight">#ffc947</color>
+    <color name="accentColorDark">#c66900</color>
+    <color name="mainTextColor">#ffffff</color>
+    <color name="accentTextColor">#ffffff</color>
+    <color name="dangerColor">#d32f2f</color>
+    <color name="dangerColorLight">#ff6659</color>
+    <color name="dangerColorDark">#9a0007</color>
 </resources>

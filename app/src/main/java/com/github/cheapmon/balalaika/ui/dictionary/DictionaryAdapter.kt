@@ -18,7 +18,6 @@ package com.github.cheapmon.balalaika.ui.dictionary
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -27,6 +26,8 @@ import com.github.cheapmon.balalaika.databinding.FragmentDictionaryItemBinding
 import com.github.cheapmon.balalaika.db.entities.entry.DictionaryEntry
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetListener
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.Widgets
+import com.github.cheapmon.balalaika.util.setIconById
+import com.google.android.material.button.MaterialButton
 
 /** Paging Adapter for [DictionaryFragment] */
 class DictionaryAdapter(
@@ -66,10 +67,10 @@ class DictionaryAdapter(
                 entryCollapseButton.setOnClickListener {
                     if (entryProperties.visibility == View.GONE) {
                         entryProperties.visibility = View.VISIBLE
-                        entryCollapseButton.setImageResource(R.drawable.ic_arrow_up)
+                        entryCollapseButton.setIconById(R.drawable.ic_arrow_up)
                     } else {
                         entryProperties.visibility = View.GONE
-                        entryCollapseButton.setImageResource(R.drawable.ic_arrow_down)
+                        entryCollapseButton.setIconById(R.drawable.ic_arrow_down)
                     }
                 }
                 entryBaseButton.setOnClickListener {
@@ -93,11 +94,11 @@ class DictionaryAdapter(
             }
         }
 
-        private fun updateBookmarkButton(button: ImageButton) {
+        private fun updateBookmarkButton(button: MaterialButton) {
             if (isBookmark) {
-                button.setImageResource(R.drawable.ic_bookmark)
+                button.setIconById(R.drawable.ic_bookmark)
             } else {
-                button.setImageResource(R.drawable.ic_bookmark_border)
+                button.setIconById(R.drawable.ic_bookmark_border)
             }
         }
     }

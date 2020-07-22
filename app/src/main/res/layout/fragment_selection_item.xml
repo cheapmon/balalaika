@@ -44,8 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{dictionary.name}"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-                android:textStyle="bold"
+                android:textAppearance="?attr/textAppearanceHeadline6"
                 app:layout_constraintBottom_toBottomOf="@+id/selection_item_icon"
                 app:layout_constraintStart_toStartOf="@+id/selection_guideline_icon"
                 app:layout_constraintTop_toTopOf="@+id/selection_item_icon"
@@ -56,7 +55,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
-                android:layout_marginLeft="12dp"
                 android:layout_marginTop="8dp"
                 android:contentDescription="@string/menu_dictionary"
                 app:layout_constraintStart_toStartOf="parent"
@@ -76,7 +74,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/selection_is_installed"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                    android:textAppearance="?attr/textAppearanceCaption"
                     android:visibility="@{dictionary.isInstalled}"
                     app:chipIcon="@drawable/ic_library"
                     app:chipIconSize="12dp"
@@ -87,28 +85,28 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/selection_is_active"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                    android:textAppearance="?attr/textAppearanceCaption"
                     android:textColor="@android:color/white"
                     android:visibility="@{dictionary.isActive}"
                     app:chipIcon="@drawable/ic_checkbox"
                     app:chipIconSize="12dp"
                     app:chipIconTint="@android:color/white"
                     app:chipMinHeight="16dp"
-                    app:chipSurfaceColor="@color/colorPrimary" />
+                    app:chipSurfaceColor="?attr/colorPrimary" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/selection_item_chip_updatable"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/selection_is_updatable"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                    android:textAppearance="?attr/textAppearanceCaption"
                     android:textColor="@android:color/white"
                     android:visibility="@{dictionary.isUpdatable}"
                     app:chipIcon="@drawable/ic_update"
                     app:chipIconSize="12dp"
                     app:chipIconTint="@android:color/white"
                     app:chipMinHeight="16dp"
-                    app:chipSurfaceColor="@color/colorSecondary" />
+                    app:chipSurfaceColor="?attr/colorSecondary" />
 
             </com.google.android.material.chip.ChipGroup>
 
@@ -126,7 +124,7 @@
                 android:ellipsize="end"
                 android:maxLines="5"
                 android:text="@{dictionary.summary}"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:textAppearance="?attr/textAppearanceBody2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/selection_guideline_icon"
                 app:layout_constraintTop_toTopOf="@+id/selection_summary_icon"

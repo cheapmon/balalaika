@@ -30,7 +30,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:openDrawer="end">
+            tools:openDrawer="start">
 
             <include
                 android:id="@+id/app_bar_main"
@@ -45,7 +45,7 @@
                 android:layout_gravity="start"
                 android:fitsSystemWindows="true"
                 app:headerLayout="@layout/nav_header_main"
-                app:itemTextAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                app:itemTextAppearance="?attr/textAppearanceBody2"
                 app:menu="@menu/activity_main_drawer" />
 
 

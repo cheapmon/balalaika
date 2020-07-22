@@ -137,6 +137,7 @@
 
             <TextView
                 android:id="@+id/search_empty_text"
+                style="?attr/textAppearanceBody2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -149,16 +150,16 @@
                 tools:visibility="visible" />
 
             <ProgressBar
-                android:id="@+id/search_progress"
-                style="?android:attr/progressBarStyle"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:id="@+id/selection_progress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:indeterminate="true"
+                android:translationY="-6dp"
                 android:visibility="@{in_progress}"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/search_list" />
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

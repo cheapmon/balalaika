@@ -42,9 +42,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
                 android:text="@{lexeme.form}"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                android:textAppearance="?attr/textAppearanceBody2"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/bookmarks_item_icon"
                 app:layout_constraintTop_toTopOf="parent"
@@ -55,20 +54,21 @@
                 android:id="@+id/bookmarks_item_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:contentDescription="@string/desc_bookmarks_item_icon"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_bookmark" />
 
-            <ImageButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/bookmarks_item_delete_button"
-                style="@style/Balalaika.ImageButton"
+                style="@style/Widget.Balalaika.Button.Icon"
                 android:contentDescription="@string/desc_bookmarks_item_delete_button"
+                app:icon="@drawable/ic_delete"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_delete" />
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.appcompat.widget.LinearLayoutCompat>

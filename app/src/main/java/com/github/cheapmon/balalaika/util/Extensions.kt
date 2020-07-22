@@ -18,12 +18,19 @@ package com.github.cheapmon.balalaika.util
 import android.content.Context
 import android.text.SpannedString
 import android.util.Log
+import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.db.entities.entry.PropertyDatabaseView
 import com.github.cheapmon.balalaika.ui.search.SearchAdapter
+import com.google.android.material.button.MaterialButton
+
+/** Convenience method for setting the icon of a [MaterialButton] from a drawable ID */
+fun MaterialButton.setIconById(@DrawableRes id: Int) {
+    this.icon = this.context.getDrawable(id)
+}
 
 /**
  * Highlight part of a string
@@ -38,7 +45,7 @@ fun String.highlight(text: String?, context: Context): SpannedString {
     return if (text == null || text == "" || !contents.contains(text)) {
         buildSpannedString { append(contents) }
     } else {
-        val color = ContextCompat.getColor(context, R.color.colorPrimary)
+        val color = ContextCompat.getColor(context, R.color.mainColor)
         buildSpannedString {
             // Split before and after text
             contents.split(Regex("(?<=$text)|(?=$text)")).forEach {
@@ -57,14 +64,19 @@ val <T> T.exhaustive: T
 class Logger(private val name: String) {
     /** @suppress */
     fun assert(msg: Any?) = log(Log.ASSERT, msg)
+
     /** @suppress */
     fun debug(msg: Any?) = log(Log.DEBUG, msg)
+
     /** @suppress */
     fun error(msg: Any?) = log(Log.ERROR, msg)
+
     /** @suppress */
     fun info(msg: Any?) = log(Log.INFO, msg)
+
     /** @suppress */
     fun verbose(msg: Any?) = log(Log.VERBOSE, msg)
+
     /** @suppress */
     fun warn(msg: Any?) = log(Log.WARN, msg)
     private fun log(priority: Int, msg: Any?) = Log.println(priority, name, msg.toString())
