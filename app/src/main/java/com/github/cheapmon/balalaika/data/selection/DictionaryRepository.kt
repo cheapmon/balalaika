@@ -58,6 +58,9 @@ class DictionaryRepository @Inject constructor(
     /** All available dictionaries */
     val dictionaries = dictionaryDao.getAll()
 
+    /** Currently active dictionary */
+    val currentDictionary = dictionaryDao.getActive()
+
     /** Get a single dictionary from the database */
     fun getDictionary(id: String) = dictionaryDao.findById(id)
 

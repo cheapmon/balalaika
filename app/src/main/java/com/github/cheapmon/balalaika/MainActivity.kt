@@ -16,6 +16,8 @@
 package com.github.cheapmon.balalaika
 
 import android.os.Bundle
+import android.view.LayoutInflater
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
@@ -27,12 +29,15 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.github.cheapmon.balalaika.databinding.ActivityMainBinding
 import com.github.cheapmon.balalaika.databinding.AppBarMainBinding
+import com.github.cheapmon.balalaika.databinding.NavDictionaryBinding
 import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
 /** Main activity for Balalaika */
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+    private val viewModel: MainViewModel by viewModels()
+
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var navController: NavController
 
@@ -58,6 +63,16 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        setupNavView(navView)
+    }
+
+    private fun setupNavView(navView: NavigationView) {
+        val layoutInflater = LayoutInflater.from(navView.context)
+        val binding = NavDictionaryBinding.inflate(layoutInflater, navView, false)
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+        navView.addHeaderView(binding.root)
     }
 
     /** @suppress */
