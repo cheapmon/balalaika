@@ -16,23 +16,17 @@
 package com.github.cheapmon.balalaika.ui.bookmarks
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.databinding.FragmentBookmarksBinding
 import com.github.cheapmon.balalaika.db.entities.lexeme.Lexeme
+import com.github.cheapmon.balalaika.ui.RecyclerViewFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -46,32 +40,39 @@ import dagger.hilt.android.AndroidEntryPoint
  * - Remove one or all bookmarks
  */
 @AndroidEntryPoint
-class BookmarksFragment : Fragment(), BookmarksAdapter.Listener {
-    private val viewModel: BookmarksViewModel by viewModels()
-
-    private lateinit var binding: FragmentBookmarksBinding
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var bookmarksLayoutManager: LinearLayoutManager
-    private lateinit var bookmarksAdapter: BookmarksAdapter
-
-    /** Prepare view and load data */
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_bookmarks, container, false)
-        bookmarksLayoutManager = LinearLayoutManager(context)
-        bookmarksAdapter = BookmarksAdapter(this)
-        recyclerView = binding.bookmarksList.apply {
-            layoutManager = bookmarksLayoutManager
-            adapter = bookmarksAdapter
-            setHasFixedSize(true)
-            addItemDecoration(DividerItemDecoration(context, bookmarksLayoutManager.orientation))
-        }
+class BookmarksFragment :
+    RecyclerViewFragment<BookmarksViewModel, FragmentBookmarksBinding, BookmarksAdapter>(
+        BookmarksViewModel::class,
+        R.layout.fragment_bookmarks,
+        true
+    ), BookmarksAdapter.Listener {
+    /** Notify about options menu */
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        submitData()
-        return binding.root
+    }
+
+    override fun createRecyclerView(binding: FragmentBookmarksBinding) =
+        binding.bookmarksList
+
+    override fun createRecyclerViewAdapter() =
+        BookmarksAdapter(this)
+
+    override fun observeData(
+        binding: FragmentBookmarksBinding,
+        owner: LifecycleOwner,
+        adapter: BookmarksAdapter
+    ) {
+        viewModel.lexemes.observe(owner, Observer {
+            adapter.submitList(it)
+            if (it.isEmpty()) {
+                binding.bookmarksEmptyIcon.visibility = View.VISIBLE
+                binding.bookmarksEmptyText.visibility = View.VISIBLE
+            } else {
+                binding.bookmarksEmptyIcon.visibility = View.GONE
+                binding.bookmarksEmptyText.visibility = View.GONE
+            }
+        })
     }
 
     /**
@@ -99,30 +100,16 @@ class BookmarksFragment : Fragment(), BookmarksAdapter.Listener {
         }
     }
 
-    /** Bind data */
-    private fun submitData() {
-        viewModel.lexemes.observe(viewLifecycleOwner, Observer {
-            bookmarksAdapter.submitList(ArrayList(it))
-            if (it.isEmpty()) {
-                binding.bookmarksEmptyIcon.visibility = View.VISIBLE
-                binding.bookmarksEmptyText.visibility = View.VISIBLE
-            } else {
-                binding.bookmarksEmptyIcon.visibility = View.GONE
-                binding.bookmarksEmptyText.visibility = View.GONE
-            }
-        })
-    }
-
     /** Remove all bookmarks */
     private fun clearBookmarks() {
         viewModel.clearBookmarks()
-        Snackbar.make(binding.root, R.string.bookmarks_clear_done, Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(requireView(), R.string.bookmarks_clear_done, Snackbar.LENGTH_SHORT).show()
     }
 
     /** Remove single bookmark */
     override fun onClickDeleteButton(lexeme: Lexeme) {
         viewModel.removeBookmark(lexeme.id)
-        Snackbar.make(binding.root, R.string.bookmarks_item_removed, Snackbar.LENGTH_SHORT)
+        Snackbar.make(requireView(), R.string.bookmarks_item_removed, Snackbar.LENGTH_SHORT)
             .show()
     }
 

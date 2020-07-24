@@ -19,24 +19,18 @@ import android.content.Intent
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.databinding.FragmentDictionaryBinding
 import com.github.cheapmon.balalaika.db.entities.entry.DictionaryEntry
 import com.github.cheapmon.balalaika.db.entities.history.SearchRestriction
+import com.github.cheapmon.balalaika.ui.RecyclerViewFragment
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetListener
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -61,55 +55,48 @@ import kotlinx.coroutines.launch
  */
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListener {
-    private val viewModel: DictionaryViewModel by viewModels()
-
-    private lateinit var binding: FragmentDictionaryBinding
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var dictionaryLayoutManager: LinearLayoutManager
-    private lateinit var dictionaryAdapter: DictionaryAdapter
-
-    /** Prepare view and load data */
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+class DictionaryFragment :
+    RecyclerViewFragment<DictionaryViewModel, FragmentDictionaryBinding, DictionaryAdapter>(
+        DictionaryViewModel::class,
+        R.layout.fragment_dictionary,
+        false
+    ), DictionaryAdapter.Listener, WidgetListener {
+    /** Notify about options menu */
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_dictionary, container, false)
-        dictionaryLayoutManager = LinearLayoutManager(context)
-        dictionaryAdapter = DictionaryAdapter(this, this)
-        with(binding) {
-            recyclerView = entryList.apply {
-                layoutManager = dictionaryLayoutManager
-                adapter = dictionaryAdapter
-                setHasFixedSize(true)
-            }
-            dictionaryEmptyButton.setOnClickListener {
-                val directions = DictionaryFragmentDirections.selectDictionary()
-                findNavController().navigate(directions)
-            }
-        }
-        bindUi()
-        indicateProgress()
-        return binding.root
     }
 
-    private fun bindUi() {
+    override fun onCreateBinding(binding: FragmentDictionaryBinding) {
+        super.onCreateBinding(binding)
+        binding.dictionaryEmptyButton.setOnClickListener {
+            val directions = DictionaryFragmentDirections.selectDictionary()
+            findNavController().navigate(directions)
+        }
+    }
+
+    override fun createRecyclerView(binding: FragmentDictionaryBinding) =
+        binding.entryList
+
+    override fun createRecyclerViewAdapter() =
+        DictionaryAdapter(this, this)
+
+    override fun observeData(
+        binding: FragmentDictionaryBinding,
+        owner: LifecycleOwner,
+        adapter: DictionaryAdapter
+    ) {
         lifecycleScope.launch {
             launch {
-                viewModel.dictionary.collectLatest { data -> dictionaryAdapter.submitData(data) }
+                viewModel.dictionary.collectLatest { data -> adapter.submitData(data) }
             }
             launch {
                 viewModel.currentDictionary.collectLatest { binding.empty = it == null }
             }
-        }
-    }
-
-    private fun indicateProgress() {
-        lifecycleScope.launch {
-            dictionaryAdapter.loadStateFlow.collect { loadState ->
-                binding.inProgress = loadState.refresh is LoadState.Loading
+            launch {
+                adapter.loadStateFlow.collect { loadState ->
+                    binding.inProgress = loadState.refresh is LoadState.Loading
+                }
             }
         }
     }
@@ -208,7 +195,7 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
         } else {
             getString(R.string.dictionary_bookmark_add, entry.lexemeWithBase.lexeme.form)
         }
-        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(requireView(), message, Snackbar.LENGTH_SHORT).show()
     }
 
     /** Go to base of a lexeme */
@@ -224,7 +211,7 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
             }
         } catch (ex: Exception) {
             Snackbar.make(
-                binding.root,
+                requireView(),
                 R.string.dictionary_playback_failed,
                 Snackbar.LENGTH_SHORT
             ).show()

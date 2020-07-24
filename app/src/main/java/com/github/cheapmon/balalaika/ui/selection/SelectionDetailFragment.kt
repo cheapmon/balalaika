@@ -17,18 +17,13 @@ package com.github.cheapmon.balalaika.ui.selection
 
 import android.graphics.text.LineBreaker.JUSTIFICATION_MODE_INTER_WORD
 import android.os.Build
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.databinding.FragmentSelectionDetailBinding
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
+import com.github.cheapmon.balalaika.ui.BaseFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -45,31 +40,23 @@ import kotlinx.coroutines.launch
  * - Remove a dictionary from the library
  */
 @AndroidEntryPoint
-class SelectionDetailFragment : Fragment() {
-    private val viewModel: SelectionDetailViewModel by viewModels()
+class SelectionDetailFragment :
+    BaseFragment<SelectionDetailViewModel, FragmentSelectionDetailBinding>(
+        SelectionDetailViewModel::class,
+        R.layout.fragment_selection_detail
+    ) {
+    override fun onCreateBinding(binding: FragmentSelectionDetailBinding) {}
 
-    private lateinit var binding: FragmentSelectionDetailBinding
-
-    /** Create view and bind data */
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_selection_detail, container, false)
-        lifecycleScope.launch { bindUi() }
-        return binding.root
-    }
-
-    private suspend fun bindUi() {
-        viewModel.dictionary.collect {
-            with(binding) {
-                dictionary = it
-                listener = Listener()
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    selectionDetailSummaryText.justificationMode = JUSTIFICATION_MODE_INTER_WORD
-                    selectionDetailInfoText.justificationMode = JUSTIFICATION_MODE_INTER_WORD
+    override fun observeData(binding: FragmentSelectionDetailBinding, owner: LifecycleOwner) {
+        lifecycleScope.launch {
+            viewModel.dictionary.collect {
+                with(binding) {
+                    dictionary = it
+                    listener = Listener()
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        selectionDetailSummaryText.justificationMode = JUSTIFICATION_MODE_INTER_WORD
+                        selectionDetailInfoText.justificationMode = JUSTIFICATION_MODE_INTER_WORD
+                    }
                 }
             }
         }
@@ -78,62 +65,38 @@ class SelectionDetailFragment : Fragment() {
     /** @suppress */
     inner class Listener {
         fun onClickActivateButton() {
-            MaterialAlertDialogBuilder(requireContext())
-                .setMessage(R.string.selection_confirm_activate)
-                .setPositiveButton(R.string.affirm) { _, _ ->
-                    viewModel.toggleActive()
-                    val directions =
-                        SelectionDetailFragmentDirections.actionNavSelectionDetailToNavSelection()
-                    findNavController().navigate(directions)
-                }.setNegativeButton(R.string.cancel, null)
-                .show()
+            val message = requireContext().getString(R.string.selection_confirm_activate)
+            showDialog(message) { viewModel.toggleActive() }
         }
 
         fun onClickDeactivateButton() {
-            MaterialAlertDialogBuilder(requireContext())
-                .setMessage(R.string.selection_confirm_deactivate)
-                .setPositiveButton(R.string.affirm) { _, _ ->
-                    viewModel.toggleActive()
-                    val directions =
-                        SelectionDetailFragmentDirections.actionNavSelectionDetailToNavSelection()
-                    findNavController().navigate(directions)
-                }.setNegativeButton(R.string.cancel, null)
-                .show()
+            val message = requireContext().getString(R.string.selection_confirm_deactivate)
+            showDialog(message) { viewModel.toggleActive() }
         }
 
         fun onClickUpdateButton() {
-            MaterialAlertDialogBuilder(requireContext())
-                .setMessage(R.string.selection_confirm_update)
-                .setPositiveButton(R.string.affirm) { _, _ ->
-                    viewModel.update()
-                    val directions =
-                        SelectionDetailFragmentDirections.actionNavSelectionDetailToNavSelection()
-                    findNavController().navigate(directions)
-                }.setNegativeButton(R.string.cancel, null)
-                .show()
+            val message = requireContext().getString(R.string.selection_confirm_update)
+            showDialog(message) { viewModel.update() }
         }
 
         fun onClickAddButton(dictionary: Dictionary) {
-            MaterialAlertDialogBuilder(requireContext())
-                .setMessage(
-                    requireContext().getString(
-                        R.string.selection_confirm_add,
-                        dictionary.name
-                    )
-                ).setPositiveButton(R.string.affirm) { _, _ ->
-                    viewModel.install()
-                    val directions =
-                        SelectionDetailFragmentDirections.actionNavSelectionDetailToNavSelection()
-                    findNavController().navigate(directions)
-                }.setNegativeButton(R.string.cancel, null)
-                .show()
+            val message = requireContext().getString(
+                R.string.selection_confirm_add,
+                dictionary.name
+            )
+            showDialog(message) { viewModel.install() }
         }
 
         fun onClickRemoveButton() {
+            val message = requireContext().getString(R.string.selection_confirm_remove)
+            showDialog(message) { viewModel.remove() }
+        }
+
+        private fun showDialog(message: String, block: () -> Unit) {
             MaterialAlertDialogBuilder(requireContext())
-                .setMessage(R.string.selection_confirm_remove)
+                .setMessage(message)
                 .setPositiveButton(R.string.affirm) { _, _ ->
-                    viewModel.remove()
+                    block()
                     val directions =
                         SelectionDetailFragmentDirections.actionNavSelectionDetailToNavSelection()
                     findNavController().navigate(directions)

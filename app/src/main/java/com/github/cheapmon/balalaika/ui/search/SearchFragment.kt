@@ -15,24 +15,18 @@
  */
 package com.github.cheapmon.balalaika.ui.search
 
-import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.databinding.FragmentSearchBinding
 import com.github.cheapmon.balalaika.db.entities.history.SearchRestriction
 import com.github.cheapmon.balalaika.db.entities.lexeme.Lexeme
+import com.github.cheapmon.balalaika.ui.RecyclerViewFragment
 import com.github.cheapmon.balalaika.util.exhaustive
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -50,54 +44,45 @@ import kotlinx.coroutines.launch
  */
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class SearchFragment : Fragment(), SearchAdapter.Listener {
-    private val viewModel: SearchViewModel by viewModels()
+class SearchFragment :
+    RecyclerViewFragment<SearchViewModel, FragmentSearchBinding, SearchAdapter>(
+        SearchViewModel::class,
+        R.layout.fragment_search,
+        false
+    ), SearchAdapter.Listener {
 
-    private lateinit var binding: FragmentSearchBinding
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var searchAdapter: SearchAdapter
-
-    /** Prepare view and load data */
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false)
-        searchAdapter = SearchAdapter(this)
-        with(binding) {
-            recyclerView = searchList.apply {
-                layoutManager = LinearLayoutManager(this@SearchFragment.context)
-                adapter = searchAdapter
-                setHasFixedSize(true)
-            }
-            searchInput.addTextChangedListener(Watcher())
-            searchRestriction.setOnCloseIconClickListener {
-                viewModel.setRestriction(SearchRestriction.None)
-            }
-        }
-        indicateProgress()
-        bindUi()
-        return binding.root
-    }
-
-    private fun indicateProgress() {
-        lifecycleScope.launch {
-            searchAdapter.loadStateFlow.collect { loadState ->
-                binding.inProgress = loadState.refresh is LoadState.Loading
-            }
+    override fun onCreateBinding(binding: FragmentSearchBinding) {
+        super.onCreateBinding(binding)
+        binding.searchInput.addTextChangedListener(Watcher())
+        binding.searchRestriction.setOnCloseIconClickListener {
+            viewModel.setRestriction(SearchRestriction.None)
         }
     }
 
-    private fun bindUi() {
+    override fun createRecyclerView(binding: FragmentSearchBinding) =
+        binding.searchList
+
+    override fun createRecyclerViewAdapter() =
+        SearchAdapter(this)
+
+    override fun observeData(
+        binding: FragmentSearchBinding,
+        owner: LifecycleOwner,
+        adapter: SearchAdapter
+    ) {
         lifecycleScope.launch {
             launch {
-                viewModel.dictionary.collectLatest { data -> searchAdapter.submitData(data) }
+                adapter.loadStateFlow.collect { loadState ->
+                    binding.inProgress = loadState.refresh is LoadState.Loading
+                }
+            }
+            launch {
+                viewModel.dictionary.collectLatest { data -> adapter.submitData(data) }
             }
             launch {
                 viewModel.query.collectLatest { query ->
                     binding.query = query
-                    searchAdapter.submitSearchText(query)
+                    adapter.submitSearchText(query)
                 }
             }
             launch {

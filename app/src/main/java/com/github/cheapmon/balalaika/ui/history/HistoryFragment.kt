@@ -16,23 +16,17 @@
 package com.github.cheapmon.balalaika.ui.history
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.databinding.FragmentHistoryBinding
 import com.github.cheapmon.balalaika.db.entities.history.HistoryEntryWithRestriction
+import com.github.cheapmon.balalaika.ui.RecyclerViewFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -46,32 +40,39 @@ import dagger.hilt.android.AndroidEntryPoint
  * - Remove one or all entries
  */
 @AndroidEntryPoint
-class HistoryFragment : Fragment(), HistoryAdapter.Listener {
-    private val viewModel: HistoryViewModel by viewModels()
-
-    private lateinit var binding: FragmentHistoryBinding
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var historyLayoutManager: LinearLayoutManager
-    private lateinit var historyAdapter: HistoryAdapter
-
-    /** Prepare view and load data */
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_history, container, false)
-        historyLayoutManager = LinearLayoutManager(context)
-        historyAdapter = HistoryAdapter(this)
-        recyclerView = binding.historyList.apply {
-            layoutManager = historyLayoutManager
-            adapter = historyAdapter
-            setHasFixedSize(true)
-            addItemDecoration(DividerItemDecoration(context, historyLayoutManager.orientation))
-        }
+class HistoryFragment :
+    RecyclerViewFragment<HistoryViewModel, FragmentHistoryBinding, HistoryAdapter>(
+        HistoryViewModel::class,
+        R.layout.fragment_history,
+        true
+    ), HistoryAdapter.Listener {
+    /** Notify about options menu */
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        submitData()
-        return binding.root
+    }
+
+    override fun createRecyclerView(binding: FragmentHistoryBinding) =
+        binding.historyList
+
+    override fun createRecyclerViewAdapter() =
+        HistoryAdapter(this)
+
+    override fun observeData(
+        binding: FragmentHistoryBinding,
+        owner: LifecycleOwner,
+        adapter: HistoryAdapter
+    ) {
+        viewModel.historyEntries.observe(owner, Observer {
+            adapter.submitList(it)
+            if (it.isEmpty()) {
+                binding.historyEmptyIcon.visibility = View.VISIBLE
+                binding.historyEmptyText.visibility = View.VISIBLE
+            } else {
+                binding.historyEmptyIcon.visibility = View.GONE
+                binding.historyEmptyText.visibility = View.GONE
+            }
+        })
     }
 
     /**
@@ -99,30 +100,16 @@ class HistoryFragment : Fragment(), HistoryAdapter.Listener {
         }
     }
 
-    /** Bind data */
-    private fun submitData() {
-        viewModel.historyEntries.observe(viewLifecycleOwner, Observer {
-            historyAdapter.submitList(ArrayList(it))
-            if (it.isEmpty()) {
-                binding.historyEmptyIcon.visibility = View.VISIBLE
-                binding.historyEmptyText.visibility = View.VISIBLE
-            } else {
-                binding.historyEmptyIcon.visibility = View.GONE
-                binding.historyEmptyText.visibility = View.GONE
-            }
-        })
-    }
-
     /** Remove all history entries */
     private fun clearHistory() {
         viewModel.clearHistory()
-        Snackbar.make(binding.root, R.string.history_clear_done, Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(requireView(), R.string.history_clear_done, Snackbar.LENGTH_SHORT).show()
     }
 
     /** Remove single history entry */
     override fun onClickDeleteButton(historyEntry: HistoryEntryWithRestriction) {
         viewModel.removeEntry(historyEntry.historyEntry)
-        Snackbar.make(binding.root, R.string.history_entry_removed, Snackbar.LENGTH_SHORT)
+        Snackbar.make(requireView(), R.string.history_entry_removed, Snackbar.LENGTH_SHORT)
             .show()
     }
 
