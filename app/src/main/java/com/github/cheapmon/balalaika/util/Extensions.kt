@@ -16,12 +16,18 @@
 package com.github.cheapmon.balalaika.util
 
 import android.content.Context
+import android.os.Bundle
 import android.text.SpannedString
 import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.navigation.NavArgs
+import androidx.navigation.NavArgsLazy
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.db.entities.entry.PropertyDatabaseView
 import com.github.cheapmon.balalaika.ui.search.SearchAdapter
@@ -94,3 +100,26 @@ class Logger(private val name: String) {
  * ```
  */
 inline fun <reified T> T.logger(block: Logger.() -> Unit) = Logger(T::class.java.name).block()
+
+/**
+ * [Lazy] delegate to access fragment arguments inside of a [ViewModel]
+ *
+ * _Note_: This is especially useful when using dependency injection, since Hilt can inject a
+ * [SavedStateHandle], as explained in
+ * [Hilt and Jetpack integrations](https://developer.android.com/training/dependency-injection/hilt-jetpack).
+ *
+ * Example:
+ * ```
+ * class MyViewModel @Inject constructor(
+ *   @Assisted savedStateHandle: SavedStateHandle
+ * ) : ViewModel() {
+ *   private val navArgs: MyNavArgs by navArgs(savedStateHandle)
+ * }
+ * ```
+ */
+inline fun <reified Args : NavArgs> navArgs(savedStateHandle: SavedStateHandle) =
+    NavArgsLazy(Args::class) { savedStateHandle.toBundle() }
+
+/** Convert [SavedStateHandle] to [Bundle] */
+fun SavedStateHandle.toBundle() =
+    bundleOf(*this.keys().map { Pair(it, this.get<Any?>(it)) }.toTypedArray())

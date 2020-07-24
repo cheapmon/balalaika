@@ -26,7 +26,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.databinding.FragmentSelectionDetailBinding
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
@@ -47,10 +46,9 @@ import kotlinx.coroutines.launch
  */
 @AndroidEntryPoint
 class SelectionDetailFragment : Fragment() {
-    private lateinit var binding: FragmentSelectionDetailBinding
-
-    private val args: SelectionDetailFragmentArgs by navArgs()
     private val viewModel: SelectionDetailViewModel by viewModels()
+
+    private lateinit var binding: FragmentSelectionDetailBinding
 
     /** Create view and bind data */
     override fun onCreateView(
@@ -65,7 +63,7 @@ class SelectionDetailFragment : Fragment() {
     }
 
     private suspend fun bindUi() {
-        viewModel.getDictionary(args.id).collect {
+        viewModel.dictionary.collect {
             with(binding) {
                 dictionary = it
                 listener = Listener()
@@ -79,11 +77,11 @@ class SelectionDetailFragment : Fragment() {
 
     /** @suppress */
     inner class Listener {
-        fun onClickActivateButton(dictionary: Dictionary) {
+        fun onClickActivateButton() {
             MaterialAlertDialogBuilder(requireContext())
                 .setMessage(R.string.selection_confirm_activate)
                 .setPositiveButton(R.string.affirm) { _, _ ->
-                    viewModel.toggleActive(dictionary)
+                    viewModel.toggleActive()
                     val directions =
                         SelectionDetailFragmentDirections.actionNavSelectionDetailToNavSelection()
                     findNavController().navigate(directions)
@@ -91,11 +89,11 @@ class SelectionDetailFragment : Fragment() {
                 .show()
         }
 
-        fun onClickDeactivateButton(dictionary: Dictionary) {
+        fun onClickDeactivateButton() {
             MaterialAlertDialogBuilder(requireContext())
                 .setMessage(R.string.selection_confirm_deactivate)
                 .setPositiveButton(R.string.affirm) { _, _ ->
-                    viewModel.toggleActive(dictionary)
+                    viewModel.toggleActive()
                     val directions =
                         SelectionDetailFragmentDirections.actionNavSelectionDetailToNavSelection()
                     findNavController().navigate(directions)
@@ -103,11 +101,11 @@ class SelectionDetailFragment : Fragment() {
                 .show()
         }
 
-        fun onClickUpdateButton(dictionary: Dictionary) {
+        fun onClickUpdateButton() {
             MaterialAlertDialogBuilder(requireContext())
                 .setMessage(R.string.selection_confirm_update)
                 .setPositiveButton(R.string.affirm) { _, _ ->
-                    viewModel.updateDictionary(dictionary)
+                    viewModel.update()
                     val directions =
                         SelectionDetailFragmentDirections.actionNavSelectionDetailToNavSelection()
                     findNavController().navigate(directions)
@@ -123,7 +121,7 @@ class SelectionDetailFragment : Fragment() {
                         dictionary.name
                     )
                 ).setPositiveButton(R.string.affirm) { _, _ ->
-                    viewModel.addDictionary(dictionary)
+                    viewModel.install()
                     val directions =
                         SelectionDetailFragmentDirections.actionNavSelectionDetailToNavSelection()
                     findNavController().navigate(directions)
@@ -131,11 +129,11 @@ class SelectionDetailFragment : Fragment() {
                 .show()
         }
 
-        fun onClickRemoveButton(dictionary: Dictionary) {
+        fun onClickRemoveButton() {
             MaterialAlertDialogBuilder(requireContext())
                 .setMessage(R.string.selection_confirm_remove)
                 .setPositiveButton(R.string.affirm) { _, _ ->
-                    viewModel.removeDictionary(dictionary.id)
+                    viewModel.remove()
                     val directions =
                         SelectionDetailFragmentDirections.actionNavSelectionDetailToNavSelection()
                     findNavController().navigate(directions)

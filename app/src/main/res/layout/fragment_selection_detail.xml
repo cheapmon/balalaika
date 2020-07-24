@@ -298,7 +298,7 @@
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:onClick="@{() -> listener.onClickActivateButton(dictionary)}"
+                    android:onClick="@{() -> listener.onClickActivateButton()}"
                     android:text="@string/selection_action_activate"
                     android:visibility="@{dictionary.installed &amp;&amp; !dictionary.active}"
                     app:icon="@drawable/ic_checkbox" />
@@ -308,7 +308,7 @@
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:onClick="@{() -> listener.onClickDeactivateButton(dictionary)}"
+                    android:onClick="@{() -> listener.onClickDeactivateButton()}"
                     android:text="@string/selection_action_deactivate"
                     android:visibility="@{dictionary.installed &amp;&amp; dictionary.active}"
                     app:icon="@drawable/ic_checkbox_empty" />
@@ -318,7 +318,7 @@
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:onClick="@{() -> listener.onClickUpdateButton(dictionary)}"
+                    android:onClick="@{() -> listener.onClickUpdateButton()}"
                     android:text="@string/selection_action_update"
                     android:visibility="@{dictionary.updatable}"
                     app:icon="@drawable/ic_update" />
@@ -338,7 +338,7 @@
                     style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:onClick="@{() -> listener.onClickRemoveButton(dictionary)}"
+                    android:onClick="@{() -> listener.onClickRemoveButton()}"
                     android:text="@string/selection_action_remove"
                     android:theme="@style/ThemeOverlay.Balalaika.Danger"
                     android:visibility="@{dictionary.installed}"

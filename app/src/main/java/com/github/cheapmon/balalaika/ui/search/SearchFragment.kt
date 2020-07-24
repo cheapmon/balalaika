@@ -26,7 +26,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -54,8 +53,6 @@ import kotlinx.coroutines.launch
 class SearchFragment : Fragment(), SearchAdapter.Listener {
     private val viewModel: SearchViewModel by viewModels()
 
-    private val args: SearchFragmentArgs by navArgs()
-
     private lateinit var binding: FragmentSearchBinding
     private lateinit var recyclerView: RecyclerView
     private lateinit var searchAdapter: SearchAdapter
@@ -80,7 +77,6 @@ class SearchFragment : Fragment(), SearchAdapter.Listener {
             }
         }
         indicateProgress()
-        handleArgs()
         bindUi()
         return binding.root
     }
@@ -125,12 +121,6 @@ class SearchFragment : Fragment(), SearchAdapter.Listener {
                 viewModel.currentDictionary.collectLatest { binding.empty = it == null }
             }
         }
-    }
-
-    /** Process fragment arguments */
-    private fun handleArgs() {
-        args.query?.let { viewModel.setQuery(it) }
-        args.restriction?.let { viewModel.setRestriction(it) }
     }
 
     /** Show entry in dictionary */

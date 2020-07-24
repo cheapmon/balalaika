@@ -15,7 +15,9 @@
  */
 package com.github.cheapmon.balalaika.ui.search
 
+import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
@@ -24,15 +26,24 @@ import com.github.cheapmon.balalaika.data.history.HistoryRepository
 import com.github.cheapmon.balalaika.data.search.SearchRepository
 import com.github.cheapmon.balalaika.db.entities.history.HistoryEntry
 import com.github.cheapmon.balalaika.db.entities.history.SearchRestriction
+import com.github.cheapmon.balalaika.util.navArgs
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 /** View model for [SearchFragment] */
 class SearchViewModel @ViewModelInject constructor(
+    @Assisted savedStateHandle: SavedStateHandle,
     private val searchRepository: SearchRepository,
     dictionaryEntryRepository: DictionaryEntryRepository,
     private val historyRepository: HistoryRepository
 ) : ViewModel() {
+    private val navArgs: SearchFragmentArgs by navArgs(savedStateHandle)
+
+    init {
+        navArgs.query?.let { setQuery(it) }
+        navArgs.restriction?.let { setRestriction(it) }
+    }
+
     /** Current search query */
     val query = searchRepository.query
 

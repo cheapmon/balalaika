@@ -15,20 +15,30 @@
  */
 package com.github.cheapmon.balalaika.ui.dictionary
 
+import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.github.cheapmon.balalaika.data.dictionary.DictionaryEntryRepository
 import com.github.cheapmon.balalaika.db.entities.category.Category
 import com.github.cheapmon.balalaika.db.entities.view.DictionaryViewWithCategories
+import com.github.cheapmon.balalaika.util.navArgs
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 /** View model for [DictionaryFragment] */
 class DictionaryViewModel @ViewModelInject constructor(
+    @Assisted savedStateHandle: SavedStateHandle,
     private val repository: DictionaryEntryRepository
 ) : ViewModel() {
+    private val navArgs: DictionaryFragmentArgs by navArgs(savedStateHandle)
+
+    init {
+        setInitialKey(navArgs.id)
+    }
+
     /**
      * Adapt dictionary presentation to user configuration
      *
@@ -55,10 +65,12 @@ class DictionaryViewModel @ViewModelInject constructor(
     fun setCategory(id: String) = repository.setCategory(id)
 
     /** Set the first entry to display */
-    fun setInitialKey(id: Long?) = repository.setInitialKey(id)
-
-    /** Get position of lexeme in the current dictionary setup */
-    suspend fun getIdOf(id: String?): Long? = repository.getIdOf(id)
+    fun setInitialKey(id: String?) {
+        viewModelScope.launch {
+            val initialKey = repository.getIdOf(id)
+            repository.setInitialKey(initialKey)
+        }
+    }
 
     /** Toggle bookmark state for a lexeme */
     fun toggleBookmark(lexemeId: String) {

@@ -30,7 +30,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -65,8 +64,6 @@ import kotlinx.coroutines.launch
 class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListener {
     private val viewModel: DictionaryViewModel by viewModels()
 
-    private val args: DictionaryFragmentArgs by navArgs()
-
     private lateinit var binding: FragmentDictionaryBinding
     private lateinit var recyclerView: RecyclerView
     private lateinit var dictionaryLayoutManager: LinearLayoutManager
@@ -95,7 +92,6 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
         }
         bindUi()
         indicateProgress()
-        scrollTo(args.id)
         return binding.root
     }
 
@@ -204,14 +200,6 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
         }
     }
 
-    /** Scroll to a dictionary entry */
-    private fun scrollTo(id: String?) {
-        lifecycleScope.launch {
-            val initialKey = viewModel.getIdOf(id)
-            viewModel.setInitialKey(initialKey)
-        }
-    }
-
     /** Add or remove an entry to bookmarks */
     override fun onClickBookmarkButton(entry: DictionaryEntry, isBookmark: Boolean) {
         viewModel.toggleBookmark(entry.lexemeWithBase.lexeme.id)
@@ -225,7 +213,7 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
 
     /** Go to base of a lexeme */
     override fun onClickBaseButton(entry: DictionaryEntry) =
-        scrollTo(entry.lexemeWithBase.base?.id)
+        viewModel.setInitialKey(entry.lexemeWithBase.base?.id)
 
     /** Play audio file */
     override fun onClickAudioButton(resId: Int) {
@@ -251,7 +239,7 @@ class DictionaryFragment : Fragment(), DictionaryAdapter.Listener, WidgetListene
     }
 
     /** Scroll to a dictionary entry */
-    override fun onClickScrollButton(id: String) = scrollTo(id)
+    override fun onClickScrollButton(id: String) = viewModel.setInitialKey(id)
 
     /** Open link in browser */
     override fun onClickLinkButton(link: String) {
