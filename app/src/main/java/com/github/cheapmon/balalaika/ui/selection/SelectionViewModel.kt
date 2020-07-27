@@ -19,7 +19,7 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.cheapmon.balalaika.data.selection.DictionaryRepository
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.launchIn
 
 /** View model for [SelectionFragment] */
 class SelectionViewModel @ViewModelInject constructor(
@@ -30,6 +30,6 @@ class SelectionViewModel @ViewModelInject constructor(
 
     /** Refresh dictionary list from sources */
     fun refresh() {
-        viewModelScope.launch { repository.refresh() }
+        repository.refresh().launchIn(viewModelScope)
     }
 }

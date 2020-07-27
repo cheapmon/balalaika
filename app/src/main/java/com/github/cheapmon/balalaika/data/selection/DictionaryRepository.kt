@@ -16,20 +16,17 @@
 package com.github.cheapmon.balalaika.data.selection
 
 import androidx.room.withTransaction
-import com.github.cheapmon.balalaika.data.LoadState
-import com.github.cheapmon.balalaika.data.Result
+import com.github.cheapmon.balalaika.data.tryLoad
 import com.github.cheapmon.balalaika.db.AppDatabase
 import com.github.cheapmon.balalaika.db.entities.config.DictionaryConfig
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.db.entities.dictionary.DictionaryDao
 import com.github.cheapmon.balalaika.ui.selection.SelectionFragment
 import com.github.cheapmon.balalaika.util.Constants
-import com.github.cheapmon.balalaika.util.logger
 import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
 
 /**
  * Dictionary data handling
@@ -53,7 +50,7 @@ class DictionaryRepository @Inject constructor(
     fun getDictionary(id: String) = dictionaryDao.findById(id)
 
     /** (De)activate a dictionary */
-    suspend fun toggleActive(dictionary: Dictionary) {
+    fun toggleActive(dictionary: Dictionary) = tryLoad {
         if (dictionary.isActive) {
             dictionaryDao.setInactive(dictionary.id)
         } else {
@@ -62,23 +59,17 @@ class DictionaryRepository @Inject constructor(
     }
 
     /** Install a dictionary */
-    fun addDictionary(dictionary: Dictionary): Flow<LoadState<Unit, Throwable>> = flow {
-        emit(LoadState.Init())
-        emit(LoadState.Loading())
-        dictionaryDao.setInstalled(dictionary.id)
+    fun addDictionary(dictionary: Dictionary) = tryLoad {
         removeEntities(dictionary.id)
-        val result = mediator.installDictionary(dictionary)
-        if (result is Result.Error) logger {
-            error("Installing dictionary $dictionary failed with:\n${result.cause}")
-        }
-        emit(LoadState.Finished(result))
+        mediator.installDictionary(dictionary)
+        dictionaryDao.setInstalled(dictionary.id)
     }
 
     /** Remove a dictionary */
-    suspend fun removeDictionary(id: String) {
+    fun removeDictionary(id: String) = tryLoad {
         removeEntities(id)
         db.dictionaries().remove(id)
-        refresh()
+        refresh().collect()
     }
 
     /**
@@ -94,9 +85,7 @@ class DictionaryRepository @Inject constructor(
      * history cascades any changes done to the table. The dictionary configuration is replaced
      * by defaults if the assigned category or dictionary view is missing.
      */
-    fun updateDictionary(dictionary: Dictionary): Flow<LoadState<Unit, Throwable>> = flow {
-        emit(LoadState.Init())
-        emit(LoadState.Loading())
+    fun updateDictionary(dictionary: Dictionary) = tryLoad {
         val configuration = db.configurations().getConfigFor(dictionary.id).first()
         db.withTransaction {
             db.configurations().removeConfigFor(dictionary.id)
@@ -106,27 +95,22 @@ class DictionaryRepository @Inject constructor(
             db.lexemes().removeInDictionary(dictionary.id)
             db.categories().removeInDictionary(dictionary.id)
         }
-        val result = mediator.installDictionary(dictionary)
-        if (result is Result.Error) logger {
-            error("Updating dictionary $dictionary failed with:\n${result.cause}")
-        } else {
-            // Ensure that configuration uses correct foreign keys
-            var orderBy = configuration?.orderBy
-            if (orderBy == null || db.categories().findById(orderBy) == null) {
-                orderBy = constants.DEFAULT_CATEGORY_ID
-            }
-            var filterBy = configuration?.filterBy
-            if (filterBy == null || db.dictionaryViews().findById(filterBy) == null) {
-                filterBy = constants.DEFAULT_DICTIONARY_VIEW_ID
-            }
-            db.configurations().insert(DictionaryConfig(dictionary.id, orderBy, filterBy))
-            db.dictionaries().setUnupdatable(dictionary.id)
+        mediator.installDictionary(dictionary)
+        // Ensure that configuration uses correct foreign keys
+        var orderBy = configuration?.orderBy
+        if (orderBy == null || db.categories().findById(orderBy) == null) {
+            orderBy = constants.DEFAULT_CATEGORY_ID
         }
-        emit(LoadState.Finished(result))
+        var filterBy = configuration?.filterBy
+        if (filterBy == null || db.dictionaryViews().findById(filterBy) == null) {
+            filterBy = constants.DEFAULT_DICTIONARY_VIEW_ID
+        }
+        db.configurations().insert(DictionaryConfig(dictionary.id, orderBy, filterBy))
+        db.dictionaries().setUnupdatable(dictionary.id)
     }
 
     /** Update the dictionary list in the database */
-    suspend fun refresh() {
+    fun refresh() = tryLoad {
         mediator.updateDictionaryList()
     }
 

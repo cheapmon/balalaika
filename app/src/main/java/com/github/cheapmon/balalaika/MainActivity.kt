@@ -21,7 +21,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -32,7 +31,6 @@ import com.github.cheapmon.balalaika.databinding.ActivityMainBinding
 import com.github.cheapmon.balalaika.databinding.AppBarMainBinding
 import com.github.cheapmon.balalaika.databinding.NavDictionaryBinding
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 /** Main activity for Balalaika */
@@ -82,9 +80,6 @@ class MainActivity : AppCompatActivity() {
         val contentBinding = binding.appBarMain.mainContent
         contentBinding.lifecycleOwner = this
         contentBinding.viewModel = viewModel
-        viewModel.messages.observe(this, Observer {
-            Snackbar.make(binding.root, it, Snackbar.LENGTH_SHORT).show()
-        })
     }
 
     /** @suppress */

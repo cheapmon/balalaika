@@ -20,12 +20,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.github.cheapmon.balalaika.data.LoadState
+import com.github.cheapmon.balalaika.data.Result
 import com.github.cheapmon.balalaika.data.selection.DictionaryRepository
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class MainViewModel @ViewModelInject constructor(
@@ -33,37 +34,44 @@ class MainViewModel @ViewModelInject constructor(
 ) : ViewModel() {
     val currentDictionary = repository.currentDictionary.asLiveData()
 
-    private val _messages = MutableStateFlow<String?>(null)
-    val messages = _messages.filterNotNull().asLiveData()
-
-    private val _progress = MutableStateFlow(false)
-    val progress = _progress.asLiveData()
+    private val _operationsInProgress = MutableStateFlow(0)
+    val progress = _operationsInProgress.map { it != 0 }.asLiveData()
 
     /** (De)activate a dictionary */
     fun toggleActive(dictionary: Dictionary) {
-        viewModelScope.launch { repository.toggleActive(dictionary) }
+        load(repository.toggleActive(dictionary)) {}
     }
 
     /** Install a dictionary into the library */
     fun install(dictionary: Dictionary) {
-        viewModelScope.launch {
-            repository.addDictionary(dictionary).collect { loadState ->
-                _progress.value = when (loadState) {
-                    is LoadState.Init -> true
-                    is LoadState.Loading -> true
-                    is LoadState.Finished -> false
-                }
-            }
-        }
+        load(repository.addDictionary(dictionary)) {}
     }
 
     /** Remove a dictionary from the library */
     fun remove(dictionary: Dictionary) {
-        viewModelScope.launch { repository.removeDictionary(dictionary.id) }
+        load(repository.removeDictionary(dictionary.id)) {}
     }
 
     /** Update a dictionary in the library */
     fun update(dictionary: Dictionary) {
-        repository.updateDictionary(dictionary).launchIn(viewModelScope)
+        load(repository.updateDictionary(dictionary)) {}
+    }
+
+    private fun <T, E> load(
+        flow: Flow<LoadState<T, E>>,
+        onFinished: (Result<T, E>) -> Unit
+    ) {
+        viewModelScope.launch {
+            flow.collect { loadState ->
+                when (loadState) {
+                    is LoadState.Init ->
+                        _operationsInProgress.value = _operationsInProgress.value + 1
+                    is LoadState.Finished -> {
+                        _operationsInProgress.value = _operationsInProgress.value - 1
+                        onFinished(loadState.data)
+                    }
+                }
+            }
+        }
     }
 }

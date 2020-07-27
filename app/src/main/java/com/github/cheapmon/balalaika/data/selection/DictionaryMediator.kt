@@ -19,7 +19,6 @@ import com.github.cheapmon.balalaika.data.Result
 import com.github.cheapmon.balalaika.data.tryRun
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.db.entities.dictionary.DictionaryDao
-import com.github.cheapmon.balalaika.util.logger
 import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
 import kotlinx.coroutines.flow.first
@@ -52,10 +51,7 @@ class DictionaryMediator @Inject constructor(
         val d = dao.getAll().first()
         val p = providers.entries.flatMap { (k, v) ->
             when (val result = tryRun { v.getDictionaryList() }) {
-                is Result.Error -> {
-                    logger { error("Provider $k failed loading dictionaries with\n${result.cause}") }
-                    emptyList()
-                }
+                is Result.Error -> emptyList()
                 is Result.Success -> result.data.map { it.copy(provider = k) }
             }
         }

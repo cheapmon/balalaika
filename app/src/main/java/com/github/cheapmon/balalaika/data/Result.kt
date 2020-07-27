@@ -24,13 +24,23 @@ sealed class Result<T, E> {
         else -> value
     }
 
-    fun <R> map(block: (T) -> R): Result<R, E> = when (this) {
+    inline fun <R> map(block: (T) -> R): Result<R, E> = when (this) {
         is Success -> Success(block(this.data))
         is Error -> Error(this.cause)
     }
 
-    fun <S> mapError(block: (E) -> S): Result<T, S> = when (this) {
+    inline fun <S> mapError(block: (E) -> S): Result<T, S> = when (this) {
         is Success -> Success(this.data)
         is Error -> Error(block(this.cause))
+    }
+
+    inline fun onSuccess(block: (T) -> Unit): Result<T, E> {
+        if (this is Success) block(this.data)
+        return this
+    }
+
+    inline fun onError(block: (E) -> Unit): Result<T, E> {
+        if (this is Error) block(this.cause)
+        return this
     }
 }

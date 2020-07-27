@@ -25,15 +25,25 @@ sealed class LoadState<T, E> {
         else -> value
     }
 
-    fun <R> map(block: (T) -> R): LoadState<R, E> = when (this) {
+    inline fun <R> map(block: (T) -> R): LoadState<R, E> = when (this) {
         is Init -> Init()
         is Loading -> Loading()
         is Finished -> Finished(this.data.map(block))
     }
 
-    fun <S> mapError(block: (E) -> S): LoadState<T, S> = when (this) {
+    inline fun <S> mapError(block: (E) -> S): LoadState<T, S> = when (this) {
         is Init -> Init()
         is Loading -> Loading()
         is Finished -> Finished(this.data.mapError(block))
+    }
+
+    inline fun onSuccess(block: (T) -> Unit): LoadState<T, E> {
+        if (this is Finished) this.data.onSuccess(block)
+        return this
+    }
+
+    inline fun onError(block: (E) -> Unit): LoadState<T, E> {
+        if (this is Finished) this.data.onError(block)
+        return this
     }
 }

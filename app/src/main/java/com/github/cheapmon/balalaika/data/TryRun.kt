@@ -15,10 +15,21 @@
  */
 package com.github.cheapmon.balalaika.data
 
+import android.util.Log
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+
 suspend fun <T> tryRun(block: suspend () -> T): Result<T, Throwable> {
     return try {
         Result.Success(block())
     } catch (t: Throwable) {
+        Log.e(Result::class.java.name, "Operation failed with\n$t")
         Result.Error(t)
     }
+}
+
+fun <T> tryLoad(block: suspend () -> T): Flow<LoadState<T, Throwable>> = flow {
+    emit(LoadState.Init())
+    emit(LoadState.Loading())
+    emit(LoadState.Finished(tryRun(block)))
 }
