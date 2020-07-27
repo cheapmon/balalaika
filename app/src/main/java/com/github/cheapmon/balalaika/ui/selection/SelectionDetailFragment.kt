@@ -17,9 +17,11 @@ package com.github.cheapmon.balalaika.ui.selection
 
 import android.graphics.text.LineBreaker.JUSTIFICATION_MODE_INTER_WORD
 import android.os.Build
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.github.cheapmon.balalaika.MainViewModel
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.databinding.FragmentSelectionDetailBinding
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
@@ -45,6 +47,8 @@ class SelectionDetailFragment :
         SelectionDetailViewModel::class,
         R.layout.fragment_selection_detail
     ) {
+    private val activityViewModel: MainViewModel by activityViewModels()
+
     override fun onCreateBinding(binding: FragmentSelectionDetailBinding) {}
 
     override fun observeData(binding: FragmentSelectionDetailBinding, owner: LifecycleOwner) {
@@ -64,19 +68,19 @@ class SelectionDetailFragment :
 
     /** @suppress */
     inner class Listener {
-        fun onClickActivateButton() {
+        fun onClickActivateButton(dictionary: Dictionary) {
             val message = requireContext().getString(R.string.selection_confirm_activate)
-            showDialog(message) { viewModel.toggleActive() }
+            showDialog(message) { activityViewModel.toggleActive(dictionary) }
         }
 
-        fun onClickDeactivateButton() {
+        fun onClickDeactivateButton(dictionary: Dictionary) {
             val message = requireContext().getString(R.string.selection_confirm_deactivate)
-            showDialog(message) { viewModel.toggleActive() }
+            showDialog(message) { activityViewModel.toggleActive(dictionary) }
         }
 
-        fun onClickUpdateButton() {
+        fun onClickUpdateButton(dictionary: Dictionary) {
             val message = requireContext().getString(R.string.selection_confirm_update)
-            showDialog(message) { viewModel.update() }
+            showDialog(message) { activityViewModel.update(dictionary) }
         }
 
         fun onClickAddButton(dictionary: Dictionary) {
@@ -84,12 +88,12 @@ class SelectionDetailFragment :
                 R.string.selection_confirm_add,
                 dictionary.name
             )
-            showDialog(message) { viewModel.install() }
+            showDialog(message) { activityViewModel.install(dictionary) }
         }
 
-        fun onClickRemoveButton() {
+        fun onClickRemoveButton(dictionary: Dictionary) {
             val message = requireContext().getString(R.string.selection_confirm_remove)
-            showDialog(message) { viewModel.remove() }
+            showDialog(message) { activityViewModel.remove(dictionary) }
         }
 
         private fun showDialog(message: String, block: () -> Unit) {

@@ -17,7 +17,9 @@ package com.github.cheapmon.balalaika.ui.selection
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.github.cheapmon.balalaika.data.selection.DictionaryRepository
+import kotlinx.coroutines.launch
 
 /** View model for [SelectionFragment] */
 class SelectionViewModel @ViewModelInject constructor(
@@ -25,11 +27,9 @@ class SelectionViewModel @ViewModelInject constructor(
 ) : ViewModel() {
     /** All available dictionaries */
     val dictionaries = repository.dictionaries
-    /** Progress of current operation */
-    val inProgress = repository.inProgress
 
     /** Refresh dictionary list from sources */
     fun refresh() {
-        repository.refresh()
+        viewModelScope.launch { repository.refresh() }
     }
 }

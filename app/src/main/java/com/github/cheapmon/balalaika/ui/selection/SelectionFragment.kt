@@ -67,17 +67,10 @@ class SelectionFragment :
         adapter: SelectionAdapter
     ) {
         lifecycleScope.launch {
-            launch {
-                viewModel.dictionaries.collect {
-                    swipeRefreshLayout.isRefreshing = false
-                    adapter.submitList(it)
-                    binding.isEmpty = it.isEmpty()
-                }
-            }
-            launch {
-                viewModel.inProgress.collect {
-                    binding.inProgress = it
-                }
+            viewModel.dictionaries.collect {
+                swipeRefreshLayout.isRefreshing = false
+                adapter.submitList(it)
+                binding.isEmpty = it.isEmpty()
             }
         }
     }
