@@ -15,8 +15,8 @@
  */
 package com.github.cheapmon.balalaika.data.selection
 
-import arrow.core.Either
-import arrow.fx.IO
+import com.github.cheapmon.balalaika.data.Result
+import com.github.cheapmon.balalaika.data.tryRun
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.db.entities.dictionary.DictionaryDao
 import com.github.cheapmon.balalaika.util.logger
@@ -51,12 +51,12 @@ class DictionaryMediator @Inject constructor(
     suspend fun updateDictionaryList() {
         val d = dao.getAll().first()
         val p = providers.entries.flatMap { (k, v) ->
-            when (val io = IO.effect { v.getDictionaryList() }.attempt().suspended()) {
-                is Either.Left -> {
-                    logger { error("Provider $k failed loading dictionaries with\n${io.a}") }
+            when (val result = tryRun { v.getDictionaryList() }) {
+                is Result.Error -> {
+                    logger { error("Provider $k failed loading dictionaries with\n${result.cause}") }
                     emptyList()
                 }
-                is Either.Right -> io.b.map { it.copy(provider = k) }
+                is Result.Success -> result.data.map { it.copy(provider = k) }
             }
         }
         p.groupBy { it.id }
@@ -96,12 +96,10 @@ class DictionaryMediator @Inject constructor(
      * Errors encountered while installing the dictionary are logged to the console and ignored
      * otherwise.
      *
-     * _Note_: `IO` results are lazily evaluated.
-     *
      * @see ZipExtractor
      * @see CsvEntityImporter
      */
-    fun installDictionary(dictionary: Dictionary): IO<Boolean> = IO.effect {
+    suspend fun installDictionary(dictionary: Dictionary): Result<Unit, Throwable> = tryRun {
         val provider = providers[dictionary.provider]
         if (provider == null) {
             throw IllegalStateException("No provider specified: $dictionary")
@@ -111,6 +109,7 @@ class DictionaryMediator @Inject constructor(
             val contents = extractor.extract(zipFile)
             importer.import(dictionary.id, contents)
             extractor.removeZip(dictionary.id)
+            Unit
         }
     }
 }
