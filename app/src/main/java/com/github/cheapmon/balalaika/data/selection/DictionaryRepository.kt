@@ -24,9 +24,12 @@ import com.github.cheapmon.balalaika.db.entities.dictionary.DictionaryDao
 import com.github.cheapmon.balalaika.ui.selection.SelectionFragment
 import com.github.cheapmon.balalaika.util.Constants
 import dagger.hilt.android.scopes.ActivityScoped
+import java.net.ConnectException
 import javax.inject.Inject
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 
 /**
  * Dictionary data handling
@@ -56,21 +59,21 @@ class DictionaryRepository @Inject constructor(
         } else {
             dictionaryDao.setActive(dictionary.id)
         }
-    }
+    }.map { it.mapError(::toDictionaryError) }
 
     /** Install a dictionary */
     fun addDictionary(dictionary: Dictionary) = tryLoad {
         removeEntities(dictionary.id)
         mediator.installDictionary(dictionary)
         dictionaryDao.setInstalled(dictionary.id)
-    }
+    }.map { it.mapError(::toDictionaryError) }
 
     /** Remove a dictionary */
     fun removeDictionary(id: String) = tryLoad {
         removeEntities(id)
         db.dictionaries().remove(id)
         refresh().collect()
-    }
+    }.map { it.mapError(::toDictionaryError) }
 
     /**
      * Update a dictionary and its contents in the database
@@ -107,12 +110,12 @@ class DictionaryRepository @Inject constructor(
         }
         db.configurations().insert(DictionaryConfig(dictionary.id, orderBy, filterBy))
         db.dictionaries().setUnupdatable(dictionary.id)
-    }
+    }.map { it.mapError(::toDictionaryError) }
 
     /** Update the dictionary list in the database */
     fun refresh() = tryLoad {
         mediator.updateDictionaryList()
-    }
+    }.map { it.mapError(::toDictionaryError) }
 
     private suspend fun removeEntities(dictionaryId: String) {
         db.withTransaction {
@@ -123,6 +126,14 @@ class DictionaryRepository @Inject constructor(
             db.properties().removeInDictionary(dictionaryId)
             db.lexemes().removeInDictionary(dictionaryId)
             db.categories().removeInDictionary(dictionaryId)
+        }
+    }
+
+    private fun toDictionaryError(cause: Throwable?): DictionaryError {
+        return when (cause) {
+            is TimeoutCancellationException -> DictionaryError.Timeout
+            is ConnectException -> DictionaryError.Network
+            else -> DictionaryError.Internal
         }
     }
 }

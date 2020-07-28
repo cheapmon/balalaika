@@ -124,4 +124,12 @@
     <string name="selection_loading_failed">Could not load dictionaries</string>
     <string name="selection_labels">Labels</string>
     <string name="selection_no_labels">None</string>
+    <string name="selection_success_activate">Dictionary was activated</string>
+    <string name="selection_success_deactivate">Dictionary was deactivated</string>
+    <string name="selection_success_update">Dictionary was updated</string>
+    <string name="selection_success_install">Dictionary was installed</string>
+    <string name="selection_success_remove">Dictionary was removed</string>
+    <string name="selection_error_timeout">Timeout while performing operation</string>
+    <string name="selection_error_network">Could not connect to server</string>
+    <string name="selection_error_internal">Internal error while performing operation</string>
 </resources>

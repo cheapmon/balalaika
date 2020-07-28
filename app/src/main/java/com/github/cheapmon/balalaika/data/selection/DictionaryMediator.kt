@@ -95,7 +95,7 @@ class DictionaryMediator @Inject constructor(
      * @see ZipExtractor
      * @see CsvEntityImporter
      */
-    suspend fun installDictionary(dictionary: Dictionary): Result<Unit, Throwable> = tryRun {
+    suspend fun installDictionary(dictionary: Dictionary) {
         val provider = providers[dictionary.provider]
         if (provider == null) {
             throw IllegalStateException("No provider specified: $dictionary")
@@ -105,7 +105,6 @@ class DictionaryMediator @Inject constructor(
             val contents = extractor.extract(zipFile)
             importer.import(dictionary.id, contents)
             extractor.removeZip(dictionary.id)
-            Unit
         }
     }
 }

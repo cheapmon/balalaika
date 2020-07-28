@@ -25,6 +25,10 @@ import kotlinx.coroutines.flow.launchIn
 class SelectionViewModel @ViewModelInject constructor(
     private val repository: DictionaryRepository
 ) : ViewModel() {
+    init {
+        refresh()
+    }
+
     /** All available dictionaries */
     val dictionaries = repository.dictionaries
 

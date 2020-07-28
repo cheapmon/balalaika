@@ -70,12 +70,12 @@ class SelectionDetailFragment :
     inner class Listener {
         fun onClickActivateButton(dictionary: Dictionary) {
             val message = requireContext().getString(R.string.selection_confirm_activate)
-            showDialog(message) { activityViewModel.toggleActive(dictionary) }
+            showDialog(message) { activityViewModel.activate(dictionary) }
         }
 
         fun onClickDeactivateButton(dictionary: Dictionary) {
             val message = requireContext().getString(R.string.selection_confirm_deactivate)
-            showDialog(message) { activityViewModel.toggleActive(dictionary) }
+            showDialog(message) { activityViewModel.deactivate(dictionary) }
         }
 
         fun onClickUpdateButton(dictionary: Dictionary) {

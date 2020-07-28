@@ -124,4 +124,12 @@
     <string name="selection_loading_failed">Wörterbücher konnten nicht geladen werden</string>
     <string name="selection_labels">Label</string>
     <string name="selection_no_labels">Keine</string>
+    <string name="selection_success_activate">Wörterbuch aktiviert</string>
+    <string name="selection_success_deactivate">Wörterbuch deaktiviert</string>
+    <string name="selection_success_update">Updates installiert</string>
+    <string name="selection_success_install">Wörterbuch installiert</string>
+    <string name="selection_success_remove">Wörterbuch gelöscht</string>
+    <string name="selection_error_timeout">Zeitüberschreitung während Ausführung</string>
+    <string name="selection_error_network">Konnte den Server nicht erreichen</string>
+    <string name="selection_error_internal">Interner Fehler während der Ausführung</string>
 </resources>
