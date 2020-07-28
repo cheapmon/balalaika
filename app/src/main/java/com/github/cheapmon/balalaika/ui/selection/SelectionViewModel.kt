@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.cheapmon.balalaika.data.selection.DictionaryRepository
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 
 /** View model for [SelectionFragment] */
 class SelectionViewModel @ViewModelInject constructor(
@@ -30,7 +31,7 @@ class SelectionViewModel @ViewModelInject constructor(
     }
 
     /** All available dictionaries */
-    val dictionaries = repository.dictionaries
+    val dictionaries = repository.dictionaries.map { list -> list.sortedBy { !it.isActive } }
 
     /** Refresh dictionary list from sources */
     fun refresh() {

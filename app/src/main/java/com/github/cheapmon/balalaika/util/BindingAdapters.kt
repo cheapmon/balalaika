@@ -15,7 +15,10 @@
  */
 package com.github.cheapmon.balalaika.util
 
+import android.graphics.text.LineBreaker
+import android.os.Build
 import android.view.View
+import android.widget.TextView
 import androidx.databinding.BindingAdapter
 
 /** Adapters for the data binding library */
@@ -37,5 +40,16 @@ object BindingAdapters {
     @BindingAdapter("android:visibility")
     fun setVisibility(view: View, value: Boolean) {
         view.visibility = if (value) View.VISIBLE else View.GONE
+    }
+
+    @JvmStatic
+    @BindingAdapter("justify")
+    fun justify(view: TextView, value: Boolean) {
+        if (value && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            view.justificationMode =
+                LineBreaker.JUSTIFICATION_MODE_INTER_WORD
+            view.justificationMode =
+                LineBreaker.JUSTIFICATION_MODE_INTER_WORD
+        }
     }
 }

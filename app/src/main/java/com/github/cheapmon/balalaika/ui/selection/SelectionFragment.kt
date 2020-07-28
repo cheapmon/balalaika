@@ -16,10 +16,12 @@
 package com.github.cheapmon.balalaika.ui.selection
 
 import android.os.Bundle
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.github.cheapmon.balalaika.MainViewModel
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.databinding.FragmentSelectionListBinding
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
@@ -34,8 +36,9 @@ class SelectionFragment :
     RecyclerViewFragment<SelectionViewModel, FragmentSelectionListBinding, SelectionAdapter>(
         SelectionViewModel::class,
         R.layout.fragment_selection_list,
-        true
+        false
     ), SelectionAdapter.Listener {
+    private val activityViewModel: MainViewModel by viewModels()
 
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
@@ -81,5 +84,9 @@ class SelectionFragment :
             dictionary.id
         )
         findNavController().navigate(directions)
+    }
+
+    override fun onClickActivate(dictionary: Dictionary) {
+        activityViewModel.activate(dictionary)
     }
 }

@@ -40,6 +40,7 @@ class SelectionAdapter(
         with(holder.binding) {
             dictionary = item
             root.setOnClickListener { listener.onClickDictionary(item) }
+            selectionItemButton.setOnClickListener { listener.onClickActivate(item) }
         }
     }
 
@@ -69,5 +70,8 @@ class SelectionAdapter(
     interface Listener {
         /** Callback for whenever a dictionary is clicked */
         fun onClickDictionary(dictionary: Dictionary)
+
+        /** Callback for whenever the "Activate" button is clicked */
+        fun onClickActivate(dictionary: Dictionary)
     }
 }

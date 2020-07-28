@@ -31,12 +31,9 @@
     </data>
 
     <com.google.android.material.card.MaterialCardView
+        style="@style/Widget.Balalaika.Card"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-        android:layout_marginVertical="@dimen/activity_vertical_margin"
-        app:cardCornerRadius="0dp"
-        app:cardElevation="2dp">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -55,24 +52,13 @@
                     android:id="@+id/entry_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
                     android:text="@{lexeme.form}"
-                    android:textAppearance="?attr/textAppearanceBody1"
-                    app:layout_constraintBottom_toBottomOf="@+id/entry_icon"
-                    app:layout_constraintEnd_toStartOf="@+id/entry_base_button"
-                    app:layout_constraintStart_toEndOf="@+id/entry_icon"
-                    app:layout_constraintTop_toTopOf="@+id/entry_icon"
-                    tools:text="Very long word" />
-
-                <ImageView
-                    android:id="@+id/entry_icon"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:contentDescription="@string/desc_dictionary_item_icon"
+                    android:textAppearance="?attr/textAppearanceHeadline6"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/entry_base_button"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_menu_book" />
+                    tools:text="Very long word" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/entry_collapse_button"
@@ -111,8 +97,6 @@
                 android:layout_marginVertical="@dimen/activity_vertical_margin"
                 android:divider="@drawable/divider"
                 android:orientation="vertical"
-                android:paddingHorizontal="4dp"
-                android:paddingVertical="4dp"
                 android:showDividers="middle"
                 tools:minHeight="100dp" />
 

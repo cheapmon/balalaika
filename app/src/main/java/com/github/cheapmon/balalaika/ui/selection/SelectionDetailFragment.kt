@@ -15,8 +15,6 @@
  */
 package com.github.cheapmon.balalaika.ui.selection
 
-import android.graphics.text.LineBreaker.JUSTIFICATION_MODE_INTER_WORD
-import android.os.Build
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -57,10 +55,6 @@ class SelectionDetailFragment :
                 with(binding) {
                     dictionary = it
                     listener = Listener()
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                        selectionDetailSummaryText.justificationMode = JUSTIFICATION_MODE_INTER_WORD
-                        selectionDetailInfoText.justificationMode = JUSTIFICATION_MODE_INTER_WORD
-                    }
                 }
             }
         }
