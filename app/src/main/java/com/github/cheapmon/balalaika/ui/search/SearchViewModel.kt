@@ -22,20 +22,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.github.cheapmon.balalaika.data.dictionary.DictionaryEntryRepository
-import com.github.cheapmon.balalaika.data.history.HistoryRepository
 import com.github.cheapmon.balalaika.data.search.SearchRepository
-import com.github.cheapmon.balalaika.db.entities.history.HistoryEntry
 import com.github.cheapmon.balalaika.db.entities.history.SearchRestriction
 import com.github.cheapmon.balalaika.util.navArgs
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 
 /** View model for [SearchFragment] */
 class SearchViewModel @ViewModelInject constructor(
     @Assisted savedStateHandle: SavedStateHandle,
     private val searchRepository: SearchRepository,
-    dictionaryEntryRepository: DictionaryEntryRepository,
-    private val historyRepository: HistoryRepository
+    dictionaryEntryRepository: DictionaryEntryRepository
 ) : ViewModel() {
     private val navArgs: SearchFragmentArgs by navArgs(savedStateHandle)
 
@@ -63,27 +58,4 @@ class SearchViewModel @ViewModelInject constructor(
     /** Set the search restriction */
     fun setRestriction(restriction: SearchRestriction) =
         searchRepository.setRestriction(restriction)
-
-    /** Add search to history */
-    fun addToHistory() {
-        viewModelScope.launch {
-            val query = this@SearchViewModel.query.first()
-            val restriction = this@SearchViewModel.restriction.first()
-            val dictionary = searchRepository.getActiveDictionary() ?: return@launch
-            if (query.isBlank()) return@launch
-            val entry = when (restriction) {
-                is SearchRestriction.None ->
-                    HistoryEntry(query = query, dictionaryId = dictionary.id)
-                is SearchRestriction.Some ->
-                    HistoryEntry(
-                        query = query,
-                        categoryId = restriction.category.id,
-                        restriction = restriction.restriction,
-                        dictionaryId = dictionary.id
-                    )
-            }
-            historyRepository.removeSimilarEntries(entry)
-            historyRepository.addEntry(entry)
-        }
-    }
 }

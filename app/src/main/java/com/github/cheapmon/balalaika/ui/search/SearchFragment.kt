@@ -15,13 +15,20 @@
  */
 package com.github.cheapmon.balalaika.ui.search
 
-import android.text.Editable
-import android.text.TextWatcher
+import android.content.Context
+import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.SearchView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
+import com.github.cheapmon.balalaika.MainViewModel
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.databinding.FragmentSearchBinding
 import com.github.cheapmon.balalaika.db.entities.history.SearchRestriction
@@ -49,14 +56,34 @@ class SearchFragment :
         SearchViewModel::class,
         R.layout.fragment_search,
         false
-    ), SearchAdapter.Listener {
+    ), SearchAdapter.Listener, SearchView.OnQueryTextListener {
+    private val activityViewModel: MainViewModel by activityViewModels()
+
+    private var searchView: SearchView? = null
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        activityViewModel.toggleSearch()
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
+    override fun onDestroyView() {
+        activityViewModel.addToHistory()
+        activityViewModel.toggleSearch()
+        super.onDestroyView()
+    }
 
     override fun onCreateBinding(binding: FragmentSearchBinding) {
         super.onCreateBinding(binding)
-        binding.searchInput.addTextChangedListener(Watcher())
         binding.searchRestriction.setOnCloseIconClickListener {
             viewModel.setRestriction(SearchRestriction.None)
         }
+
+        searchView = (activity as? AppCompatActivity)?.findViewById(R.id.main_search)
+        searchView?.setOnQueryTextListener(this)
     }
 
     override fun createRecyclerView(binding: FragmentSearchBinding) =
@@ -81,7 +108,7 @@ class SearchFragment :
             }
             launch {
                 viewModel.query.collectLatest { query ->
-                    binding.query = query
+                    searchView?.setQuery(query, false)
                     adapter.submitSearchText(query)
                 }
             }
@@ -110,19 +137,26 @@ class SearchFragment :
 
     /** Show entry in dictionary */
     override fun onClickItem(lexeme: Lexeme) {
-        viewModel.addToHistory()
+        activityViewModel.addToHistory()
         val directions = SearchFragmentDirections.actionNavSearchToNavHome(lexeme.id)
         findNavController().navigate(directions)
     }
 
-    /** @suppress */
-    inner class Watcher : TextWatcher {
-        override fun afterTextChanged(s: Editable?) = Unit
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        hideKeyboard()
+        activityViewModel.addToHistory()
+        return true
+    }
 
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            val query = s.toString().trim()
-            if (query.length >= 2) viewModel.setQuery(query)
-        }
+    override fun onQueryTextChange(newText: String?): Boolean {
+        val query = newText.toString().trim()
+        if (query.length >= 2) viewModel.setQuery(query)
+        return true
+    }
+
+    private fun hideKeyboard() {
+        val view = requireView()
+        (view.context?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager)
+            ?.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }

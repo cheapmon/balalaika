@@ -53,29 +53,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/search_input_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="8dp"
-            android:layout_marginTop="8dp"
-            android:hint="@string/search_query"
-            app:endIconMode="clear_text"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:hint="Query">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/search_input"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:imeOptions="actionSearch"
-                android:inputType="text"
-                android:text="@{query}" />
-        </com.google.android.material.textfield.TextInputLayout>
-
         <com.google.android.material.chip.Chip
             android:id="@+id/search_restriction"
             style="@style/Widget.MaterialComponents.Chip.Entry"
@@ -86,9 +63,9 @@
             android:text="@{restriction}"
             android:visibility="gone"
             app:chipIcon="@drawable/ic_filter"
-            app:layout_constraintEnd_toEndOf="@+id/search_input_layout"
-            app:layout_constraintStart_toStartOf="@+id/search_input_layout"
-            app:layout_constraintTop_toBottomOf="@+id/search_input_layout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="Category: Restriction"
             tools:visibility="visible" />
 

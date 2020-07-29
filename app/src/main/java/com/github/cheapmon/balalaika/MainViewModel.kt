@@ -23,20 +23,27 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.github.cheapmon.balalaika.data.LoadState
 import com.github.cheapmon.balalaika.data.Result
+import com.github.cheapmon.balalaika.data.history.HistoryRepository
+import com.github.cheapmon.balalaika.data.search.SearchRepository
 import com.github.cheapmon.balalaika.data.selection.DictionaryError
 import com.github.cheapmon.balalaika.data.selection.DictionaryRepository
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
+import com.github.cheapmon.balalaika.db.entities.history.HistoryEntry
+import com.github.cheapmon.balalaika.db.entities.history.SearchRestriction
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class MainViewModel @ViewModelInject constructor(
     @ApplicationContext private val context: Context,
-    private val repository: DictionaryRepository
+    private val repository: DictionaryRepository,
+    private val searchRepository: SearchRepository,
+    private val historyRepository: HistoryRepository
 ) : ViewModel() {
     val currentDictionary = repository.currentDictionary.asLiveData()
 
@@ -45,6 +52,13 @@ class MainViewModel @ViewModelInject constructor(
 
     private val _messages = MutableStateFlow<String?>(null)
     val messages = _messages.filterNotNull().asLiveData()
+
+    private val _showSearch = MutableStateFlow(false)
+    val showSearch = _showSearch.asLiveData()
+
+    fun toggleSearch() {
+        _showSearch.value = !_showSearch.value
+    }
 
     /** Activate a dictionary */
     fun activate(dictionary: Dictionary) {
@@ -91,6 +105,29 @@ class MainViewModel @ViewModelInject constructor(
                     }
                 }
             }
+        }
+    }
+
+    /** Add search to history */
+    fun addToHistory() {
+        viewModelScope.launch {
+            val query = searchRepository.query.first()
+            val restriction = searchRepository.restriction.first()
+            val dictionary = searchRepository.getActiveDictionary() ?: return@launch
+            if (query.isBlank()) return@launch
+            val entry = when (restriction) {
+                is SearchRestriction.None ->
+                    HistoryEntry(query = query, dictionaryId = dictionary.id)
+                is SearchRestriction.Some ->
+                    HistoryEntry(
+                        query = query,
+                        categoryId = restriction.category.id,
+                        restriction = restriction.restriction,
+                        dictionaryId = dictionary.id
+                    )
+            }
+            historyRepository.removeSimilarEntries(entry)
+            historyRepository.addEntry(entry)
         }
     }
 }

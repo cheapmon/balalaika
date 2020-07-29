@@ -79,11 +79,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun observeData(binding: ActivityMainBinding) {
-        val contentBinding = binding.appBarMain.mainContent
+        val barBinding = binding.appBarMain
+        barBinding.lifecycleOwner = this
+        barBinding.viewModel = viewModel
+
+        val contentBinding = barBinding.mainContent
         contentBinding.lifecycleOwner = this
         contentBinding.viewModel = viewModel
+
         viewModel.messages.observe(this, Observer {
             Snackbar.make(binding.root, it, Snackbar.LENGTH_SHORT).show()
+        })
+
+        viewModel.showSearch.observe(this, Observer {
+            if (it) barBinding.mainSearch.requestFocus()
         })
     }
 

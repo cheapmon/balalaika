@@ -17,6 +17,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.github.cheapmon.balalaika.MainViewModel" />
+    </data>
+
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -32,7 +39,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
+                app:popupTheme="@style/AppTheme.PopupOverlay">
+
+                <SearchView
+                    android:id="@+id/main_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:iconifiedByDefault="false"
+                    android:imeOptions="actionDone|flagNoExtractUi"
+                    android:queryHint="@string/search_query"
+                    android:searchHintIcon="@null"
+                    android:searchIcon="@null"
+                    android:visibility="@{viewModel.showSearch}"
+                    tools:targetApi="lollipop_mr1" />
+            </androidx.appcompat.widget.Toolbar>
 
         </com.google.android.material.appbar.AppBarLayout>
 
