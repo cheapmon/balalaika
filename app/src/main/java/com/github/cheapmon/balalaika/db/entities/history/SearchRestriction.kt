@@ -15,20 +15,23 @@
  */
 package com.github.cheapmon.balalaika.db.entities.history
 
+import android.os.Parcel
+import android.os.Parcelable
+import androidx.core.os.ParcelCompat
 import com.github.cheapmon.balalaika.db.entities.category.Category
+import com.github.cheapmon.balalaika.db.entities.category.WidgetType
 import com.github.cheapmon.balalaika.ui.history.HistoryFragment
 import com.github.cheapmon.balalaika.ui.search.SearchFragment
-import java.io.Serializable
 
 /**
  * Optional restriction of a search query
  *
- * _Note_: This class is [serializable][Serializable] and can be passed between fragments.
+ * _Note_: This class is [parcelable][Parcelable] and can be passed between fragments.
  *
  * @see SearchFragment
  * @see HistoryFragment
  */
-sealed class SearchRestriction : Serializable {
+sealed class SearchRestriction : Parcelable {
     /** No additional search restriction */
     object None : SearchRestriction()
 
@@ -39,4 +42,58 @@ sealed class SearchRestriction : Serializable {
         /** Restriction */
         val restriction: String
     ) : SearchRestriction()
+
+    /** @suppress */
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        when (this) {
+            is None -> {
+                ParcelCompat.writeBoolean(parcel, false)
+            }
+            is Some -> {
+                ParcelCompat.writeBoolean(parcel, true)
+                parcel.writeString(this.category.id)
+                parcel.writeString(this.category.dictionaryId)
+                parcel.writeString(this.category.name)
+                parcel.writeString(this.category.widget.name)
+                parcel.writeInt(this.category.iconId)
+                parcel.writeInt(this.category.sequence)
+                ParcelCompat.writeBoolean(parcel, this.category.hidden)
+                ParcelCompat.writeBoolean(parcel, this.category.orderBy)
+                parcel.writeString(this.restriction)
+            }
+        }
+    }
+
+    /** @suppress */
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    /** @suppress */
+    companion object CREATOR : Parcelable.Creator<SearchRestriction> {
+        override fun createFromParcel(parcel: Parcel): SearchRestriction {
+            val isSome = ParcelCompat.readBoolean(parcel)
+            return if (isSome) {
+                Some(
+                    category = Category(
+                        id = parcel.readString()!!,
+                        dictionaryId = parcel.readString()!!,
+                        name = parcel.readString()!!,
+                        widget = WidgetType.valueOf(parcel.readString()!!),
+                        iconId = parcel.readInt(),
+                        sequence = parcel.readInt(),
+                        hidden = ParcelCompat.readBoolean(parcel),
+                        orderBy = ParcelCompat.readBoolean(parcel)
+                    ),
+                    restriction = parcel.readString()!!
+                )
+            } else {
+                None
+            }
+        }
+
+        override fun newArray(size: Int): Array<SearchRestriction?> {
+            return arrayOfNulls(size)
+        }
+    }
 }

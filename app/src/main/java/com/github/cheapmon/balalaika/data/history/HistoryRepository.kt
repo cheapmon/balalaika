@@ -18,7 +18,6 @@ package com.github.cheapmon.balalaika.data.history
 import com.github.cheapmon.balalaika.db.entities.history.HistoryEntry
 import com.github.cheapmon.balalaika.db.entities.history.HistoryEntryDao
 import com.github.cheapmon.balalaika.db.entities.history.HistoryEntryWithRestriction
-import com.github.cheapmon.balalaika.db.entities.history.SearchRestriction
 import com.github.cheapmon.balalaika.ui.history.HistoryFragment
 import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
@@ -32,24 +31,13 @@ import kotlinx.coroutines.flow.map
  */
 @ActivityScoped
 class HistoryRepository @Inject constructor(
-    private val historyEntryDao: HistoryEntryDao
+    private val historyEntryDao: HistoryEntryDao,
+    private val mapper: HistoryEntryMapper
 ) {
     /** All [search history entries][HistoryEntry] */
     val historyEntries: Flow<List<HistoryEntryWithRestriction>> =
         historyEntryDao.getAllWithCategory().map {
-            it.reversed().map { entry ->
-                if (entry.category != null && entry.historyEntry.restriction != null) {
-                    HistoryEntryWithRestriction(
-                        entry.historyEntry,
-                        SearchRestriction.Some(entry.category, entry.historyEntry.restriction)
-                    )
-                } else {
-                    HistoryEntryWithRestriction(
-                        entry.historyEntry,
-                        SearchRestriction.None
-                    )
-                }
-            }
+            it.reversed().map { entry -> mapper.map(entry) }
         }
 
     /** Remove [search history entry][HistoryEntry] */

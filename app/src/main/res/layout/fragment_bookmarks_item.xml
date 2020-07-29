@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:text="@{lexeme.form}"
-                android:textAppearance="?attr/textAppearanceBody2"
+                android:textAppearance="?attr/textAppearanceHeadline6"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/bookmarks_item_icon"
                 app:layout_constraintTop_toTopOf="parent"
