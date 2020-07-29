@@ -60,6 +60,7 @@ class SearchFragment :
     private val activityViewModel: MainViewModel by activityViewModels()
 
     private var searchView: SearchView? = null
+    private var queryIsSet = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -108,7 +109,10 @@ class SearchFragment :
             }
             launch {
                 viewModel.query.collectLatest { query ->
-                    searchView?.setQuery(query, false)
+                    if (!queryIsSet) {
+                        searchView?.setQuery(query, false)
+                        queryIsSet = true
+                    }
                     adapter.submitSearchText(query)
                 }
             }

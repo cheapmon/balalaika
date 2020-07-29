@@ -62,11 +62,12 @@ class DictionaryMediator @Inject constructor(
                 val current = d.find { it.id == id }
                 when {
                     current != null -> {
-                        if (current.isInstalled && current.version < newest.version) {
-                            dao.setUpdatable(current.id)
-                        } else {
-                            dao.setUnupdatable(current.id)
-                        }
+                        val newDictionary = newest.copy(
+                            isActive = current.isActive,
+                            isInstalled = current.isInstalled,
+                            isUpdatable = current.isInstalled && current.version < newest.version
+                        )
+                        dao.insertAll(listOf(newDictionary))
                     }
                     else -> {
                         val newDictionary = newest.copy(

@@ -35,320 +35,213 @@
         android:fillViewport="true"
         android:orientation="vertical">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/selection_detail_container"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-            android:layout_marginVertical="@dimen/activity_vertical_margin"
-            android:paddingBottom="16dp">
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/selection_detail_title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="32dp"
-                android:text="@{dictionary.name}"
-                android:textAppearance="?attr/textAppearanceHeadline5"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="This is a very long dictionary name" />
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.Balalaika.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <View
-                android:id="@+id/selection_divider_top"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_marginTop="8dp"
-                android:background="?android:attr/listDivider"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/selection_detail_title" />
-
-            <ImageView
-                android:id="@+id/selection_detail_label_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:contentDescription="@string/selection_labels"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/selection_divider_top"
-                app:srcCompat="@drawable/ic_label" />
-
-            <TextView
-                android:id="@+id/selection_detail_label_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/selection_no_labels"
-                android:textAppearance="?attr/textAppearanceBody2"
-                android:visibility="@{!dictionary.installed}"
-                app:layout_constraintBottom_toBottomOf="@+id/selection_detail_label_icon"
-                app:layout_constraintStart_toStartOf="@+id/selection_detail_guideline_icon"
-                app:layout_constraintTop_toTopOf="@+id/selection_detail_label_icon" />
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/selection_detail_chip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@+id/selection_detail_label_icon"
-                app:layout_constraintStart_toStartOf="@+id/selection_detail_guideline_icon"
-                app:layout_constraintTop_toTopOf="@+id/selection_detail_label_icon"
-                app:singleLine="true">
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/selection_detail_chip_installed"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/selection_is_installed"
-                    android:textAppearance="?attr/textAppearanceCaption"
-                    android:visibility="@{dictionary.installed}"
-                    app:chipIcon="@drawable/ic_library"
-                    app:chipIconSize="12dp"
-                    app:chipMinHeight="16dp" />
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/selection_detail_chip_active"
-                    android:layout_width="wrap_content"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{dictionary.name}"
+                        android:textAppearance="?attr/textAppearanceHeadline6"
+                        tools:text="Dictionary Name" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFeatureSettings="smcp"
+                        android:text="@{dictionary.authors}"
+                        android:textAppearance="?attr/textAppearanceCaption"
+                        tools:text="Authors" />
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="@+id/selection_guideline_icon"
+                        app:layout_constraintTop_toBottomOf="@+id/selection_item_icon"
+                        app:singleLine="true">
+
+                        <com.google.android.material.chip.Chip
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:clickable="false"
+                            android:text="@string/selection_is_installed"
+                            android:textAppearance="?attr/textAppearanceCaption"
+                            android:visibility="@{dictionary.isInstalled}"
+                            app:chipMinHeight="16dp" />
+
+                        <com.google.android.material.chip.Chip
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:clickable="false"
+                            android:text="@string/selection_is_active"
+                            android:textAppearance="?attr/textAppearanceCaption"
+                            android:textColor="@android:color/white"
+                            android:visibility="@{dictionary.isActive}"
+                            app:chipIconTint="@android:color/white"
+                            app:chipMinHeight="16dp"
+                            app:chipSurfaceColor="?attr/colorPrimary" />
+
+                        <com.google.android.material.chip.Chip
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:clickable="false"
+                            android:text="@string/selection_is_updatable"
+                            android:textAppearance="?attr/textAppearanceCaption"
+                            android:textColor="@android:color/white"
+                            android:visibility="@{dictionary.isUpdatable}"
+                            app:chipMinHeight="16dp"
+                            app:chipSurfaceColor="?attr/colorSecondary" />
+
+                    </com.google.android.material.chip.ChipGroup>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.Balalaika.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/selection_is_active"
-                    android:textAppearance="?attr/textAppearanceCaption"
-                    android:textColor="@android:color/white"
-                    android:visibility="@{dictionary.active}"
-                    app:chipIcon="@drawable/ic_checkbox"
-                    app:chipIconSize="12dp"
-                    app:chipIconTint="@android:color/white"
-                    app:chipMinHeight="16dp"
-                    app:chipSurfaceColor="?attr/colorPrimary" />
+                    android:orientation="vertical"
+                    android:padding="8dp">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/selection_detail_chip_updatable"
-                    android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="8dp"
+                        android:paddingTop="8dp"
+                        android:paddingEnd="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/selection_actions"
+                            android:textAppearance="?attr/textAppearanceCaption" />
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/selection_button_activate"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="@{() -> listener.onClickActivateButton(dictionary)}"
+                        android:text="@string/selection_action_activate"
+                        android:visibility="@{dictionary.installed &amp;&amp; !dictionary.active}" />
+
+                    <Button
+                        android:id="@+id/selection_button_deactivate"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="@{() -> listener.onClickDeactivateButton(dictionary)}"
+                        android:text="@string/selection_action_deactivate"
+                        android:visibility="@{dictionary.installed &amp;&amp; dictionary.active}" />
+
+                    <Button
+                        android:id="@+id/selection_button_update"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="@{() -> listener.onClickUpdateButton(dictionary)}"
+                        android:text="@string/selection_action_update"
+                        android:visibility="@{dictionary.updatable}" />
+
+                    <Button
+                        android:id="@+id/selection_button_add"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="@{() -> listener.onClickAddButton(dictionary)}"
+                        android:text="@string/selection_action_add"
+                        android:visibility="@{!dictionary.installed}" />
+
+                    <Button
+                        android:id="@+id/selection_button_remove"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="@{() -> listener.onClickRemoveButton(dictionary)}"
+                        android:text="@string/selection_action_remove"
+                        android:theme="@style/ThemeOverlay.Balalaika.Danger"
+                        android:visibility="@{dictionary.installed}" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.Balalaika.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/selection_is_updatable"
-                    android:textAppearance="?attr/textAppearanceCaption"
-                    android:textColor="@android:color/white"
-                    android:visibility="@{dictionary.updatable}"
-                    app:chipIcon="@drawable/ic_update"
-                    app:chipIconSize="12dp"
-                    app:chipIconTint="@android:color/white"
-                    app:chipMinHeight="16dp"
-                    app:chipSurfaceColor="?attr/colorSecondary" />
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-            </com.google.android.material.chip.ChipGroup>
+                    <TextView
+                        style="?attr/textAppearanceCaption"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/selection_summary_title" />
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/selection_detail_guideline_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_begin="40dp" />
+                    <TextView
+                        style="?attr/textAppearanceBody2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:autoLink="web"
+                        android:text="@{dictionary.summary}"
+                        app:justify="@{true}"
+                        tools:text="@string/impsum" />
 
-            <ImageView
-                android:id="@+id/selection_detail_author_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:contentDescription="@string/selection_authors_title"
-                app:layout_constraintEnd_toEndOf="@+id/selection_detail_label_icon"
-                app:layout_constraintStart_toStartOf="@+id/selection_detail_label_icon"
-                app:layout_constraintTop_toBottomOf="@+id/selection_detail_label_text"
-                app:srcCompat="@drawable/ic_author" />
+                    <TextView
+                        style="?attr/textAppearanceCaption"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="@string/selection_info_title" />
 
-            <TextView
-                android:id="@+id/selection_detail_author_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/selection_authors_title"
-                android:textAppearance="?attr/textAppearanceBody1"
-                app:layout_constraintBottom_toBottomOf="@+id/selection_detail_author_icon"
-                app:layout_constraintStart_toStartOf="@+id/selection_detail_guideline_icon"
-                app:layout_constraintTop_toTopOf="@+id/selection_detail_author_icon" />
+                    <TextView
+                        style="?attr/textAppearanceBody2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:autoLink="web"
+                        android:text="@{dictionary.additionalInfo}"
+                        app:justify="@{true}"
+                        tools:text="@string/impsum" />
 
-            <TextView
-                android:id="@+id/selection_detail_author_text"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@{dictionary.authors}"
-                android:textAppearance="?attr/textAppearanceBody2"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/selection_detail_guideline_icon"
-                app:layout_constraintTop_toBottomOf="@+id/selection_detail_author_icon"
-                tools:text="Author, author, author..." />
+                    <TextView
+                        style="?attr/textAppearanceCaption"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="@string/selection_version_title" />
 
-            <ImageView
-                android:id="@+id/selection_detail_summary_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:contentDescription="@string/selection_summary_title"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/selection_detail_author_text"
-                app:srcCompat="@drawable/ic_summary" />
+                    <TextView
+                        style="?attr/textAppearanceBody2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{String.valueOf(dictionary.version)}"
+                        tools:text="1.0" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-            <TextView
-                android:id="@+id/selection_detail_summary_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/selection_summary_title"
-                android:textAppearance="?attr/textAppearanceBody1"
-                app:layout_constraintBottom_toBottomOf="@+id/selection_detail_summary_icon"
-                app:layout_constraintStart_toStartOf="@+id/selection_detail_guideline_icon"
-                app:layout_constraintTop_toTopOf="@+id/selection_detail_summary_icon" />
-
-            <TextView
-                android:id="@+id/selection_detail_summary_text"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:autoLink="web"
-                android:text="@{dictionary.summary}"
-                android:textAppearance="?attr/textAppearanceBody2"
-                app:justify="@{true}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/selection_detail_guideline_icon"
-                app:layout_constraintTop_toBottomOf="@+id/selection_detail_summary_icon"
-                tools:text="@string/impsum" />
-
-            <ImageView
-                android:id="@+id/selection_detail_info_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:contentDescription="@string/selection_info_title"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/selection_detail_summary_text"
-                app:srcCompat="@drawable/ic_info" />
-
-            <TextView
-                android:id="@+id/selection_detail_info_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/selection_info_title"
-                android:textAppearance="?attr/textAppearanceBody1"
-                app:layout_constraintBottom_toBottomOf="@+id/selection_detail_info_icon"
-                app:layout_constraintStart_toStartOf="@+id/selection_detail_guideline_icon"
-                app:layout_constraintTop_toTopOf="@+id/selection_detail_info_icon" />
-
-            <TextView
-                android:id="@+id/selection_detail_info_text"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:autoLink="web"
-                android:text="@{dictionary.additionalInfo}"
-                android:textAppearance="?attr/textAppearanceBody2"
-                app:justify="@{true}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/selection_detail_guideline_icon"
-                app:layout_constraintTop_toBottomOf="@+id/selection_detail_info_icon"
-                tools:text="@string/impsum" />
-
-            <ImageView
-                android:id="@+id/selection_version_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:contentDescription="@string/selection_version_title"
-                app:layout_constraintEnd_toEndOf="@+id/selection_detail_info_icon"
-                app:layout_constraintStart_toStartOf="@+id/selection_detail_info_icon"
-                app:layout_constraintTop_toBottomOf="@+id/selection_detail_info_text"
-                app:srcCompat="@drawable/ic_version" />
-
-            <TextView
-                android:id="@+id/selection_version_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/selection_version_title"
-                android:textAppearance="?attr/textAppearanceBody1"
-                app:layout_constraintBottom_toBottomOf="@+id/selection_version_icon"
-                app:layout_constraintStart_toStartOf="@+id/selection_detail_guideline_icon"
-                app:layout_constraintTop_toTopOf="@+id/selection_version_icon" />
-
-            <TextView
-                android:id="@+id/selection_version_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{String.valueOf('v') + String.valueOf(dictionary.version)}"
-                android:textAppearance="?attr/textAppearanceBody2"
-                app:layout_constraintBottom_toBottomOf="@+id/selection_version_title"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/selection_version_title"
-                tools:text="v1.0" />
-
-            <View
-                android:id="@+id/selection_divider_bottom"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_marginTop="16dp"
-                android:background="?android:attr/listDivider"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/selection_version_text" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="vertical"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/selection_divider_bottom">
-
-                <Button
-                    android:id="@+id/selection_button_activate"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="@{() -> listener.onClickActivateButton(dictionary)}"
-                    android:text="@string/selection_action_activate"
-                    android:visibility="@{dictionary.installed &amp;&amp; !dictionary.active}"
-                    app:icon="@drawable/ic_checkbox" />
-
-                <Button
-                    android:id="@+id/selection_button_deactivate"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="@{() -> listener.onClickDeactivateButton(dictionary)}"
-                    android:text="@string/selection_action_deactivate"
-                    android:visibility="@{dictionary.installed &amp;&amp; dictionary.active}"
-                    app:icon="@drawable/ic_checkbox_empty" />
-
-                <Button
-                    android:id="@+id/selection_button_update"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="@{() -> listener.onClickUpdateButton(dictionary)}"
-                    android:text="@string/selection_action_update"
-                    android:visibility="@{dictionary.updatable}"
-                    app:icon="@drawable/ic_update" />
-
-                <Button
-                    android:id="@+id/selection_button_add"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="@{() -> listener.onClickAddButton(dictionary)}"
-                    android:text="@string/selection_action_add"
-                    android:visibility="@{!dictionary.installed}"
-                    app:icon="@drawable/ic_library" />
-
-                <Button
-                    android:id="@+id/selection_button_remove"
-                    style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="@{() -> listener.onClickRemoveButton(dictionary)}"
-                    android:text="@string/selection_action_remove"
-                    android:theme="@style/ThemeOverlay.Balalaika.Danger"
-                    android:visibility="@{dictionary.installed}"
-                    app:icon="@drawable/ic_delete" />
-
-            </LinearLayout>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
 
     </ScrollView>
 </layout>

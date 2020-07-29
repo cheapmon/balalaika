@@ -100,6 +100,7 @@
 
     <!-- Dictionary selection fragment -->
     <string name="selection_empty">No dictionaries</string>
+    <string name="selection_actions">Actions</string>
     <string name="selection_summary_title">Summary</string>
     <string name="selection_tab_list">My dictionaries</string>
     <string name="selection_tab_download">Download</string>

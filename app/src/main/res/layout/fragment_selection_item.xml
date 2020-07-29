@@ -69,36 +69,31 @@
                     <com.google.android.material.chip.Chip
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:clickable="false"
                         android:text="@string/selection_is_installed"
                         android:textAppearance="?attr/textAppearanceCaption"
                         android:visibility="@{dictionary.isInstalled}"
-                        app:chipIcon="@drawable/ic_library"
-                        app:chipIconSize="12dp"
                         app:chipMinHeight="16dp" />
 
                     <com.google.android.material.chip.Chip
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:clickable="false"
                         android:text="@string/selection_is_active"
                         android:textAppearance="?attr/textAppearanceCaption"
                         android:textColor="@android:color/white"
                         android:visibility="@{dictionary.isActive}"
-                        app:chipIcon="@drawable/ic_checkbox"
-                        app:chipIconSize="12dp"
-                        app:chipIconTint="@android:color/white"
                         app:chipMinHeight="16dp"
                         app:chipSurfaceColor="?attr/colorPrimary" />
 
                     <com.google.android.material.chip.Chip
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:clickable="false"
                         android:text="@string/selection_is_updatable"
                         android:textAppearance="?attr/textAppearanceCaption"
                         android:textColor="@android:color/white"
                         android:visibility="@{dictionary.isUpdatable}"
-                        app:chipIcon="@drawable/ic_update"
-                        app:chipIconSize="12dp"
-                        app:chipIconTint="@android:color/white"
                         app:chipMinHeight="16dp"
                         app:chipSurfaceColor="?attr/colorSecondary" />
 
@@ -112,7 +107,6 @@
                     android:maxLines="5"
                     android:text="@{dictionary.summary}"
                     android:textAppearance="?attr/textAppearanceBody2"
-                    android:textColor="?android:attr/textColorSecondary"
                     app:justify="@{true}"
                     tools:text="@string/impsum" />
 

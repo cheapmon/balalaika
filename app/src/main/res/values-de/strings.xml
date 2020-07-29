@@ -100,6 +100,7 @@
 
     <!-- Dictionary selection fragment -->
     <string name="selection_empty">Keine Wörterbücher</string>
+    <string name="selection_actions">Funktionen</string>
     <string name="selection_summary_title">Zusammenfassung</string>
     <string name="selection_tab_list">Wörterbücher</string>
     <string name="selection_tab_download">Download</string>
