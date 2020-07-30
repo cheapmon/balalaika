@@ -59,10 +59,10 @@ class DictionaryViewModel @ViewModelInject constructor(
     val category = repository.category
 
     /** Set the dictionary view */
-    fun setDictionaryView(id: String) = repository.setDictionaryView(id)
+    fun setDictionaryView(id: String) = viewModelScope.launch { repository.setDictionaryView(id) }
 
     /** Set the dictionary ordering */
-    fun setCategory(id: String) = repository.setCategory(id)
+    fun setCategory(id: String) = viewModelScope.launch { repository.setCategory(id) }
 
     /** Set the first entry to display */
     fun setInitialKey(id: String?) {

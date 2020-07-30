@@ -31,15 +31,11 @@ import com.github.cheapmon.balalaika.db.entities.lexeme.LexemeDao
 import com.github.cheapmon.balalaika.db.entities.property.PropertyDao
 import com.github.cheapmon.balalaika.db.entities.view.DictionaryView
 import com.github.cheapmon.balalaika.db.entities.view.DictionaryViewDao
-import com.github.cheapmon.balalaika.di.IoDispatcher
 import com.github.cheapmon.balalaika.ui.bookmarks.BookmarksFragment
 import com.github.cheapmon.balalaika.ui.dictionary.DictionaryFragment
 import com.github.cheapmon.balalaika.util.Constants
 import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
-import kotlin.coroutines.CoroutineContext
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
@@ -49,7 +45,6 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 
 /**
  * Application-wide dictionary data handling
@@ -60,7 +55,6 @@ import kotlinx.coroutines.launch
 @ActivityScoped
 @Suppress("EXPERIMENTAL_API_USAGE")
 class DictionaryEntryRepository @Inject constructor(
-    @IoDispatcher dispatcher: CoroutineDispatcher,
     private val constants: Constants,
     categoryDao: CategoryDao,
     private val lexemeDao: LexemeDao,
@@ -70,10 +64,7 @@ class DictionaryEntryRepository @Inject constructor(
     dictionaryDao: DictionaryDao,
     private val configDao: DictionaryConfigDao,
     private val cacheEntryDao: CacheEntryDao
-) : CoroutineScope {
-    /** @suppress */
-    override val coroutineContext: CoroutineContext = dispatcher
-
+) {
     private val config = dictionaryDao.getActive()
         .filterNotNull()
         .flatMapLatest { configDao.getConfigFor(it.id) }
@@ -108,15 +99,15 @@ class DictionaryEntryRepository @Inject constructor(
     val currentDictionary = dictionaryDao.getActive()
 
     /** Set dictionary view */
-    fun setDictionaryView(id: String) = launch {
-        val config = config.first() ?: return@launch
+    suspend fun setDictionaryView(id: String) {
+        val config = config.first() ?: return
         val result = config.copy(filterBy = id)
         configDao.update(result)
     }
 
     /** Set dictionary ordering */
-    fun setCategory(id: String) = launch {
-        val config = config.first() ?: return@launch
+    suspend fun setCategory(id: String) {
+        val config = config.first() ?: return
         val result = config.copy(orderBy = id)
         configDao.update(result)
     }
