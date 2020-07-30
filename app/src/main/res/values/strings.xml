@@ -69,7 +69,7 @@
     <string name="dictionary_playback_failed">Playback failed</string>
     <string name="dictionary_bookmark_add">%1$s was added to bookmarks</string>
     <string name="dictionary_bookmark_remove">%1$s was removed from bookmarks</string>
-    <string name="dictionary_empty">No active dictionaries</string>
+    <string name="dictionary_empty">No dictionary selected</string>
     <string name="dictionary_select_dictionary">Select a dictionary</string>
 
     <!-- Bookmarks fragment -->
@@ -106,18 +106,18 @@
     <string name="selection_tab_download">Download</string>
     <string name="selection_authors_title">Authors</string>
     <string name="selection_info_title">Additional information</string>
-    <string name="selection_action_activate">Set as active</string>
-    <string name="selection_action_deactivate">Set as inactive</string>
+    <string name="selection_action_activate">Read now</string>
+    <string name="selection_action_deactivate">Close this dictionary</string>
     <string name="selection_action_update">Update</string>
     <string name="selection_action_add">Add to Library</string>
     <string name="selection_action_remove">Remove from library</string>
     <string name="selection_version_title">Version</string>
-    <string name="selection_is_active">active</string>
+    <string name="selection_is_active">opened</string>
     <string name="selection_is_installable">new</string>
     <string name="selection_is_installed">library</string>
     <string name="selection_is_updatable">updates</string>
-    <string name="selection_confirm_activate">Activate this dictionary?</string>
-    <string name="selection_confirm_deactivate">Deactivate this dictionary?</string>
+    <string name="selection_confirm_activate">Open this dictionary?</string>
+    <string name="selection_confirm_deactivate">Close this dictionary?</string>
     <string name="selection_confirm_update">Update this dictionary?</string>
     <string name="selection_confirm_add">Add %1$s to library?</string>
     <string name="selection_confirm_remove">Remove this dictionary?</string>
@@ -125,8 +125,8 @@
     <string name="selection_loading_failed">Could not load dictionaries</string>
     <string name="selection_labels">Labels</string>
     <string name="selection_no_labels">None</string>
-    <string name="selection_success_activate">Dictionary was activated</string>
-    <string name="selection_success_deactivate">Dictionary was deactivated</string>
+    <string name="selection_success_activate">Dictionary opened</string>
+    <string name="selection_success_deactivate">Dictionary closed</string>
     <string name="selection_success_update">Dictionary was updated</string>
     <string name="selection_success_install">Dictionary was installed</string>
     <string name="selection_success_remove">Dictionary was removed</string>
