@@ -49,7 +49,7 @@ import com.github.cheapmon.balalaika.db.entities.property.Property
             category.id AS "c_id", 
             category.name AS "c_name",
             category.widget AS "c_widget", 
-            category.icon_id AS "c_icon_id", 
+            category.icon_name AS "c_icon_name",
             category.sequence AS "c_sequence",
             category.hidden AS "c_hidden",
             category.order_by AS "c_order_by",

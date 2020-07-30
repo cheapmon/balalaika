@@ -17,7 +17,6 @@ package com.github.cheapmon.balalaika.data.selection
 
 import android.content.Context
 import androidx.room.withTransaction
-import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.db.AppDatabase
 import com.github.cheapmon.balalaika.db.entities.category.Category
 import com.github.cheapmon.balalaika.db.entities.category.WidgetType
@@ -27,7 +26,6 @@ import com.github.cheapmon.balalaika.db.entities.property.Property
 import com.github.cheapmon.balalaika.db.entities.view.DictionaryView
 import com.github.cheapmon.balalaika.db.entities.view.DictionaryViewToCategory
 import com.github.cheapmon.balalaika.util.Constants
-import com.github.cheapmon.balalaika.util.ResourceUtil
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.InputStreamReader
 import java.util.Locale
@@ -69,7 +67,7 @@ class CsvEntityImporter @Inject constructor(
             dictionaryId = dictionaryId,
             name = "Default",
             widget = WidgetType.PLAIN,
-            iconId = R.drawable.ic_circle,
+            iconName = "ic_circle",
             sequence = -1,
             hidden = true,
             orderBy = true
@@ -81,7 +79,7 @@ class CsvEntityImporter @Inject constructor(
                 widget = WidgetType.valueOf(
                     it["widget"].toUpperCase(Locale.ROOT)
                 ),
-                iconId = ResourceUtil.drawable(context, it["icon"]),
+                iconName = it["icon"],
                 sequence = it["sequence"].toInt(),
                 hidden = it["hidden"] == "1",
                 orderBy = it["order_by"] == "1",

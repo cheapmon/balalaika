@@ -55,7 +55,7 @@ sealed class SearchRestriction : Parcelable {
                 parcel.writeString(this.category.dictionaryId)
                 parcel.writeString(this.category.name)
                 parcel.writeString(this.category.widget.name)
-                parcel.writeInt(this.category.iconId)
+                parcel.writeString(this.category.iconName)
                 parcel.writeInt(this.category.sequence)
                 ParcelCompat.writeBoolean(parcel, this.category.hidden)
                 ParcelCompat.writeBoolean(parcel, this.category.orderBy)
@@ -80,7 +80,7 @@ sealed class SearchRestriction : Parcelable {
                         dictionaryId = parcel.readString()!!,
                         name = parcel.readString()!!,
                         widget = WidgetType.valueOf(parcel.readString()!!),
-                        iconId = parcel.readInt(),
+                        iconName = parcel.readString()!!,
                         sequence = parcel.readInt(),
                         hidden = ParcelCompat.readBoolean(parcel),
                         orderBy = ParcelCompat.readBoolean(parcel)

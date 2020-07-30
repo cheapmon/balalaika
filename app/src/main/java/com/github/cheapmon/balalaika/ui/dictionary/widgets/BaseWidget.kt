@@ -26,6 +26,7 @@ import com.github.cheapmon.balalaika.databinding.WidgetTemplateBinding
 import com.github.cheapmon.balalaika.db.entities.category.Category
 import com.github.cheapmon.balalaika.db.entities.history.SearchRestriction
 import com.github.cheapmon.balalaika.db.entities.property.PropertyWithCategory
+import com.github.cheapmon.balalaika.util.ResourceUtil
 import com.github.cheapmon.balalaika.util.highlight
 import com.github.cheapmon.balalaika.util.setIconById
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -113,7 +114,7 @@ open class BaseWidget(
     open fun onClickActionButtonListener(value: String): Unit = Unit
 
     /** Icon for the data category */
-    open val categoryIcon = category.iconId
+    open val categoryIcon = ResourceUtil.drawable(parent.context, category.iconName)
 
     /** Message in the context menu */
     open val menuMessage =

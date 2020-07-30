@@ -16,7 +16,6 @@
 package com.github.cheapmon.balalaika.db.entities.category
 
 import android.graphics.drawable.Drawable
-import androidx.annotation.DrawableRes
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
@@ -76,7 +75,7 @@ data class Category(
      *
      * @see ResourceUtil
      */
-    @DrawableRes @ColumnInfo(name = "icon_id") val iconId: Int,
+    @ColumnInfo(name = "icon_name") val iconName: String,
     /**
      * Unique position in ordering of data categories
      *
