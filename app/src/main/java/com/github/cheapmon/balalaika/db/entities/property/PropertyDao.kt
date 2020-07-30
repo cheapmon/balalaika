@@ -32,7 +32,7 @@ interface PropertyDao {
      */
     @Transaction
     @Query(
-        """SELECT * FROM property
+        """SELECT property.* FROM property
                 JOIN category ON property.category_id = category.id
                 WHERE lexeme_id = (:lexemeId)
                 AND category_id IN (SELECT category_id FROM dictionary_view_to_category

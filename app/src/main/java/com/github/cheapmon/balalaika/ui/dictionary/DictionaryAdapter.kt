@@ -61,8 +61,8 @@ class DictionaryAdapter(
         /** Bind single entry to this view holder */
         fun bind(entry: DictionaryEntry) {
             with(binding) {
-                lexeme = entry.lexemeWithBase.lexeme
-                base = entry.lexemeWithBase.base
+                lexeme = entry.lexeme
+                base = entry.base
                 entryProperties.visibility = View.VISIBLE
                 entryCollapseButton.setOnClickListener {
                     if (entryProperties.visibility == View.GONE) {
@@ -76,7 +76,7 @@ class DictionaryAdapter(
                 entryBaseButton.setOnClickListener {
                     listener.onClickBaseButton(entry)
                 }
-                isBookmark = entry.lexemeWithBase.lexeme.isBookmark
+                isBookmark = entry.lexeme.isBookmark
                 updateBookmarkButton(entryBookmarkButton)
                 entryBookmarkButton.setOnClickListener {
                     listener.onClickBookmarkButton(entry, isBookmark)
@@ -105,7 +105,7 @@ class DictionaryAdapter(
 
     private object DictionaryDiff : DiffUtil.ItemCallback<DictionaryEntry>() {
         override fun areItemsTheSame(oldItem: DictionaryEntry, newItem: DictionaryEntry): Boolean {
-            return oldItem.lexemeWithBase.lexeme.id == newItem.lexemeWithBase.lexeme.id
+            return oldItem.lexeme.id == newItem.lexeme.id
         }
 
         override fun areContentsTheSame(

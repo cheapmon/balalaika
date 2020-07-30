@@ -47,7 +47,7 @@ class DictionaryPagingSource(
         val data = cacheEntryDao.getFromDictionaryCache(pos, params.loadSize).mapNotNull { id ->
             val lexeme = lexemeDao.getLexemeById(id) ?: return@mapNotNull null
             val properties = propertyDao.getProperties(id, dictionaryViewId)
-            DictionaryEntry(lexeme, properties)
+            DictionaryEntry(lexeme.lexeme, lexeme.base, properties)
         }
         return LoadResult.Page(
             data,

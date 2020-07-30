@@ -189,18 +189,18 @@ class DictionaryFragment :
 
     /** Add or remove an entry to bookmarks */
     override fun onClickBookmarkButton(entry: DictionaryEntry, isBookmark: Boolean) {
-        viewModel.toggleBookmark(entry.lexemeWithBase.lexeme.id)
+        viewModel.toggleBookmark(entry.lexeme.id)
         val message = if (isBookmark) {
-            getString(R.string.dictionary_bookmark_remove, entry.lexemeWithBase.lexeme.form)
+            getString(R.string.dictionary_bookmark_remove, entry.lexeme.form)
         } else {
-            getString(R.string.dictionary_bookmark_add, entry.lexemeWithBase.lexeme.form)
+            getString(R.string.dictionary_bookmark_add, entry.lexeme.form)
         }
         Snackbar.make(requireView(), message, Snackbar.LENGTH_SHORT).show()
     }
 
     /** Go to base of a lexeme */
     override fun onClickBaseButton(entry: DictionaryEntry) =
-        viewModel.setInitialKey(entry.lexemeWithBase.base?.id)
+        viewModel.setInitialKey(entry.base?.id)
 
     /** Play audio file */
     override fun onClickAudioButton(resId: Int) {

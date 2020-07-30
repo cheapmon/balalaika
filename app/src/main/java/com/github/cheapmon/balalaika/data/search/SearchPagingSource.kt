@@ -46,7 +46,7 @@ class SearchPagingSource(
         val data = cacheEntryDao.getFromSearchCache(pos, params.loadSize).mapNotNull { id ->
             val lexeme = lexemeDao.getLexemeById(id) ?: return@mapNotNull null
             val properties = propertyDao.getProperties(id, constants.DEFAULT_DICTIONARY_VIEW_ID)
-            DictionaryEntry(lexeme, properties)
+            DictionaryEntry(lexeme.lexeme, lexeme.base, properties)
         }
         return LoadResult.Page(
             data,

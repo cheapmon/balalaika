@@ -15,8 +15,10 @@
  */
 package com.github.cheapmon.balalaika.db.entities.entry
 
+import androidx.room.Embedded
+import androidx.room.Relation
 import com.github.cheapmon.balalaika.db.entities.lexeme.Lexeme
-import com.github.cheapmon.balalaika.db.entities.lexeme.LexemeWithBase
+import com.github.cheapmon.balalaika.db.entities.property.Property
 import com.github.cheapmon.balalaika.db.entities.property.PropertyWithCategory
 
 /**
@@ -24,8 +26,20 @@ import com.github.cheapmon.balalaika.db.entities.property.PropertyWithCategory
  * its [properties][PropertyWithCategory]
  */
 data class DictionaryEntry(
-    /** [Lexeme] and [base][Lexeme.baseId] associated with this entry */
-    val lexemeWithBase: LexemeWithBase,
-    /** All [properties][PropertyWithCategory] associated with [lexemeWithBase] */
+    /** A single lexeme */
+    @Embedded val lexeme: Lexeme,
+
+    /** The base associated with this lexeme */
+    @Relation(
+        parentColumn = "base_id",
+        entityColumn = "id"
+    ) val base: Lexeme?,
+
+    /** All properties of this lexeme */
+    @Relation(
+        entity = Property::class,
+        parentColumn = "id",
+        entityColumn = "lexeme_id"
+    )
     val properties: List<PropertyWithCategory>
 )

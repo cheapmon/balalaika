@@ -47,14 +47,14 @@ class SearchAdapter(
         val entry = getItem(position) ?: return
         with(holder.binding) {
             entryTitle.text =
-                entry.lexemeWithBase.lexeme.form.highlight(searchText, root.context)
+                entry.lexeme.form.highlight(searchText, root.context)
             val props = entry.properties.filter { it.property.value.contains(searchText) }
             if (props.isEmpty()) {
                 entryProperties.visibility = View.GONE
             } else {
                 entryProperties.visibility = View.VISIBLE
             }
-            root.setOnClickListener { listener.onClickItem(entry.lexemeWithBase.lexeme) }
+            root.setOnClickListener { listener.onClickItem(entry.lexeme) }
             entryProperties.removeAllViews()
             props
                 .groupBy { it.category }
@@ -87,7 +87,7 @@ class SearchAdapter(
             oldItem: DictionaryEntry,
             newItem: DictionaryEntry
         ): Boolean {
-            return oldItem.lexemeWithBase.lexeme.id == newItem.lexemeWithBase.lexeme.id
+            return oldItem.lexeme.id == newItem.lexeme.id
         }
 
         override fun areContentsTheSame(
