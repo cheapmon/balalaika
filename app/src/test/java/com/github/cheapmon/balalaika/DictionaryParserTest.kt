@@ -27,24 +27,22 @@ import org.junit.Test
 
 class DictionaryParserTest {
     private val dispatcher = TestCoroutineDispatcher()
-
-    private suspend fun loadFrom(contents: String) =
-        JsonDictionaryParser(dispatcher, Moshi.Builder().build()).parse(contents)
+    private val parser = JsonDictionaryParser(dispatcher, Moshi.Builder().build())
 
     @Test
     fun `parses empty file`() = runBlockingTest {
-        val response = loadFrom("[]")
+        val response = parser.parse("[]")
         assertTrue(response.isEmpty())
     }
 
     @Test(expected = JsonEncodingException::class)
     fun `does not parse broken file`() = runBlockingTest {
-        loadFrom("&&;")
+        parser.parse("&&;")
     }
 
     @Test
     fun `parses single entry`() = runBlockingTest {
-        val list = loadFrom(
+        val list = parser.parse(
             """
             [{
                 "id": "dict_a",
@@ -74,7 +72,7 @@ class DictionaryParserTest {
 
     @Test
     fun `parses multiple entries`() = runBlockingTest {
-        val list = loadFrom(
+        val list = parser.parse(
             """
             [
                 {

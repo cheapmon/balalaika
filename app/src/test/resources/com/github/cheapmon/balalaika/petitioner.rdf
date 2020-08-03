@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE rdf:RDF [
+  <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <!ENTITY dc "http://purl.org/dc/terms/">
+  <!ENTITY ili "http://ili.globalwordnet.org/ili/">
+  <!ENTITY lime "http://www.w3.org/ns/lemon/lime#">
+  <!ENTITY ontolex "http://www.w3.org/ns/lemon/ontolex#">
+  <!ENTITY owl "http://www.w3.org/2002/07/owl#">
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+  <!ENTITY schema "http://schema.org/">
+  <!ENTITY skos "http://www.w3.org/2004/02/skos/core#">
+  <!ENTITY synsem "http://www.w3.org/ns/lemon/synsem#">
+  <!ENTITY wn "http://wordnet-rdf.princeton.edu/ontology#">
+  <!ENTITY wordnetlicense "http://wordnet.princeton.edu/wordnet/license/">
+  <!ENTITY pwn "http://wordnet-rdf.princeton.edu/rdf/">
+]>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/terms/"
+         xmlns:ili="http://ili.globalwordnet.org/ili/"
+         xmlns:lime="http://www.w3.org/ns/lemon/lime#"
+         xmlns:ontolex="http://www.w3.org/ns/lemon/ontolex#"
+         xmlns:owl="http://www.w3.org/2002/07/owl#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:schema="http://schema.org/"
+         xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+         xmlns:synsem="http://www.w3.org/ns/lemon/synsem#"
+         xmlns:wn="http://wordnet-rdf.princeton.edu/ontology#"
+         xmlns:wordnetlicense="http://wordnet.princeton.edu/wordnet/license/"
+         xmlns:pwn="http://wordnet-rdf.princeton.edu/rdf/">
+
+<ontolex:LexicalEntry rdf:about="#petitioner-n">
+    <ontolex:canonicalForm rdf:parseType="Resource">
+        <ontolex:writtenRep xml:lang="en">petitioner</ontolex:writtenRep>
+    </ontolex:canonicalForm>
+        <ontolex:sense rdf:resource="#petitioner-10439776-n"/>    <ontolex:sense rdf:resource="#petitioner-10691631-n"/>
+ 
+    <wn:partOfSpeech rdf:resource="&wn;noun"/>
+  </ontolex:LexicalEntry>
+  
+<ontolex:LexicalEntry rdf:about="#requester-n">
+    <ontolex:canonicalForm rdf:parseType="Resource">
+        <ontolex:writtenRep xml:lang="en">requester</ontolex:writtenRep>
+    </ontolex:canonicalForm>
+        <ontolex:sense rdf:resource="#requester-10439776-n"/>
+ 
+    <wn:partOfSpeech rdf:resource="&wn;noun"/>
+  </ontolex:LexicalEntry>
+  
+<ontolex:LexicalEntry rdf:about="#suer-n">
+    <ontolex:canonicalForm rdf:parseType="Resource">
+        <ontolex:writtenRep xml:lang="en">suer</ontolex:writtenRep>
+    </ontolex:canonicalForm>
+        <ontolex:sense rdf:resource="#suer-10691631-n"/>
+ 
+    <wn:partOfSpeech rdf:resource="&wn;noun"/>
+  </ontolex:LexicalEntry>
+  
+<ontolex:LexicalEntry rdf:about="#suppliant-n">
+    <ontolex:canonicalForm rdf:parseType="Resource">
+        <ontolex:writtenRep xml:lang="en">suppliant</ontolex:writtenRep>
+    </ontolex:canonicalForm>
+        <ontolex:sense rdf:resource="#suppliant-10439776-n"/>
+ 
+    <wn:partOfSpeech rdf:resource="&wn;noun"/>
+  </ontolex:LexicalEntry>
+  
+<ontolex:LexicalEntry rdf:about="#supplicant-n">
+    <ontolex:canonicalForm rdf:parseType="Resource">
+        <ontolex:writtenRep xml:lang="en">supplicant</ontolex:writtenRep>
+    </ontolex:canonicalForm>
+        <ontolex:sense rdf:resource="#supplicant-10439776-n"/>
+ 
+    <wn:partOfSpeech rdf:resource="&wn;noun"/>
+  </ontolex:LexicalEntry>
+  
+
+  <ontolex:LexicalSense rdf:about="#petitioner-10439776-n">
+
+  </ontolex:LexicalSense>
+
+  <ontolex:LexicalSense rdf:about="#petitioner-10691631-n">
+     <wn:derivation rdf:resource="&pwn;lemma/petition#petition-00756776-v"/>
+
+  </ontolex:LexicalSense>
+
+  <ontolex:LexicalSense rdf:about="#requester-10439776-n">
+
+  </ontolex:LexicalSense>
+
+  <ontolex:LexicalSense rdf:about="#suer-10691631-n">
+     <wn:derivation rdf:resource="&pwn;lemma/sue#sue-02588127-v"/>
+
+  </ontolex:LexicalSense>
+
+  <ontolex:LexicalSense rdf:about="#suppliant-10439776-n">
+     <wn:derivation rdf:resource="&pwn;lemma/supplicate#supplicate-00760672-v"/>
+
+  </ontolex:LexicalSense>
+
+  <ontolex:LexicalSense rdf:about="#supplicant-10439776-n">
+     <wn:derivation rdf:resource="&pwn;lemma/supplicate#supplicate-00760672-v"/>
+
+  </ontolex:LexicalSense>
+
+
+  <ontolex:LexicalConcept rdf:about="&pwn;id/10439776-n">
+    <owl:sameAs rdf:resource="&ili;i91977"/>
+    <wn:partOfSpeech rdf:resource="&wn;noun"/>
+    <dc:subject>noun.person</dc:subject>
+    <wn:definition rdf:parseType="Resource">
+      <rdf:value xml:lang="en">one praying humbly for something; &quot;a suppliant for her favors&quot;</rdf:value>
+    </wn:definition>
+    <wn:hypernym rdf:resource="&pwn;id/09630310-n"/>
+    <wn:hyponym rdf:resource="&pwn;id/09870495-n"/>
+    <wn:hyponym rdf:resource="&pwn;id/10479448-n"/>
+    <wn:hyponym rdf:resource="&pwn;id/10642716-n"/>
+
+  </ontolex:LexicalConcept>
+
+  <ontolex:LexicalConcept rdf:about="&pwn;id/10691631-n">
+    <owl:sameAs rdf:resource="&ili;i93419"/>
+    <wn:partOfSpeech rdf:resource="&wn;noun"/>
+    <dc:subject>noun.person</dc:subject>
+    <wn:definition rdf:parseType="Resource">
+      <rdf:value xml:lang="en">someone who petitions a court for redress of a grievance or recovery of a right</rdf:value>
+    </wn:definition>
+    <wn:hypernym rdf:resource="&pwn;id/10457619-n"/>
+
+  </ontolex:LexicalConcept>
+
+</rdf:RDF>

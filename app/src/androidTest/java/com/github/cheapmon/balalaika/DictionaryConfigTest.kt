@@ -78,7 +78,7 @@ class DictionaryConfigTest {
                     dictionaryId = "dic_a",
                     name = "Category A",
                     widget = WidgetType.PLAIN,
-                    iconId = 0,
+                    iconName = "ic_circle",
                     sequence = 0,
                     hidden = false,
                     orderBy = false
@@ -88,7 +88,7 @@ class DictionaryConfigTest {
                     dictionaryId = "dic_a",
                     name = "Category B",
                     widget = WidgetType.PLAIN,
-                    iconId = 0,
+                    iconName = "ic_circle",
                     sequence = 0,
                     hidden = false,
                     orderBy = false
@@ -98,7 +98,7 @@ class DictionaryConfigTest {
                     dictionaryId = "dic_b",
                     name = "Category C",
                     widget = WidgetType.PLAIN,
-                    iconId = 0,
+                    iconName = "ic_circle",
                     sequence = 0,
                     hidden = false,
                     orderBy = false
