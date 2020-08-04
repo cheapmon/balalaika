@@ -1,19 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE rdf:RDF [
-  <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-  <!ENTITY dc "http://purl.org/dc/terms/">
-  <!ENTITY ili "http://ili.globalwordnet.org/ili/">
-  <!ENTITY lime "http://www.w3.org/ns/lemon/lime#">
-  <!ENTITY ontolex "http://www.w3.org/ns/lemon/ontolex#">
-  <!ENTITY owl "http://www.w3.org/2002/07/owl#">
-  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
-  <!ENTITY schema "http://schema.org/">
-  <!ENTITY skos "http://www.w3.org/2004/02/skos/core#">
-  <!ENTITY synsem "http://www.w3.org/ns/lemon/synsem#">
-  <!ENTITY wn "http://wordnet-rdf.princeton.edu/ontology#">
-  <!ENTITY wordnetlicense "http://wordnet.princeton.edu/wordnet/license/">
-  <!ENTITY pwn "http://wordnet-rdf.princeton.edu/rdf/">
-]>
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
          xmlns:dc="http://purl.org/dc/terms/"
          xmlns:ili="http://ili.globalwordnet.org/ili/"

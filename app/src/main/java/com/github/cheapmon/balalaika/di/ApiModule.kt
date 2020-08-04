@@ -19,6 +19,8 @@ import com.github.cheapmon.balalaika.data.dictionary.wordnet.WordnetApi
 import com.github.cheapmon.balalaika.data.selection.DictionaryApi
 import com.github.cheapmon.balalaika.util.Constants
 import com.squareup.moshi.Moshi
+import com.tickaroo.tikxml.TikXml
+import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,7 +30,6 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 
 /** API dependency injection module */
 @Module
@@ -68,12 +69,21 @@ class ApiModule {
     /** @suppress */
     @ActivityScoped
     @Provides
+    fun provideTikXml(): TikXml = TikXml.Builder().exceptionOnUnreadXml(false).build()
+
+    /** @suppress */
+    @ActivityScoped
+    @Provides
     @WordnetRetrofit
-    fun provideWordnetRetrofit(constants: Constants, client: OkHttpClient): Retrofit =
+    fun provideWordnetRetrofit(
+        constants: Constants,
+        client: OkHttpClient,
+        tikXml: TikXml
+    ): Retrofit =
         Retrofit.Builder()
             .baseUrl(constants.WORDNET_URL)
             .client(client)
-            .addConverterFactory(SimpleXmlConverterFactory.create())
+            .addConverterFactory(TikXmlConverterFactory.create(tikXml))
             .build()
 
     @ActivityScoped

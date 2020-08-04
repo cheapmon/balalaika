@@ -18,15 +18,16 @@ package com.github.cheapmon.balalaika.data.dictionary.wordnet
 import com.github.cheapmon.balalaika.data.Mapper
 import com.github.cheapmon.balalaika.data.dictionary.wordnet.WordnetInfo.LexicalEntry
 import javax.inject.Inject
+import org.apache.commons.text.StringEscapeUtils
 
 class WordnetInfoMapper @Inject constructor() : Mapper<RDFNode, WordnetInfo> {
-    private val prefix = "http://wordnet-rdf.princeton.edu/ontology#"
+    private val prefix = "&wn;"
 
     override fun map(value: RDFNode) = WordnetInfo(
         entries = value.lexicalEntryList.map { node ->
             LexicalEntry(
-                representation = node.canonicalForm?.writtenRep ?: "",
-                partOfSpeech = when (node.partOfSpeech?.resource?.removePrefix(prefix)) {
+                representation = StringEscapeUtils.unescapeHtml4(node.canonicalForm.writtenRep),
+                partOfSpeech = when (node.partOfSpeech.resource.removePrefix(prefix)) {
                     "noun" -> "Noun"
                     "adjective" -> "Adjective"
                     "phrase" -> "Phrase"
@@ -37,6 +38,6 @@ class WordnetInfoMapper @Inject constructor() : Mapper<RDFNode, WordnetInfo> {
                 }
             )
         },
-        definitions = value.lexicalConceptList.mapNotNull { it.definition?.value }
+        definitions = value.lexicalConceptList.map { StringEscapeUtils.unescapeHtml4(it.definition.value) }
     )
 }

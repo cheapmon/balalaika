@@ -21,15 +21,15 @@ import com.github.cheapmon.balalaika.data.dictionary.wordnet.RDFNode.DefinitionN
 import com.github.cheapmon.balalaika.data.dictionary.wordnet.RDFNode.LexicalConceptNode
 import com.github.cheapmon.balalaika.data.dictionary.wordnet.RDFNode.LexicalEntryNode
 import com.github.cheapmon.balalaika.data.dictionary.wordnet.RDFNode.PartOfSpeechNode
+import com.tickaroo.tikxml.TikXml
 import java.io.InputStream
-import javax.xml.stream.XMLStreamException
+import okio.buffer
+import okio.source
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import org.simpleframework.xml.core.Persister
-import org.simpleframework.xml.core.ValueRequiredException
 
 class WordnetParserTest {
-    private val serializer = Persister()
+    private val serializer = TikXml.Builder().exceptionOnUnreadXml(false).build()
 
     @Test
     fun `parses partOfSpeech node`() {
@@ -158,7 +158,7 @@ class WordnetParserTest {
                             writtenRep = "petitioner"
                         ),
                         partOfSpeech = PartOfSpeechNode(
-                            resource = "http://wordnet-rdf.princeton.edu/ontology#noun"
+                            resource = "&wn;noun"
                         )
                     ),
                     LexicalEntryNode(
@@ -166,7 +166,7 @@ class WordnetParserTest {
                             writtenRep = "requester"
                         ),
                         partOfSpeech = PartOfSpeechNode(
-                            resource = "http://wordnet-rdf.princeton.edu/ontology#noun"
+                            resource = "&wn;noun"
                         )
                     ),
                     LexicalEntryNode(
@@ -174,7 +174,7 @@ class WordnetParserTest {
                             writtenRep = "suer"
                         ),
                         partOfSpeech = PartOfSpeechNode(
-                            resource = "http://wordnet-rdf.princeton.edu/ontology#noun"
+                            resource = "&wn;noun"
                         )
                     ),
                     LexicalEntryNode(
@@ -182,7 +182,7 @@ class WordnetParserTest {
                             writtenRep = "suppliant"
                         ),
                         partOfSpeech = PartOfSpeechNode(
-                            resource = "http://wordnet-rdf.princeton.edu/ontology#noun"
+                            resource = "&wn;noun"
                         )
                     ),
                     LexicalEntryNode(
@@ -190,13 +190,13 @@ class WordnetParserTest {
                             writtenRep = "supplicant"
                         ),
                         partOfSpeech = PartOfSpeechNode(
-                            resource = "http://wordnet-rdf.princeton.edu/ontology#noun"
+                            resource = "&wn;noun"
                         )
                     )
                 ), lexicalConceptList = listOf(
                     LexicalConceptNode(
                         definition = DefinitionNode(
-                            value = "one praying humbly for something; \"a suppliant for her favors\""
+                            value = "one praying humbly for something; &quot;a suppliant for her favors&quot;"
                         )
                     ),
                     LexicalConceptNode(
@@ -210,19 +210,19 @@ class WordnetParserTest {
         )
     }
 
-    @Test(expected = XMLStreamException::class)
+    @Test(expected = IllegalArgumentException::class)
     fun `does not parse when namespace is missing`() {
         serializer.read<RDFNode>("<rdf:RDF />")
     }
 
-    @Test(expected = ValueRequiredException::class)
+    @Test(expected = IllegalArgumentException::class)
     fun `does not parse wrong node type`() {
         serializer.read<CanonicalFormNode>("""<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />""")
     }
 
-    private inline fun <reified T> Persister.read(source: String): T =
-        this.read(T::class.java, source)
+    private inline fun <reified T> TikXml.read(source: String): T =
+        this.read(source.byteInputStream())
 
-    private inline fun <reified T> Persister.read(source: InputStream): T =
-        this.read(T::class.java, source)
+    private inline fun <reified T> TikXml.read(source: InputStream): T =
+        this.read(source.source().buffer(), T::class.java)
 }

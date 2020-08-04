@@ -15,58 +15,39 @@
  */
 package com.github.cheapmon.balalaika.data.dictionary.wordnet
 
-import org.simpleframework.xml.Attribute
-import org.simpleframework.xml.Element
-import org.simpleframework.xml.ElementList
-import org.simpleframework.xml.Namespace
-import org.simpleframework.xml.Root
+import com.tickaroo.tikxml.annotation.Attribute
+import com.tickaroo.tikxml.annotation.Element
+import com.tickaroo.tikxml.annotation.PropertyElement
+import com.tickaroo.tikxml.annotation.Xml
 
-@Root(name = "RDF", strict = false)
-@Namespace(prefix = "rdf")
+@Xml(name = "rdf:RDF")
 data class RDFNode(
-    @field:ElementList(inline = true)
-    var lexicalEntryList: List<LexicalEntryNode> = mutableListOf(),
-
-    @field:ElementList(inline = true)
-    var lexicalConceptList: List<LexicalConceptNode> = mutableListOf()
+    @Element val lexicalEntryList: List<LexicalEntryNode>,
+    @Element val lexicalConceptList: List<LexicalConceptNode>
 ) {
-    @Root(name = "LexicalEntry", strict = false)
-    @Namespace(prefix = "ontolex")
+    @Xml(name = "ontolex:LexicalEntry")
     data class LexicalEntryNode(
-        @field:Element
-        var canonicalForm: CanonicalFormNode? = null,
-
-        @field:Element
-        var partOfSpeech: PartOfSpeechNode? = null
+        @Element val canonicalForm: CanonicalFormNode,
+        @Element val partOfSpeech: PartOfSpeechNode
     )
 
-    @Root(name = "canonicalForm", strict = false)
-    @Namespace(prefix = "ontolex")
+    @Xml(name = "ontolex:canonicalForm")
     data class CanonicalFormNode(
-        @field:Element
-        var writtenRep: String = ""
+        @PropertyElement(name = "ontolex:writtenRep") val writtenRep: String
     )
 
-    @Root(name = "partOfSpeech", strict = false)
-    @Namespace(prefix = "wn")
+    @Xml(name = "wn:partOfSpeech")
     data class PartOfSpeechNode(
-        @field:Attribute
-        @Namespace(prefix = "rdf")
-        var resource: String = ""
+        @Attribute(name = "rdf:resource") val resource: String
     )
 
-    @Root(name = "LexicalConcept", strict = false)
-    @Namespace(prefix = "ontolex")
+    @Xml(name = "ontolex:LexicalConcept")
     data class LexicalConceptNode(
-        @field:Element
-        var definition: DefinitionNode? = null
+        @Element(name = "wn:definition") val definition: DefinitionNode
     )
 
-    @Root(name = "definition", strict = false)
-    @Namespace(prefix = "wn")
+    @Xml(name = "wn:definition")
     data class DefinitionNode(
-        @field:Element
-        @Namespace(prefix = "rdf")
-        var value: String = ""
+        @PropertyElement(name = "rdf:value") val value: String
     )
 }

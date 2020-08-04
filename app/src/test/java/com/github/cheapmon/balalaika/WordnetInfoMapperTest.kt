@@ -39,7 +39,7 @@ class WordnetInfoMapperTest {
                         writtenRep = "petitioner"
                     ),
                     partOfSpeech = PartOfSpeechNode(
-                        resource = "http://wordnet-rdf.princeton.edu/ontology#noun"
+                        resource = "&wn;noun"
                     )
                 ),
                 LexicalEntryNode(
@@ -47,7 +47,7 @@ class WordnetInfoMapperTest {
                         writtenRep = "requester"
                     ),
                     partOfSpeech = PartOfSpeechNode(
-                        resource = "http://wordnet-rdf.princeton.edu/ontology#noun"
+                        resource = "&wn;noun"
                     )
                 ),
                 LexicalEntryNode(
@@ -55,7 +55,7 @@ class WordnetInfoMapperTest {
                         writtenRep = "suer"
                     ),
                     partOfSpeech = PartOfSpeechNode(
-                        resource = "http://wordnet-rdf.princeton.edu/ontology#noun"
+                        resource = "&wn;noun"
                     )
                 ),
                 LexicalEntryNode(
@@ -63,7 +63,7 @@ class WordnetInfoMapperTest {
                         writtenRep = "suppliant"
                     ),
                     partOfSpeech = PartOfSpeechNode(
-                        resource = "http://wordnet-rdf.princeton.edu/ontology#noun"
+                        resource = "&wn;noun"
                     )
                 ),
                 LexicalEntryNode(
@@ -71,13 +71,13 @@ class WordnetInfoMapperTest {
                         writtenRep = "supplicant"
                     ),
                     partOfSpeech = PartOfSpeechNode(
-                        resource = "http://wordnet-rdf.princeton.edu/ontology#noun"
+                        resource = "&wn;noun"
                     )
                 )
             ), lexicalConceptList = listOf(
                 LexicalConceptNode(
                     definition = DefinitionNode(
-                        value = "one praying humbly for something; \"a suppliant for her favors\""
+                        value = "one praying humbly for something; &quot;a suppliant for her favors&quot;"
                     )
                 ),
                 LexicalConceptNode(
