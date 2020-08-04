@@ -27,6 +27,7 @@ import com.github.cheapmon.balalaika.ui.dictionary.widgets.PlainWidget
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.ReferenceWidget
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.UrlWidget
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.Widget
+import com.github.cheapmon.balalaika.ui.dictionary.widgets.WordnetWidget
 
 /**
  * Types of Widgets
@@ -84,5 +85,12 @@ enum class WidgetType {
      *
      * @see UrlWidget
      */
-    URL
+    URL,
+
+    /**
+     * Widget for displaying Wordnet information
+     *
+     * @see WordnetWidget
+     */
+    WORDNET
 }

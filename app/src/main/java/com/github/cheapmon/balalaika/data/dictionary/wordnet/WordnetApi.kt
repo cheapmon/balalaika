@@ -16,9 +16,9 @@
 package com.github.cheapmon.balalaika.data.dictionary.wordnet
 
 import retrofit2.http.GET
-import retrofit2.http.Path
+import retrofit2.http.Url
 
 interface WordnetApi {
-    @GET("lemma/{id}")
-    suspend fun getWordnetData(@Path("id") id: String): RDFNode
+    @GET
+    suspend fun getWordnetData(@Url url: String): RDFNode
 }

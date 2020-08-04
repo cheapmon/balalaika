@@ -22,8 +22,8 @@ import com.tickaroo.tikxml.annotation.Xml
 
 @Xml(name = "rdf:RDF")
 data class RDFNode(
-    @Element val lexicalEntryList: List<LexicalEntryNode>,
-    @Element val lexicalConceptList: List<LexicalConceptNode>
+    @Element val lexicalEntryList: List<LexicalEntryNode>?,
+    @Element val lexicalConceptList: List<LexicalConceptNode>?
 ) {
     @Xml(name = "ontolex:LexicalEntry")
     data class LexicalEntryNode(

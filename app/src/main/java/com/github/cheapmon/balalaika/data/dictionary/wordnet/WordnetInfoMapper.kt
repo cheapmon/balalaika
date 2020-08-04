@@ -24,7 +24,7 @@ class WordnetInfoMapper @Inject constructor() : Mapper<RDFNode, WordnetInfo> {
     private val prefix = "&wn;"
 
     override fun map(value: RDFNode) = WordnetInfo(
-        entries = value.lexicalEntryList.map { node ->
+        entries = value.lexicalEntryList.orEmpty().map { node ->
             LexicalEntry(
                 representation = StringEscapeUtils.unescapeHtml4(node.canonicalForm.writtenRep),
                 partOfSpeech = when (node.partOfSpeech.resource.removePrefix(prefix)) {
@@ -38,6 +38,6 @@ class WordnetInfoMapper @Inject constructor() : Mapper<RDFNode, WordnetInfo> {
                 }
             )
         },
-        definitions = value.lexicalConceptList.map { StringEscapeUtils.unescapeHtml4(it.definition.value) }
+        definitions = value.lexicalConceptList.orEmpty().map { StringEscapeUtils.unescapeHtml4(it.definition.value) }
     )
 }

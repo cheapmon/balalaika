@@ -232,4 +232,13 @@ class DictionaryFragment :
     override fun onClickLinkButton(link: String) {
         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(link)))
     }
+
+    /** Open Wordnet dialog */
+    override fun onClickWordnetButton(word: String, url: String) {
+        lifecycleScope.launch {
+            viewModel.getWordnetData(url).collect { loadState ->
+                // TODO: Handle result
+            }
+        }
+    }
 }

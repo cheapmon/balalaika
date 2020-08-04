@@ -86,4 +86,7 @@ class DictionaryViewModel @ViewModelInject constructor(
     suspend fun getDictionaryViews(): List<DictionaryViewWithCategories> {
         return repository.dictionaryViews.first()
     }
+
+    /** Load Wordnet information for a word */
+    fun getWordnetData(url: String) = repository.getWordnetData(url)
 }
