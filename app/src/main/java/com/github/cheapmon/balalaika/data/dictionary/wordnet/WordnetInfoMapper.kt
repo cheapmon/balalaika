@@ -19,7 +19,7 @@ import com.github.cheapmon.balalaika.data.Mapper
 import com.github.cheapmon.balalaika.data.dictionary.wordnet.WordnetInfo.LexicalEntry
 import javax.inject.Inject
 
-internal class WordnetInfoMapper @Inject constructor() : Mapper<RDFNode, WordnetInfo> {
+class WordnetInfoMapper @Inject constructor() : Mapper<RDFNode, WordnetInfo> {
     private val prefix = "http://wordnet-rdf.princeton.edu/ontology#"
 
     override fun map(value: RDFNode) = WordnetInfo(

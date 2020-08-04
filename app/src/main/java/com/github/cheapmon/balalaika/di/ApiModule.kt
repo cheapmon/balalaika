@@ -15,6 +15,7 @@
  */
 package com.github.cheapmon.balalaika.di
 
+import com.github.cheapmon.balalaika.data.dictionary.wordnet.WordnetApi
 import com.github.cheapmon.balalaika.data.selection.DictionaryApi
 import com.github.cheapmon.balalaika.util.Constants
 import com.squareup.moshi.Moshi
@@ -27,17 +28,12 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 
 /** API dependency injection module */
 @Module
 @InstallIn(ActivityComponent::class)
 class ApiModule {
-    /** @suppress */
-    @ActivityScoped
-    @Provides
-    @ServerUrl
-    fun provideServerUrl(constants: Constants): String = constants.SERVER_URL
-
     /** @suppress */
     @ActivityScoped
     @Provides
@@ -55,9 +51,10 @@ class ApiModule {
     /** @suppress */
     @ActivityScoped
     @Provides
-    fun provideRetrofit(@ServerUrl url: String, client: OkHttpClient, moshi: Moshi): Retrofit =
+    @DictionaryRetrofit
+    fun provideRetrofit(constants: Constants, client: OkHttpClient, moshi: Moshi): Retrofit =
         Retrofit.Builder()
-            .baseUrl(url)
+            .baseUrl(constants.SERVER_URL)
             .client(client)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
@@ -65,6 +62,22 @@ class ApiModule {
     /** @suppress */
     @ActivityScoped
     @Provides
-    fun provideDictionaryApi(retrofit: Retrofit): DictionaryApi =
+    fun provideDictionaryApi(@DictionaryRetrofit retrofit: Retrofit): DictionaryApi =
         retrofit.create(DictionaryApi::class.java)
+
+    /** @suppress */
+    @ActivityScoped
+    @Provides
+    @WordnetRetrofit
+    fun provideWordnetRetrofit(constants: Constants, client: OkHttpClient): Retrofit =
+        Retrofit.Builder()
+            .baseUrl(constants.WORDNET_URL)
+            .client(client)
+            .addConverterFactory(SimpleXmlConverterFactory.create())
+            .build()
+
+    @ActivityScoped
+    @Provides
+    fun provideWordnetApi(@WordnetRetrofit retrofit: Retrofit): WordnetApi =
+        retrofit.create(WordnetApi::class.java)
 }

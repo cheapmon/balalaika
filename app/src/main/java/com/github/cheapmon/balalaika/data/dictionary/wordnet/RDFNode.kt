@@ -23,7 +23,7 @@ import org.simpleframework.xml.Root
 
 @Root(name = "RDF", strict = false)
 @Namespace(prefix = "rdf")
-internal data class RDFNode(
+data class RDFNode(
     @field:ElementList(inline = true)
     var lexicalEntryList: List<LexicalEntryNode> = mutableListOf(),
 
@@ -32,7 +32,7 @@ internal data class RDFNode(
 ) {
     @Root(name = "LexicalEntry", strict = false)
     @Namespace(prefix = "ontolex")
-    internal data class LexicalEntryNode(
+    data class LexicalEntryNode(
         @field:Element
         var canonicalForm: CanonicalFormNode? = null,
 
@@ -42,14 +42,14 @@ internal data class RDFNode(
 
     @Root(name = "canonicalForm", strict = false)
     @Namespace(prefix = "ontolex")
-    internal data class CanonicalFormNode(
+    data class CanonicalFormNode(
         @field:Element
         var writtenRep: String = ""
     )
 
     @Root(name = "partOfSpeech", strict = false)
     @Namespace(prefix = "wn")
-    internal data class PartOfSpeechNode(
+    data class PartOfSpeechNode(
         @field:Attribute
         @Namespace(prefix = "rdf")
         var resource: String = ""
@@ -57,14 +57,14 @@ internal data class RDFNode(
 
     @Root(name = "LexicalConcept", strict = false)
     @Namespace(prefix = "ontolex")
-    internal data class LexicalConceptNode(
+    data class LexicalConceptNode(
         @field:Element
         var definition: DefinitionNode? = null
     )
 
     @Root(name = "definition", strict = false)
     @Namespace(prefix = "wn")
-    internal data class DefinitionNode(
+    data class DefinitionNode(
         @field:Element
         @Namespace(prefix = "rdf")
         var value: String = ""
