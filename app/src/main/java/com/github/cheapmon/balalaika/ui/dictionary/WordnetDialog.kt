@@ -51,7 +51,8 @@ class WordnetDialog(
             val itemAdapter = Adapter(
                 wordsTitle = requireContext().getString(R.string.dictionary_wordnet_words),
                 definitionsTitle = requireContext().getString(R.string.dictionary_wordnet_definitions),
-                emptyMessage = requireContext().getString(R.string.dictionary_wordnet_empty)
+                emptyMessage = requireContext().getString(R.string.dictionary_wordnet_empty),
+                errorMessage = requireContext().getString(R.string.selection_error_internal)
             )
             binding = DialogWordnetBinding.inflate(it.layoutInflater)
             binding.dialogWordnetList.apply {
@@ -63,9 +64,10 @@ class WordnetDialog(
                 payload.collect { loadState ->
                     binding.inProgress = loadState !is LoadState.Finished
                     if (loadState is LoadState.Finished) {
-                        if (loadState.data is Result.Success)
-                            itemAdapter.submitInfo(loadState.data.data)
-                        // TODO: Handle error
+                        when (loadState.data) {
+                            is Result.Success -> itemAdapter.submitInfo(loadState.data.data)
+                            is Result.Error -> itemAdapter.submitError()
+                        }.exhaustive
                     }
                 }
             }
@@ -87,7 +89,8 @@ class WordnetDialog(
     private class Adapter(
         private val wordsTitle: String,
         private val definitionsTitle: String,
-        private val emptyMessage: String
+        private val emptyMessage: String,
+        private val errorMessage: String
     ) : ListAdapter<Item, ViewHolder>(Diff) {
         fun submitInfo(info: WordnetInfo) {
             val list = mutableListOf<Item>()
@@ -111,6 +114,8 @@ class WordnetDialog(
             if (list.isEmpty()) list.add(Item.TitleItem(emptyMessage))
             submitList(list)
         }
+
+        fun submitError() = submitList(listOf(Item.TitleItem(errorMessage)))
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
