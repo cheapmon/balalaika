@@ -17,10 +17,15 @@ package com.github.cheapmon.balalaika.data.dictionary.wordnet
 
 data class WordnetInfo(
     val entries: List<LexicalEntry>,
-    val definitions: List<String>
+    val definitions: List<Definition>
 ) {
     data class LexicalEntry(
         val representation: String,
         val partOfSpeech: String
+    )
+
+    data class Definition(
+        val explanation: String,
+        val examples: List<String>
     )
 }

@@ -38,6 +38,13 @@ class WordnetInfoMapper @Inject constructor() : Mapper<RDFNode, WordnetInfo> {
                 }
             )
         },
-        definitions = value.lexicalConceptList.orEmpty().map { StringEscapeUtils.unescapeHtml4(it.definition.value) }
+        definitions = value.lexicalConceptList.orEmpty().mapNotNull {
+            val parts = StringEscapeUtils.unescapeHtml4(it.definition.value).split(Regex(";"))
+            parts.firstOrNull()?.let { explanation ->
+                val examples = parts.drop(1)
+                    .map { e -> e.replace("\"", "").trim() }
+                WordnetInfo.Definition(explanation, examples)
+            }
+        }
     )
 }

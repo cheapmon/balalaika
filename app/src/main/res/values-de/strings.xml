@@ -71,6 +71,10 @@
     <string name="dictionary_bookmark_remove">%1$s aus Lesezeichen entfernt</string>
     <string name="dictionary_empty">Kein Wörterbuch ausgewählt</string>
     <string name="dictionary_select_dictionary">Wörterbücher installieren</string>
+    <string name="dictionary_wordnet_title">Wordnet-Daten für %1$s (englisch)</string>
+    <string name="dictionary_wordnet_words">Verwandte Wörter</string>
+    <string name="dictionary_wordnet_definitions">Definitionen</string>
+    <string name="dictionary_wordnet_empty">Keine verwandten Wörter oder Definitionen gefunden</string>
 
     <!-- Bookmarks fragment -->
     <string name="bookmarks_item_removed">Lesezeichen entfernt</string>

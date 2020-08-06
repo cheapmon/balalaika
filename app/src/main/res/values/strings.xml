@@ -71,6 +71,10 @@
     <string name="dictionary_bookmark_remove">%1$s was removed from bookmarks</string>
     <string name="dictionary_empty">No dictionary selected</string>
     <string name="dictionary_select_dictionary">Select a dictionary</string>
+    <string name="dictionary_wordnet_title">Wordnet Data for %1$s</string>
+    <string name="dictionary_wordnet_words">Related words</string>
+    <string name="dictionary_wordnet_definitions">Definitions</string>
+    <string name="dictionary_wordnet_empty">Found no related words or definitions</string>
 
     <!-- Bookmarks fragment -->
     <string name="bookmarks_item_removed">Bookmark was removed</string>

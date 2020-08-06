@@ -235,10 +235,6 @@ class DictionaryFragment :
 
     /** Open Wordnet dialog */
     override fun onClickWordnetButton(word: String, url: String) {
-        lifecycleScope.launch {
-            viewModel.getWordnetData(url).collect { loadState ->
-                // TODO: Handle result
-            }
-        }
+        WordnetDialog(word, viewModel.getWordnetData(url)).show(parentFragmentManager, null)
     }
 }
