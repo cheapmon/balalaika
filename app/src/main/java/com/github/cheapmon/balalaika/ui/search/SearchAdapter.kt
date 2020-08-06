@@ -104,6 +104,7 @@ class SearchAdapter(
         override fun onClickSearchButton(query: String, restriction: SearchRestriction) = Unit
         override fun onClickScrollButton(id: String) = Unit
         override fun onClickLinkButton(link: String) = Unit
+        override fun onClickWordnetButton(word: String, url: String) = Unit
     }
 
     /** Component that handles actions from this adapter */

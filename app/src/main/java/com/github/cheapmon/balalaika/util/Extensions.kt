@@ -16,7 +16,6 @@
 package com.github.cheapmon.balalaika.util
 
 import android.content.Context
-import android.os.Bundle
 import android.text.SpannedString
 import android.util.Log
 import androidx.annotation.DrawableRes
@@ -25,7 +24,6 @@ import androidx.core.os.bundleOf
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.navigation.NavArgs
 import androidx.navigation.NavArgsLazy
 import com.github.cheapmon.balalaika.R
@@ -33,9 +31,9 @@ import com.github.cheapmon.balalaika.db.entities.entry.PropertyDatabaseView
 import com.github.cheapmon.balalaika.ui.search.SearchAdapter
 import com.google.android.material.button.MaterialButton
 
-/** Convenience method for setting the icon of a [MaterialButton] from a drawable ID */
+/** Convenience method for setting the icon of a `MaterialButton` from a drawable ID */
 fun MaterialButton.setIconById(@DrawableRes id: Int) {
-    this.icon = this.context.getDrawable(id)
+    this.icon = ContextCompat.getDrawable(this.context, id)
 }
 
 /**
@@ -102,10 +100,10 @@ class Logger(private val name: String) {
 inline fun <reified T> T.logger(block: Logger.() -> Unit) = Logger(T::class.java.name).block()
 
 /**
- * [Lazy] delegate to access fragment arguments inside of a [ViewModel]
+ * `Lazy` delegate to access fragment arguments inside of a `ViewModel`
  *
  * _Note_: This is especially useful when using dependency injection, since Hilt can inject a
- * [SavedStateHandle], as explained in
+ * `SavedStateHandle`, as explained in
  * [Hilt and Jetpack integrations](https://developer.android.com/training/dependency-injection/hilt-jetpack).
  *
  * Example:
@@ -120,6 +118,6 @@ inline fun <reified T> T.logger(block: Logger.() -> Unit) = Logger(T::class.java
 inline fun <reified Args : NavArgs> navArgs(savedStateHandle: SavedStateHandle) =
     NavArgsLazy(Args::class) { savedStateHandle.toBundle() }
 
-/** Convert [SavedStateHandle] to [Bundle] */
+/** Convert `SavedStateHandle` to `Bundle` */
 fun SavedStateHandle.toBundle() =
     bundleOf(*this.keys().map { Pair(it, this.get<Any?>(it)) }.toTypedArray())

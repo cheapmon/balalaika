@@ -42,7 +42,10 @@ annotation class MainImmediateDispatcher
 @Qualifier
 annotation class ApplicationScope
 
-/** Denotes a string to contain the main server URL */
+/** Retrofit for dictionaries */
 @Retention(AnnotationRetention.BINARY)
 @Qualifier
-annotation class ServerUrl
+annotation class DictionaryRetrofit
+
+/** Retrofit for Wordnet */
+annotation class WordnetRetrofit

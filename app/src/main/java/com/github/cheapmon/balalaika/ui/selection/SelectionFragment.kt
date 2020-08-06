@@ -48,6 +48,7 @@ class SelectionFragment :
         setHasOptionsMenu(true)
     }
 
+    /** @suppress */
     override fun onCreateBinding(binding: FragmentSelectionListBinding) {
         super.onCreateBinding(binding)
         swipeRefreshLayout = binding.selectionRefresh.apply {
@@ -58,12 +59,15 @@ class SelectionFragment :
         }
     }
 
+    /** @suppress */
     override fun createRecyclerView(binding: FragmentSelectionListBinding) =
         binding.selectionList
 
+    /** @suppress */
     override fun createRecyclerViewAdapter() =
         SelectionAdapter(this)
 
+    /** @suppress */
     override fun observeData(
         binding: FragmentSelectionListBinding,
         owner: LifecycleOwner,
@@ -86,6 +90,7 @@ class SelectionFragment :
         findNavController().navigate(directions)
     }
 
+    /** Activate a dictionary */
     override fun onClickActivate(dictionary: Dictionary) {
         activityViewModel.activate(dictionary)
     }

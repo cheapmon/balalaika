@@ -13,10 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.cheapmon.balalaika.data
+package com.github.cheapmon.balalaika.data.dictionary.wordnet
 
-/** Transforms a value from one class to another */
-interface Mapper<A, B> {
-    /** Transform value */
-    fun map(value: A): B
+import retrofit2.http.GET
+import retrofit2.http.Url
+
+/** API for retrieving Wordnet data for a word */
+interface WordnetApi {
+    /** Get Wordnet data for a word from [url] */
+    @GET
+    suspend fun getWordnetData(@Url url: String): RDFNode
 }

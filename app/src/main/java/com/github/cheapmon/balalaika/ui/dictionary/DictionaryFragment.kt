@@ -67,6 +67,7 @@ class DictionaryFragment :
         setHasOptionsMenu(true)
     }
 
+    /** @suppress */
     override fun onCreateBinding(binding: FragmentDictionaryBinding) {
         super.onCreateBinding(binding)
         binding.dictionaryEmptyButton.setOnClickListener {
@@ -75,12 +76,15 @@ class DictionaryFragment :
         }
     }
 
+    /** @suppress */
     override fun createRecyclerView(binding: FragmentDictionaryBinding) =
         binding.entryList
 
+    /** @suppress */
     override fun createRecyclerViewAdapter() =
         DictionaryAdapter(this, this)
 
+    /** @suppress */
     override fun observeData(
         binding: FragmentDictionaryBinding,
         owner: LifecycleOwner,
@@ -231,5 +235,10 @@ class DictionaryFragment :
     /** Open link in browser */
     override fun onClickLinkButton(link: String) {
         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(link)))
+    }
+
+    /** Open Wordnet dialog */
+    override fun onClickWordnetButton(word: String, url: String) {
+        WordnetDialog(word, viewModel.getWordnetData(url)).show(parentFragmentManager, null)
     }
 }

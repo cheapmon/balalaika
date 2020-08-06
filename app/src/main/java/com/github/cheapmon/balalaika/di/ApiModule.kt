@@ -15,9 +15,12 @@
  */
 package com.github.cheapmon.balalaika.di
 
+import com.github.cheapmon.balalaika.data.dictionary.wordnet.WordnetApi
 import com.github.cheapmon.balalaika.data.selection.DictionaryApi
 import com.github.cheapmon.balalaika.util.Constants
 import com.squareup.moshi.Moshi
+import com.tickaroo.tikxml.TikXml
+import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,12 +38,6 @@ class ApiModule {
     /** @suppress */
     @ActivityScoped
     @Provides
-    @ServerUrl
-    fun provideServerUrl(constants: Constants): String = constants.SERVER_URL
-
-    /** @suppress */
-    @ActivityScoped
-    @Provides
     fun provideHttpClient(): OkHttpClient = OkHttpClient.Builder()
         .addInterceptor(HttpLoggingInterceptor().apply {
             setLevel(HttpLoggingInterceptor.Level.BASIC)
@@ -55,9 +52,10 @@ class ApiModule {
     /** @suppress */
     @ActivityScoped
     @Provides
-    fun provideRetrofit(@ServerUrl url: String, client: OkHttpClient, moshi: Moshi): Retrofit =
+    @DictionaryRetrofit
+    fun provideRetrofit(constants: Constants, client: OkHttpClient, moshi: Moshi): Retrofit =
         Retrofit.Builder()
-            .baseUrl(url)
+            .baseUrl(constants.SERVER_URL)
             .client(client)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
@@ -65,6 +63,32 @@ class ApiModule {
     /** @suppress */
     @ActivityScoped
     @Provides
-    fun provideDictionaryApi(retrofit: Retrofit): DictionaryApi =
+    fun provideDictionaryApi(@DictionaryRetrofit retrofit: Retrofit): DictionaryApi =
         retrofit.create(DictionaryApi::class.java)
+
+    /** @suppress */
+    @ActivityScoped
+    @Provides
+    fun provideTikXml(): TikXml = TikXml.Builder().exceptionOnUnreadXml(false).build()
+
+    /** @suppress */
+    @ActivityScoped
+    @Provides
+    @WordnetRetrofit
+    fun provideWordnetRetrofit(
+        constants: Constants,
+        client: OkHttpClient,
+        tikXml: TikXml
+    ): Retrofit =
+        Retrofit.Builder()
+            .baseUrl(constants.WORDNET_URL)
+            .client(client)
+            .addConverterFactory(TikXmlConverterFactory.create(tikXml))
+            .build()
+
+    /** @suppress */
+    @ActivityScoped
+    @Provides
+    fun provideWordnetApi(@WordnetRetrofit retrofit: Retrofit): WordnetApi =
+        retrofit.create(WordnetApi::class.java)
 }

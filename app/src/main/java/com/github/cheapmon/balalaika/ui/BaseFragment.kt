@@ -28,14 +28,17 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import kotlin.reflect.KClass
 
+/** Simple fragment boilerplate using view model and data binding */
 abstract class BaseFragment<VM : ViewModel, B : ViewDataBinding>(
     viewModelClass: KClass<VM>,
     @LayoutRes private val layoutId: Int
 ) : Fragment() {
+    /** View model for this fragment */
     val viewModel: VM by createViewModelLazy(viewModelClass, { this.viewModelStore })
 
     private lateinit var binding: B
 
+    /** Create view binding */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -51,11 +54,15 @@ abstract class BaseFragment<VM : ViewModel, B : ViewDataBinding>(
         return binding.root
     }
 
+    /** Observe data when view has been created */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         observeData(binding, viewLifecycleOwner)
     }
 
+    /** Additional operations on the view binding */
     abstract fun onCreateBinding(binding: B)
+
+    /** Observe data from the view model */
     abstract fun observeData(binding: B, owner: LifecycleOwner)
 }

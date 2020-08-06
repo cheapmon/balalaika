@@ -46,4 +46,7 @@ class Constants @Inject constructor() {
     /** Base URL of dictionary API */
     // TODO: Setup
     val SERVER_URL: String = "https://example.org/"
+
+    /** Base URL of Wordnet API */
+    val WORDNET_URL: String = "http://wordnet-rdf.princeton.edu/rdf/"
 }

@@ -16,6 +16,7 @@
 package com.github.cheapmon.balalaika.data.selection
 
 import androidx.room.withTransaction
+import com.github.cheapmon.balalaika.data.LoadState
 import com.github.cheapmon.balalaika.data.tryLoad
 import com.github.cheapmon.balalaika.db.AppDatabase
 import com.github.cheapmon.balalaika.db.entities.config.DictionaryConfig
@@ -27,6 +28,7 @@ import dagger.hilt.android.scopes.ActivityScoped
 import java.net.ConnectException
 import javax.inject.Inject
 import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -53,7 +55,7 @@ class DictionaryRepository @Inject constructor(
     fun getDictionary(id: String) = dictionaryDao.findById(id)
 
     /** (De)activate a dictionary */
-    fun toggleActive(dictionary: Dictionary) = tryLoad {
+    fun toggleActive(dictionary: Dictionary): Flow<LoadState<Unit, DictionaryError>> = tryLoad {
         if (dictionary.isActive) {
             dictionaryDao.setInactive(dictionary.id)
         } else {
@@ -62,14 +64,14 @@ class DictionaryRepository @Inject constructor(
     }.map { it.mapError(::toDictionaryError) }
 
     /** Install a dictionary */
-    fun addDictionary(dictionary: Dictionary) = tryLoad {
+    fun addDictionary(dictionary: Dictionary): Flow<LoadState<Unit, DictionaryError>> = tryLoad {
         removeEntities(dictionary.id)
         mediator.installDictionary(dictionary)
         dictionaryDao.setInstalled(dictionary.id)
     }.map { it.mapError(::toDictionaryError) }
 
     /** Remove a dictionary */
-    fun removeDictionary(id: String) = tryLoad {
+    fun removeDictionary(id: String): Flow<LoadState<Unit, DictionaryError>> = tryLoad {
         removeEntities(id)
         db.dictionaries().remove(id)
         refresh().collect()
@@ -88,7 +90,7 @@ class DictionaryRepository @Inject constructor(
      * history cascades any changes done to the table. The dictionary configuration is replaced
      * by defaults if the assigned category or dictionary view is missing.
      */
-    fun updateDictionary(dictionary: Dictionary) = tryLoad {
+    fun updateDictionary(dictionary: Dictionary): Flow<LoadState<Unit, DictionaryError>> = tryLoad {
         val configuration = db.configurations().getConfigFor(dictionary.id).first()
         db.withTransaction {
             db.configurations().removeConfigFor(dictionary.id)
@@ -113,7 +115,7 @@ class DictionaryRepository @Inject constructor(
     }.map { it.mapError(::toDictionaryError) }
 
     /** Update the dictionary list in the database */
-    fun refresh() = tryLoad {
+    fun refresh(): Flow<LoadState<Unit, DictionaryError>> = tryLoad {
         mediator.updateDictionaryList()
     }.map { it.mapError(::toDictionaryError) }
 

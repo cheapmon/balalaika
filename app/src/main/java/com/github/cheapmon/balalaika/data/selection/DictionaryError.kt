@@ -18,8 +18,17 @@ package com.github.cheapmon.balalaika.data.selection
 import androidx.annotation.StringRes
 import com.github.cheapmon.balalaika.R
 
-enum class DictionaryError(@StringRes val msgId: Int) {
+/** Types of errors encountered while retrieving dictionaries from a remote source */
+enum class DictionaryError(
+    /** Android string resource used for error message */
+    @StringRes val msgId: Int
+) {
+    /** Timeout while performing operation */
     Timeout(R.string.selection_error_timeout),
+
+    /** Network can't be reached while performing operation */
     Network(R.string.selection_error_network),
+
+    /** Internal error while performing operation */
     Internal(R.string.selection_error_internal)
 }

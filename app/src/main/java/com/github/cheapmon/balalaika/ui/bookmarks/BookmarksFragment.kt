@@ -52,12 +52,15 @@ class BookmarksFragment :
         setHasOptionsMenu(true)
     }
 
+    /** @suppress */
     override fun createRecyclerView(binding: FragmentBookmarksBinding) =
         binding.bookmarksList
 
+    /** @suppress */
     override fun createRecyclerViewAdapter() =
         BookmarksAdapter(this)
 
+    /** @suppress */
     override fun observeData(
         binding: FragmentBookmarksBinding,
         owner: LifecycleOwner,

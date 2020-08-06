@@ -16,11 +16,11 @@
 package com.github.cheapmon.balalaika
 
 import com.github.cheapmon.balalaika.data.selection.DictionaryApi
-import junit.framework.Assert.assertTrue
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import retrofit2.Retrofit

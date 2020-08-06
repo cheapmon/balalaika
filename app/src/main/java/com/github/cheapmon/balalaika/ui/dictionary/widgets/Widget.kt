@@ -79,6 +79,9 @@ interface WidgetListener {
 
     /** Callback for when a link action button is clicked */
     fun onClickLinkButton(link: String)
+
+    /** Callback for when a Wordnet action button is clicked */
+    fun onClickWordnetButton(word: String, url: String)
 }
 
 /** Helper object to assign appropriate [widgets][Widget] to a list of [properties][Property] */
@@ -142,6 +145,14 @@ object Widgets {
                 searchText
             )
             WidgetType.URL -> UrlWidget(
+                parent,
+                listener,
+                category,
+                properties,
+                hasActions,
+                searchText
+            )
+            WidgetType.WORDNET -> WordnetWidget(
                 parent,
                 listener,
                 category,

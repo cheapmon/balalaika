@@ -39,23 +39,38 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
+/**
+ * View model for the main activity and its fragments
+ *
+ * Used for operations that need to survive fragment transactions, including:
+ * - Adding, removing, updating, activating and deactivating dictionaries
+ * - Adding search queries to the history
+ */
 class MainViewModel @ViewModelInject constructor(
     @ApplicationContext private val context: Context,
     private val repository: DictionaryRepository,
     private val searchRepository: SearchRepository,
     private val historyRepository: HistoryRepository
 ) : ViewModel() {
+    /** Currently active dictionary */
     val currentDictionary = repository.currentDictionary.asLiveData()
 
     private val _operationsInProgress = MutableStateFlow(0)
+
+    /** Progress of any running operations */
     val progress = _operationsInProgress.map { it != 0 }.asLiveData()
 
     private val _messages = MutableStateFlow<String?>(null)
+
+    /** Messages about operations to be displayed in the UI */
     val messages = _messages.filterNotNull().asLiveData()
 
     private val _showSearch = MutableStateFlow(false)
+
+    /** Whether to show the search field in the app bar */
     val showSearch = _showSearch.asLiveData()
 
+    /** Toggle the search field */
     fun toggleSearch() {
         _showSearch.value = !_showSearch.value
     }
@@ -65,6 +80,7 @@ class MainViewModel @ViewModelInject constructor(
         load(repository.toggleActive(dictionary), R.string.selection_success_activate)
     }
 
+    /** Deactivate a dictionary */
     fun deactivate(dictionary: Dictionary) {
         load(repository.toggleActive(dictionary), R.string.selection_success_deactivate)
     }
@@ -84,6 +100,7 @@ class MainViewModel @ViewModelInject constructor(
         load(repository.updateDictionary(dictionary), R.string.selection_success_update)
     }
 
+    /** Load an operation and keep track of the progress of any operation  */
     private fun <T> load(
         flow: Flow<LoadState<T, DictionaryError>>,
         @StringRes msgId: Int

@@ -21,10 +21,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
+import com.github.cheapmon.balalaika.data.LoadState
 import com.github.cheapmon.balalaika.data.dictionary.DictionaryEntryRepository
+import com.github.cheapmon.balalaika.data.dictionary.wordnet.WordnetInfo
 import com.github.cheapmon.balalaika.db.entities.category.Category
 import com.github.cheapmon.balalaika.db.entities.view.DictionaryViewWithCategories
 import com.github.cheapmon.balalaika.util.navArgs
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -86,4 +89,8 @@ class DictionaryViewModel @ViewModelInject constructor(
     suspend fun getDictionaryViews(): List<DictionaryViewWithCategories> {
         return repository.dictionaryViews.first()
     }
+
+    /** Load Wordnet information for a word */
+    fun getWordnetData(url: String): Flow<LoadState<WordnetInfo, Throwable>> =
+        repository.getWordnetData(url)
 }

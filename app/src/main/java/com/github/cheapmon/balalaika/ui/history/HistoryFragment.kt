@@ -52,12 +52,15 @@ class HistoryFragment :
         setHasOptionsMenu(true)
     }
 
+    /** @suppress */
     override fun createRecyclerView(binding: FragmentHistoryBinding) =
         binding.historyList
 
+    /** @suppress */
     override fun createRecyclerViewAdapter() =
         HistoryAdapter(this)
 
+    /** @suppress */
     override fun observeData(
         binding: FragmentHistoryBinding,
         owner: LifecycleOwner,
