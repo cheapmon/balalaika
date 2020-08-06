@@ -67,6 +67,7 @@ class DictionaryFragment :
         setHasOptionsMenu(true)
     }
 
+    /** @suppress */
     override fun onCreateBinding(binding: FragmentDictionaryBinding) {
         super.onCreateBinding(binding)
         binding.dictionaryEmptyButton.setOnClickListener {
@@ -75,12 +76,15 @@ class DictionaryFragment :
         }
     }
 
+    /** @suppress */
     override fun createRecyclerView(binding: FragmentDictionaryBinding) =
         binding.entryList
 
+    /** @suppress */
     override fun createRecyclerViewAdapter() =
         DictionaryAdapter(this, this)
 
+    /** @suppress */
     override fun observeData(
         binding: FragmentDictionaryBinding,
         owner: LifecycleOwner,

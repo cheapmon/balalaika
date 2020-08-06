@@ -62,6 +62,7 @@ class SearchFragment :
     private var searchView: SearchView? = null
     private var queryIsSet = false
 
+    /** @suppress */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -71,12 +72,14 @@ class SearchFragment :
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 
+    /** @suppress */
     override fun onDestroyView() {
         activityViewModel.addToHistory()
         activityViewModel.toggleSearch()
         super.onDestroyView()
     }
 
+    /** @suppress */
     override fun onCreateBinding(binding: FragmentSearchBinding) {
         super.onCreateBinding(binding)
         binding.searchRestriction.setOnCloseIconClickListener {
@@ -87,12 +90,15 @@ class SearchFragment :
         searchView?.setOnQueryTextListener(this)
     }
 
+    /** @suppress */
     override fun createRecyclerView(binding: FragmentSearchBinding) =
         binding.searchList
 
+    /** @suppress */
     override fun createRecyclerViewAdapter() =
         SearchAdapter(this)
 
+    /** @suppress */
     override fun observeData(
         binding: FragmentSearchBinding,
         owner: LifecycleOwner,
@@ -146,12 +152,14 @@ class SearchFragment :
         findNavController().navigate(directions)
     }
 
+    /** Add query to history */
     override fun onQueryTextSubmit(query: String?): Boolean {
         hideKeyboard()
         activityViewModel.addToHistory()
         return true
     }
 
+    /** Refresh search */
     override fun onQueryTextChange(newText: String?): Boolean {
         val query = newText.toString().trim()
         if (query.length >= 2) viewModel.setQuery(query)

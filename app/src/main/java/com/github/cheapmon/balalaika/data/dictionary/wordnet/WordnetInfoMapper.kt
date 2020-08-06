@@ -20,9 +20,11 @@ import com.github.cheapmon.balalaika.data.dictionary.wordnet.WordnetInfo.Lexical
 import javax.inject.Inject
 import org.apache.commons.text.StringEscapeUtils
 
+/** Transform a [RDFNode] into a [WordnetInfo] */
 class WordnetInfoMapper @Inject constructor() : Mapper<RDFNode, WordnetInfo> {
     private val prefix = "&wn;"
 
+    /** @suppress */
     override fun map(value: RDFNode) = WordnetInfo(
         entries = value.lexicalEntryList.orEmpty().map { node ->
             LexicalEntry(

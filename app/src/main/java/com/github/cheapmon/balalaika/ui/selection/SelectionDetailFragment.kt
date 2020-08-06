@@ -47,8 +47,10 @@ class SelectionDetailFragment :
     ) {
     private val activityViewModel: MainViewModel by activityViewModels()
 
+    /** @suppress */
     override fun onCreateBinding(binding: FragmentSelectionDetailBinding) {}
 
+    /** @suppress */
     override fun observeData(binding: FragmentSelectionDetailBinding, owner: LifecycleOwner) {
         lifecycleScope.launch {
             viewModel.dictionary.collect {

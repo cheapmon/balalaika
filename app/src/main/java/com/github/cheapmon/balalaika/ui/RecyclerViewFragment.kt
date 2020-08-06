@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlin.reflect.KClass
 
+/** Simple boilerplate for fragments with a recycler view */
 abstract class RecyclerViewFragment<VM : ViewModel,
     B : ViewDataBinding,
     R : RecyclerView.Adapter<*>>(
@@ -33,6 +34,7 @@ abstract class RecyclerViewFragment<VM : ViewModel,
     ) : BaseFragment<VM, B>(viewModelClass, layoutId) {
     private lateinit var adapter: R
 
+    /** @suppress */
     override fun onCreateBinding(binding: B) {
         val linearLayoutManager = LinearLayoutManager(context)
         val recyclerView = createRecyclerView(binding)
@@ -47,11 +49,17 @@ abstract class RecyclerViewFragment<VM : ViewModel,
         }
     }
 
+    /** @suppress */
     override fun observeData(binding: B, owner: LifecycleOwner) {
         observeData(binding, owner, adapter)
     }
 
+    /** Additional setup for the recycler view */
     abstract fun createRecyclerView(binding: B): RecyclerView
+
+    /** Additional setup for the recycler view adapter */
     abstract fun createRecyclerViewAdapter(): R
+
+    /** Observe data and submit to the adapter */
     abstract fun observeData(binding: B, owner: LifecycleOwner, adapter: R)
 }

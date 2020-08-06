@@ -18,7 +18,9 @@ package com.github.cheapmon.balalaika.data.dictionary
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.github.cheapmon.balalaika.data.LoadState
 import com.github.cheapmon.balalaika.data.dictionary.wordnet.WordnetApi
+import com.github.cheapmon.balalaika.data.dictionary.wordnet.WordnetInfo
 import com.github.cheapmon.balalaika.data.dictionary.wordnet.WordnetInfoMapper
 import com.github.cheapmon.balalaika.data.tryLoad
 import com.github.cheapmon.balalaika.db.entities.cache.CacheEntry
@@ -167,6 +169,7 @@ class DictionaryEntryRepository @Inject constructor(
     }
 
     /** Load Wordnet information for a word */
-    fun getWordnetData(url: String) = tryLoad { wordnetApi.getWordnetData(url) }
-        .map { loadState -> loadState.map { node -> mapper.map(node) } }
+    fun getWordnetData(url: String): Flow<LoadState<WordnetInfo, Throwable>> =
+        tryLoad { wordnetApi.getWordnetData(url) }
+            .map { loadState -> loadState.map { node -> mapper.map(node) } }
 }

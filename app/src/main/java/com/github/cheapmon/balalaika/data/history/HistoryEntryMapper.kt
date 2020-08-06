@@ -21,8 +21,10 @@ import com.github.cheapmon.balalaika.db.entities.history.HistoryEntryWithRestric
 import com.github.cheapmon.balalaika.db.entities.history.SearchRestriction
 import javax.inject.Inject
 
+/** Transform a [HistoryEntryWithCategory] into a [HistoryEntryWithRestriction] */
 class HistoryEntryMapper @Inject constructor() :
     Mapper<HistoryEntryWithCategory, HistoryEntryWithRestriction> {
+    /** @suppress */
     override fun map(value: HistoryEntryWithCategory): HistoryEntryWithRestriction {
         return if (value.category != null && value.historyEntry.restriction != null) {
             HistoryEntryWithRestriction(

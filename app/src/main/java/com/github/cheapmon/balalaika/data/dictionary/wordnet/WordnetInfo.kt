@@ -15,17 +15,26 @@
  */
 package com.github.cheapmon.balalaika.data.dictionary.wordnet
 
+/** Information about a word */
 data class WordnetInfo(
+    /** List of related words */
     val entries: List<LexicalEntry>,
+    /** List of definitions */
     val definitions: List<Definition>
 ) {
+    /** Related word */
     data class LexicalEntry(
+        /** Written representation of this word */
         val representation: String,
+        /** Part of speech of this word (e.g. noun) */
         val partOfSpeech: String
     )
 
+    /** Definition of a word */
     data class Definition(
+        /** Explanation */
         val explanation: String,
+        /** Example sentences */
         val examples: List<String>
     )
 }

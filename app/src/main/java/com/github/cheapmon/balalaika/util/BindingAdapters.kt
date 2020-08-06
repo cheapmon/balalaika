@@ -42,6 +42,15 @@ object BindingAdapters {
         view.visibility = if (value) View.VISIBLE else View.GONE
     }
 
+    /**
+     * Justify text on newer devices
+     *
+     * Example:
+     * ```xml
+     * <TextView
+     *   app:justify="@{true}" />
+     * ```
+     */
     @JvmStatic
     @BindingAdapter("justify")
     fun justify(view: TextView, value: Boolean) {

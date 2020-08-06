@@ -15,30 +15,45 @@
  */
 package com.github.cheapmon.balalaika.data
 
+/** Result of an operation */
 sealed class Result<T, E> {
-    data class Success<T, E>(val data: T) : Result<T, E>()
-    data class Error<T, E>(val cause: E) : Result<T, E>()
+    /** Operation succeeded */
+    data class Success<T, E>(
+        /** Result data */
+        val data: T
+    ) : Result<T, E>()
 
+    /** Operation failed */
+    data class Error<T, E>(
+        /** Cause of Failure */
+        val cause: E
+    ) : Result<T, E>()
+
+    /** Retrieve result or an alternative value if the operation failed */
     fun or(value: T): T = when (this) {
         is Success -> this.data
         else -> value
     }
 
+    /** Transform result if the operation succeeded */
     inline fun <R> map(block: (T) -> R): Result<R, E> = when (this) {
         is Success -> Success(block(this.data))
         is Error -> Error(this.cause)
     }
 
+    /** Transform result if the operation failed */
     inline fun <S> mapError(block: (E) -> S): Result<T, S> = when (this) {
         is Success -> Success(this.data)
         is Error -> Error(block(this.cause))
     }
 
+    /** Run [block] if the operation succeeded */
     inline fun onSuccess(block: (T) -> Unit): Result<T, E> {
         if (this is Success) block(this.data)
         return this
     }
 
+    /** Run [block] if the operation failed */
     inline fun onError(block: (E) -> Unit): Result<T, E> {
         if (this is Error) block(this.cause)
         return this

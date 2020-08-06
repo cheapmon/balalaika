@@ -40,12 +40,14 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 
+/** Dialog for displaying Wordnet data for a word */
 class WordnetDialog(
     private val word: String,
     private val payload: Flow<LoadState<WordnetInfo, Throwable>>
 ) : DialogFragment() {
     private lateinit var binding: DialogWordnetBinding
 
+    /** Create dialog and bind data */
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         requireActivity().let {
             val itemAdapter = Adapter(

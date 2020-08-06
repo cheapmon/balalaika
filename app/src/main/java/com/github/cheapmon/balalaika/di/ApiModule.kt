@@ -86,6 +86,7 @@ class ApiModule {
             .addConverterFactory(TikXmlConverterFactory.create(tikXml))
             .build()
 
+    /** @suppress */
     @ActivityScoped
     @Provides
     fun provideWordnetApi(@WordnetRetrofit retrofit: Retrofit): WordnetApi =

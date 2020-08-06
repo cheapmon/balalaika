@@ -18,7 +18,9 @@ package com.github.cheapmon.balalaika.data.dictionary.wordnet
 import retrofit2.http.GET
 import retrofit2.http.Url
 
+/** API for retrieving Wordnet data for a word */
 interface WordnetApi {
+    /** Get Wordnet data for a word from [url] */
     @GET
     suspend fun getWordnetData(@Url url: String): RDFNode
 }

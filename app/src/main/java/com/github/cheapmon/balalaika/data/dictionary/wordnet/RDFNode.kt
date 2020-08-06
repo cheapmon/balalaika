@@ -20,32 +20,40 @@ import com.tickaroo.tikxml.annotation.Element
 import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
 
+/** XML representation of Wordnet data */
 @Xml(name = "rdf:RDF")
 data class RDFNode(
+    /** @suppress */
     @Element val lexicalEntryList: List<LexicalEntryNode>?,
+    /** @suppress */
     @Element val lexicalConceptList: List<LexicalConceptNode>?
 ) {
+    /** @suppress */
     @Xml(name = "ontolex:LexicalEntry")
     data class LexicalEntryNode(
         @Element val canonicalForm: CanonicalFormNode,
         @Element val partOfSpeech: PartOfSpeechNode
     )
 
+    /** @suppress */
     @Xml(name = "ontolex:canonicalForm")
     data class CanonicalFormNode(
         @PropertyElement(name = "ontolex:writtenRep") val writtenRep: String
     )
 
+    /** @suppress */
     @Xml(name = "wn:partOfSpeech")
     data class PartOfSpeechNode(
         @Attribute(name = "rdf:resource") val resource: String
     )
 
+    /** @suppress */
     @Xml(name = "ontolex:LexicalConcept")
     data class LexicalConceptNode(
         @Element(name = "wn:definition") val definition: DefinitionNode
     )
 
+    /** @suppress */
     @Xml(name = "wn:definition")
     data class DefinitionNode(
         @PropertyElement(name = "rdf:value") val value: String

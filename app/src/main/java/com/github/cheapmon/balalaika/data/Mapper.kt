@@ -15,6 +15,8 @@
  */
 package com.github.cheapmon.balalaika.data
 
+/** Transforms a value from one class to another */
 interface Mapper<A, B> {
+    /** Transform value */
     fun map(value: A): B
 }

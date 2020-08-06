@@ -19,6 +19,12 @@ import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
+/**
+ * Run [block] and wrap it in a [Result]
+ *
+ * _Note_: This catches _any_ error encountered while performing [block]. Handling of errors
+ * is up to the caller.
+ */
 suspend fun <T> tryRun(block: suspend () -> T): Result<T, Throwable> {
     return try {
         Result.Success(block())
@@ -28,6 +34,7 @@ suspend fun <T> tryRun(block: suspend () -> T): Result<T, Throwable> {
     }
 }
 
+/** Run [block] and wrap the operation in a [LoadState] */
 fun <T> tryLoad(block: suspend () -> T): Flow<LoadState<T, Throwable>> = flow {
     emit(LoadState.Init())
     emit(LoadState.Loading())
