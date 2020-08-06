@@ -211,11 +211,6 @@ class WordnetParserTest {
     }
 
     @Test(expected = IllegalArgumentException::class)
-    fun `does not parse when namespace is missing`() {
-        serializer.read<RDFNode>("<rdf:RDF />")
-    }
-
-    @Test(expected = IllegalArgumentException::class)
     fun `does not parse wrong node type`() {
         serializer.read<CanonicalFormNode>("""<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />""")
     }

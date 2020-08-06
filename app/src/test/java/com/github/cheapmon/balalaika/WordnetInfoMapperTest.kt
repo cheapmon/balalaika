@@ -22,6 +22,7 @@ import com.github.cheapmon.balalaika.data.dictionary.wordnet.RDFNode.LexicalConc
 import com.github.cheapmon.balalaika.data.dictionary.wordnet.RDFNode.LexicalEntryNode
 import com.github.cheapmon.balalaika.data.dictionary.wordnet.RDFNode.PartOfSpeechNode
 import com.github.cheapmon.balalaika.data.dictionary.wordnet.WordnetInfo
+import com.github.cheapmon.balalaika.data.dictionary.wordnet.WordnetInfo.Definition
 import com.github.cheapmon.balalaika.data.dictionary.wordnet.WordnetInfo.LexicalEntry
 import com.github.cheapmon.balalaika.data.dictionary.wordnet.WordnetInfoMapper
 import org.junit.Assert.assertEquals
@@ -109,8 +110,16 @@ class WordnetInfoMapperTest {
                     )
                 ),
                 definitions = listOf(
-                    "one praying humbly for something; \"a suppliant for her favors\"",
-                    "someone who petitions a court for redress of a grievance or recovery of a right"
+                    Definition(
+                        explanation = "one praying humbly for something",
+                        examples = listOf(
+                            "a suppliant for her favors"
+                        )
+                    ),
+                    Definition(
+                        explanation = "someone who petitions a court for redress of a grievance or recovery of a right",
+                        examples = emptyList()
+                    )
                 )
             ),
             wordnetInfo
