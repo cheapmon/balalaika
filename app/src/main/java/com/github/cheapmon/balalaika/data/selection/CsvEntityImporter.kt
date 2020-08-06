@@ -15,7 +15,6 @@
  */
 package com.github.cheapmon.balalaika.data.selection
 
-import android.content.Context
 import androidx.room.withTransaction
 import com.github.cheapmon.balalaika.db.AppDatabase
 import com.github.cheapmon.balalaika.db.entities.category.Category
@@ -26,7 +25,6 @@ import com.github.cheapmon.balalaika.db.entities.property.Property
 import com.github.cheapmon.balalaika.db.entities.view.DictionaryView
 import com.github.cheapmon.balalaika.db.entities.view.DictionaryViewToCategory
 import com.github.cheapmon.balalaika.util.Constants
-import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.InputStreamReader
 import java.util.Locale
 import javax.inject.Inject
@@ -34,7 +32,6 @@ import org.apache.commons.csv.CSVFormat
 
 /** Extracting database entities from `.csv` source files */
 class CsvEntityImporter @Inject constructor(
-    @ApplicationContext private val context: Context,
     private val db: AppDatabase,
     private val constants: Constants
 ) {

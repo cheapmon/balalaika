@@ -35,7 +35,7 @@ import com.google.android.material.button.MaterialButton
 
 /** Convenience method for setting the icon of a [MaterialButton] from a drawable ID */
 fun MaterialButton.setIconById(@DrawableRes id: Int) {
-    this.icon = this.context.getDrawable(id)
+    this.icon = ContextCompat.getDrawable(this.context, id)
 }
 
 /**

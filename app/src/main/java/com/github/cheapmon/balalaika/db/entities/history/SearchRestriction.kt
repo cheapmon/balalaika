@@ -15,6 +15,7 @@
  */
 package com.github.cheapmon.balalaika.db.entities.history
 
+import android.annotation.SuppressLint
 import android.os.Parcel
 import android.os.Parcelable
 import androidx.core.os.ParcelCompat
@@ -70,6 +71,7 @@ sealed class SearchRestriction : Parcelable {
     }
 
     /** @suppress */
+    @SuppressLint("ParcelCreator")
     companion object CREATOR : Parcelable.Creator<SearchRestriction> {
         override fun createFromParcel(parcel: Parcel): SearchRestriction {
             val isSome = ParcelCompat.readBoolean(parcel)
