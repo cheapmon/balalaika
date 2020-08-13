@@ -58,6 +58,7 @@ class SearchAdapter(
             entryProperties.removeAllViews()
             props
                 .groupBy { it.category }
+                .toSortedMap(Comparator { t, t2 -> t.sequence.compareTo(t2.sequence) })
                 .forEach { (category, properties) ->
                     val widget = Widgets.get(
                         entryProperties,

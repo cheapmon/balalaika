@@ -86,6 +86,7 @@ class DictionaryAdapter(
                 entryProperties.visibility = View.VISIBLE
                 entryProperties.removeAllViews()
                 entry.properties.groupBy { it.category }
+                    .toSortedMap(Comparator { t, t2 -> t.sequence.compareTo(t2.sequence) })
                     .forEach { (category, properties) ->
                         val widget =
                             Widgets.get(entryProperties, widgetListener, category, properties)
