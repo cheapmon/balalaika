@@ -33,6 +33,10 @@ class SelectionViewModel @ViewModelInject constructor(
     /** All available dictionaries */
     val dictionaries = repository.dictionaries.map { list -> list.sortedBy { !it.isActive } }
 
+    val installedDictionaries = repository.installedDictionaries
+    val remoteDictionaries = repository.remoteDictionaries
+    val localDictionaries = repository.localDictionaries
+
     /** Refresh dictionary list from sources */
     fun refresh() {
         repository.refresh().launchIn(viewModelScope)

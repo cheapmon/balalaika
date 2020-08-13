@@ -15,8 +15,12 @@
  */
 package com.github.cheapmon.balalaika.data.selection
 
+import androidx.annotation.StringRes
+import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.squareup.moshi.JsonClass
+import java.util.SortedSet
+import java.util.TreeSet
 
 /**
  * Partial [dictionary][Dictionary] information stripped of app-specific data
@@ -37,7 +41,9 @@ data class DictionaryInfo(
     /** Authors of this dictionary */
     val authors: String,
     /** Additional information for this dictionary */
-    val additionalInfo: String
+    val additionalInfo: String,
+    /** Additional tags */
+    @Transient val tags: SortedSet<Tag> = TreeSet()
 ) {
     /** Convert this [DictionaryInfo] to a [Dictionary] */
     fun toDictionary() =
@@ -49,4 +55,38 @@ data class DictionaryInfo(
             authors = authors,
             additionalInfo = additionalInfo
         )
+
+    /** Add tags to this [DictionaryInfo] */
+    fun addTag(tag: Tag) {
+        tags.add(tag)
+    }
+
+    /** Additional tags for [DictionaryInfo] */
+    enum class Tag(@StringRes msgId: Int) {
+        /** Dictionary is already in the library */
+        Library(R.string.selection_is_installed),
+
+        /** Dictionary is outdated */
+        Outdated(R.string.selection_is_outdated),
+
+        /** Dictionary is up-to-date */
+        UpToDate(R.string.selection_is_uptodate),
+
+        /** Dictionary can be updated */
+        Updates(R.string.selection_is_updatable),
+
+        /** Dictionary is opened */
+        Opened(R.string.affirm)
+    }
+
+    companion object {
+        fun fromDictionary(dictionary: Dictionary) = DictionaryInfo(
+            id = dictionary.id,
+            version = dictionary.version,
+            name = dictionary.name,
+            summary = dictionary.summary,
+            authors = dictionary.authors,
+            additionalInfo = dictionary.additionalInfo
+        )
+    }
 }

@@ -52,7 +52,7 @@ class DictionaryMediator @Inject constructor(
         val p = providers.entries.flatMap { (k, v) ->
             when (val result = tryRun { v.getDictionaryList() }) {
                 is Result.Error -> emptyList()
-                is Result.Success -> result.data.map { it.copy(provider = k) }
+                is Result.Success -> result.data.map { it.toDictionary().copy(provider = k) }
             }
         }
         p.groupBy { it.id }

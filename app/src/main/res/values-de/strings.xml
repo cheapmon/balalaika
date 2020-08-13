@@ -120,6 +120,8 @@
     <string name="selection_is_active">geöffnet</string>
     <string name="selection_is_installable">neu</string>
     <string name="selection_is_installed">Bibliothek</string>
+    <string name="selection_is_outdated">veraltet</string>
+    <string name="selection_is_uptodate">aktuell</string>
     <string name="selection_is_updatable">Updates</string>
     <string name="selection_confirm_activate">Dieses Wörterbuch öffnen?</string>
     <string name="selection_confirm_deactivate">Dieses Wörterbuch schließen?</string>

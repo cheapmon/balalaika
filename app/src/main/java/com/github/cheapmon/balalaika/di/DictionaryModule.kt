@@ -15,8 +15,8 @@
  */
 package com.github.cheapmon.balalaika.di
 
+import com.github.cheapmon.balalaika.data.selection.AssetDictionaryProvider
 import com.github.cheapmon.balalaika.data.selection.DictionaryProvider
-import com.github.cheapmon.balalaika.data.selection.ResourcesDictionaryProvider
 import com.github.cheapmon.balalaika.data.selection.ServerDictionaryProvider
 import dagger.Module
 import dagger.Provides
@@ -35,7 +35,7 @@ class DictionaryModule {
     @Provides
     @IntoMap
     @StringKey("RESOURCES")
-    fun provideResourcesProvider(provider: ResourcesDictionaryProvider): DictionaryProvider =
+    fun provideResourcesProvider(provider: AssetDictionaryProvider): DictionaryProvider =
         provider
 
     /** @suppress */

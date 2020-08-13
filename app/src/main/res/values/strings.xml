@@ -120,6 +120,8 @@
     <string name="selection_is_active">opened</string>
     <string name="selection_is_installable">new</string>
     <string name="selection_is_installed">library</string>
+    <string name="selection_is_outdated">outdated</string>
+    <string name="selection_is_uptodate">up-to-date</string>
     <string name="selection_is_updatable">updates</string>
     <string name="selection_confirm_activate">Open this dictionary?</string>
     <string name="selection_confirm_deactivate">Close this dictionary?</string>

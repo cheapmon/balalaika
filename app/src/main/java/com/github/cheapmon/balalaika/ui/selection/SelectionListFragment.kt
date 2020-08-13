@@ -23,21 +23,24 @@ import androidx.navigation.fragment.findNavController
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.github.cheapmon.balalaika.MainViewModel
 import com.github.cheapmon.balalaika.R
+import com.github.cheapmon.balalaika.data.selection.DictionaryInfo
 import com.github.cheapmon.balalaika.databinding.FragmentSelectionListBinding
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.ui.RecyclerViewFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /** Fragment for displaying available dictionaries for multiple sources */
 @AndroidEntryPoint
-class SelectionListFragment :
-    RecyclerViewFragment<SelectionViewModel, FragmentSelectionListBinding, SelectionAdapter>(
-        SelectionViewModel::class,
-        R.layout.fragment_selection_list,
-        false
-    ), SelectionAdapter.Listener {
+class SelectionListFragment(
+    private val data: Flow<List<DictionaryInfo>>
+) : RecyclerViewFragment<SelectionViewModel, FragmentSelectionListBinding, SelectionAdapter>(
+    SelectionViewModel::class,
+    R.layout.fragment_selection_list,
+    false
+), SelectionAdapter.Listener {
     private val activityViewModel: MainViewModel by viewModels()
 
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
@@ -74,10 +77,10 @@ class SelectionListFragment :
         adapter: SelectionAdapter
     ) {
         lifecycleScope.launch {
-            viewModel.dictionaries.collect {
+            data.collect { list ->
                 swipeRefreshLayout.isRefreshing = false
-                adapter.submitList(it)
-                binding.isEmpty = it.isEmpty()
+                adapter.submitList(list.map { it.toDictionary() })
+                binding.isEmpty = list.isEmpty()
             }
         }
     }

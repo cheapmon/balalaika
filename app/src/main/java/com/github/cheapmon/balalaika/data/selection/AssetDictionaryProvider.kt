@@ -16,7 +16,6 @@
 package com.github.cheapmon.balalaika.data.selection
 
 import android.content.Context
-import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 import com.github.cheapmon.balalaika.di.IoDispatcher
 import com.github.cheapmon.balalaika.util.Constants
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -25,27 +24,31 @@ import java.io.FileNotFoundException
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import kotlinx.coroutines.withTimeout
 
 /** [Dictionary provider][DictionaryProvider] for local asset files */
 @ActivityScoped
-class ResourcesDictionaryProvider @Inject constructor(
+class AssetDictionaryProvider @Inject constructor(
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
     @ApplicationContext private val context: Context,
     private val constants: Constants,
     private val parser: JsonDictionaryParser
 ) : DictionaryProvider {
-    private val dictionaryList = context.assets.open(constants.DICTIONARY_FILE)
-        .bufferedReader()
-        .readText()
+    private lateinit var dictionaryList: List<DictionaryInfo>
     private val zipFiles = context.assets.list("")
         .orEmpty()
         .filter { it.endsWith(".zip") }
 
-    override suspend fun getDictionaryList(): List<Dictionary> =
-        withTimeout(constants.LOCAL_TIMEOUT) {
-            parser.parse(dictionaryList)
-        }.map { it.toDictionary() }
+    override suspend fun getDictionaryList(): List<DictionaryInfo> {
+        if (!::dictionaryList.isInitialized) {
+            dictionaryList = withContext(dispatcher) {
+                val file = context.assets.open(constants.DICTIONARY_FILE)
+                    .bufferedReader()
+                    .readText()
+                parser.parse(file)
+            }
+        }
+        return dictionaryList
+    }
 
     override suspend fun getDictionary(id: String): ByteArray {
         val fileName = zipFiles.find { it.startsWith(id) }

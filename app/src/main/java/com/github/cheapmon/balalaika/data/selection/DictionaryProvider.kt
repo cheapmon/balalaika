@@ -20,7 +20,7 @@ import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 /** Provides [dictionaries][Dictionary] from a local or remote source */
 interface DictionaryProvider {
     /** List of [dictionaries][Dictionary] */
-    suspend fun getDictionaryList(): List<Dictionary>
+    suspend fun getDictionaryList(): List<DictionaryInfo>
     /** Bytes of a `.zip` file with [dictionary][Dictionary] contents */
     suspend fun getDictionary(id: String): ByteArray
 }

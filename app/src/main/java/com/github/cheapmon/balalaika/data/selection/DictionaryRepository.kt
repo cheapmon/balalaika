@@ -17,6 +17,7 @@ package com.github.cheapmon.balalaika.data.selection
 
 import androidx.room.withTransaction
 import com.github.cheapmon.balalaika.data.LoadState
+import com.github.cheapmon.balalaika.data.selection.DictionaryInfo.Tag.*
 import com.github.cheapmon.balalaika.data.tryLoad
 import com.github.cheapmon.balalaika.db.AppDatabase
 import com.github.cheapmon.balalaika.db.entities.config.DictionaryConfig
@@ -29,6 +30,7 @@ import java.net.ConnectException
 import javax.inject.Inject
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -43,10 +45,52 @@ class DictionaryRepository @Inject constructor(
     private val constants: Constants,
     private val db: AppDatabase,
     private val dictionaryDao: DictionaryDao,
-    private val mediator: DictionaryMediator
+    private val mediator: DictionaryMediator,
+    private val assetDictionaryProvider: AssetDictionaryProvider,
+    private val serverDictionaryProvider: ServerDictionaryProvider
 ) {
     /** All available dictionaries */
     val dictionaries = dictionaryDao.getAll()
+
+    /** All installed dictionaries */
+    // TODO: Remove isInstalled field when ready
+    val installedDictionaries = dictionaryDao.getAll().map { list ->
+        list.filter { it.isInstalled }
+            .map { DictionaryInfo.fromDictionary(it) }
+    }
+
+    /** All remote dictionaries */
+    val remoteDictionaries = dictionaries.map { list -> list.filter { it.isInstalled } }
+        .map { list ->
+            val remote = serverDictionaryProvider.getDictionaryList()
+            remote.forEach { new ->
+                val current = list.find { it.id == new.id } ?: return@forEach
+                new.addTag(Library)
+                if (current.isActive) new.tags.add(Opened)
+                when {
+                    current.version > new.version -> new.tags.add(Outdated)
+                    current.version == new.version -> new.tags.add(UpToDate)
+                    current.version < new.version -> new.tags.add(Updates)
+                }
+            }
+            remote
+        }.catch { emptyList<DictionaryInfo>() }
+
+    val localDictionaries = dictionaries.map { list -> list.filter { it.isInstalled } }
+        .map { list ->
+            val local = assetDictionaryProvider.getDictionaryList()
+            local.forEach { new ->
+                val current = list.find { it.id == new.id } ?: return@forEach
+                new.addTag(Library)
+                if (current.isActive) new.tags.add(Opened)
+                when {
+                    current.version > new.version -> new.tags.add(Outdated)
+                    current.version == new.version -> new.tags.add(UpToDate)
+                    current.version < new.version -> new.tags.add(Updates)
+                }
+            }
+            local
+        }
 
     /** Currently active dictionary */
     val currentDictionary = dictionaryDao.getActive()

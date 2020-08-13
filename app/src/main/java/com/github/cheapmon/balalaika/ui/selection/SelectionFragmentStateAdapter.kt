@@ -18,13 +18,16 @@ package com.github.cheapmon.balalaika.ui.selection
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 
-class SelectionFragmentStateAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
+class SelectionFragmentStateAdapter(
+    fragment: Fragment,
+    private val viewModel: SelectionViewModel
+) : FragmentStateAdapter(fragment) {
     override fun getItemCount(): Int = 3
 
     override fun createFragment(position: Int): Fragment = when (position) {
-        0 -> SelectionListFragment()
-        1 -> SelectionListFragment()
-        2 -> SelectionListFragment()
+        0 -> SelectionListFragment(viewModel.installedDictionaries)
+        1 -> SelectionListFragment(viewModel.localDictionaries)
+        2 -> SelectionListFragment(viewModel.remoteDictionaries)
         else -> throw IllegalArgumentException("Position must be <= 2")
     }
 }
