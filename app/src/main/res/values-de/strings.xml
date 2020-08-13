@@ -107,6 +107,7 @@
     <string name="selection_actions">Funktionen</string>
     <string name="selection_summary_title">Zusammenfassung</string>
     <string name="selection_tab_list">Wörterbücher</string>
+    <string name="selection_tab_local">App</string>
     <string name="selection_tab_download">Download</string>
     <string name="selection_authors_title">Autoren</string>
     <string name="selection_info_title">Weitere Informationen</string>

@@ -16,82 +16,44 @@
 package com.github.cheapmon.balalaika.ui.selection
 
 import android.os.Bundle
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.github.cheapmon.balalaika.MainViewModel
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.databinding.FragmentSelectionListBinding
-import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
-import com.github.cheapmon.balalaika.ui.RecyclerViewFragment
-import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import com.github.cheapmon.balalaika.databinding.FragmentSelectionBinding
+import com.google.android.material.tabs.TabLayoutMediator
+import java.lang.IllegalArgumentException
 
-/** Fragment for displaying available dictionaries for multiple sources */
-@AndroidEntryPoint
-class SelectionFragment :
-    RecyclerViewFragment<SelectionViewModel, FragmentSelectionListBinding, SelectionAdapter>(
-        SelectionViewModel::class,
-        R.layout.fragment_selection_list,
-        false
-    ), SelectionAdapter.Listener {
-    private val activityViewModel: MainViewModel by viewModels()
+class SelectionFragment : Fragment() {
+    lateinit var binding: FragmentSelectionBinding
 
-    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
-
-    /** Notify about options menu */
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentSelectionBinding.inflate(inflater)
+        return binding.root
     }
 
-    /** @suppress */
-    override fun onCreateBinding(binding: FragmentSelectionListBinding) {
-        super.onCreateBinding(binding)
-        swipeRefreshLayout = binding.selectionRefresh.apply {
-            setOnRefreshListener {
-                swipeRefreshLayout.isRefreshing = true
-                viewModel.refresh()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val context = requireContext()
+        binding.selectionPager.adapter = SelectionFragmentStateAdapter(this)
+        TabLayoutMediator(binding.selectionTabs, binding.selectionPager) { tab, position ->
+            tab.icon = when (position) {
+                0 -> ContextCompat.getDrawable(context, R.drawable.ic_library)
+                1 -> ContextCompat.getDrawable(context, R.drawable.ic_phone)
+                2 -> ContextCompat.getDrawable(context, R.drawable.ic_download)
+                else -> throw IllegalArgumentException("Position must be <= 2")
             }
-        }
-    }
-
-    /** @suppress */
-    override fun createRecyclerView(binding: FragmentSelectionListBinding) =
-        binding.selectionList
-
-    /** @suppress */
-    override fun createRecyclerViewAdapter() =
-        SelectionAdapter(this)
-
-    /** @suppress */
-    override fun observeData(
-        binding: FragmentSelectionListBinding,
-        owner: LifecycleOwner,
-        adapter: SelectionAdapter
-    ) {
-        lifecycleScope.launch {
-            viewModel.dictionaries.collect {
-                swipeRefreshLayout.isRefreshing = false
-                adapter.submitList(it)
-                binding.isEmpty = it.isEmpty()
+            tab.text = when (position) {
+                0 -> context.getString(R.string.selection_tab_list)
+                1 -> context.getString(R.string.selection_tab_local)
+                2 -> context.getString(R.string.selection_tab_download)
+                else -> throw IllegalArgumentException("Position must be <= 2")
             }
-        }
-    }
-
-    /** Show dictionary in detail view */
-    override fun onClickDictionary(dictionary: Dictionary) {
-        val directions = SelectionFragmentDirections.actionNavSelectionToNavSelectionDetail(
-            dictionary.id
-        )
-        findNavController().navigate(directions)
-    }
-
-    /** Activate a dictionary */
-    override fun onClickActivate(dictionary: Dictionary) {
-        activityViewModel.activate(dictionary)
+        }.attach()
     }
 }

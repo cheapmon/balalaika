@@ -23,7 +23,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.databinding.FragmentSelectionItemBinding
 import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
 
-/** Adapter for [SelectionFragment] */
+/* Displays a list of dictionaries */
 class SelectionAdapter(
     private val listener: Listener
 ) : ListAdapter<Dictionary, SelectionAdapter.ViewHolder>(Diff) {
