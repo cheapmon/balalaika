@@ -13,8 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-include ':data'
-include ':model'
-include ':app'
-include ':validate'
-rootProject.name = "Balalaika"
+package com.github.cheapmon.balalaika.data.db.lexeme
+
+import androidx.room.Embedded
+import androidx.room.Relation
+import com.github.cheapmon.balalaika.data.db.DatabaseEntity
+
+/** [Lexeme] linked with its optional [base][Lexeme.baseId] */
+internal data class LexemeWithBase(
+    /** [Lexeme] */
+    @Embedded val lexeme: Lexeme,
+    /** Optional [base][Lexeme.baseId] of [lexeme] */
+    @Relation(parentColumn = "base_id", entityColumn = "id") val base: Lexeme?
+) : DatabaseEntity

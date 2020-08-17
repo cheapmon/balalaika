@@ -13,8 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-include ':data'
-include ':model'
-include ':app'
-include ':validate'
-rootProject.name = "Balalaika"
+package com.github.cheapmon.balalaika.data.db.bookmark
+
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
+
+@Dao
+internal interface BookmarkDao {
+    @Query("SELECT * FROM bookmark")
+    fun getAll(): Flow<List<BookmarkWithLexeme>>
+
+    @Insert
+    suspend fun insert(bookmark: Bookmark)
+
+    @Query("DELETE FROM bookmark WHERE lexeme_id = (:lexemeId)")
+    suspend fun remove(lexemeId: String)
+}

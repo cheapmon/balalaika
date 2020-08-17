@@ -13,8 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-include ':data'
-include ':model'
-include ':app'
-include ':validate'
-rootProject.name = "Balalaika"
+package com.github.cheapmon.balalaika.data.db
+
+import androidx.room.Database
+import androidx.room.RoomDatabase
+import com.github.cheapmon.balalaika.data.db.cache.CacheEntry
+import com.github.cheapmon.balalaika.data.db.cache.CacheEntryDao
+
+/** Application-wide in-memory database */
+@Database(
+    entities = [CacheEntry::class],
+    version = 1,
+    exportSchema = false
+)
+internal abstract class CacheDatabase : RoomDatabase() {
+    /** Database link for cache entries */
+    abstract fun cacheEntries(): CacheEntryDao
+}

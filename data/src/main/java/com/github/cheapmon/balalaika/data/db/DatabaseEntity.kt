@@ -13,8 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-include ':data'
-include ':model'
-include ':app'
-include ':validate'
-rootProject.name = "Balalaika"
+
+package com.github.cheapmon.balalaika.data.db
+
+internal interface DatabaseEntity

@@ -13,8 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-include ':data'
-include ':model'
-include ':app'
-include ':validate'
-rootProject.name = "Balalaika"
+package com.github.cheapmon.balalaika.data.db.bookmark
+
+import androidx.room.Embedded
+import androidx.room.Relation
+import com.github.cheapmon.balalaika.data.db.DatabaseEntity
+import com.github.cheapmon.balalaika.data.db.lexeme.Lexeme
+
+internal data class BookmarkWithLexeme(
+    @Embedded val bookmark: Bookmark,
+    @Relation(
+        parentColumn = "lexeme_id",
+        entityColumn = "id"
+    ) val lexeme: Lexeme
+) : DatabaseEntity
