@@ -13,7 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-include ':model'
-include ':app'
-include ':validate'
-rootProject.name = "Balalaika"
+package com.github.cheapmon.balalaika.model
+
+data class Dictionary(
+    val id: String,
+    val version: Int,
+    val name: String,
+    val summary: String,
+    val authors: String,
+    val additionalInfo: String,
+    val libraryState: LibraryState,
+    val readState: ReadState,
+    val installState: InstallState
+) {
+    enum class LibraryState {
+        InLibrary,
+        NotInLibrary
+    }
+
+    enum class ReadState {
+        Opened,
+        Closed
+    }
+
+    enum class InstallState {
+        Outdated,
+        UpToDate,
+        Updates
+    }
+}

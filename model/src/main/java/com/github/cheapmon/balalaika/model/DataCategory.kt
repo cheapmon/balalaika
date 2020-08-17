@@ -13,7 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-include ':model'
-include ':app'
-include ':validate'
-rootProject.name = "Balalaika"
+package com.github.cheapmon.balalaika.model
+
+data class DataCategory(
+    val id: String,
+    val name: String,
+    val iconName: String
+)

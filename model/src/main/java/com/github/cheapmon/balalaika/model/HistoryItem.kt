@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-include ':model'
-include ':app'
-include ':validate'
-rootProject.name = "Balalaika"
+package com.github.cheapmon.balalaika.model
+
+data class HistoryItem(
+    val query: String,
+    val restriction: SearchRestriction?
+)
