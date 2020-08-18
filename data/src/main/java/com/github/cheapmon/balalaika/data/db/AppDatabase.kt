@@ -18,35 +18,35 @@ package com.github.cheapmon.balalaika.data.db
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.github.cheapmon.balalaika.data.db.category.Category
+import com.github.cheapmon.balalaika.data.db.category.CategoryEntity
 import com.github.cheapmon.balalaika.data.db.category.CategoryDao
 import com.github.cheapmon.balalaika.data.db.category.WidgetTypeConverters
 import com.github.cheapmon.balalaika.data.db.config.DictionaryConfig
 import com.github.cheapmon.balalaika.data.db.config.DictionaryConfigDao
-import com.github.cheapmon.balalaika.data.db.dictionary.Dictionary
+import com.github.cheapmon.balalaika.data.db.dictionary.DictionaryEntity
 import com.github.cheapmon.balalaika.data.db.dictionary.DictionaryDao
 import com.github.cheapmon.balalaika.data.db.entry.DictionaryEntryDao
 import com.github.cheapmon.balalaika.data.db.entry.PropertyDatabaseView
-import com.github.cheapmon.balalaika.data.db.history.HistoryEntry
-import com.github.cheapmon.balalaika.data.db.history.HistoryEntryDao
-import com.github.cheapmon.balalaika.data.db.lexeme.Lexeme
+import com.github.cheapmon.balalaika.data.db.history.HistoryItemEntity
+import com.github.cheapmon.balalaika.data.db.history.HistoryItemDao
+import com.github.cheapmon.balalaika.data.db.lexeme.LexemeEntity
 import com.github.cheapmon.balalaika.data.db.lexeme.LexemeDao
-import com.github.cheapmon.balalaika.data.db.property.Property
+import com.github.cheapmon.balalaika.data.db.property.PropertyEntity
 import com.github.cheapmon.balalaika.data.db.property.PropertyDao
-import com.github.cheapmon.balalaika.data.db.view.DictionaryView
+import com.github.cheapmon.balalaika.data.db.view.DictionaryViewEntity
 import com.github.cheapmon.balalaika.data.db.view.DictionaryViewDao
 import com.github.cheapmon.balalaika.data.db.view.DictionaryViewToCategory
 
 /** Application-wide database */
 @Database(
     entities = [
-        Dictionary::class,
-        Category::class,
-        Lexeme::class,
-        Property::class,
-        DictionaryView::class,
+        DictionaryEntity::class,
+        CategoryEntity::class,
+        LexemeEntity::class,
+        PropertyEntity::class,
+        DictionaryViewEntity::class,
         DictionaryViewToCategory::class,
-        HistoryEntry::class,
+        HistoryItemEntity::class,
         DictionaryConfig::class
     ],
     views = [PropertyDatabaseView::class],
@@ -55,26 +55,26 @@ import com.github.cheapmon.balalaika.data.db.view.DictionaryViewToCategory
 )
 @TypeConverters(WidgetTypeConverters::class)
 internal abstract class AppDatabase : RoomDatabase() {
-    /** Database link for [dictionaries][Dictionary] */
+    /** Database link for [dictionaries][DictionaryEntity] */
     abstract fun dictionaries(): DictionaryDao
 
-    /** Database link for [categories][Category] */
+    /** Database link for [categories][CategoryEntity] */
     abstract fun categories(): CategoryDao
 
-    /** Database link for [lexemes][Lexeme] */
+    /** Database link for [lexemes][LexemeEntity] */
     abstract fun lexemes(): LexemeDao
 
-    /** Database link for [properties][Property] */
+    /** Database link for [properties][PropertyEntity] */
     abstract fun properties(): PropertyDao
 
     /** Database link for [dictionary entries][PropertyDatabaseView] */
     abstract fun dictionaryEntries(): DictionaryEntryDao
 
-    /** Database link for [dictionary views][DictionaryView] */
+    /** Database link for [dictionary views][DictionaryViewEntity] */
     abstract fun dictionaryViews(): DictionaryViewDao
 
-    /** Database link for [history entries][HistoryEntry] */
-    abstract fun historyEntries(): HistoryEntryDao
+    /** Database link for [history entries][HistoryItemEntity] */
+    abstract fun historyEntries(): HistoryItemDao
 
     /** Database link for [dictionary configurations][DictionaryConfig] */
     abstract fun configurations(): DictionaryConfigDao

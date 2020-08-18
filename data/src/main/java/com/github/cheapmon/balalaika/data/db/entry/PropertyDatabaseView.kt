@@ -17,17 +17,17 @@ package com.github.cheapmon.balalaika.data.db.entry
 
 import androidx.room.DatabaseView
 import androidx.room.Embedded
-import com.github.cheapmon.balalaika.data.db.category.Category
-import com.github.cheapmon.balalaika.data.db.dictionary.Dictionary
-import com.github.cheapmon.balalaika.data.db.lexeme.Lexeme
-import com.github.cheapmon.balalaika.data.db.property.Property
+import com.github.cheapmon.balalaika.data.db.category.CategoryEntity
+import com.github.cheapmon.balalaika.data.db.dictionary.DictionaryEntity
+import com.github.cheapmon.balalaika.data.db.lexeme.LexemeEntity
+import com.github.cheapmon.balalaika.data.db.property.PropertyEntity
 
 /**
  * Database View collecting all information associated with a single property of a dictionary
  * entry
  *
- * A single record in the view consists of a [lexeme][Lexeme], its [base][Lexeme], the
- * [property][Property] itself, and its [data category][Category].
+ * A single record in the view consists of a [lexeme][LexemeEntity], its [base][LexemeEntity], the
+ * [property][PropertyEntity] itself, and its [data category][CategoryEntity].
  *
  * Most critical operations concerning dictionary entries use this view, since it is a lot easier
  * for filtering and ordering of entries to have everything in one place.
@@ -37,43 +37,43 @@ import com.github.cheapmon.balalaika.data.db.property.Property
  * Room can generate the correct code for this class.
  */
 @DatabaseView(
-    """SELECT lexeme.*,
+    """SELECT lexemes.*,
             base.id AS "b_id",
             base.form AS "b_form", 
             base.base_id AS "b_base_id",
-            property.id AS "p_id", 
-            property.category_id AS "p_category_id",
-            property.lexeme_id AS "p_lexeme_id",
-            property.value AS "p_value", 
-            category.id AS "c_id", 
-            category.name AS "c_name",
-            category.widget AS "c_widget", 
-            category.icon_name AS "c_icon_name",
-            category.sequence AS "c_sequence",
-            category.hidden AS "c_hidden",
-            category.sortable AS "c_sortable",
-            dictionary.id AS "d_id",
-            dictionary.version AS "d_version",
-            dictionary.name AS "d_name",
-            dictionary.summary AS "d_summary",
-            dictionary.authors AS "d_authors",
-            dictionary.additional_info AS "d_addition_info"
-            FROM lexeme
-            LEFT JOIN lexeme AS base ON lexeme.base_id = base.id
-            LEFT JOIN property ON lexeme.id = property.lexeme_id 
-            LEFT JOIN category ON property.category_id = category.id
-            LEFT JOIN dictionary ON category.dictionary_id = dictionary.id""",
-    viewName = "dictionary_entry"
+            properties.id AS "p_id", 
+            properties.category_id AS "p_category_id",
+            properties.lexeme_id AS "p_lexeme_id",
+            properties.value AS "p_value", 
+            categories.id AS "c_id", 
+            categories.name AS "c_name",
+            categories.widget AS "c_widget", 
+            categories.icon_name AS "c_icon_name",
+            categories.sequence AS "c_sequence",
+            categories.hidden AS "c_hidden",
+            categories.sortable AS "c_sortable",
+            dictionaries.id AS "d_id",
+            dictionaries.version AS "d_version",
+            dictionaries.name AS "d_name",
+            dictionaries.summary AS "d_summary",
+            dictionaries.authors AS "d_authors",
+            dictionaries.additional_info AS "d_addition_info"
+            FROM lexemes
+            LEFT JOIN lexemes AS base ON lexemes.base_id = base.id
+            LEFT JOIN properties ON lexemes.id = properties.lexeme_id 
+            LEFT JOIN categories ON properties.category_id = categories.id
+            LEFT JOIN dictionaries ON categories.dictionary_id = dictionaries.id""",
+    viewName = "dictionary_entries"
 )
 internal data class PropertyDatabaseView(
-    /** [Lexeme] associated with [property] */
-    @Embedded val lexeme: Lexeme,
-    /** Base [lexeme][Lexeme] associated with [property] */
-    @Embedded(prefix = "b_") val base: Lexeme?,
-    /** Single [Property] of a dictionary entry */
-    @Embedded(prefix = "p_") val property: Property?,
-    /** [Data category][Category] associated with [property] */
-    @Embedded(prefix = "c_") val category: Category?,
-    /** [Dictionary] associated with [property] */
-    @Embedded(prefix = "d_") val dictionary: Dictionary?
+    /** [LexemeEntity] associated with [property] */
+    @Embedded val lexeme: LexemeEntity,
+    /** Base [lexeme][LexemeEntity] associated with [property] */
+    @Embedded(prefix = "b_") val base: LexemeEntity?,
+    /** Single [PropertyEntity] of a dictionary entry */
+    @Embedded(prefix = "p_") val property: PropertyEntity?,
+    /** [Data category][CategoryEntity] associated with [property] */
+    @Embedded(prefix = "c_") val category: CategoryEntity?,
+    /** [DictionaryEntity] associated with [property] */
+    @Embedded(prefix = "d_") val dictionary: DictionaryEntity?
 )

@@ -15,7 +15,13 @@
  */
 package com.github.cheapmon.balalaika.model
 
-data class Property(
-    val category: DataCategory,
-    val value: PropertyValue
-)
+sealed class Property {
+    data class Audio(val name: String, val fileName: String) : Property()
+    data class Example(val name: String, val content: String) : Property()
+    data class Morphology(val parts: List<String>) : Property()
+    data class Plain(val value: String) : Property()
+    data class Reference(val entry: DictionaryEntry) : Property()
+    data class Simple(val value: String) : Property()
+    data class Url(val name: String, val url: String) : Property()
+    data class Wordnet(val name: String, val url: String) : Property()
+}

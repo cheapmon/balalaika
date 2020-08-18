@@ -21,8 +21,8 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.github.cheapmon.balalaika.data.db.DatabaseEntity
-import com.github.cheapmon.balalaika.data.db.category.Category
-import com.github.cheapmon.balalaika.data.db.dictionary.Dictionary
+import com.github.cheapmon.balalaika.data.db.category.CategoryEntity
+import com.github.cheapmon.balalaika.data.db.dictionary.DictionaryEntity
 
 /**
  * Entry in search history
@@ -34,12 +34,12 @@ import com.github.cheapmon.balalaika.data.db.dictionary.Dictionary
     tableName = "search_history",
     foreignKeys = [
         ForeignKey(
-            entity = Dictionary::class,
+            entity = DictionaryEntity::class,
             parentColumns = ["id"],
             childColumns = ["dictionary_id"]
         ),
         ForeignKey(
-            entity = Category::class,
+            entity = CategoryEntity::class,
             parentColumns = ["id", "dictionary_id"],
             childColumns = ["category_id", "dictionary_id"],
             onDelete = ForeignKey.CASCADE
@@ -47,7 +47,7 @@ import com.github.cheapmon.balalaika.data.db.dictionary.Dictionary
     ],
     indices = [Index(value = ["category_id", "dictionary_id"])]
 )
-internal data class HistoryEntry(
+internal data class HistoryItemEntity(
     /**
      * Primary key of this history entry
      *
@@ -55,9 +55,9 @@ internal data class HistoryEntry(
      * auto increment.
      */
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    /** Optional [category][Category] of this entry if the search has been restricted */
+    /** Optional [category][CategoryEntity] of this entry if the search has been restricted */
     @ColumnInfo(name = "category_id") val categoryId: String? = null,
-    /** Optional [dictionary][Dictionary] this entry belongs to */
+    /** Optional [dictionary][DictionaryEntity] this entry belongs to */
     @ColumnInfo(name = "dictionary_id", index = true) val dictionaryId: String,
     /** Optional restriction of this entry */
     @ColumnInfo(name = "restriction") val restriction: String? = null,

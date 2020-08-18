@@ -21,12 +21,12 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.github.cheapmon.balalaika.data.db.DatabaseEntity
-import com.github.cheapmon.balalaika.data.db.category.Category
-import com.github.cheapmon.balalaika.data.db.dictionary.Dictionary
-import com.github.cheapmon.balalaika.data.db.lexeme.Lexeme
+import com.github.cheapmon.balalaika.data.db.category.CategoryEntity
+import com.github.cheapmon.balalaika.data.db.dictionary.DictionaryEntity
+import com.github.cheapmon.balalaika.data.db.lexeme.LexemeEntity
 
 /**
- * Property of a [lexeme][Lexeme] based on a [data category][Category]
+ * Property of a [lexeme][LexemeEntity] based on a [data category][CategoryEntity]
  *
  * To keep data categories flexible, properties are not saved on the lexeme itself, but in a
  * different table. This also enables 1:n-associations.
@@ -34,17 +34,17 @@ import com.github.cheapmon.balalaika.data.db.lexeme.Lexeme
 @Entity(
     foreignKeys = [
         ForeignKey(
-            entity = Category::class,
+            entity = CategoryEntity::class,
             parentColumns = ["id", "dictionary_id"],
             childColumns = ["category_id", "dictionary_id"]
         ),
         ForeignKey(
-            entity = Dictionary::class,
+            entity = DictionaryEntity::class,
             parentColumns = ["id"],
             childColumns = ["dictionary_id"]
         ),
         ForeignKey(
-            entity = Lexeme::class,
+            entity = LexemeEntity::class,
             parentColumns = ["id", "dictionary_id"],
             childColumns = ["lexeme_id", "dictionary_id"]
         )
@@ -52,9 +52,10 @@ import com.github.cheapmon.balalaika.data.db.lexeme.Lexeme
     indices = [
         Index(value = ["category_id", "dictionary_id"]),
         Index(value = ["lexeme_id", "dictionary_id"])
-    ]
+    ],
+    tableName = "properties"
 )
-internal data class Property(
+internal data class PropertyEntity(
     /**
      * Primary key of this property
      *
@@ -62,11 +63,11 @@ internal data class Property(
      * auto increment.
      */
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    /** [Data category][Category] associated with this property */
+    /** [Data category][CategoryEntity] associated with this property */
     @ColumnInfo(name = "category_id") val categoryId: String,
-    /** [Dictionary] associated with this property */
+    /** [DictionaryEntity] associated with this property */
     @ColumnInfo(name = "dictionary_id", index = true) val dictionaryId: String,
-    /** [Lexeme] this property belongs to */
+    /** [LexemeEntity] this property belongs to */
     @ColumnInfo(name = "lexeme_id") val lexemeId: String,
     /** Serialized property value */
     val value: String

@@ -15,8 +15,11 @@
  */
 package com.github.cheapmon.balalaika.model
 
+import java.util.SortedMap
+
 data class DictionaryEntry(
     val representation: String,
     val base: DictionaryEntry?,
-    val properties: List<Property>
+    val properties: SortedMap<DataCategory, List<Property>>,
+    val bookmark: Bookmark?
 )

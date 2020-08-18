@@ -20,7 +20,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import com.github.cheapmon.balalaika.data.db.DatabaseEntity
-import com.github.cheapmon.balalaika.data.db.dictionary.Dictionary
+import com.github.cheapmon.balalaika.data.db.dictionary.DictionaryEntity
 
 /**
  * Data category of a dictionary entry
@@ -40,7 +40,7 @@ import com.github.cheapmon.balalaika.data.db.dictionary.Dictionary
  * Instead of data category _type_, we simply differentiate based on data category _presentation_.
  * This is done through the [widget] property. For example, pieces of information which do not
  * represent the same type of data, but share a common presentation will have the same [WidgetType],
- * but not the same [Category]. This kind of differentiation enables a flexible and wide-spread
+ * but not the same [CategoryEntity]. This kind of differentiation enables a flexible and wide-spread
  * language support, which is one of the main goals of this project.
  *
  * @see WidgetType
@@ -49,13 +49,14 @@ import com.github.cheapmon.balalaika.data.db.dictionary.Dictionary
     primaryKeys = ["id", "dictionary_id"],
     foreignKeys = [
         ForeignKey(
-            entity = Dictionary::class,
+            entity = DictionaryEntity::class,
             parentColumns = ["id"],
             childColumns = ["dictionary_id"]
         )
-    ]
+    ],
+    tableName = "categories"
 )
-internal data class Category(
+internal data class CategoryEntity(
     /** Unique primary identifier of this category from sources */
     val id: String,
     /** Dictionary this category belongs to */

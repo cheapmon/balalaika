@@ -22,12 +22,12 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 internal interface BookmarkDao {
-    @Query("SELECT * FROM bookmark")
-    fun getAll(): Flow<List<BookmarkWithLexeme>>
+    @Query("SELECT * FROM bookmarks WHERE dictionary_id = (:dictionaryId)")
+    fun getAll(dictionaryId: String): Flow<List<BookmarkEntity>>
 
     @Insert
-    suspend fun insert(bookmark: Bookmark)
+    suspend fun insert(bookmark: BookmarkEntity)
 
-    @Query("DELETE FROM bookmark WHERE lexeme_id = (:lexemeId)")
+    @Query("DELETE FROM bookmarks WHERE lexeme_id = (:lexemeId)")
     suspend fun remove(lexemeId: String)
 }

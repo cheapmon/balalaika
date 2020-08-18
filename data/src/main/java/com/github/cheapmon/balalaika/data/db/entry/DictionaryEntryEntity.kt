@@ -18,29 +18,37 @@ package com.github.cheapmon.balalaika.data.db.entry
 import androidx.room.Embedded
 import androidx.room.Relation
 import com.github.cheapmon.balalaika.data.db.DatabaseEntity
-import com.github.cheapmon.balalaika.data.db.lexeme.Lexeme
-import com.github.cheapmon.balalaika.data.db.property.Property
+import com.github.cheapmon.balalaika.data.db.bookmark.BookmarkEntity
+import com.github.cheapmon.balalaika.data.db.lexeme.LexemeEntity
+import com.github.cheapmon.balalaika.data.db.property.PropertyEntity
 import com.github.cheapmon.balalaika.data.db.property.PropertyWithCategory
+import com.github.cheapmon.balalaika.model.Bookmark
 
 /**
- * Full entry in a dictionary, consisting of a [lexeme][Lexeme] grouped with its base and all of
+ * Full entry in a dictionary, consisting of a [lexeme][LexemeEntity] grouped with its base and all of
  * its [properties][PropertyWithCategory]
  */
-internal data class DictionaryEntry(
+internal data class DictionaryEntryEntity(
     /** A single lexeme */
-    @Embedded val lexeme: Lexeme,
+    @Embedded val lexeme: LexemeEntity,
 
     /** The base associated with this lexeme */
     @Relation(
         parentColumn = "base_id",
         entityColumn = "id"
-    ) val base: Lexeme?,
+    ) val base: LexemeEntity?,
 
     /** All properties of this lexeme */
     @Relation(
-        entity = Property::class,
+        entity = PropertyEntity::class,
         parentColumn = "id",
         entityColumn = "lexeme_id"
     )
-    val properties: List<PropertyWithCategory>
+    val properties: List<PropertyWithCategory>,
+
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "lexeme_id"
+    )
+    val bookmark: BookmarkEntity
 ) : DatabaseEntity

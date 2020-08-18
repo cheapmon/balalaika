@@ -18,40 +18,40 @@ package com.github.cheapmon.balalaika.data.db.entry
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import com.github.cheapmon.balalaika.data.db.category.Category
-import com.github.cheapmon.balalaika.data.db.lexeme.Lexeme
-import com.github.cheapmon.balalaika.data.db.property.Property
+import com.github.cheapmon.balalaika.data.db.category.CategoryEntity
+import com.github.cheapmon.balalaika.data.db.lexeme.LexemeEntity
+import com.github.cheapmon.balalaika.data.db.property.PropertyEntity
 import com.github.cheapmon.balalaika.data.db.property.PropertyDao
-import com.github.cheapmon.balalaika.data.db.view.DictionaryView
+import com.github.cheapmon.balalaika.data.db.view.DictionaryViewEntity
 
 /**
- * Database link for [dictionary entries][DictionaryEntry]
+ * Database link for [dictionary entries][DictionaryEntryEntity]
  *
  * Dictionary entry retrieval consists of two steps:
- * 1. Querying of matching [lexemes][Lexeme]
+ * 1. Querying of matching [lexemes][LexemeEntity]
  * 2. Fetching associated dictionary entries on demand
  *
  * In this data access object, we handle the first step by fetching
- * [lexeme identifiers][Lexeme.id] based on the user configuration.
+ * [lexeme identifiers][LexemeEntity.id] based on the user configuration.
  *
  * @see PropertyDao.getProperties
  */
 @Dao
 internal interface DictionaryEntryDao {
     /**
-     * Get all [lexeme ids][Lexeme.id], depending on a certain
-     * [dictionary view][DictionaryView]
+     * Get all [lexeme ids][LexemeEntity.id], depending on a certain
+     * [dictionary view][DictionaryViewEntity]
      *
-     * This effectively checks for all [categories][Category] that are displayed within the
+     * This effectively checks for all [categories][CategoryEntity] that are displayed within the
      * dictionary view and selects only those lexemes that match one of those categories and aren't
      * hidden.
      *
-     * _Note_: These lexemes are sorted only by the [form][Lexeme.form] and
-     * [sequence][Category.sequence] fields.
+     * _Note_: These lexemes are sorted only by the [form][LexemeEntity.form] and
+     * [sequence][CategoryEntity.sequence] fields.
      */
     @Transaction
     @Query(
-        """SELECT id FROM dictionary_entry
+        """SELECT id FROM dictionary_entries
                     WHERE c_id IN (SELECT category_id FROM dictionary_view_to_category
                     WHERE dictionary_view_id = (:dictionaryViewId))
                     AND c_hidden = 0
@@ -62,18 +62,18 @@ internal interface DictionaryEntryDao {
     suspend fun getLexemes(dictionaryId: String, dictionaryViewId: String): List<String>
 
     /**
-     * Get all [lexemes][Lexeme], depending on a certain [dictionary view][DictionaryView] and
-     * sorted by a certain [data category][Category]
+     * Get all [lexemes][LexemeEntity], depending on a certain [dictionary view][DictionaryViewEntity] and
+     * sorted by a certain [data category][CategoryEntity]
      *
-     * This effectively checks for all [categories][Category] that are displayed within the
+     * This effectively checks for all [categories][CategoryEntity] that are displayed within the
      * dictionary view and selects only those lexemes that match one of those categories and aren't
      * hidden, then sorts the remaining lexemes based on the given data category.
      */
     @Transaction
     @Query(
         """SELECT id
-                    FROM dictionary_entry
-                    JOIN (SELECT id AS o_id, p_value as o_value FROM dictionary_entry
+                    FROM dictionary_entries
+                    JOIN (SELECT id AS o_id, p_value as o_value FROM dictionary_entries
                     WHERE c_id = (:categoryId) ORDER BY p_value ASC) AS ids ON o_id = id
                     WHERE c_id IN (SELECT category_id FROM dictionary_view_to_category
                     WHERE dictionary_view_id = (:dictionaryViewId))
@@ -89,12 +89,12 @@ internal interface DictionaryEntryDao {
     ): List<String>
 
     /**
-     * Find all [lexemes][Lexeme] whose [form][Lexeme.form] or
-     * [property value][Property.value] includes the given [query] string
+     * Find all [lexemes][LexemeEntity] whose [form][LexemeEntity.form] or
+     * [property value][PropertyEntity.value] includes the given [query] string
      */
     @Transaction
     @Query(
-        """SELECT id FROM dictionary_entry
+        """SELECT id FROM dictionary_entries
                     WHERE (form LIKE '%' || (:query) || '%'
                     OR p_value LIKE '%' || (:query) || '%')
                     AND c_hidden = 0
@@ -105,16 +105,16 @@ internal interface DictionaryEntryDao {
     suspend fun findLexemes(dictionaryId: String, query: String): List<String>
 
     /**
-     * Find all [lexemes][Lexeme] whose [form][Lexeme.form] or
-     * [property value][Property.value] includes the given [query] string and meet a certain
+     * Find all [lexemes][LexemeEntity] whose [form][LexemeEntity.form] or
+     * [property value][PropertyEntity.value] includes the given [query] string and meet a certain
      * restriction
      */
     @Transaction
     @Query(
-        """SELECT id FROM dictionary_entry
+        """SELECT id FROM dictionary_entries
                     WHERE (form LIKE '%' || (:query) || '%'
                     OR p_value LIKE '%' || (:query) || '%')
-                    AND id IN (SELECT DISTINCT id FROM dictionary_entry
+                    AND id IN (SELECT DISTINCT id FROM dictionary_entries
                     WHERE c_id = (:categoryId) AND p_value LIKE '%' || (:restriction) || '%')
                     AND c_hidden = 0
                     AND dictionary_id = (:dictionaryId)

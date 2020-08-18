@@ -21,26 +21,26 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
-/** Database for [dictionaries][Dictionary] */
+/** Database for [dictionaries][DictionaryEntity] */
 @Dao
 internal interface DictionaryDao {
     /** Get all available dictionaries */
-    @Query("SELECT * FROM dictionary")
-    fun getAll(): Flow<List<Dictionary>>
+    @Query("SELECT * FROM dictionaries")
+    fun getAll(): Flow<List<DictionaryEntity>>
 
     /** Find a dictionary by its id */
-    @Query("SELECT * FROM dictionary WHERE id = (:id) LIMIT 1")
-    fun findById(id: String): Flow<Dictionary?>
+    @Query("SELECT * FROM dictionaries WHERE id = (:id) LIMIT 1")
+    fun findById(id: String): Flow<DictionaryEntity?>
 
     /** Insert dictionaries into the database */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(dictionary: List<Dictionary>)
+    suspend fun insertAll(dictionary: List<DictionaryEntity>)
 
     /** Remove a dictionary from the database */
-    @Query("DELETE FROM dictionary WHERE id = (:id)")
+    @Query("DELETE FROM dictionaries WHERE id = (:id)")
     suspend fun remove(id: String)
 
     /** Delete all dictionaries from the database */
-    @Query("DELETE FROM dictionary")
+    @Query("DELETE FROM dictionaries")
     suspend fun clear()
 }

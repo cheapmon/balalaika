@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 internal interface DictionaryConfigDao {
     /** Get the configuration for a dictionary */
-    @Query("""SELECT * FROM config WHERE id = (:dictionaryId) LIMIT 1""")
+    @Query("""SELECT * FROM configurations WHERE id = (:dictionaryId) LIMIT 1""")
     fun getConfigFor(dictionaryId: String): Flow<DictionaryConfig?>
 
     /** Insert a configuration into the database */
@@ -38,6 +38,6 @@ internal interface DictionaryConfigDao {
     suspend fun update(config: DictionaryConfig)
 
     /** Remove the configuration for a dictionary */
-    @Query("""DELETE FROM config WHERE id = (:dictionaryId)""")
+    @Query("""DELETE FROM configurations WHERE id = (:dictionaryId)""")
     suspend fun removeConfigFor(dictionaryId: String)
 }

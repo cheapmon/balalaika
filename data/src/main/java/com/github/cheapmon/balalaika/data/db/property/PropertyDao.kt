@@ -19,20 +19,20 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
-import com.github.cheapmon.balalaika.data.db.lexeme.Lexeme
-import com.github.cheapmon.balalaika.data.db.view.DictionaryView
+import com.github.cheapmon.balalaika.data.db.lexeme.LexemeEntity
+import com.github.cheapmon.balalaika.data.db.view.DictionaryViewEntity
 
-/** Database link for [properties][Property] */
+/** Database link for [properties][PropertyEntity] */
 @Dao
 internal interface PropertyDao {
     /**
-     * Get all properties of a [lexeme][Lexeme], depending on a
-     * [dictionary view][DictionaryView]
+     * Get all properties of a [lexeme][LexemeEntity], depending on a
+     * [dictionary view][DictionaryViewEntity]
      */
     @Transaction
     @Query(
-        """SELECT property.* FROM property
-                JOIN category ON property.category_id = category.id
+        """SELECT properties.* FROM properties
+                JOIN categories ON properties.category_id = categories.id
                 WHERE lexeme_id = (:lexemeId)
                 AND category_id IN (SELECT category_id FROM dictionary_view_to_category
                 WHERE dictionary_view_id = (:dictionaryViewId))
@@ -43,11 +43,11 @@ internal interface PropertyDao {
         dictionaryViewId: String
     ): List<PropertyWithCategory>
 
-    /** Insert all [properties][Property] into the database */
+    /** Insert all [properties][PropertyEntity] into the database */
     @Insert
-    suspend fun insertAll(properties: List<Property>)
+    suspend fun insertAll(properties: List<PropertyEntity>)
 
     /** Remove all properties associated with a dictionary */
-    @Query("""DELETE FROM property WHERE dictionary_id = (:dictionaryId)""")
+    @Query("""DELETE FROM properties WHERE dictionary_id = (:dictionaryId)""")
     suspend fun removeInDictionary(dictionaryId: String)
 }

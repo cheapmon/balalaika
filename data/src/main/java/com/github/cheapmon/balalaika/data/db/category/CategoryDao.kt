@@ -20,22 +20,22 @@ import androidx.room.Insert
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
-/** Database link for [data categories][Category] */
+/** Database link for [data categories][CategoryEntity] */
 @Dao
 internal interface CategoryDao {
     /** Get all data categories that can be used to order dictionary entries */
-    @Query("""SELECT * FROM category WHERE dictionary_id = (:dictionaryId) AND sortable = 1""")
-    fun getSortable(dictionaryId: String): Flow<List<Category>>
+    @Query("""SELECT * FROM categories WHERE dictionary_id = (:dictionaryId) AND sortable = 1""")
+    fun getSortable(dictionaryId: String): Flow<List<CategoryEntity>>
 
     /** Insert all data categories into the database */
     @Insert
-    suspend fun insertAll(categories: List<Category>)
+    suspend fun insertAll(categories: List<CategoryEntity>)
 
     /** Remove all data categories belonging to a dictionary */
-    @Query("""DELETE FROM category WHERE dictionary_id = (:dictionaryId)""")
+    @Query("""DELETE FROM categories WHERE dictionary_id = (:dictionaryId)""")
     suspend fun removeInDictionary(dictionaryId: String)
 
     /** Find a data category by its id */
-    @Query("""SELECT * FROM category WHERE id = (:id) LIMIT 1""")
-    suspend fun findById(id: String): Category?
+    @Query("""SELECT * FROM categories WHERE id = (:id) LIMIT 1""")
+    suspend fun findById(id: String): CategoryEntity?
 }

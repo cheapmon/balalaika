@@ -20,7 +20,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import com.github.cheapmon.balalaika.data.db.DatabaseEntity
-import com.github.cheapmon.balalaika.data.db.dictionary.Dictionary
+import com.github.cheapmon.balalaika.data.db.dictionary.DictionaryEntity
 
 /**
  * Basic lexical unit
@@ -33,19 +33,20 @@ import com.github.cheapmon.balalaika.data.db.dictionary.Dictionary
     primaryKeys = ["id", "dictionary_id"],
     foreignKeys = [
         ForeignKey(
-            entity = Lexeme::class,
+            entity = LexemeEntity::class,
             parentColumns = ["id", "dictionary_id"],
             childColumns = ["base_id", "dictionary_id"]
         ),
         ForeignKey(
-            entity = Dictionary::class,
+            entity = DictionaryEntity::class,
             parentColumns = ["id"],
             childColumns = ["dictionary_id"]
         )
     ],
-    indices = [Index("base_id", "dictionary_id")]
+    indices = [Index("base_id", "dictionary_id")],
+    tableName = "lexemes"
 )
-internal data class Lexeme(
+internal data class LexemeEntity(
     /** Identifier of this lexeme from sources */
     @ColumnInfo(index = true) val id: String,
     /** Dictionary this lexeme belongs to */

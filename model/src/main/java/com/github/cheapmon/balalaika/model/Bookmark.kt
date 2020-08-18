@@ -15,6 +15,4 @@
  */
 package com.github.cheapmon.balalaika.model
 
-data class Bookmark(
-    val entry: DictionaryEntry
-)
+class Bookmark

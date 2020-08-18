@@ -19,33 +19,33 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
-import com.github.cheapmon.balalaika.data.db.category.Category
+import com.github.cheapmon.balalaika.data.db.category.CategoryEntity
 import kotlinx.coroutines.flow.Flow
 
-/** Database link for [dictionary views][DictionaryView] */
+/** Database link for [dictionary views][DictionaryViewEntity] */
 @Dao
 internal interface DictionaryViewDao {
     /**
-     * Get all [dictionary views][DictionaryView] and their associated [data categories][Category]
+     * Get all [dictionary views][DictionaryViewEntity] and their associated [data categories][CategoryEntity]
      */
     @Transaction
     @Query(
-        """SELECT dictionary_view.*
-                FROM dictionary_view
+        """SELECT dictionary_views.*
+                FROM dictionary_views
                 WHERE dictionary_id = (:dictionaryId)"""
     )
     fun getAll(dictionaryId: String): Flow<List<DictionaryViewWithCategories>>
 
-    /** Insert all [dictionary views][DictionaryView] into the database */
+    /** Insert all [dictionary views][DictionaryViewEntity] into the database */
     @Insert
-    suspend fun insertViews(dictionaryViews: List<DictionaryView>)
+    suspend fun insertViews(dictionaryViews: List<DictionaryViewEntity>)
 
     /** Insert all [dictionary view relations][DictionaryViewToCategory] into the database */
     @Insert
     suspend fun insertRelation(dictionaryViewToCategory: List<DictionaryViewToCategory>)
 
     /** Remove all dictionary views associated with a dictionary */
-    @Query("""DELETE FROM dictionary_view WHERE dictionary_id = (:dictionaryId)""")
+    @Query("""DELETE FROM dictionary_views WHERE dictionary_id = (:dictionaryId)""")
     suspend fun removeViews(dictionaryId: String)
 
     /** Remove all dictionary view relations associated with a dictionary */
@@ -53,6 +53,6 @@ internal interface DictionaryViewDao {
     suspend fun removeRelations(dictionaryId: String)
 
     /** Find a dictionary view by its id */
-    @Query("""SELECT * FROM dictionary_view WHERE id = (:id) LIMIT 1""")
-    suspend fun findById(id: String): DictionaryView?
+    @Query("""SELECT * FROM dictionary_views WHERE id = (:id) LIMIT 1""")
+    suspend fun findById(id: String): DictionaryViewEntity?
 }

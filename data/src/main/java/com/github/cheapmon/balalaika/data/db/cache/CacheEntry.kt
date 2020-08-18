@@ -19,10 +19,10 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.github.cheapmon.balalaika.data.db.DatabaseEntity
-import com.github.cheapmon.balalaika.data.db.lexeme.Lexeme
+import com.github.cheapmon.balalaika.data.db.lexeme.LexemeEntity
 
 /** Entry in the main cache */
-@Entity(tableName = "cache_entry")
+@Entity(tableName = "cache_entries")
 internal data class CacheEntry(
     /**
      * Primary key of this entry
@@ -30,6 +30,6 @@ internal data class CacheEntry(
      * This effectively serves as the relative position of a lexeme in the dictionary.
      */
     @PrimaryKey val id: Long,
-    /** Identifier of a [lexeme][Lexeme] */
+    /** Identifier of a [lexeme][LexemeEntity] */
     @ColumnInfo(name = "lexeme_id", index = true) val lexemeId: String
 ) : DatabaseEntity

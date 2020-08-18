@@ -20,19 +20,19 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 
-/** Database link for [lexemes][Lexeme] */
+/** Database link for [lexemes][LexemeEntity] */
 @Dao
 internal interface LexemeDao {
-    /** Find a [lexeme][Lexeme] by its [identifier][Lexeme.id] */
+    /** Find a [lexeme][LexemeEntity] by its [identifier][LexemeEntity.id] */
     @Transaction
-    @Query("SELECT * FROM lexeme WHERE id = (:id) LIMIT 1")
+    @Query("SELECT * FROM lexemes WHERE id = (:id) LIMIT 1")
     suspend fun getLexemeById(id: String): LexemeWithBase?
 
-    /** Insert all [lexemes][Lexeme] into the database */
+    /** Insert all [lexemes][LexemeEntity] into the database */
     @Insert
-    suspend fun insertAll(lexemes: List<Lexeme>)
+    suspend fun insertAll(lexemes: List<LexemeEntity>)
 
     /** Remove all lexemes associated with a dictionary */
-    @Query("""DELETE FROM lexeme WHERE dictionary_id = (:dictionaryId)""")
+    @Query("""DELETE FROM lexemes WHERE dictionary_id = (:dictionaryId)""")
     suspend fun removeInDictionary(dictionaryId: String)
 }

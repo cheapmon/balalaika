@@ -20,29 +20,29 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import com.github.cheapmon.balalaika.data.db.DatabaseEntity
-import com.github.cheapmon.balalaika.data.db.category.Category
-import com.github.cheapmon.balalaika.data.db.dictionary.Dictionary
+import com.github.cheapmon.balalaika.data.db.category.CategoryEntity
+import com.github.cheapmon.balalaika.data.db.dictionary.DictionaryEntity
 
 /**
- * Relation between [dictionary views][DictionaryView] and their associated
- * [data categories][Category]
+ * Relation between [dictionary views][DictionaryViewEntity] and their associated
+ * [data categories][CategoryEntity]
  */
 @Entity(
     tableName = "dictionary_view_to_category",
     primaryKeys = ["dictionary_view_id", "category_id", "dictionary_id"],
     foreignKeys = [
         ForeignKey(
-            entity = DictionaryView::class,
+            entity = DictionaryViewEntity::class,
             parentColumns = ["id", "dictionary_id"],
             childColumns = ["dictionary_view_id", "dictionary_id"]
         ),
         ForeignKey(
-            entity = Category::class,
+            entity = CategoryEntity::class,
             parentColumns = ["id", "dictionary_id"],
             childColumns = ["category_id", "dictionary_id"]
         ),
         ForeignKey(
-            entity = Dictionary::class,
+            entity = DictionaryEntity::class,
             parentColumns = ["id"],
             childColumns = ["dictionary_id"]
         )
@@ -53,10 +53,10 @@ import com.github.cheapmon.balalaika.data.db.dictionary.Dictionary
     ]
 )
 internal data class DictionaryViewToCategory(
-    /** [Dictionary view][DictionaryView] */
+    /** [Dictionary view][DictionaryViewEntity] */
     @ColumnInfo(name = "dictionary_view_id") val id: String,
-    /** [Category] associated with this dictionary view */
+    /** [CategoryEntity] associated with this dictionary view */
     @ColumnInfo(name = "category_id") val categoryId: String,
-    /** [Dictionary] associated with this dictionary view */
+    /** [DictionaryEntity] associated with this dictionary view */
     @ColumnInfo(name = "dictionary_id", index = true) val dictionaryId: String
 ) : DatabaseEntity

@@ -34,8 +34,8 @@ import com.github.cheapmon.balalaika.data.db.DatabaseEntity
  * Invalidation of dictionaries is achieved via the [version] number. There is currently no way
  * implemented to compare the contents of two dictionaries with the same [id].
  */
-@Entity
-internal data class Dictionary(
+@Entity(tableName = "dictionaries")
+internal data class DictionaryEntity(
     /** Unique primary identifier of this dictionary */
     @PrimaryKey val id: String,
     /** Version number of this dictionary */

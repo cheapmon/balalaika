@@ -21,34 +21,34 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.github.cheapmon.balalaika.data.db.DatabaseEntity
-import com.github.cheapmon.balalaika.data.db.category.Category
-import com.github.cheapmon.balalaika.data.db.dictionary.Dictionary
-import com.github.cheapmon.balalaika.data.db.view.DictionaryView
+import com.github.cheapmon.balalaika.data.db.category.CategoryEntity
+import com.github.cheapmon.balalaika.data.db.dictionary.DictionaryEntity
+import com.github.cheapmon.balalaika.data.db.view.DictionaryViewEntity
 
 /**
- * Application configuration for the display of a [dictionary][Dictionary]
+ * Application configuration for the display of a [dictionary][DictionaryEntity]
  *
  * When another dictionary is activated, two pieces of information need to be saved:
- * - The selected [dictionary view][DictionaryView]
- * - The selected [category][Category] to order dictionary entries by
+ * - The selected [dictionary view][DictionaryViewEntity]
+ * - The selected [category][CategoryEntity] to order dictionary entries by
  *
  * For each dictionary, there always exists one dictionary configuration.
  */
 @Entity(
-    tableName = "config",
+    tableName = "configurations",
     foreignKeys = [
         ForeignKey(
-            entity = Dictionary::class,
+            entity = DictionaryEntity::class,
             parentColumns = ["id"],
             childColumns = ["id"]
         ),
         ForeignKey(
-            entity = Category::class,
+            entity = CategoryEntity::class,
             parentColumns = ["id", "dictionary_id"],
             childColumns = ["sort_by", "id"]
         ),
         ForeignKey(
-            entity = DictionaryView::class,
+            entity = DictionaryViewEntity::class,
             parentColumns = ["id", "dictionary_id"],
             childColumns = ["filter_by", "id"]
         )
@@ -59,10 +59,10 @@ import com.github.cheapmon.balalaika.data.db.view.DictionaryView
     ]
 )
 internal data class DictionaryConfig(
-    /** [Dictionary] this configuration belongs to */
+    /** [DictionaryEntity] this configuration belongs to */
     @PrimaryKey val id: String,
-    /** [Category] identifier of this configuration */
+    /** [CategoryEntity] identifier of this configuration */
     @ColumnInfo(name = "sort_by", index = true) val sortBy: String,
-    /** [DictionaryView] identifier of this configuration */
+    /** [DictionaryViewEntity] identifier of this configuration */
     @ColumnInfo(name = "filter_by", index = true) val filterBy: String
 ) : DatabaseEntity

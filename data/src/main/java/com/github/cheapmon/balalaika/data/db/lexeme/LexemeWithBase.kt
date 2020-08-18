@@ -19,10 +19,10 @@ import androidx.room.Embedded
 import androidx.room.Relation
 import com.github.cheapmon.balalaika.data.db.DatabaseEntity
 
-/** [Lexeme] linked with its optional [base][Lexeme.baseId] */
+/** [LexemeEntity] linked with its optional [base][LexemeEntity.baseId] */
 internal data class LexemeWithBase(
-    /** [Lexeme] */
-    @Embedded val lexeme: Lexeme,
-    /** Optional [base][Lexeme.baseId] of [lexeme] */
-    @Relation(parentColumn = "base_id", entityColumn = "id") val base: Lexeme?
+    /** [LexemeEntity] */
+    @Embedded val lexeme: LexemeEntity,
+    /** Optional [base][LexemeEntity.baseId] of [lexeme] */
+    @Relation(parentColumn = "base_id", entityColumn = "id") val base: LexemeEntity?
 ) : DatabaseEntity
