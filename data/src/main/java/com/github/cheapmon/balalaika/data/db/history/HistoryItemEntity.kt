@@ -25,9 +25,9 @@ import com.github.cheapmon.balalaika.data.db.category.CategoryEntity
 import com.github.cheapmon.balalaika.data.db.dictionary.DictionaryEntity
 
 /**
- * Entry in search history
+ * Item in search history
  *
- * An entry consists of a [query] and an optional restriction (fields [categoryId] and
+ * An item consists of a [query] and an optional restriction (fields [categoryId] and
  * [restriction]).
  */
 @Entity(
@@ -49,17 +49,17 @@ import com.github.cheapmon.balalaika.data.db.dictionary.DictionaryEntity
 )
 internal data class HistoryItemEntity(
     /**
-     * Primary key of this history entry
+     * Primary key of this history item
      *
      * _Note_: A default value of `0` and `autoGenerate = true` effectively corresponds to
      * auto increment.
      */
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    /** Optional [category][CategoryEntity] of this entry if the search has been restricted */
+    /** Optional [category][CategoryEntity] of this item if the search has been restricted */
     @ColumnInfo(name = "category_id") val categoryId: String? = null,
-    /** Optional [dictionary][DictionaryEntity] this entry belongs to */
+    /** Optional [dictionary][DictionaryEntity] this item belongs to */
     @ColumnInfo(name = "dictionary_id", index = true) val dictionaryId: String,
-    /** Optional restriction of this entry */
+    /** Optional restriction of this item */
     @ColumnInfo(name = "restriction") val restriction: String? = null,
     /** Search query */
     @ColumnInfo(name = "query") val query: String

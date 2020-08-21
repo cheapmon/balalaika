@@ -23,26 +23,27 @@ import androidx.room.Transaction
 import com.github.cheapmon.balalaika.data.db.category.CategoryEntity
 import kotlinx.coroutines.flow.Flow
 
-/** Database link for [history entries][HistoryItemEntity] */
+/** Database link for [history items][HistoryItemEntity] */
 @Dao
 internal interface HistoryItemDao {
     /**
-     * Get all [history entries][HistoryItemEntity]
+     * Get all [history items][HistoryItemEntity]
      *
-     * This also retrieves the associated [category][CategoryEntity] if the search has been restricted
+     * This also retrieves the associated [category][CategoryEntity] if the search has been
+     * restricted
      */
     @Transaction
     @Query(
         """SELECT search_history.* FROM search_history
                 WHERE dictionary_id = (:dictionaryId)"""
     )
-    fun getAll(dictionaryId: String): Flow<List<HistoryEntryWithCategory>>
+    fun getAll(dictionaryId: String): Flow<List<HistoryItemWithCategory>>
 
-    /** Insert all [history entries][HistoryItemEntity] into the database */
+    /** Insert all [history items][HistoryItemEntity] into the database */
     @Insert
-    suspend fun insert(historyEntries: HistoryItemEntity)
+    suspend fun insert(historyItems: HistoryItemEntity)
 
-    /** Remove all [history entries][HistoryItemEntity] with a similar [query] from the database */
+    /** Remove all [history items][HistoryItemEntity] with a similar [query] from the database */
     @Query(
         """DELETE FROM search_history
                 WHERE `query` = (:query)
@@ -51,11 +52,11 @@ internal interface HistoryItemDao {
     )
     suspend fun removeSimilar(query: String, dictionaryId: String)
 
-    /** Remove a single [history entry][HistoryItemEntity] from the database */
+    /** Remove a single [history item][HistoryItemEntity] from the database */
     @Delete
     suspend fun remove(historyEntry: HistoryItemEntity)
 
-    /** Remove all search history entries associated with a dictionary */
+    /** Remove all search history items associated with a dictionary */
     @Query("""DELETE FROM search_history WHERE dictionary_id = (:dictionaryId)""")
     suspend fun removeInDictionary(dictionaryId: String)
 }
