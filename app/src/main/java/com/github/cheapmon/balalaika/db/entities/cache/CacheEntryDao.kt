@@ -31,13 +31,6 @@ interface CacheEntryDao {
     )
     suspend fun getFromDictionaryCache(startId: Long, count: Int): List<String>
 
-    /** Get some entries from the search cache */
-    @Query(
-        """SELECT lexeme_id FROM search_cache_entry
-                WHERE id >= (:startId) AND id < (:startId) + (:count)"""
-    )
-    suspend fun getFromSearchCache(startId: Long, count: Int): List<String>
-
     /** Find the position of an entry in the main cache */
     @Transaction
     @Query(
@@ -51,15 +44,7 @@ interface CacheEntryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertIntoDictionaryCache(entries: List<CacheEntry>)
 
-    /** Insert entries into search cache */
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertIntoSearchCache(entries: List<SearchCacheEntry>)
-
     /** Remove all main cache entries */
     @Query("DELETE FROM cache_entry")
     suspend fun clearDictionaryCache()
-
-    /** Remove all search cache entries */
-    @Query("DELETE FROM search_cache_entry")
-    suspend fun clearSearchCache()
 }

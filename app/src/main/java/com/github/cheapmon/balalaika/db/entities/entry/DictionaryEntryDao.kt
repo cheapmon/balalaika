@@ -15,6 +15,7 @@
  */
 package com.github.cheapmon.balalaika.db.entities.entry
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
@@ -102,7 +103,7 @@ interface DictionaryEntryDao {
      */
     @Transaction
     @Query(
-        """SELECT id FROM PropertyDatabaseView
+        """SELECT id, dictionary_id, form, base_id, is_bookmark FROM PropertyDatabaseView
                     WHERE (form LIKE '%' || (:query) || '%'
                     OR p_value LIKE '%' || (:query) || '%')
                     AND c_hidden = 0
@@ -110,7 +111,7 @@ interface DictionaryEntryDao {
                     GROUP BY id
                     ORDER BY form ASC"""
     )
-    suspend fun findLexemes(query: String): List<String>
+    fun findLexemes(query: String): PagingSource<Int, DictionaryEntry>
 
     /**
      * Find all [lexemes][Lexeme] whose [form][Lexeme.form] or
@@ -121,7 +122,7 @@ interface DictionaryEntryDao {
      */
     @Transaction
     @Query(
-        """SELECT id FROM PropertyDatabaseView
+        """SELECT id, dictionary_id, form, base_id, is_bookmark FROM PropertyDatabaseView
                     WHERE (form LIKE '%' || (:query) || '%'
                     OR p_value LIKE '%' || (:query) || '%')
                     AND id IN (SELECT DISTINCT id FROM PropertyDatabaseView
@@ -131,9 +132,9 @@ interface DictionaryEntryDao {
                     GROUP BY id
                     ORDER BY form ASC"""
     )
-    suspend fun findLexemes(
+    fun findLexemes(
         query: String,
         categoryId: String,
         restriction: String
-    ): List<String>
+    ): PagingSource<Int, DictionaryEntry>
 }

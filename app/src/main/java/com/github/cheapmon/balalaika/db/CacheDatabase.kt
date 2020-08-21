@@ -19,7 +19,6 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.github.cheapmon.balalaika.db.entities.cache.CacheEntry
 import com.github.cheapmon.balalaika.db.entities.cache.CacheEntryDao
-import com.github.cheapmon.balalaika.db.entities.cache.SearchCacheEntry
 
 /**
  * Application-wide in-memory database
@@ -29,8 +28,7 @@ import com.github.cheapmon.balalaika.db.entities.cache.SearchCacheEntry
  */
 @Database(
     entities = [
-        CacheEntry::class,
-        SearchCacheEntry::class
+        CacheEntry::class
     ],
     version = 1,
     exportSchema = false
