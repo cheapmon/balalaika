@@ -20,8 +20,8 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.github.cheapmon.balalaika.data.db.category.CategoryEntity
 import com.github.cheapmon.balalaika.data.db.lexeme.LexemeEntity
-import com.github.cheapmon.balalaika.data.db.property.PropertyEntity
 import com.github.cheapmon.balalaika.data.db.property.PropertyDao
+import com.github.cheapmon.balalaika.data.db.property.PropertyEntity
 import com.github.cheapmon.balalaika.data.db.view.DictionaryViewEntity
 
 /**

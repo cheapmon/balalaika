@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.cheapmon.balalaika.data.mappers
+package com.github.cheapmon.balalaika.data.repositories
 
-import com.github.cheapmon.balalaika.data.db.DatabaseEntity
+import javax.inject.Singleton
 
-internal interface EntityMapper<A : DatabaseEntity, B : Any> {
-    fun mapFromEntity(from: A): B
-    fun mapToEntity(from: B): A
-}
+@Singleton
+class DictionaryEntryRepository

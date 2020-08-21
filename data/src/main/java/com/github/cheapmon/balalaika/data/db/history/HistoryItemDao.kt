@@ -39,9 +39,9 @@ internal interface HistoryItemDao {
     )
     fun getAll(dictionaryId: String): Flow<List<HistoryItemWithCategory>>
 
-    /** Insert all [history items][HistoryItemEntity] into the database */
+    /** Insert a [history item][HistoryItemEntity] into the database */
     @Insert
-    suspend fun insert(historyItems: HistoryItemEntity)
+    suspend fun insert(historyItem: HistoryItemEntity)
 
     /** Remove all [history items][HistoryItemEntity] with a similar [query] from the database */
     @Query(
@@ -50,7 +50,7 @@ internal interface HistoryItemDao {
                 AND id IN (SELECT search_history.id FROM search_history
                 WHERE dictionary_id = (:dictionaryId))"""
     )
-    suspend fun removeSimilar(query: String, dictionaryId: String)
+    suspend fun removeSimilar(dictionaryId: String, query: String)
 
     /** Remove a single [history item][HistoryItemEntity] from the database */
     @Delete
