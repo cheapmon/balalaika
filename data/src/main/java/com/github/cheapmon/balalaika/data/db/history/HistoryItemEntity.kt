@@ -20,7 +20,6 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.github.cheapmon.balalaika.data.db.DatabaseEntity
 import com.github.cheapmon.balalaika.data.db.category.CategoryEntity
 import com.github.cheapmon.balalaika.data.db.dictionary.DictionaryEntity
 
@@ -63,4 +62,4 @@ internal data class HistoryItemEntity(
     @ColumnInfo(name = "restriction") val restriction: String? = null,
     /** Search query */
     @ColumnInfo(name = "query") val query: String
-) : DatabaseEntity
+)

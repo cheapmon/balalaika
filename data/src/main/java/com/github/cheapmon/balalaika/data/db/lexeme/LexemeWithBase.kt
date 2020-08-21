@@ -17,7 +17,6 @@ package com.github.cheapmon.balalaika.data.db.lexeme
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.github.cheapmon.balalaika.data.db.DatabaseEntity
 
 /** [LexemeEntity] linked with its optional [base][LexemeEntity.baseId] */
 internal data class LexemeWithBase(
@@ -25,4 +24,4 @@ internal data class LexemeWithBase(
     @Embedded val lexeme: LexemeEntity,
     /** Optional [base][LexemeEntity.baseId] of [lexeme] */
     @Relation(parentColumn = "base_id", entityColumn = "id") val base: LexemeEntity?
-) : DatabaseEntity
+)

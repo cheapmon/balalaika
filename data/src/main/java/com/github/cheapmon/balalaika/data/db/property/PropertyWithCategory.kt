@@ -17,7 +17,6 @@ package com.github.cheapmon.balalaika.data.db.property
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.github.cheapmon.balalaika.data.db.DatabaseEntity
 import com.github.cheapmon.balalaika.data.db.category.CategoryEntity
 
 /**
@@ -30,4 +29,4 @@ internal data class PropertyWithCategory(
     @Embedded val property: PropertyEntity,
     /** [CategoryEntity] associated with this [property] */
     @Relation(parentColumn = "category_id", entityColumn = "id") val category: CategoryEntity
-) : DatabaseEntity
+)

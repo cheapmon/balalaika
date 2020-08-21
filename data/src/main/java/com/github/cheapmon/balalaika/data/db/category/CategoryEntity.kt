@@ -19,7 +19,6 @@ import android.graphics.drawable.Drawable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import com.github.cheapmon.balalaika.data.db.DatabaseEntity
 import com.github.cheapmon.balalaika.data.db.dictionary.DictionaryEntity
 
 /**
@@ -97,4 +96,4 @@ internal data class CategoryEntity(
      * it isn't helpful for dictionary entries to be ordered by any category (e.g. URLs).
      */
     val sortable: Boolean
-) : DatabaseEntity
+)

@@ -20,7 +20,6 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.github.cheapmon.balalaika.data.db.DatabaseEntity
 import com.github.cheapmon.balalaika.data.db.category.CategoryEntity
 import com.github.cheapmon.balalaika.data.db.dictionary.DictionaryEntity
 import com.github.cheapmon.balalaika.data.db.view.DictionaryViewEntity
@@ -65,4 +64,4 @@ internal data class DictionaryConfig(
     @ColumnInfo(name = "sort_by", index = true) val sortBy: String,
     /** [DictionaryViewEntity] identifier of this configuration */
     @ColumnInfo(name = "filter_by", index = true) val filterBy: String
-) : DatabaseEntity
+)

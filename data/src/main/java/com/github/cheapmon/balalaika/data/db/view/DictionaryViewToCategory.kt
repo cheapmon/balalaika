@@ -19,7 +19,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
-import com.github.cheapmon.balalaika.data.db.DatabaseEntity
 import com.github.cheapmon.balalaika.data.db.category.CategoryEntity
 import com.github.cheapmon.balalaika.data.db.dictionary.DictionaryEntity
 
@@ -59,4 +58,4 @@ internal data class DictionaryViewToCategory(
     @ColumnInfo(name = "category_id") val categoryId: String,
     /** [DictionaryEntity] associated with this dictionary view */
     @ColumnInfo(name = "dictionary_id", index = true) val dictionaryId: String
-) : DatabaseEntity
+)

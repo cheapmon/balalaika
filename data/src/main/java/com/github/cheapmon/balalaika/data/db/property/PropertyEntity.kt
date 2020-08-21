@@ -20,7 +20,6 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.github.cheapmon.balalaika.data.db.DatabaseEntity
 import com.github.cheapmon.balalaika.data.db.category.CategoryEntity
 import com.github.cheapmon.balalaika.data.db.dictionary.DictionaryEntity
 import com.github.cheapmon.balalaika.data.db.lexeme.LexemeEntity
@@ -71,4 +70,4 @@ internal data class PropertyEntity(
     @ColumnInfo(name = "lexeme_id") val lexemeId: String,
     /** Serialized property value */
     val value: String
-) : DatabaseEntity
+)

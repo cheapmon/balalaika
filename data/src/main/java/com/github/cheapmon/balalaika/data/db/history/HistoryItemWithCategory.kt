@@ -17,7 +17,6 @@ package com.github.cheapmon.balalaika.data.db.history
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.github.cheapmon.balalaika.data.db.DatabaseEntity
 import com.github.cheapmon.balalaika.data.db.category.CategoryEntity
 
 /**
@@ -31,4 +30,4 @@ internal data class HistoryItemWithCategory(
     @Embedded val historyItem: HistoryItemEntity,
     /** Optional [category][CategoryEntity] if the search has been restricted */
     @Relation(parentColumn = "category_id", entityColumn = "id") val category: CategoryEntity?
-) : DatabaseEntity
+)

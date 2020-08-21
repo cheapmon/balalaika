@@ -18,7 +18,6 @@ package com.github.cheapmon.balalaika.data.db.dictionary
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.github.cheapmon.balalaika.data.db.DatabaseEntity
 
 /**
  * Description and metadata for a dictionary
@@ -48,4 +47,4 @@ internal data class DictionaryEntity(
     val authors: String,
     /** Additional information for this dictionary (e.g. hyperlinks) */
     @ColumnInfo(name = "additional_info") val additionalInfo: String
-) : DatabaseEntity
+)

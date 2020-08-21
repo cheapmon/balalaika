@@ -18,7 +18,6 @@ package com.github.cheapmon.balalaika.data.db.cache
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.github.cheapmon.balalaika.data.db.DatabaseEntity
 import com.github.cheapmon.balalaika.data.db.lexeme.LexemeEntity
 
 /** Entry in the main cache */
@@ -32,4 +31,4 @@ internal data class CacheEntry(
     @PrimaryKey val id: Long,
     /** Identifier of a [lexeme][LexemeEntity] */
     @ColumnInfo(name = "lexeme_id", index = true) val lexemeId: String
-) : DatabaseEntity
+)

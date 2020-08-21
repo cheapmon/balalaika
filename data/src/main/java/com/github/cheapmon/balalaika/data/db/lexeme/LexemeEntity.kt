@@ -19,7 +19,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
-import com.github.cheapmon.balalaika.data.db.DatabaseEntity
 import com.github.cheapmon.balalaika.data.db.dictionary.DictionaryEntity
 
 /**
@@ -59,4 +58,4 @@ internal data class LexemeEntity(
     val form: String,
     /** Optional base of this lexeme */
     @ColumnInfo(name = "base_id", index = true) val baseId: String?
-) : DatabaseEntity
+)

@@ -19,10 +19,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import com.github.cheapmon.balalaika.data.db.DatabaseEntity
 import com.github.cheapmon.balalaika.data.db.dictionary.DictionaryEntity
 import com.github.cheapmon.balalaika.data.db.lexeme.LexemeEntity
-import com.github.cheapmon.balalaika.model.DictionaryEntry
 
 @Entity(
     foreignKeys = [
@@ -43,4 +41,4 @@ internal data class BookmarkEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     @ColumnInfo(name = "dictionary_id", index = true) val dictionaryId: String,
     @ColumnInfo(name = "lexeme_id", index = true) val lexemeId: String
-) : DatabaseEntity
+)
