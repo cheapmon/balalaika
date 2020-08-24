@@ -16,13 +16,19 @@
 package com.github.cheapmon.balalaika.data.repositories
 
 import com.github.cheapmon.balalaika.data.db.dictionary.DictionaryDao
+import com.github.cheapmon.balalaika.data.di.Local
+import com.github.cheapmon.balalaika.data.di.Remote
 import com.github.cheapmon.balalaika.data.mappers.DictionaryEntityToDictionary
 import com.github.cheapmon.balalaika.data.prefs.PreferenceStorage
+import com.github.cheapmon.balalaika.data.repositories.dictionary.DictionaryDataSource
+import com.github.cheapmon.balalaika.data.result.LoadState
+import com.github.cheapmon.balalaika.data.result.tryLoad
 import com.github.cheapmon.balalaika.model.Dictionary
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 @Suppress("EXPERIMENTAL_API_USAGE")
@@ -30,10 +36,23 @@ import kotlinx.coroutines.flow.map
 class DictionaryRepository @Inject internal constructor(
     private val storage: PreferenceStorage,
     private val dao: DictionaryDao,
+    @Local private val localDataSource: DictionaryDataSource,
+    @Remote private val remoteDataSource: DictionaryDataSource,
     private val mapper: DictionaryEntityToDictionary
 ) {
     fun getOpenDictionary(): Flow<Dictionary?> =
         storage.observableOpenDictionary
             .flatMapLatest { dao.findById(it) }
             .map { it?.let { mapper(it) } }
+
+    fun getInstalledDictionaries(): Flow<List<Dictionary>> =
+        dao.getAll().map { list -> list.map { mapper(it) } }
+
+    fun getLocalDictionaries(): Flow<List<Dictionary>> = flow {
+        emit(localDataSource.getDictionaryList())
+    }
+
+    fun getRemoteDictionaries(): Flow<LoadState<List<Dictionary>, Throwable>> = tryLoad {
+        remoteDataSource.getDictionaryList()
+    }
 }
