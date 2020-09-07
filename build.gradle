@@ -27,6 +27,7 @@ buildscript {
         dokka_version = "0.9.17"
         ktlint_gradle_version = "9.2.1"
         tikxml_version = "0.9.0_11-SNAPSHOT"
+        wire_version = "3.0.0-rc01"
     }
     repositories {
         google()
@@ -41,6 +42,7 @@ buildscript {
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
         classpath "org.jetbrains.dokka:dokka-android-gradle-plugin:$dokka_version"
         classpath "org.jlleitschuh.gradle:ktlint-gradle:$ktlint_gradle_version"
+        classpath "com.squareup.wire:wire-gradle-plugin:$wire_version"
     }
 }
 
@@ -50,6 +52,7 @@ allprojects {
         jcenter()
         maven { url 'http://oss.sonatype.org/content/repositories/snapshots' }
     }
+    apply from: rootProject.file('gradle/generated-kotlin-sources.gradle')
 }
 
 task clean(type: Delete) {

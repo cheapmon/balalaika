@@ -22,6 +22,7 @@ import com.github.cheapmon.balalaika.data.db.CacheDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 
 /**
@@ -30,7 +31,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
  * This module inject the application database and all of its data access objects.
  */
 @Module
-@InstallIn(ApplicationContext::class)
+@InstallIn(ApplicationComponent::class)
 internal class DatabaseModule {
     /** @suppress */
     @Provides

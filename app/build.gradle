@@ -23,8 +23,6 @@ plugins {
     id "org.jlleitschuh.gradle.ktlint"
 }
 
-apply from: rootProject.file('gradle/generated-kotlin-sources.gradle')
-
 android {
     compileSdkVersion 30
     buildToolsVersion "29.0.3"

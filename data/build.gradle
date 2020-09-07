@@ -13,11 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
-apply plugin: 'org.jlleitschuh.gradle.ktlint'
+plugins {
+    id "com.android.library"
+    id "org.jetbrains.kotlin.android"
+    id "org.jetbrains.kotlin.android.extensions"
+    id "org.jetbrains.kotlin.kapt"
+    id 'org.jlleitschuh.gradle.ktlint'
+    id "com.squareup.wire"
+}
 
 android {
     compileSdkVersion 30
@@ -48,6 +51,14 @@ android {
     }
 }
 
+sourceSets {
+    main.java.srcDirs += "$buildDir/generated/src/main/java"
+}
+
+wire {
+    kotlin {}
+}
+
 dependencies {
     // Main dependencies
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
@@ -76,6 +87,10 @@ dependencies {
     implementation "org.apache.commons:commons-csv:1.8"
     implementation "org.apache.commons:commons-text:1.9"
     testImplementation "com.squareup.okhttp3:mockwebserver:4.8.0"
+
+    // DataStore library
+    implementation "androidx.datastore:datastore-core:1.0.0-alpha01"
+    implementation "com.squareup.wire:wire-runtime:$wire_version"
 
     // Dependency Injection
     implementation "com.google.dagger:hilt-android:$hilt_version"

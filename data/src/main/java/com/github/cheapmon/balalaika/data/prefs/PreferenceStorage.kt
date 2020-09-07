@@ -18,6 +18,7 @@ package com.github.cheapmon.balalaika.data.prefs
 import kotlinx.coroutines.flow.Flow
 
 internal interface PreferenceStorage {
-    var openDictionary: String
-    var observableOpenDictionary: Flow<String>
+    val openDictionary: Flow<String?>
+
+    suspend fun setOpenDictionary(dictionaryId: String)
 }

@@ -24,12 +24,9 @@ import com.github.cheapmon.balalaika.data.repositories.dictionary.DictionaryData
 import com.github.cheapmon.balalaika.data.result.LoadState
 import com.github.cheapmon.balalaika.data.result.tryLoad
 import com.github.cheapmon.balalaika.model.Dictionary
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 
 @Suppress("EXPERIMENTAL_API_USAGE")
 @Singleton
@@ -41,18 +38,52 @@ class DictionaryRepository @Inject internal constructor(
     private val mapper: DictionaryEntityToDictionary
 ) {
     fun getOpenDictionary(): Flow<Dictionary?> =
-        storage.observableOpenDictionary
-            .flatMapLatest { dao.findById(it) }
+        storage.openDictionary
+            .flatMapLatest { it?.let { dao.findById(it) } ?: flowOf(null) }
             .map { it?.let { mapper(it) } }
 
     fun getInstalledDictionaries(): Flow<List<Dictionary>> =
         dao.getAll().map { list -> list.map { mapper(it) } }
 
-    fun getLocalDictionaries(): Flow<List<Dictionary>> = flow {
-        emit(localDataSource.getDictionaryList())
-    }
+    fun getLocalDictionaries(): Flow<List<Dictionary>> =
+        getInstalledDictionaries().mapLatest { currentList ->
+            val newList = localDataSource.getDictionaryList()
+            compareDictionaryLists(currentList, newList)
+        }
 
-    fun getRemoteDictionaries(): Flow<LoadState<List<Dictionary>, Throwable>> = tryLoad {
-        remoteDataSource.getDictionaryList()
+    fun getRemoteDictionaries(): Flow<LoadState<List<Dictionary>, Throwable>> =
+        combine(
+            getInstalledDictionaries(),
+            tryLoad { remoteDataSource.getDictionaryList() },
+        ) { currentList: List<Dictionary>, loadState: LoadState<List<Dictionary>, Throwable> ->
+            when (loadState) {
+                is LoadState.Init -> LoadState.Init()
+                is LoadState.Loading -> LoadState.Loading()
+                is LoadState.Finished -> loadState.map { newList ->
+                    compareDictionaryLists(currentList, newList)
+                }
+            }
+        }
+
+    private fun compareDictionaryLists(
+        currentList: List<Dictionary>,
+        newList: List<Dictionary>
+    ): List<Dictionary> = newList.map { dictionary ->
+        val current = currentList.find { it.id == dictionary.id }
+        if (current == null) {
+            dictionary
+        } else {
+            val installState = when {
+                current.version > dictionary.version -> Dictionary.InstallState.Outdated
+                current.version == dictionary.version -> Dictionary.InstallState.UpToDate
+                current.version < dictionary.version -> Dictionary.InstallState.Updates
+                else -> throw IllegalStateException()
+            }
+            dictionary.copy(
+                libraryState = current.libraryState,
+                readState = current.readState,
+                installState = installState
+            )
+        }
     }
 }
