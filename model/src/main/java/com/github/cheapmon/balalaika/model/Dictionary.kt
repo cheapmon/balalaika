@@ -33,6 +33,10 @@ data class Dictionary(
     override val additionalInfo: String,
 ) : SimpleDictionary
 
+data class InstalledDictionary(
+    private val dictionary: Dictionary,
+    val isOpened: Boolean = false
+) : SimpleDictionary by dictionary
 
 data class DownloadableDictionary(
     private val dictionary: Dictionary,

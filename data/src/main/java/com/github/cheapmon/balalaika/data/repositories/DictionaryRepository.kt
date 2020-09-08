@@ -23,10 +23,8 @@ import com.github.cheapmon.balalaika.data.result.Result
 import com.github.cheapmon.balalaika.data.result.tryRun
 import com.github.cheapmon.balalaika.model.Dictionary
 import com.github.cheapmon.balalaika.model.DownloadableDictionary
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
+import com.github.cheapmon.balalaika.model.InstalledDictionary
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -43,11 +41,14 @@ class DictionaryRepository @Inject internal constructor(
             .flatMapLatest { it?.let { dao.findById(it) } ?: flowOf(null) }
             .map { it?.let { mapper(it) } }
 
-    fun getInstalledDictionaries(): Flow<List<Dictionary>> =
-        dao.getAll().map { list -> list.map { mapper(it) } }
+    fun getInstalledDictionaries(): Flow<List<InstalledDictionary>> =
+        combine(getOpenDictionary(), dao.getAll()) { opened, list ->
+            list.map { InstalledDictionary(mapper(it), it.id == opened?.id) }
+        }
 
     fun getDownloadableDictionaries(): Flow<List<DownloadableDictionary>> =
-        getInstalledDictionaries().map { currentList ->
+        dao.getAll().map { list ->
+            val currentList = list.map { mapper(it) }
             val newList = fetchDictionariesFromDataSources()
             compareDictionaryLists(currentList, newList)
         }
@@ -67,7 +68,7 @@ class DictionaryRepository @Inject internal constructor(
     ): List<DownloadableDictionary> = newList.map { dictionary ->
         val current = currentList.find { it.id == dictionary.id }
         if (current == null) {
-            DownloadableDictionary(dictionary, false)
+            DownloadableDictionary(dictionary)
         } else {
             val isInLibrary = dictionary.version == current.version
             DownloadableDictionary(dictionary, isInLibrary)
