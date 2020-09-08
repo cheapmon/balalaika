@@ -20,5 +20,5 @@ import kotlinx.coroutines.flow.Flow
 internal interface PreferenceStorage {
     val openDictionary: Flow<String?>
 
-    suspend fun setOpenDictionary(dictionaryId: String)
+    suspend fun setOpenDictionary(dictionaryId: String?)
 }

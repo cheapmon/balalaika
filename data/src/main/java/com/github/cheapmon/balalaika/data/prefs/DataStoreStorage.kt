@@ -45,7 +45,7 @@ internal class DataStoreStorage(
     override val openDictionary: Flow<String?> =
         dataStore.data.map { preferences -> preferences.openDictionary }
 
-    override suspend fun setOpenDictionary(dictionaryId: String) {
+    override suspend fun setOpenDictionary(dictionaryId: String?) {
         dataStore.updateData { preferences ->
             preferences.copy(openDictionary = dictionaryId)
         }

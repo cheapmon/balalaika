@@ -19,6 +19,7 @@ import com.github.cheapmon.balalaika.data.db.dictionary.DictionaryDao
 import com.github.cheapmon.balalaika.data.mappers.DictionaryEntityToDictionary
 import com.github.cheapmon.balalaika.data.prefs.PreferenceStorage
 import com.github.cheapmon.balalaika.data.repositories.dictionary.DictionaryDataSource
+import com.github.cheapmon.balalaika.data.repositories.dictionary.install.DictionaryInstaller
 import com.github.cheapmon.balalaika.data.result.Result
 import com.github.cheapmon.balalaika.data.result.tryRun
 import com.github.cheapmon.balalaika.model.Dictionary
@@ -34,8 +35,9 @@ class DictionaryRepository @Inject internal constructor(
     private val storage: PreferenceStorage,
     private val dao: DictionaryDao,
     private val dataSources: Map<String, @JvmSuppressWildcards DictionaryDataSource>,
+    private val installer: DictionaryInstaller,
     private val mapper: DictionaryEntityToDictionary
-) {
+) : DictionaryInstaller by installer {
     fun getOpenDictionary(): Flow<Dictionary?> =
         storage.openDictionary
             .flatMapLatest { it?.let { dao.findById(it) } ?: flowOf(null) }
@@ -73,5 +75,13 @@ class DictionaryRepository @Inject internal constructor(
             val isInLibrary = dictionary.version == current.version
             DownloadableDictionary(dictionary, isInLibrary)
         }
+    }
+
+    suspend fun openDictionary(dictionary: InstalledDictionary) {
+        storage.setOpenDictionary(dictionary.id)
+    }
+
+    suspend fun closeDictionary(dictionary: InstalledDictionary) {
+        storage.setOpenDictionary(null)
     }
 }
