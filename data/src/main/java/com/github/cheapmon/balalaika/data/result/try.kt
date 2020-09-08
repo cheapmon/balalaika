@@ -16,6 +16,7 @@
 package com.github.cheapmon.balalaika.data.result
 
 import android.util.Log
+import kotlin.experimental.ExperimentalTypeInference
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -39,4 +40,36 @@ internal fun <T> tryLoad(block: suspend () -> T): Flow<LoadState<T, Throwable>> 
     emit(LoadState.Init())
     emit(LoadState.Loading())
     emit(LoadState.Finished(tryRun(block)))
+}
+
+/**
+ * Run [block] and wrap the operation in a [ProgressState], indicating progress while the
+ * operation is ongoing
+ *
+ * Example:
+ * ```
+ * tryProgress {
+ *   progress(25)
+ *   someOperation()
+ *   progress(50)
+ *   someOtherOperation()
+ *   progress(75)
+ *   return@tryProgress someResult
+ * }
+ * ```
+ */
+@OptIn(ExperimentalTypeInference::class)
+internal fun <T, M> tryProgress(
+    @BuilderInference
+    block: suspend ProgressState.Listener<M>.() -> T
+): Flow<ProgressState<T, M, Throwable>> = flow {
+    emit(ProgressState.Init)
+    emit(ProgressState.InProgress(0))
+    val listener = object : ProgressState.Listener<M> {
+        override suspend fun progress(inProgress: ProgressState.InProgress<M>) {
+            val percentage = inProgress.percentage.coerceIn(0, 100)
+            emit(inProgress.copy(percentage = percentage))
+        }
+    }
+    emit(ProgressState.Finished(tryRun { block(listener) }))
 }
