@@ -15,30 +15,26 @@
  */
 package com.github.cheapmon.balalaika.model
 
-data class Dictionary(
-    val id: String,
-    val version: Int,
-    val name: String,
-    val summary: String,
-    val authors: String,
-    val additionalInfo: String,
-    val libraryState: LibraryState,
-    val readState: ReadState,
-    val installState: InstallState
-) {
-    enum class LibraryState {
-        InLibrary,
-        NotInLibrary
-    }
-
-    enum class ReadState {
-        Opened,
-        Closed
-    }
-
-    enum class InstallState {
-        Outdated,
-        UpToDate,
-        Updates
-    }
+private interface SimpleDictionary {
+    val id: String
+    val version: Int
+    val name: String
+    val summary: String
+    val authors: String
+    val additionalInfo: String
 }
+
+data class Dictionary(
+    override val id: String,
+    override val version: Int,
+    override val name: String,
+    override val summary: String,
+    override val authors: String,
+    override val additionalInfo: String,
+) : SimpleDictionary
+
+
+data class DownloadableDictionary(
+    private val dictionary: Dictionary,
+    val isInLibrary: Boolean = false,
+) : SimpleDictionary by dictionary

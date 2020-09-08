@@ -22,6 +22,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
+import dagger.multibindings.IntoMap
+import dagger.multibindings.StringKey
 
 /** [Dictionary data source][DictionaryDataSource] dependency injection module */
 @Module
@@ -29,13 +31,15 @@ import dagger.hilt.android.components.ApplicationComponent
 internal class DictionaryModule {
     /** @suppress */
     @Provides
-    @Local
+    @IntoMap
+    @StringKey("LOCAL")
     fun provideLocalDataSource(source: LocalDictionaryDataSource): DictionaryDataSource =
         source
 
     /** @suppress */
     @Provides
-    @Remote
+    @IntoMap
+    @StringKey("REMOTE")
     fun provideRemoteDataSource(source: RemoteDictionaryDataSource): DictionaryDataSource =
         source
 }

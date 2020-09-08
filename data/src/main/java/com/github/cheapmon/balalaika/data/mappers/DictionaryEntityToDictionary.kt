@@ -28,8 +28,5 @@ internal class DictionaryEntityToDictionary : Mapper<DictionaryEntity, Dictionar
         summary = from.summary,
         authors = from.authors,
         additionalInfo = from.additionalInfo,
-        libraryState = Dictionary.LibraryState.NotInLibrary,
-        readState = Dictionary.ReadState.Closed,
-        installState = Dictionary.InstallState.UpToDate
     )
 }

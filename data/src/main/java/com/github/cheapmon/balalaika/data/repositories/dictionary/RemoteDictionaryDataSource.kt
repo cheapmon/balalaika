@@ -36,9 +36,6 @@ internal class RemoteDictionaryDataSource @Inject constructor(
                 summary = it.summary,
                 authors = it.authors,
                 additionalInfo = it.additionalInfo,
-                libraryState = Dictionary.LibraryState.NotInLibrary,
-                readState = Dictionary.ReadState.Closed,
-                installState = Dictionary.InstallState.UpToDate
             )
         }
     }

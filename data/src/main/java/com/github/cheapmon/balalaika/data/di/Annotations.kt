@@ -37,14 +37,6 @@ internal annotation class MainDispatcher
 @Qualifier
 internal annotation class MainImmediateDispatcher
 
-@Retention(AnnotationRetention.BINARY)
-@Qualifier
-internal annotation class Local
-
-@Retention(AnnotationRetention.BINARY)
-@Qualifier
-internal annotation class Remote
-
 /** Retrofit for dictionaries */
 @Retention(AnnotationRetention.BINARY)
 @Qualifier

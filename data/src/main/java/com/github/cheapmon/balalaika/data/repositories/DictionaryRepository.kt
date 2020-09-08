@@ -16,15 +16,17 @@
 package com.github.cheapmon.balalaika.data.repositories
 
 import com.github.cheapmon.balalaika.data.db.dictionary.DictionaryDao
-import com.github.cheapmon.balalaika.data.di.Local
-import com.github.cheapmon.balalaika.data.di.Remote
 import com.github.cheapmon.balalaika.data.mappers.DictionaryEntityToDictionary
 import com.github.cheapmon.balalaika.data.prefs.PreferenceStorage
 import com.github.cheapmon.balalaika.data.repositories.dictionary.DictionaryDataSource
-import com.github.cheapmon.balalaika.data.result.LoadState
-import com.github.cheapmon.balalaika.data.result.tryLoad
+import com.github.cheapmon.balalaika.data.result.Result
+import com.github.cheapmon.balalaika.data.result.tryRun
 import com.github.cheapmon.balalaika.model.Dictionary
-import kotlinx.coroutines.flow.*
+import com.github.cheapmon.balalaika.model.DownloadableDictionary
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -33,8 +35,7 @@ import javax.inject.Singleton
 class DictionaryRepository @Inject internal constructor(
     private val storage: PreferenceStorage,
     private val dao: DictionaryDao,
-    @Local private val localDataSource: DictionaryDataSource,
-    @Remote private val remoteDataSource: DictionaryDataSource,
+    private val dataSources: Map<String, @JvmSuppressWildcards DictionaryDataSource>,
     private val mapper: DictionaryEntityToDictionary
 ) {
     fun getOpenDictionary(): Flow<Dictionary?> =
@@ -45,45 +46,31 @@ class DictionaryRepository @Inject internal constructor(
     fun getInstalledDictionaries(): Flow<List<Dictionary>> =
         dao.getAll().map { list -> list.map { mapper(it) } }
 
-    fun getLocalDictionaries(): Flow<List<Dictionary>> =
-        getInstalledDictionaries().mapLatest { currentList ->
-            val newList = localDataSource.getDictionaryList()
+    fun getDownloadableDictionaries(): Flow<List<DownloadableDictionary>> =
+        getInstalledDictionaries().map { currentList ->
+            val newList = fetchDictionariesFromDataSources()
             compareDictionaryLists(currentList, newList)
         }
 
-    fun getRemoteDictionaries(): Flow<LoadState<List<Dictionary>, Throwable>> =
-        combine(
-            getInstalledDictionaries(),
-            tryLoad { remoteDataSource.getDictionaryList() },
-        ) { currentList: List<Dictionary>, loadState: LoadState<List<Dictionary>, Throwable> ->
-            when (loadState) {
-                is LoadState.Init -> LoadState.Init()
-                is LoadState.Loading -> LoadState.Loading()
-                is LoadState.Finished -> loadState.map { newList ->
-                    compareDictionaryLists(currentList, newList)
-                }
+    private suspend fun fetchDictionariesFromDataSources(): List<Dictionary> {
+        return dataSources.flatMap { (_, v) ->
+            when (val result = tryRun { v.getDictionaryList() }) {
+                is Result.Success -> result.data
+                is Result.Error -> emptyList()
             }
         }
+    }
 
     private fun compareDictionaryLists(
         currentList: List<Dictionary>,
-        newList: List<Dictionary>
-    ): List<Dictionary> = newList.map { dictionary ->
+        newList: List<Dictionary>,
+    ): List<DownloadableDictionary> = newList.map { dictionary ->
         val current = currentList.find { it.id == dictionary.id }
         if (current == null) {
-            dictionary
+            DownloadableDictionary(dictionary, false)
         } else {
-            val installState = when {
-                current.version > dictionary.version -> Dictionary.InstallState.Outdated
-                current.version == dictionary.version -> Dictionary.InstallState.UpToDate
-                current.version < dictionary.version -> Dictionary.InstallState.Updates
-                else -> throw IllegalStateException()
-            }
-            dictionary.copy(
-                libraryState = current.libraryState,
-                readState = current.readState,
-                installState = installState
-            )
+            val isInLibrary = dictionary.version == current.version
+            DownloadableDictionary(dictionary, isInLibrary)
         }
     }
 }
