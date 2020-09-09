@@ -44,6 +44,15 @@ internal interface DictionaryApi {
     suspend fun getDictionaryList(): List<DictionaryJson>
 
     /**
+     * Check if a dictionary with a specific id and version is available
+     */
+    @GET("dictionary/check/{id}/{version}")
+    suspend fun hasDictionary(
+        @Path("id") id: String,
+        @Path("version") version: Int
+    ): Boolean
+
+    /**
      * `.zip` file with dictionary contents
      *
      * The `.zip` file contains five `.csv` files:
@@ -53,6 +62,9 @@ internal interface DictionaryApi {
      * 4. `properties.csv`
      * 5. `views.csv`
      */
-    @GET("dictionary/{id}")
-    suspend fun getDictionaryContents(@Path("id") id: String): ResponseBody
+    @GET("dictionary/{id}/{version}")
+    suspend fun getDictionaryContents(
+        @Path("id") id: String,
+        @Path("version") version: Int
+    ): ResponseBody
 }

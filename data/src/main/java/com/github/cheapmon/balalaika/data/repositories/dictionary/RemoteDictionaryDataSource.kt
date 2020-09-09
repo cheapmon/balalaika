@@ -40,7 +40,10 @@ internal class RemoteDictionaryDataSource @Inject constructor(
         }
     }
 
-    override suspend fun getDictionaryContents(id: String): ByteArray = withContext(dispatcher) {
-        api.getDictionaryContents(id).bytes()
+    override suspend fun hasDictionary(id: String, version: Int): Boolean =
+        withContext(dispatcher) { api.hasDictionary(id, version) }
+
+    override suspend fun getDictionaryContents(id: String, version: Int): ByteArray = withContext(dispatcher) {
+        api.getDictionaryContents(id, version).bytes()
     }
 }

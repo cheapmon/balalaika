@@ -19,5 +19,6 @@ import com.github.cheapmon.balalaika.model.Dictionary
 
 interface DictionaryDataSource {
     suspend fun getDictionaryList(): List<Dictionary>
-    suspend fun getDictionaryContents(id: String): ByteArray
+    suspend fun hasDictionary(id: String, version: Int): Boolean
+    suspend fun getDictionaryContents(id: String, version: Int): ByteArray
 }
