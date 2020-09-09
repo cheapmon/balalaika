@@ -16,6 +16,12 @@
 package com.github.cheapmon.balalaika.data.util
 
 internal object Constants {
+    /** Default dictionary order */
+    const val DEFAULT_CATEGORY_ID = "default"
+
+    /** Default dictionary view */
+    const val DEFAULT_DICTIONARY_VIEW_ID = "all"
+
     const val DICTIONARY_LIST_FILE = "dictionaries.json"
     const val SERVER_URL = "https://www.example.org/"
 }

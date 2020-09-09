@@ -13,12 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.cheapmon.balalaika.data.repositories.dictionary
+package com.github.cheapmon.balalaika.data.repositories.dictionary.install
 
-import com.github.cheapmon.balalaika.model.Dictionary
-
-internal interface DictionaryDataSource {
-    suspend fun getDictionaryList(): List<Dictionary>
-    suspend fun hasDictionary(id: String, version: Int): Boolean
-    suspend fun getDictionaryContents(id: String, version: Int): ByteArray
-}
+/**
+ * Wrapper for sending `.csv` contents
+ */
+internal data class DictionaryContents(
+    /** `categories.csv` file contents */
+    val categories: String,
+    /** `lexemes.csv` file contents */
+    val lexemes: String,
+    /** `full_forms.csv` file contents */
+    val fullForms: String,
+    /** `properties.csv` file contents */
+    val properties: String,
+    /** `views.csv` file contents */
+    val views: String
+)
