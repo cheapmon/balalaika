@@ -52,7 +52,6 @@ allprojects {
         jcenter()
         maven { url 'http://oss.sonatype.org/content/repositories/snapshots' }
     }
-    apply from: rootProject.file('gradle/generated-kotlin-sources.gradle')
 }
 
 task clean(type: Delete) {
