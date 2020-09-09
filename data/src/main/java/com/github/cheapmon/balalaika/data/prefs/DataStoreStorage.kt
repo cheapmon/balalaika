@@ -35,10 +35,10 @@ internal class DataStoreStorage(
         fileName = "prefs",
         serializer = object : Serializer<UserPreferences> {
             override fun readFrom(input: InputStream): UserPreferences =
-                UserPreferences.ADAPTER.decode(input)
+                UserPreferences.parseFrom(input)
 
             override fun writeTo(t: UserPreferences, output: OutputStream) =
-                t.encode(output)
+                t.writeTo(output)
         }
     )
 
@@ -47,7 +47,7 @@ internal class DataStoreStorage(
 
     override suspend fun setOpenDictionary(dictionaryId: String?) {
         dataStore.updateData { preferences ->
-            preferences.copy(openDictionary = dictionaryId)
+            preferences.toBuilder().setOpenDictionary(dictionaryId).build()
         }
     }
 }
