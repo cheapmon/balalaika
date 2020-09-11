@@ -28,6 +28,15 @@ internal interface BookmarkDao {
     @Insert
     suspend fun insert(bookmark: BookmarkEntity)
 
-    @Query("DELETE FROM bookmarks WHERE lexeme_id = (:lexemeId)")
-    suspend fun remove(lexemeId: String)
+    @Query(
+        """DELETE FROM bookmarks
+                WHERE lexeme_id = (:lexemeId) AND dictionary_id = (:dictionaryId)"""
+    )
+    suspend fun remove(dictionaryId: String, lexemeId: String)
+
+    @Query(
+        """DELETE FROM bookmarks
+                WHERE dictionary_id = (:dictionaryId)"""
+    )
+    suspend fun removeInDictionary(dictionaryId: String)
 }

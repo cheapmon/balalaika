@@ -27,12 +27,14 @@ import com.github.cheapmon.balalaika.data.db.lexeme.LexemeEntity
         ForeignKey(
             entity = LexemeEntity::class,
             parentColumns = ["lexeme_id"],
-            childColumns = ["id"]
+            childColumns = ["id"],
+            onDelete = ForeignKey.CASCADE
         ),
         ForeignKey(
             entity = DictionaryEntity::class,
             parentColumns = ["dictionary_id"],
-            childColumns = ["id"]
+            childColumns = ["id"],
+            onDelete = ForeignKey.CASCADE
         )
     ],
     tableName = "bookmarks"

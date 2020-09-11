@@ -18,6 +18,8 @@ package com.github.cheapmon.balalaika.data.db
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.github.cheapmon.balalaika.data.db.bookmark.BookmarkDao
+import com.github.cheapmon.balalaika.data.db.bookmark.BookmarkEntity
 import com.github.cheapmon.balalaika.data.db.category.CategoryDao
 import com.github.cheapmon.balalaika.data.db.category.CategoryEntity
 import com.github.cheapmon.balalaika.data.db.category.WidgetTypeConverters
@@ -40,6 +42,7 @@ import com.github.cheapmon.balalaika.data.db.view.DictionaryViewToCategory
 /** Application-wide database */
 @Database(
     entities = [
+        BookmarkEntity::class,
         DictionaryEntity::class,
         CategoryEntity::class,
         LexemeEntity::class,
@@ -63,6 +66,9 @@ internal abstract class AppDatabase : RoomDatabase() {
 
     /** Database link for [lexemes][LexemeEntity] */
     abstract fun lexemes(): LexemeDao
+
+    /** Database link for [bookmarks][BookmarkEntity] */
+    abstract fun bookmarks(): BookmarkDao
 
     /** Database link for [properties][PropertyEntity] */
     abstract fun properties(): PropertyDao

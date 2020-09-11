@@ -18,6 +18,8 @@ package com.github.cheapmon.balalaika.data.di
 import com.github.cheapmon.balalaika.data.repositories.dictionary.DictionaryDataSource
 import com.github.cheapmon.balalaika.data.repositories.dictionary.LocalDictionaryDataSource
 import com.github.cheapmon.balalaika.data.repositories.dictionary.RemoteDictionaryDataSource
+import com.github.cheapmon.balalaika.data.repositories.dictionary.install.DefaultDictionaryInstaller
+import com.github.cheapmon.balalaika.data.repositories.dictionary.install.DictionaryInstaller
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -42,4 +44,8 @@ internal class DictionaryModule {
     @StringKey("REMOTE")
     fun provideRemoteDataSource(source: RemoteDictionaryDataSource): DictionaryDataSource =
         source
+
+    @Provides
+    fun provideDictionaryInstaller(installer: DefaultDictionaryInstaller): DictionaryInstaller =
+        installer
 }

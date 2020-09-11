@@ -5,5 +5,11 @@ enum class InstallationMessage {
     InstallDownloadZip,
     InstallExtractContents,
     InstallImportData,
-    InstallCleanup
+    InstallCleanup,
+
+    RemoveDeleteEntities,
+
+    UpdateDeleteEntities,
+    UpdateInstall,
+    UpdateCleanup
 }

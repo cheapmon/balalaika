@@ -35,7 +35,8 @@ import com.github.cheapmon.balalaika.data.db.dictionary.DictionaryEntity
         ForeignKey(
             entity = DictionaryEntity::class,
             parentColumns = ["id"],
-            childColumns = ["dictionary_id"]
+            childColumns = ["dictionary_id"],
+            onDelete = ForeignKey.CASCADE
         ),
         ForeignKey(
             entity = CategoryEntity::class,
