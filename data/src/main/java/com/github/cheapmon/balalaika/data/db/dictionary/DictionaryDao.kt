@@ -43,4 +43,8 @@ internal interface DictionaryDao {
     /** Delete all dictionaries from the database */
     @Query("DELETE FROM dictionaries")
     suspend fun clear()
+
+    /** Number of dictionaries */
+    @Query("SELECT COUNT(*) FROM dictionaries")
+    suspend fun count(): Int
 }

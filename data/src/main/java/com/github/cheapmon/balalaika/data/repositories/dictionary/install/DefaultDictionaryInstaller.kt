@@ -12,7 +12,7 @@ import java.util.zip.ZipFile
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.flowOn
 
 @Singleton
 internal class DefaultDictionaryInstaller @Inject constructor(
@@ -21,57 +21,55 @@ internal class DefaultDictionaryInstaller @Inject constructor(
     private val dataSources: Map<String, @JvmSuppressWildcards DictionaryDataSource>,
     private val importer: CsvEntityImporter
 ) : DictionaryInstaller {
-    override suspend fun addDictionaryToLibrary(
+    override fun addDictionaryToLibrary(
         dictionary: DownloadableDictionary
     ): InstallationProgress = tryProgress {
-        withContext(dispatcher) {
-            progress(ProgressState.InProgress(0, InstallationMessage.InstallCheckSources))
-            val dataSource = dataSources.values
-                .find { it.hasDictionary(dictionary.id, dictionary.version) }
-                ?: throw IllegalArgumentException("No datasource for this dictionary")
+        progress(ProgressState.InProgress(0, InstallationMessage.InstallCheckSources))
+        val dataSource = dataSources.values
+            .find { it.hasDictionary(dictionary.id, dictionary.version) }
+            ?: throw IllegalArgumentException("No datasource for this dictionary")
 
-            progress(ProgressState.InProgress(20, InstallationMessage.InstallDownloadZip))
-            val bytes = dataSource.getDictionaryContents(dictionary.id, dictionary.version)
-            val tempFile = createTempFile("tmp", ".zip", context.filesDir)
-            tempFile.outputStream().use { out -> out.write(bytes) }
+        progress(ProgressState.InProgress(20, InstallationMessage.InstallDownloadZip))
+        val bytes = dataSource.getDictionaryContents(dictionary.id, dictionary.version)
+        val tempFile = createTempFile("tmp", ".zip", context.filesDir)
+        tempFile.outputStream().use { out -> out.write(bytes) }
 
-            progress(ProgressState.InProgress(40, InstallationMessage.InstallExtractContents))
-            val entries = ZipFile(tempFile).use { file ->
-                file.entries().asSequence().map { entry ->
-                    Pair(
-                        entry.name.removeSuffix(".csv"),
-                        file.getInputStream(entry).bufferedReader().readText()
-                    )
-                }.toMap()
-            }
-            val contents = DictionaryContents(
-                categories = entries["categories"] ?: missingFile("categories"),
-                lexemes = entries["lexemes"] ?: missingFile("lexemes"),
-                fullForms = entries["full_forms"] ?: missingFile("full_forms"),
-                properties = entries["properties"] ?: missingFile("properties"),
-                views = entries["views"] ?: missingFile("views")
-            )
-
-            progress(ProgressState.InProgress(60, InstallationMessage.InstallImportData))
-            importer.import(dictionary.id, contents)
-
-            progress(ProgressState.InProgress(80, InstallationMessage.InstallCleanup))
-            tempFile.delete()
-
-            progress(ProgressState.InProgress(100))
+        progress(ProgressState.InProgress(40, InstallationMessage.InstallExtractContents))
+        val entries = ZipFile(tempFile).use { file ->
+            file.entries().asSequence().map { entry ->
+                Pair(
+                    entry.name.removeSuffix(".csv"),
+                    file.getInputStream(entry).bufferedReader().readText()
+                )
+            }.toMap()
         }
-    }
+        val contents = DictionaryContents(
+            categories = entries["categories"] ?: missingFile("categories"),
+            lexemes = entries["lexemes"] ?: missingFile("lexemes"),
+            fullForms = entries["full_forms"] ?: missingFile("full_forms"),
+            properties = entries["properties"] ?: missingFile("properties"),
+            views = entries["views"] ?: missingFile("views")
+        )
+
+        progress(ProgressState.InProgress(60, InstallationMessage.InstallImportData))
+        importer.import(dictionary, contents)
+
+        progress(ProgressState.InProgress(80, InstallationMessage.InstallCleanup))
+        tempFile.delete()
+
+        progress(ProgressState.InProgress(100))
+    }.flowOn(dispatcher)
 
     private fun missingFile(fileName: String): Nothing =
         throw FileNotFoundException("Could not find $fileName.csv")
 
-    override suspend fun removeDictionaryFromLibrary(
+    override fun removeDictionaryFromLibrary(
         dictionary: DownloadableDictionary
     ): InstallationProgress {
         TODO("Not yet implemented")
     }
 
-    override suspend fun updateDictionary(
+    override fun updateDictionary(
         dictionary: DownloadableDictionary
     ): InstallationProgress {
         TODO("Not yet implemented")

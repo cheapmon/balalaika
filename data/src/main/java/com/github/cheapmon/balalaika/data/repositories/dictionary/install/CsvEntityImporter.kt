@@ -20,12 +20,14 @@ import com.github.cheapmon.balalaika.data.db.AppDatabase
 import com.github.cheapmon.balalaika.data.db.category.CategoryEntity
 import com.github.cheapmon.balalaika.data.db.category.WidgetType
 import com.github.cheapmon.balalaika.data.db.config.DictionaryConfig
+import com.github.cheapmon.balalaika.data.db.dictionary.DictionaryEntity
 import com.github.cheapmon.balalaika.data.db.lexeme.LexemeEntity
 import com.github.cheapmon.balalaika.data.db.property.PropertyEntity
 import com.github.cheapmon.balalaika.data.db.view.DictionaryViewEntity
 import com.github.cheapmon.balalaika.data.db.view.DictionaryViewToCategory
 import com.github.cheapmon.balalaika.data.di.IoDispatcher
 import com.github.cheapmon.balalaika.data.util.Constants
+import com.github.cheapmon.balalaika.model.DownloadableDictionary
 import java.io.InputStreamReader
 import java.util.Locale
 import javax.inject.Inject
@@ -50,19 +52,33 @@ internal class CsvEntityImporter @Inject constructor(
      *
      * _Note_: Uses `withTransaction` to ensure source file validity.
      */
-    suspend fun import(dictionaryId: String, contents: DictionaryContents) =
+    suspend fun import(dictionary: DownloadableDictionary, contents: DictionaryContents) =
         withContext(dispatcher) {
             db.withTransaction {
-                db.categories().insertAll(readCategories(dictionaryId, contents))
-                db.lexemes().insertAll(readLexemes(dictionaryId, contents))
-                db.properties().insertAll(readProperties(dictionaryId, contents))
-                db.dictionaryViews().insertViews(readDictionaryViews(dictionaryId, contents))
+                db.dictionaries().insertAll(readDictionary(dictionary))
+                db.categories().insertAll(readCategories(dictionary.id, contents))
+                db.lexemes().insertAll(readLexemes(dictionary.id, contents))
+                db.properties().insertAll(readProperties(dictionary.id, contents))
+                db.dictionaryViews().insertViews(readDictionaryViews(dictionary.id, contents))
                 db.dictionaryViews().insertRelation(
-                    readDictionaryViewToCategories(dictionaryId, contents)
+                    readDictionaryViewToCategories(dictionary.id, contents)
                 )
-                db.configurations().insert(generateDefaultConfiguration(dictionaryId))
+                db.configurations().insert(generateDefaultConfiguration(dictionary.id))
             }
         }
+
+    private fun readDictionary(dictionary: DownloadableDictionary): List<DictionaryEntity> {
+        return listOf(
+            DictionaryEntity(
+                id = dictionary.id,
+                version = dictionary.version,
+                name = dictionary.name,
+                summary = dictionary.summary,
+                authors = dictionary.authors,
+                additionalInfo = dictionary.additionalInfo
+            )
+        )
+    }
 
     private fun readCategories(
         dictionaryId: String,

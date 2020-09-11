@@ -35,4 +35,8 @@ internal interface LexemeDao {
     /** Remove all lexemes associated with a dictionary */
     @Query("""DELETE FROM lexemes WHERE dictionary_id = (:dictionaryId)""")
     suspend fun removeInDictionary(dictionaryId: String)
+
+    /** Number of lexemes */
+    @Query("SELECT COUNT(*) FROM lexemes")
+    suspend fun count(): Int
 }
