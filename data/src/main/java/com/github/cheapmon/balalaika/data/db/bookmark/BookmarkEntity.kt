@@ -18,6 +18,7 @@ package com.github.cheapmon.balalaika.data.db.bookmark
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.github.cheapmon.balalaika.data.db.dictionary.DictionaryEntity
 import com.github.cheapmon.balalaika.data.db.lexeme.LexemeEntity
@@ -26,17 +27,18 @@ import com.github.cheapmon.balalaika.data.db.lexeme.LexemeEntity
     foreignKeys = [
         ForeignKey(
             entity = LexemeEntity::class,
-            parentColumns = ["lexeme_id"],
-            childColumns = ["id"],
+            parentColumns = ["id", "dictionary_id"],
+            childColumns = ["lexeme_id", "dictionary_id"],
             onDelete = ForeignKey.CASCADE
         ),
         ForeignKey(
             entity = DictionaryEntity::class,
-            parentColumns = ["dictionary_id"],
-            childColumns = ["id"],
+            parentColumns = ["id"],
+            childColumns = ["dictionary_id"],
             onDelete = ForeignKey.CASCADE
         )
     ],
+    indices = [Index("lexeme_id", "dictionary_id")],
     tableName = "bookmarks"
 )
 internal data class BookmarkEntity(

@@ -50,7 +50,8 @@ class DefaultDictionaryInstallerTest {
             context,
             dispatcher,
             mapOf("LOCAL" to dataSource),
-            importer
+            importer,
+            db
         )
     }
 
@@ -72,5 +73,6 @@ class DefaultDictionaryInstallerTest {
         Assert.assertTrue(result is ProgressState.Finished && result.data is Result.Success)
         Assert.assertEquals(1, db.dictionaries().count())
         Assert.assertEquals(3, db.lexemes().count())
+        Assert.assertEquals(0, context.filesDir.listFiles().size)
     }
 }
