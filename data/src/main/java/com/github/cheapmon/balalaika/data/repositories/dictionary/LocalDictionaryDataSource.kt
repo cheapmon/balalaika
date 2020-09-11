@@ -23,11 +23,11 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.withContext
 import java.io.FileNotFoundException
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 
 @Singleton
 internal class LocalDictionaryDataSource @Inject constructor(
@@ -55,7 +55,7 @@ internal class LocalDictionaryDataSource @Inject constructor(
                     name = it.name,
                     summary = it.summary,
                     authors = it.authors,
-                    additionalInfo = it.additionalInfo,
+                    additionalInfo = it.additionalInfo
                 )
             }
     }
@@ -69,7 +69,7 @@ internal class LocalDictionaryDataSource @Inject constructor(
         }
 
     override suspend fun getDictionaryContents(id: String, version: Int): ByteArray {
-        val fileName = fileNames.find { it.startsWith("${id}_${version}") }
+        val fileName = fileNames.find { it.startsWith("${id}_$version") }
             ?: throw FileNotFoundException()
         return withContext(dispatcher) { context.assets.open(fileName).use { it.readBytes() } }
     }

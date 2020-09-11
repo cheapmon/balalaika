@@ -19,6 +19,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
@@ -26,8 +27,9 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 internal interface DictionaryConfigDao {
     /** Get the configuration for a dictionary */
+    @Transaction
     @Query("""SELECT * FROM configurations WHERE id = (:dictionaryId) LIMIT 1""")
-    fun getConfigFor(dictionaryId: String): Flow<DictionaryConfig?>
+    fun getConfigFor(dictionaryId: String): Flow<DictionaryConfigWithRelations?>
 
     /** Insert a configuration into the database */
     @Insert(onConflict = OnConflictStrategy.REPLACE)

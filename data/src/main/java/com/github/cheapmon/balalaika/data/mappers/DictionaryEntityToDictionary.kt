@@ -27,6 +27,6 @@ internal class DictionaryEntityToDictionary : Mapper<DictionaryEntity, Dictionar
         name = from.name,
         summary = from.summary,
         authors = from.authors,
-        additionalInfo = from.additionalInfo,
+        additionalInfo = from.additionalInfo
     )
 }

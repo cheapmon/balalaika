@@ -35,7 +35,7 @@ internal class RemoteDictionaryDataSource @Inject constructor(
                 name = it.name,
                 summary = it.summary,
                 authors = it.authors,
-                additionalInfo = it.additionalInfo,
+                additionalInfo = it.additionalInfo
             )
         }
     }

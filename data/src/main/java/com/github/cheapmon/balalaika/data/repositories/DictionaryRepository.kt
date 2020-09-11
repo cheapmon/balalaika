@@ -15,42 +15,65 @@
  */
 package com.github.cheapmon.balalaika.data.repositories
 
+import com.github.cheapmon.balalaika.data.db.config.DictionaryConfigDao
+import com.github.cheapmon.balalaika.data.db.config.DictionaryConfigWithRelations
 import com.github.cheapmon.balalaika.data.db.dictionary.DictionaryDao
+import com.github.cheapmon.balalaika.data.mappers.CategoryEntityToDataCategory
 import com.github.cheapmon.balalaika.data.mappers.DictionaryEntityToDictionary
+import com.github.cheapmon.balalaika.data.mappers.DictionaryViewWithCategoriesToDictionaryView
 import com.github.cheapmon.balalaika.data.prefs.PreferenceStorage
 import com.github.cheapmon.balalaika.data.repositories.dictionary.DictionaryDataSource
 import com.github.cheapmon.balalaika.data.repositories.dictionary.install.DictionaryInstaller
 import com.github.cheapmon.balalaika.data.result.Result
 import com.github.cheapmon.balalaika.data.result.tryRun
+import com.github.cheapmon.balalaika.model.DataCategory
 import com.github.cheapmon.balalaika.model.Dictionary
+import com.github.cheapmon.balalaika.model.DictionaryView
 import com.github.cheapmon.balalaika.model.DownloadableDictionary
 import com.github.cheapmon.balalaika.model.InstalledDictionary
-import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 
 @Suppress("EXPERIMENTAL_API_USAGE")
 @Singleton
 class DictionaryRepository @Inject internal constructor(
     private val storage: PreferenceStorage,
-    private val dao: DictionaryDao,
+    private val dictionaryDao: DictionaryDao,
+    private val configDao: DictionaryConfigDao,
     private val dataSources: Map<String, @JvmSuppressWildcards DictionaryDataSource>,
     private val installer: DictionaryInstaller,
-    private val mapper: DictionaryEntityToDictionary
+    private val toDictionary: DictionaryEntityToDictionary,
+    private val toDataCategory: CategoryEntityToDataCategory,
+    private val toDictionaryView: DictionaryViewWithCategoriesToDictionaryView
 ) : DictionaryInstaller by installer {
     fun getOpenDictionary(): Flow<Dictionary?> =
         storage.openDictionary
-            .flatMapLatest { it?.let { dao.findById(it) } ?: flowOf(null) }
-            .map { it?.let { mapper(it) } }
+            .flatMapLatest { it?.let { dictionaryDao.findById(it) } ?: flowOf(null) }
+            .map { it?.let { toDictionary(it) } }
+
+    private fun getConfig(): Flow<DictionaryConfigWithRelations?> =
+        storage.openDictionary
+            .flatMapLatest { it?.let { configDao.getConfigFor(it) } ?: flowOf(null) }
+
+    fun getSortCategory(): Flow<DataCategory?> =
+        getConfig().map { config -> config?.category?.let { toDataCategory(it) } }
+
+    fun getDictionaryView(): Flow<DictionaryView?> =
+        getConfig().map { config -> config?.view?.let { toDictionaryView(it) } }
 
     fun getInstalledDictionaries(): Flow<List<InstalledDictionary>> =
-        combine(getOpenDictionary(), dao.getAll()) { opened, list ->
-            list.map { InstalledDictionary(mapper(it), it.id == opened?.id) }
+        combine(getOpenDictionary(), dictionaryDao.getAll()) { opened, list ->
+            list.map { InstalledDictionary(toDictionary(it), it.id == opened?.id) }
         }
 
     fun getDownloadableDictionaries(): Flow<List<DownloadableDictionary>> =
-        dao.getAll().map { list ->
-            val currentList = list.map { mapper(it) }
+        dictionaryDao.getAll().map { list ->
+            val currentList = list.map { toDictionary(it) }
             val newList = fetchDictionariesFromDataSources()
             compareDictionaryLists(currentList, newList)
         }
@@ -66,7 +89,7 @@ class DictionaryRepository @Inject internal constructor(
 
     private fun compareDictionaryLists(
         currentList: List<Dictionary>,
-        newList: List<Dictionary>,
+        newList: List<Dictionary>
     ): List<DownloadableDictionary> = newList.map { dictionary ->
         val current = currentList.find { it.id == dictionary.id }
         if (current == null) {
