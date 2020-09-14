@@ -1,5 +1,6 @@
 package com.github.cheapmon.balalaika.data.mappers
 
+import com.github.cheapmon.balalaika.data.db.entry.DictionaryEntryDao
 import com.github.cheapmon.balalaika.data.db.entry.DictionaryEntryEntity
 import com.github.cheapmon.balalaika.data.db.view.DictionaryViewWithCategories
 import com.github.cheapmon.balalaika.model.Bookmark
@@ -9,6 +10,7 @@ import javax.inject.Singleton
 
 @Singleton
 internal class DictionaryEntryEntityToDictionaryEntry @Inject constructor(
+    private val dictionaryEntryDao: DictionaryEntryDao,
     private val toDataCategory: CategoryEntityToDataCategory,
     private val toProperty: PropertyEntityToProperty
 ) {
@@ -17,7 +19,9 @@ internal class DictionaryEntryEntityToDictionaryEntry @Inject constructor(
         view: DictionaryViewWithCategories
     ): DictionaryEntry = DictionaryEntry(
         representation = entry.lexeme.form,
-        base = entry.base?.let { this(it, view) },
+        base = entry.base
+            ?.let { dictionaryEntryDao.findEntryById(it.dictionaryId, it.id) }
+            ?.let { this(it, view) },
         properties = entry.properties
             .groupBy { it.category }
             .mapKeys { (category, _) -> toDataCategory(category) }

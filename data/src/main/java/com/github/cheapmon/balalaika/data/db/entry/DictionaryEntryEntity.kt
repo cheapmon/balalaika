@@ -34,7 +34,7 @@ internal data class DictionaryEntryEntity(
     @Relation(
         parentColumn = "base_id",
         entityColumn = "id"
-    ) val base: DictionaryEntryEntity?,
+    ) val base: LexemeEntity?,
 
     /** All properties of this lexeme */
     @Relation(
