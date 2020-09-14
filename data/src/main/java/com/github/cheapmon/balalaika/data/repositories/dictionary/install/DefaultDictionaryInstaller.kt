@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.withTransaction
 import com.github.cheapmon.balalaika.data.db.AppDatabase
 import com.github.cheapmon.balalaika.data.db.config.DictionaryConfig
+import com.github.cheapmon.balalaika.data.db.config.DictionaryConfigWithRelations
 import com.github.cheapmon.balalaika.data.di.IoDispatcher
 import com.github.cheapmon.balalaika.data.repositories.dictionary.DictionaryDataSource
 import com.github.cheapmon.balalaika.data.result.ProgressState
@@ -130,13 +131,13 @@ internal class DefaultDictionaryInstaller @Inject constructor(
 
     private suspend fun cleanupConfiguration(
         dictionary: DownloadableDictionary,
-        configuration: DictionaryConfig?
+        configuration: DictionaryConfigWithRelations?
     ) {
-        var sortBy = configuration?.sortBy
+        var sortBy = configuration?.category?.id
         if (sortBy == null || db.categories().findById(sortBy) == null) {
             sortBy = Constants.DEFAULT_CATEGORY_ID
         }
-        var filterBy = configuration?.filterBy
+        var filterBy = configuration?.view?.dictionaryView?.id
         if (filterBy == null || db.dictionaryViews().findById(filterBy) == null) {
             filterBy = Constants.DEFAULT_DICTIONARY_VIEW_ID
         }

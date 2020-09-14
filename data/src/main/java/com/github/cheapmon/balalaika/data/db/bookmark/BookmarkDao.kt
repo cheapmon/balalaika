@@ -22,6 +22,13 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 internal interface BookmarkDao {
+    @Query(
+        """SELECT * FROM bookmarks
+                WHERE dictionary_id = (:dictionaryId) AND lexeme_id = (:lexemeId)
+                LIMIT 1"""
+    )
+    suspend fun findById(dictionaryId: String, lexemeId: String): BookmarkEntity?
+
     @Query("SELECT * FROM bookmarks WHERE dictionary_id = (:dictionaryId)")
     fun getAll(dictionaryId: String): Flow<List<BookmarkEntity>>
 

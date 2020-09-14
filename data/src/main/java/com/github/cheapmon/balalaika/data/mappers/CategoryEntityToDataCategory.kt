@@ -25,6 +25,7 @@ internal class CategoryEntityToDataCategory @Inject constructor() : Mapper<Categ
     override suspend fun invoke(from: CategoryEntity): DataCategory = DataCategory(
         id = from.id,
         name = from.name,
-        iconName = from.iconName
+        iconName = from.iconName,
+        sequence = from.sequence
     )
 }

@@ -22,6 +22,12 @@ internal object Constants {
     /** Default dictionary view */
     const val DEFAULT_DICTIONARY_VIEW_ID = "all"
 
+    /** Number of elements loaded per page */
+    const val PAGE_SIZE = 15
+
+    /** Paging start index */
+    const val PAGING_START_INDEX = 1L
+
     const val DICTIONARY_LIST_FILE = "dictionaries.json"
     const val SERVER_URL = "https://www.example.org/"
 }

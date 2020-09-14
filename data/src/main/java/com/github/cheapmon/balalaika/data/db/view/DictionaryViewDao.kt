@@ -54,5 +54,5 @@ internal interface DictionaryViewDao {
 
     /** Find a dictionary view by its id */
     @Query("""SELECT * FROM dictionary_views WHERE id = (:id) LIMIT 1""")
-    suspend fun findById(id: String): DictionaryViewEntity?
+    suspend fun findById(id: String): DictionaryViewWithCategories?
 }

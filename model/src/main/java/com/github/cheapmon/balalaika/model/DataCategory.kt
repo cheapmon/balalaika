@@ -18,5 +18,6 @@ package com.github.cheapmon.balalaika.model
 data class DataCategory(
     val id: String,
     val name: String,
-    val iconName: String
+    val iconName: String,
+    val sequence: Int
 )

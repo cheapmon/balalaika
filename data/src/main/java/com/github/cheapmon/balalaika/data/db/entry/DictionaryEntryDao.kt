@@ -38,6 +38,16 @@ import com.github.cheapmon.balalaika.data.db.view.DictionaryViewEntity
  */
 @Dao
 internal interface DictionaryEntryDao {
+    /** Get a single dictionary entry based on its dictionary and lexeme */
+    @Transaction
+    @Query(
+        """SELECT * FROM lexemes
+                WHERE dictionary_id = (:dictionaryId)
+                AND id = (:lexemeId)
+                LIMIT 1"""
+    )
+    suspend fun findEntryById(dictionaryId: String, lexemeId: String): DictionaryEntryEntity?
+
     /**
      * Get all [lexeme ids][LexemeEntity.id], depending on a certain
      * [dictionary view][DictionaryViewEntity]

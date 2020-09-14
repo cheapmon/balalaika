@@ -15,9 +15,11 @@
  */
 package com.github.cheapmon.balalaika.data.repositories
 
+import com.github.cheapmon.balalaika.data.db.category.CategoryDao
 import com.github.cheapmon.balalaika.data.db.config.DictionaryConfigDao
 import com.github.cheapmon.balalaika.data.db.config.DictionaryConfigWithRelations
 import com.github.cheapmon.balalaika.data.db.dictionary.DictionaryDao
+import com.github.cheapmon.balalaika.data.db.view.DictionaryViewDao
 import com.github.cheapmon.balalaika.data.mappers.CategoryEntityToDataCategory
 import com.github.cheapmon.balalaika.data.mappers.DictionaryEntityToDictionary
 import com.github.cheapmon.balalaika.data.mappers.DictionaryViewWithCategoriesToDictionaryView
@@ -45,6 +47,8 @@ class DictionaryRepository @Inject internal constructor(
     private val storage: PreferenceStorage,
     private val dictionaryDao: DictionaryDao,
     private val configDao: DictionaryConfigDao,
+    private val categoryDao: CategoryDao,
+    private val dictionaryViewDao: DictionaryViewDao,
     private val dataSources: Map<String, @JvmSuppressWildcards DictionaryDataSource>,
     private val installer: DictionaryInstaller,
     private val toDictionary: DictionaryEntityToDictionary,
@@ -63,8 +67,18 @@ class DictionaryRepository @Inject internal constructor(
     fun getSortCategory(): Flow<DataCategory?> =
         getConfig().map { config -> config?.category?.let { toDataCategory(it) } }
 
+    fun getSortCategories(): Flow<List<DataCategory>?> =
+        storage.openDictionary
+            .flatMapLatest { id -> id?.let { categoryDao.getSortable(it) } ?: flowOf(null) }
+            .map { list -> list?.map { toDataCategory(it) } }
+
     fun getDictionaryView(): Flow<DictionaryView?> =
         getConfig().map { config -> config?.view?.let { toDictionaryView(it) } }
+
+    fun getDictionaryViews(): Flow<List<DictionaryView>?> =
+        storage.openDictionary
+            .flatMapLatest { id -> id?.let { dictionaryViewDao.getAll(it) } ?: flowOf(null) }
+            .map { list -> list?.map { toDictionaryView(it) } }
 
     fun getInstalledDictionaries(): Flow<List<InstalledDictionary>> =
         combine(getOpenDictionary(), dictionaryDao.getAll()) { opened, list ->
