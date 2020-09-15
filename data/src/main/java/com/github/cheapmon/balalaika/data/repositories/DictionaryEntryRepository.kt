@@ -19,6 +19,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.PagingSource
+import androidx.paging.map
 import com.github.cheapmon.balalaika.data.db.cache.CacheEntry
 import com.github.cheapmon.balalaika.data.db.cache.CacheEntryDao
 import com.github.cheapmon.balalaika.data.db.entry.DictionaryEntryDao
@@ -29,9 +30,11 @@ import com.github.cheapmon.balalaika.model.DataCategory
 import com.github.cheapmon.balalaika.model.DictionaryEntry
 import com.github.cheapmon.balalaika.model.DictionaryView
 import com.github.cheapmon.balalaika.model.InstalledDictionary
+import com.github.cheapmon.balalaika.model.SearchRestriction
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 @Singleton
 class DictionaryEntryRepository @Inject internal constructor(
@@ -53,6 +56,31 @@ class DictionaryEntryRepository @Inject internal constructor(
             initialKey = initialKey,
             pagingSourceFactory = { DictionaryEntryPagingSource(dictionary, dictionaryView) }
         ).flow
+    }
+
+    suspend fun queryDictionaryEntries(
+        dictionary: InstalledDictionary,
+        dictionaryView: DictionaryView,
+        query: String,
+        searchRestriction: SearchRestriction? = null
+    ): Flow<PagingData<DictionaryEntry>> {
+        val view = dictionaryViewDao.findById(dictionaryView.id)
+            ?: throw IllegalArgumentException("Dictionary view does not exist")
+        return Pager(
+            config = PagingConfig(pageSize = Constants.PAGE_SIZE),
+            pagingSourceFactory = {
+                if (searchRestriction == null) {
+                    dictionaryEntryDao.findLexemes(dictionary.id, query)
+                } else {
+                    dictionaryEntryDao.findLexemes(
+                        dictionary.id,
+                        query,
+                        searchRestriction.category.id,
+                        searchRestriction.text
+                    )
+                }
+            }
+        ).flow.map { pagingData -> pagingData.map { toDictionaryEntry(it, view) } }
     }
 
     private suspend fun refreshCache(

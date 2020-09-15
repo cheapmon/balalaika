@@ -15,6 +15,7 @@
  */
 package com.github.cheapmon.balalaika.data.db.entry
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
@@ -104,15 +105,14 @@ internal interface DictionaryEntryDao {
      */
     @Transaction
     @Query(
-        """SELECT id FROM dictionary_entries
-                    WHERE (form LIKE '%' || (:query) || '%'
-                    OR p_value LIKE '%' || (:query) || '%')
+        """SELECT id, dictionary_id, form, base_id FROM dictionary_entries
+                    WHERE dictionary_id = (:dictionaryId)
+                    AND (form LIKE '%' || (:query) || '%' OR p_value LIKE '%' || (:query) || '%')
                     AND c_hidden = 0
-                    AND dictionary_id = (:dictionaryId)
                     GROUP BY id
                     ORDER BY form ASC"""
     )
-    suspend fun findLexemes(dictionaryId: String, query: String): List<String>
+    fun findLexemes(dictionaryId: String, query: String): PagingSource<Int, DictionaryEntryEntity>
 
     /**
      * Find all [lexemes][LexemeEntity] whose [form][LexemeEntity.form] or
@@ -121,20 +121,19 @@ internal interface DictionaryEntryDao {
      */
     @Transaction
     @Query(
-        """SELECT id FROM dictionary_entries
-                    WHERE (form LIKE '%' || (:query) || '%'
-                    OR p_value LIKE '%' || (:query) || '%')
-                    AND id IN (SELECT DISTINCT id FROM dictionary_entries
+        """SELECT id, dictionary_id, form, base_id FROM dictionary_entries
+                    WHERE dictionary_id = (:dictionaryId)
+                    AND (form LIKE '%' || (:query) || '%' OR p_value LIKE '%' || (:query) || '%')
+                    AND id IN (SELECT DISTINCT id FROM dictionary_entries 
                     WHERE c_id = (:categoryId) AND p_value LIKE '%' || (:restriction) || '%')
                     AND c_hidden = 0
-                    AND dictionary_id = (:dictionaryId)
                     GROUP BY id
                     ORDER BY form ASC"""
     )
-    suspend fun findLexemes(
+    fun findLexemes(
         dictionaryId: String,
         query: String,
         categoryId: String,
         restriction: String
-    ): List<String>
+    ): PagingSource<Int, DictionaryEntryEntity>
 }
