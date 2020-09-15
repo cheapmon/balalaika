@@ -18,6 +18,7 @@ internal class DictionaryEntryEntityToDictionaryEntry @Inject constructor(
         entry: DictionaryEntryEntity,
         view: DictionaryViewWithCategories
     ): DictionaryEntry = DictionaryEntry(
+        id = entry.lexeme.id,
         representation = entry.lexeme.form,
         base = entry.base
             ?.let { dictionaryEntryDao.findEntryById(it.dictionaryId, it.id) }

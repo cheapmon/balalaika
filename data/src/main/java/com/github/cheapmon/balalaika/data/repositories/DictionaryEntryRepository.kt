@@ -40,16 +40,17 @@ class DictionaryEntryRepository @Inject internal constructor(
     private val dictionaryViewDao: DictionaryViewDao,
     private val toDictionaryEntry: DictionaryEntryEntityToDictionaryEntry
 ) {
-    private suspend fun getDictionaryEntries(
+    suspend fun getDictionaryEntries(
         dictionary: InstalledDictionary,
         dictionaryView: DictionaryView,
         category: DataCategory,
-        initialKey: CacheEntry? // TODO: Use DictionaryEntry?
+        initialEntry: DictionaryEntry?
     ): Flow<PagingData<DictionaryEntry>> {
+        val initialKey = initialEntry?.id?.let { cacheEntryDao.findEntry(it) }
         refreshCache(dictionary, dictionaryView, category)
         return Pager(
             config = PagingConfig(pageSize = Constants.PAGE_SIZE),
-            initialKey = initialKey?.id,
+            initialKey = initialKey,
             pagingSourceFactory = { DictionaryEntryPagingSource(dictionary, dictionaryView) }
         ).flow
     }
