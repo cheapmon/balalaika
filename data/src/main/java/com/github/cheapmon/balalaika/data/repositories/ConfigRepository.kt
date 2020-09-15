@@ -6,43 +6,37 @@ import com.github.cheapmon.balalaika.data.db.config.DictionaryConfigWithRelation
 import com.github.cheapmon.balalaika.data.db.view.DictionaryViewDao
 import com.github.cheapmon.balalaika.data.mappers.CategoryEntityToDataCategory
 import com.github.cheapmon.balalaika.data.mappers.DictionaryViewWithCategoriesToDictionaryView
-import com.github.cheapmon.balalaika.data.prefs.PreferenceStorage
 import com.github.cheapmon.balalaika.model.DataCategory
+import com.github.cheapmon.balalaika.model.Dictionary
 import com.github.cheapmon.balalaika.model.DictionaryView
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
 @Suppress("EXPERIMENTAL_API_USAGE")
 @Singleton
 class ConfigRepository @Inject internal constructor(
-    private val storage: PreferenceStorage,
     private val configDao: DictionaryConfigDao,
     private val categoryDao: CategoryDao,
     private val dictionaryViewDao: DictionaryViewDao,
     private val toDataCategory: CategoryEntityToDataCategory,
     private val toDictionaryView: DictionaryViewWithCategoriesToDictionaryView
 ) {
-    private fun getConfig(): Flow<DictionaryConfigWithRelations?> =
-        storage.openDictionary
-            .flatMapLatest { it?.let { configDao.getConfigFor(it) } ?: flowOf(null) }
+    private fun getConfig(dictionary: Dictionary): Flow<DictionaryConfigWithRelations?> =
+        configDao.getConfigFor(dictionary.id)
 
-    fun getSortCategory(): Flow<DataCategory?> =
-        getConfig().map { config -> config?.category?.let { toDataCategory(it) } }
+    fun getSortCategory(dictionary: Dictionary): Flow<DataCategory?> =
+        getConfig(dictionary).map { config -> config?.category?.let { toDataCategory(it) } }
 
-    fun getSortCategories(): Flow<List<DataCategory>?> =
-        storage.openDictionary
-            .flatMapLatest { id -> id?.let { categoryDao.getSortable(it) } ?: flowOf(null) }
-            .map { list -> list?.map { toDataCategory(it) } }
+    fun getSortCategories(dictionary: Dictionary): Flow<List<DataCategory>?> =
+        categoryDao.getSortable(dictionary.id)
+            .map { list -> list.map { toDataCategory(it) } }
 
-    fun getDictionaryView(): Flow<DictionaryView?> =
-        getConfig().map { config -> config?.view?.let { toDictionaryView(it) } }
+    fun getDictionaryView(dictionary: Dictionary): Flow<DictionaryView?> =
+        getConfig(dictionary).map { config -> config?.view?.let { toDictionaryView(it) } }
 
-    fun getDictionaryViews(): Flow<List<DictionaryView>?> =
-        storage.openDictionary
-            .flatMapLatest { id -> id?.let { dictionaryViewDao.getAll(it) } ?: flowOf(null) }
-            .map { list -> list?.map { toDictionaryView(it) } }
+    fun getDictionaryViews(dictionary: Dictionary): Flow<List<DictionaryView>?> =
+        dictionaryViewDao.getAll(dictionary.id)
+            .map { list -> list.map { toDictionaryView(it) } }
 }

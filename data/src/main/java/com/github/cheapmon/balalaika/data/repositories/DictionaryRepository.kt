@@ -28,7 +28,6 @@ import com.github.cheapmon.balalaika.model.InstalledDictionary
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -47,8 +46,8 @@ class DictionaryRepository @Inject internal constructor(
             .flatMapLatest { it?.let { dictionaryDao.findById(it) } ?: flowOf(null) }
             .map { it?.let { toDictionary(it) } }
 
-    fun getInstalledDictionaries(): Flow<List<InstalledDictionary>> =
-        combine(getOpenDictionary(), dictionaryDao.getAll()) { opened, list ->
+    fun getInstalledDictionaries(opened: Dictionary?): Flow<List<InstalledDictionary>> =
+        dictionaryDao.getAll().map { list ->
             list.map { InstalledDictionary(toDictionary(it), it.id == opened?.id) }
         }
 
