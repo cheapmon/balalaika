@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.map
 
 @Suppress("EXPERIMENTAL_API_USAGE")
 @Singleton
-class ConfigRepository @Inject internal constructor(
+public class ConfigRepository @Inject internal constructor(
     private val configDao: DictionaryConfigDao,
     private val categoryDao: CategoryDao,
     private val dictionaryViewDao: DictionaryViewDao,
@@ -26,17 +26,17 @@ class ConfigRepository @Inject internal constructor(
     private fun getConfig(dictionary: Dictionary): Flow<DictionaryConfigWithRelations?> =
         configDao.getConfigFor(dictionary.id)
 
-    fun getSortCategory(dictionary: Dictionary): Flow<DataCategory?> =
+    public fun getSortCategory(dictionary: Dictionary): Flow<DataCategory?> =
         getConfig(dictionary).map { config -> config?.category?.let { toDataCategory(it) } }
 
-    fun getSortCategories(dictionary: Dictionary): Flow<List<DataCategory>?> =
+    public fun getSortCategories(dictionary: Dictionary): Flow<List<DataCategory>?> =
         categoryDao.getSortable(dictionary.id)
             .map { list -> list.map { toDataCategory(it) } }
 
-    fun getDictionaryView(dictionary: Dictionary): Flow<DictionaryView?> =
+    public fun getDictionaryView(dictionary: Dictionary): Flow<DictionaryView?> =
         getConfig(dictionary).map { config -> config?.view?.let { toDictionaryView(it) } }
 
-    fun getDictionaryViews(dictionary: Dictionary): Flow<List<DictionaryView>?> =
+    public fun getDictionaryViews(dictionary: Dictionary): Flow<List<DictionaryView>?> =
         dictionaryViewDao.getAll(dictionary.id)
             .map { list -> list.map { toDictionaryView(it) } }
 }

@@ -11,11 +11,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 @Singleton
-class WordnetRepository @Inject internal constructor(
+public class WordnetRepository @Inject internal constructor(
     private val wordnetApi: WordnetApi,
     private val toWordnetInfo: RDFNodeToWordnetInfo
 ) {
-    fun getWordnetData(url: String): Flow<LoadState<WordnetInfo, Throwable>> =
+    public fun getWordnetData(url: String): Flow<LoadState<WordnetInfo, Throwable>> =
         tryLoad { wordnetApi.getWordnetData(url) }
             .map { loadState -> loadState.map { toWordnetInfo(it) } }
 }

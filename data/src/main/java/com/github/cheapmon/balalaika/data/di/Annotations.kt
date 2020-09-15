@@ -45,4 +45,4 @@ internal annotation class DictionaryRetrofit
 /** Retrofit for Wordnet */
 @Retention(AnnotationRetention.BINARY)
 @Qualifier
-annotation class WordnetRetrofit
+internal annotation class WordnetRetrofit

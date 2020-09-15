@@ -8,10 +8,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class BookmarkRepository @Inject internal constructor(
+public class BookmarkRepository @Inject internal constructor(
     private val bookmarkDao: BookmarkDao
 ) {
-    suspend fun addBookmark(
+    public suspend fun addBookmark(
         dictionary: InstalledDictionary,
         dictionaryEntry: DictionaryEntry
     ) {
@@ -22,14 +22,14 @@ class BookmarkRepository @Inject internal constructor(
         bookmarkDao.insert(bookmark)
     }
 
-    suspend fun removeBookmark(
+    public suspend fun removeBookmark(
         dictionary: InstalledDictionary,
         dictionaryEntry: DictionaryEntry
     ) {
         bookmarkDao.remove(dictionary.id, dictionaryEntry.id)
     }
 
-    suspend fun clearBookmarks(dictionary: InstalledDictionary) {
+    public suspend fun clearBookmarks(dictionary: InstalledDictionary) {
         bookmarkDao.removeInDictionary(dictionary.id)
     }
 }

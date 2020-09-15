@@ -30,7 +30,7 @@ import org.junit.runner.RunWith
 
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
-class DefaultDictionaryInstallerTest {
+internal class DefaultDictionaryInstallerTest {
     private lateinit var db: AppDatabase
     private lateinit var importer: CsvEntityImporter
     private lateinit var dataSource: DictionaryDataSource

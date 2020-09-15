@@ -16,47 +16,47 @@
 package com.github.cheapmon.balalaika.data.result
 
 /** State of an asynchronous operation */
-sealed class LoadState<T, E> {
+public sealed class LoadState<T, E> {
     /** Operation has been started */
-    class Init<T, E> : LoadState<T, E>()
+    public class Init<T, E> : LoadState<T, E>()
 
     /** Operation is in progress */
-    class Loading<T, E> : LoadState<T, E>()
+    public class Loading<T, E> : LoadState<T, E>()
 
     /** Operation is finished and has either succeeded or failed */
-    data class Finished<T, E>(
+    public data class Finished<T, E>(
         /** Result of operation */
         val data: Result<T, E>
     ) : LoadState<T, E>()
 
     /** Retrieve result or an alternative value if the operation failed */
-    fun or(value: T): T = when (this) {
+    public fun or(value: T): T = when (this) {
         is Finished -> this.data.or(value)
         else -> value
     }
 
     /** Transform result if the operation succeeded */
-    inline fun <R> map(block: (T) -> R): LoadState<R, E> = when (this) {
+    public inline fun <R> map(block: (T) -> R): LoadState<R, E> = when (this) {
         is Init -> Init()
         is Loading -> Loading()
         is Finished -> Finished(this.data.map(block))
     }
 
     /** Transform result if the operation failed */
-    inline fun <S> mapError(block: (E) -> S): LoadState<T, S> = when (this) {
+    public inline fun <S> mapError(block: (E) -> S): LoadState<T, S> = when (this) {
         is Init -> Init()
         is Loading -> Loading()
         is Finished -> Finished(this.data.mapError(block))
     }
 
     /** Run [block] if this operation succeeded */
-    inline fun onSuccess(block: (T) -> Unit): LoadState<T, E> {
+    public inline fun onSuccess(block: (T) -> Unit): LoadState<T, E> {
         if (this is Finished) this.data.onSuccess(block)
         return this
     }
 
     /** Run [block] if this operation failed */
-    inline fun onError(block: (E) -> Unit): LoadState<T, E> {
+    public inline fun onError(block: (E) -> Unit): LoadState<T, E> {
         if (this is Finished) this.data.onError(block)
         return this
     }

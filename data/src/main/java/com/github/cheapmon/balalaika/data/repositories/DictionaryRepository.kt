@@ -34,24 +34,24 @@ import kotlinx.coroutines.flow.map
 
 @Suppress("EXPERIMENTAL_API_USAGE")
 @Singleton
-class DictionaryRepository @Inject internal constructor(
+public class DictionaryRepository @Inject internal constructor(
     private val storage: PreferenceStorage,
     private val dictionaryDao: DictionaryDao,
     private val dataSources: Map<String, @JvmSuppressWildcards DictionaryDataSource>,
     private val installer: DictionaryInstaller,
     private val toDictionary: DictionaryEntityToDictionary
 ) : DictionaryInstaller by installer {
-    fun getOpenDictionary(): Flow<Dictionary?> =
+    public fun getOpenDictionary(): Flow<Dictionary?> =
         storage.openDictionary
             .flatMapLatest { it?.let { dictionaryDao.findById(it) } ?: flowOf(null) }
             .map { it?.let { toDictionary(it) } }
 
-    fun getInstalledDictionaries(opened: Dictionary?): Flow<List<InstalledDictionary>> =
+    public fun getInstalledDictionaries(opened: Dictionary?): Flow<List<InstalledDictionary>> =
         dictionaryDao.getAll().map { list ->
             list.map { InstalledDictionary(toDictionary(it), it.id == opened?.id) }
         }
 
-    fun getDownloadableDictionaries(): Flow<List<DownloadableDictionary>> =
+    public fun getDownloadableDictionaries(): Flow<List<DownloadableDictionary>> =
         dictionaryDao.getAll().map { list ->
             val currentList = list.map { toDictionary(it) }
             val newList = fetchDictionariesFromDataSources()
@@ -80,11 +80,11 @@ class DictionaryRepository @Inject internal constructor(
         }
     }
 
-    suspend fun openDictionary(dictionary: InstalledDictionary) {
+    public suspend fun openDictionary(dictionary: InstalledDictionary) {
         storage.setOpenDictionary(dictionary.id)
     }
 
-    suspend fun closeDictionary() {
+    public suspend fun closeDictionary() {
         storage.setOpenDictionary(null)
     }
 }

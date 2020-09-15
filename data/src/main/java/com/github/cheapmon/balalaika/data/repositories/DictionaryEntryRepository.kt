@@ -37,13 +37,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 @Singleton
-class DictionaryEntryRepository @Inject internal constructor(
+public class DictionaryEntryRepository @Inject internal constructor(
     private val dictionaryEntryDao: DictionaryEntryDao,
     private val cacheEntryDao: CacheEntryDao,
     private val dictionaryViewDao: DictionaryViewDao,
     private val toDictionaryEntry: DictionaryEntryEntityToDictionaryEntry
 ) {
-    suspend fun getDictionaryEntries(
+    public suspend fun getDictionaryEntries(
         dictionary: InstalledDictionary,
         dictionaryView: DictionaryView,
         category: DataCategory,
@@ -58,7 +58,7 @@ class DictionaryEntryRepository @Inject internal constructor(
         ).flow
     }
 
-    suspend fun queryDictionaryEntries(
+    public suspend fun queryDictionaryEntries(
         dictionary: InstalledDictionary,
         dictionaryView: DictionaryView,
         query: String,

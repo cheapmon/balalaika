@@ -23,28 +23,25 @@ import com.github.cheapmon.balalaika.model.HistoryItem
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
 @Suppress("EXPERIMENTAL_API_USAGE")
 @Singleton
-class HistoryRepository @Inject internal constructor(
-    private val repository: DictionaryRepository,
+public class HistoryRepository @Inject internal constructor(
     private val dao: HistoryItemDao,
     private val toHistoryItem: HistoryItemWithCategoryToHistoryItem,
     private val fromHistoryItem: HistoryItemToHistoryItemEntity
 ) {
-    fun getHistoryItems(): Flow<List<HistoryItem>> = repository.getOpenDictionary()
-        .flatMapLatest { dictionary ->
-            dictionary?.let { dao.getAll(dictionary.id) } ?: flowOf(emptyList())
-        }.map { list -> list.map { entity -> toHistoryItem(entity) } }
+    public fun getHistoryItems(dictionary: Dictionary): Flow<List<HistoryItem>> =
+        dao.getAll(dictionary.id)
+            .map { list -> list.map { entity -> toHistoryItem(entity) } }
 
-    suspend fun addToHistory(dictionary: Dictionary, historyItem: HistoryItem) {
+    public suspend fun addToHistory(dictionary: Dictionary, historyItem: HistoryItem) {
         val entity = fromHistoryItem(historyItem, dictionary)
         dao.removeSimilar(dictionary.id, historyItem.query)
         dao.insert(entity)
     }
 
-    suspend fun clearHistory(dictionary: Dictionary) = dao.removeInDictionary(dictionary.id)
+    public suspend fun clearHistory(dictionary: Dictionary): Unit =
+        dao.removeInDictionary(dictionary.id)
 }
