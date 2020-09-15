@@ -30,12 +30,10 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
 
     // Logging
-    implementation 'io.github.microutils:kotlin-logging:1.7.9'
-    implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.30'
+    implementation 'io.github.microutils:kotlin-logging:1.8.3'
 
     // Import
     implementation 'org.apache.commons:commons-csv:1.8'
-    implementation "org.yaml:snakeyaml:1.26:android"
 
     // Miscellaneous
     //noinspection GradleDependency
