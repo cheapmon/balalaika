@@ -118,7 +118,7 @@ class DictionaryRepository @Inject internal constructor(
         storage.setOpenDictionary(dictionary.id)
     }
 
-    suspend fun closeDictionary(dictionary: InstalledDictionary) {
+    suspend fun closeDictionary() {
         storage.setOpenDictionary(null)
     }
 }

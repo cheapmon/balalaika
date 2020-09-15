@@ -41,3 +41,8 @@ internal annotation class MainImmediateDispatcher
 @Retention(AnnotationRetention.BINARY)
 @Qualifier
 internal annotation class DictionaryRetrofit
+
+/** Retrofit for Wordnet */
+@Retention(AnnotationRetention.BINARY)
+@Qualifier
+annotation class WordnetRetrofit

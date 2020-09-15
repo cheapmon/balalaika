@@ -28,6 +28,13 @@ internal object Constants {
     /** Paging start index */
     const val PAGING_START_INDEX = 1L
 
+    /** Assets file with dictionary list */
     const val DICTIONARY_LIST_FILE = "dictionaries.json"
+
+    /** Base URL of dictionary API */
+    // TODO: Setup
     const val SERVER_URL = "https://www.example.org/"
+
+    /** Base URL of Wordnet API */
+    const val WORDNET_URL: String = "http://wordnet-rdf.princeton.edu/rdf/"
 }

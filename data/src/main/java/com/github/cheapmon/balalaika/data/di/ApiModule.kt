@@ -16,8 +16,11 @@
 package com.github.cheapmon.balalaika.data.di
 
 import com.github.cheapmon.balalaika.data.repositories.dictionary.DictionaryApi
+import com.github.cheapmon.balalaika.data.repositories.wordnet.WordnetApi
 import com.github.cheapmon.balalaika.data.util.Constants
 import com.squareup.moshi.Moshi
+import com.tickaroo.tikxml.TikXml
+import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -57,4 +60,27 @@ internal class ApiModule {
     @Provides
     fun provideDictionaryApi(@DictionaryRetrofit retrofit: Retrofit): DictionaryApi =
         retrofit.create(DictionaryApi::class.java)
+
+    /** @suppress */
+    @Provides
+    fun provideTikXml(): TikXml = TikXml.Builder()
+        .exceptionOnUnreadXml(false)
+        .build()
+
+    /** @suppress */
+    @Provides
+    @WordnetRetrofit
+    fun provideWordnetRetrofit(
+        client: OkHttpClient,
+        tikXml: TikXml
+    ): Retrofit = Retrofit.Builder()
+        .baseUrl(Constants.WORDNET_URL)
+        .client(client)
+        .addConverterFactory(TikXmlConverterFactory.create(tikXml))
+        .build()
+
+    /** @suppress */
+    @Provides
+    fun provideWordnetApi(@WordnetRetrofit retrofit: Retrofit): WordnetApi =
+        retrofit.create(WordnetApi::class.java)
 }

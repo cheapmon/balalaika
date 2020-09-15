@@ -53,6 +53,7 @@ internal interface DictionaryViewDao {
     suspend fun removeRelations(dictionaryId: String)
 
     /** Find a dictionary view by its id */
+    @Transaction
     @Query("""SELECT * FROM dictionary_views WHERE id = (:id) LIMIT 1""")
     suspend fun findById(id: String): DictionaryViewWithCategories?
 }
