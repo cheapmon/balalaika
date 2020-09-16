@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.cheapmon.balalaika.ui.preferences
+package com.github.cheapmon.balalaika.ui.about
 
 import android.content.Intent
 import android.net.Uri
@@ -25,7 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 /** Fragment for configuring preferences */
 @AndroidEntryPoint
-class PreferencesFragment : PreferenceFragmentCompat() {
+class AboutFragment : PreferenceFragmentCompat() {
     /** Load data and add callbacks */
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
