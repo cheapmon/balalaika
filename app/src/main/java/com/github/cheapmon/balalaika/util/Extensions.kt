@@ -27,7 +27,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavArgs
 import androidx.navigation.NavArgsLazy
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.db.entities.entry.PropertyDatabaseView
+import com.github.cheapmon.balalaika.model.DictionaryEntry
 import com.github.cheapmon.balalaika.ui.search.SearchAdapter
 import com.google.android.material.button.MaterialButton
 
@@ -39,7 +39,7 @@ fun MaterialButton.setIconById(@DrawableRes id: Int) {
 /**
  * Highlight part of a string
  *
- * This is used in the user interface to indicate matching [dictionary entries][PropertyDatabaseView]
+ * This is used in the user interface to indicate matching [dictionary entries][DictionaryEntry]
  * for a search query.
  *
  * @see SearchAdapter

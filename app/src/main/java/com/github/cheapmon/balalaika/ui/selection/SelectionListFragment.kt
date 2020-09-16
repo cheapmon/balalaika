@@ -18,24 +18,21 @@ package com.github.cheapmon.balalaika.ui.selection
 import android.os.Bundle
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.LiveData
 import androidx.navigation.fragment.findNavController
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.github.cheapmon.balalaika.MainViewModel
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.data.selection.DictionaryInfo
 import com.github.cheapmon.balalaika.databinding.FragmentSelectionListBinding
-import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
+import com.github.cheapmon.balalaika.model.InstalledDictionary
+import com.github.cheapmon.balalaika.model.SimpleDictionary
 import com.github.cheapmon.balalaika.ui.RecyclerViewFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
 /** Fragment for displaying available dictionaries for multiple sources */
 @AndroidEntryPoint
 class SelectionListFragment(
-    private val data: Flow<List<DictionaryInfo>>
+    private val data: LiveData<List<InstalledDictionary>>
 ) : RecyclerViewFragment<SelectionViewModel, FragmentSelectionListBinding, SelectionAdapter>(
     SelectionViewModel::class,
     R.layout.fragment_selection_list,
@@ -76,25 +73,23 @@ class SelectionListFragment(
         owner: LifecycleOwner,
         adapter: SelectionAdapter
     ) {
-        lifecycleScope.launch {
-            data.collect { list ->
-                swipeRefreshLayout.isRefreshing = false
-                adapter.submitList(list.map { it.toDictionary() })
-                binding.isEmpty = list.isEmpty()
-            }
+        binding.lifecycleOwner = owner
+        data.observe(owner) { list ->
+            swipeRefreshLayout.isRefreshing = false
+            adapter.submitList(list)
+            binding.isEmpty = list.isEmpty()
         }
     }
 
     /** Show dictionary in detail view */
-    override fun onClickDictionary(dictionary: Dictionary) {
+    override fun onClickDictionary(dictionary: SimpleDictionary) {
         val directions = SelectionFragmentDirections.actionNavSelectionToNavSelectionDetail(
             dictionary.id
         )
         findNavController().navigate(directions)
     }
 
-    /** Activate a dictionary */
-    override fun onClickActivate(dictionary: Dictionary) {
+    override fun onClickReadNow(dictionary: SimpleDictionary) {
         activityViewModel.activate(dictionary)
     }
 }

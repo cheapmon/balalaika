@@ -46,7 +46,7 @@ public class DictionaryRepository @Inject internal constructor(
             .flatMapLatest { it?.let { dictionaryDao.findById(it) } ?: flowOf(null) }
             .map { it?.let { InstalledDictionary(toDictionary(it), isOpened = true) } }
 
-    public fun getInstalledDictionaries(opened: Dictionary?): Flow<List<InstalledDictionary>> =
+    public fun getInstalledDictionaries(opened: InstalledDictionary?): Flow<List<InstalledDictionary>> =
         dictionaryDao.getAll().map { list ->
             list.map { InstalledDictionary(toDictionary(it), it.id == opened?.id) }
         }

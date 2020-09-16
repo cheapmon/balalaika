@@ -21,7 +21,19 @@
 
         <variable
             name="dictionary"
-            type="com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary" />
+            type="com.github.cheapmon.balalaika.model.SimpleDictionary" />
+
+        <variable
+            name="is_installed"
+            type="Boolean" />
+
+        <variable
+            name="is_opened"
+            type="Boolean" />
+
+        <variable
+            name="listener"
+            type="com.github.cheapmon.balalaika.ui.selection.SelectionAdapter.Listener" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -31,7 +43,8 @@
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
-        android:focusable="true">
+        android:focusable="true"
+        android:onClick="@{() -> listener.onClickDictionary(dictionary)}">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -72,7 +85,7 @@
                         android:clickable="false"
                         android:text="@string/selection_is_installed"
                         android:textAppearance="?attr/textAppearanceCaption"
-                        android:visibility="@{dictionary.isInstalled}"
+                        android:visibility="@{is_installed}"
                         app:chipMinHeight="16dp" />
 
                     <com.google.android.material.chip.Chip
@@ -82,20 +95,9 @@
                         android:text="@string/selection_is_active"
                         android:textAppearance="?attr/textAppearanceCaption"
                         android:textColor="@android:color/white"
-                        android:visibility="@{dictionary.isActive}"
+                        android:visibility="@{is_opened}"
                         app:chipMinHeight="16dp"
                         app:chipSurfaceColor="?attr/colorPrimary" />
-
-                    <com.google.android.material.chip.Chip
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:clickable="false"
-                        android:text="@string/selection_is_updatable"
-                        android:textAppearance="?attr/textAppearanceCaption"
-                        android:textColor="@android:color/white"
-                        android:visibility="@{dictionary.isUpdatable}"
-                        app:chipMinHeight="16dp"
-                        app:chipSurfaceColor="?attr/colorSecondary" />
 
                 </com.google.android.material.chip.ChipGroup>
 
@@ -124,8 +126,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
+                    android:onClick="@{() -> listener.onClickReadNow(dictionary)}"
                     android:text="@string/selection_action_activate"
-                    android:visibility="@{dictionary.installed &amp;&amp; !dictionary.active}" />
+                    android:visibility="@{is_installed &amp;&amp; !is_opened}" />
             </LinearLayout>
 
         </LinearLayout>

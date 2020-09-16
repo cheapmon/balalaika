@@ -25,9 +25,12 @@ class SelectionFragmentStateAdapter(
     override fun getItemCount(): Int = 3
 
     override fun createFragment(position: Int): Fragment = when (position) {
+        // TODO
         0 -> SelectionListFragment(viewModel.installedDictionaries)
-        1 -> SelectionListFragment(viewModel.localDictionaries)
-        2 -> SelectionListFragment(viewModel.remoteDictionaries)
+        // 1 -> SelectionListFragment(viewModel.localDictionaries)
+        1 -> SelectionListFragment(viewModel.installedDictionaries)
+        // 2 -> SelectionListFragment(viewModel.remoteDictionaries)
+        2 -> SelectionListFragment(viewModel.installedDictionaries)
         else -> throw IllegalArgumentException("Position must be <= 2")
     }
 }

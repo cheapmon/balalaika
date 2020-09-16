@@ -16,29 +16,31 @@
 package com.github.cheapmon.balalaika.ui.selection
 
 import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.github.cheapmon.balalaika.data.selection.DictionaryRepository
-import kotlinx.coroutines.flow.launchIn
+import androidx.lifecycle.asLiveData
+import com.github.cheapmon.balalaika.data.repositories.DictionaryRepository
+import com.github.cheapmon.balalaika.model.InstalledDictionary
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 
 /** View model for [SelectionFragment] */
 class SelectionViewModel @ViewModelInject constructor(
-    private val repository: DictionaryRepository
+    private val dictionaries: DictionaryRepository
 ) : ViewModel() {
     init {
         refresh()
     }
 
-    /** All available dictionaries */
-    val dictionaries = repository.dictionaries.map { list -> list.sortedBy { !it.isActive } }
-
-    val installedDictionaries = repository.installedDictionaries
-    val remoteDictionaries = repository.remoteDictionaries
-    val localDictionaries = repository.localDictionaries
+    /** All installed dictionaries */
+    val installedDictionaries: LiveData<List<InstalledDictionary>> =
+        dictionaries.getOpenDictionary()
+            .flatMapLatest { dictionaries.getInstalledDictionaries(it) }
+            .map { list -> list.sortedBy { !it.isOpened } }
+            .asLiveData()
 
     /** Refresh dictionary list from sources */
     fun refresh() {
-        repository.refresh().launchIn(viewModelScope)
+        // TODO
     }
 }

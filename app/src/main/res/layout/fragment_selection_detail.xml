@@ -24,8 +24,8 @@
             type="com.github.cheapmon.balalaika.ui.selection.SelectionDetailFragment.Listener" />
 
         <variable
-            name="dictionary"
-            type="com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary" />
+            name="view_model"
+            type="com.github.cheapmon.balalaika.ui.selection.SelectionDetailViewModel" />
     </data>
 
     <ScrollView
@@ -54,7 +54,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@{dictionary.name}"
+                        android:text="@{view_model.dictionary.name}"
                         android:textAppearance="?attr/textAppearanceHeadline6"
                         tools:text="Dictionary Name" />
 
@@ -62,7 +62,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFeatureSettings="smcp"
-                        android:text="@{dictionary.authors}"
+                        android:text="@{view_model.dictionary.authors}"
                         android:textAppearance="?attr/textAppearanceCaption"
                         tools:text="Authors" />
 
@@ -79,7 +79,6 @@
                             android:clickable="false"
                             android:text="@string/selection_is_installed"
                             android:textAppearance="?attr/textAppearanceCaption"
-                            android:visibility="@{dictionary.isInstalled}"
                             app:chipMinHeight="16dp" />
 
                         <com.google.android.material.chip.Chip
@@ -89,21 +88,10 @@
                             android:text="@string/selection_is_active"
                             android:textAppearance="?attr/textAppearanceCaption"
                             android:textColor="@android:color/white"
-                            android:visibility="@{dictionary.isActive}"
+                            android:visibility="@{view_model.dictionary.isOpened}"
                             app:chipIconTint="@android:color/white"
                             app:chipMinHeight="16dp"
                             app:chipSurfaceColor="?attr/colorPrimary" />
-
-                        <com.google.android.material.chip.Chip
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:clickable="false"
-                            android:text="@string/selection_is_updatable"
-                            android:textAppearance="?attr/textAppearanceCaption"
-                            android:textColor="@android:color/white"
-                            android:visibility="@{dictionary.isUpdatable}"
-                            app:chipMinHeight="16dp"
-                            app:chipSurfaceColor="?attr/colorSecondary" />
 
                     </com.google.android.material.chip.ChipGroup>
 
@@ -140,46 +128,27 @@
                         style="@style/Widget.MaterialComponents.Button.TextButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:onClick="@{() -> listener.onClickActivateButton(dictionary)}"
+                        android:onClick="@{() -> listener.onClickActivateButton(view_model.dictionary)}"
                         android:text="@string/selection_action_activate"
-                        android:visibility="@{dictionary.installed &amp;&amp; !dictionary.active}" />
+                        android:visibility="@{!view_model.dictionary.opened}" />
 
                     <Button
                         android:id="@+id/selection_button_deactivate"
                         style="@style/Widget.MaterialComponents.Button.TextButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:onClick="@{() -> listener.onClickDeactivateButton(dictionary)}"
+                        android:onClick="@{() -> listener.onClickDeactivateButton(view_model.dictionary)}"
                         android:text="@string/selection_action_deactivate"
-                        android:visibility="@{dictionary.installed &amp;&amp; dictionary.active}" />
-
-                    <Button
-                        android:id="@+id/selection_button_update"
-                        style="@style/Widget.MaterialComponents.Button.TextButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:onClick="@{() -> listener.onClickUpdateButton(dictionary)}"
-                        android:text="@string/selection_action_update"
-                        android:visibility="@{dictionary.updatable}" />
-
-                    <Button
-                        android:id="@+id/selection_button_add"
-                        style="@style/Widget.MaterialComponents.Button.TextButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:onClick="@{() -> listener.onClickAddButton(dictionary)}"
-                        android:text="@string/selection_action_add"
-                        android:visibility="@{!dictionary.installed}" />
+                        android:visibility="@{view_model.dictionary.opened}" />
 
                     <Button
                         android:id="@+id/selection_button_remove"
                         style="@style/Widget.MaterialComponents.Button.TextButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:onClick="@{() -> listener.onClickRemoveButton(dictionary)}"
+                        android:onClick="@{() -> listener.onClickRemoveButton(view_model.dictionary)}"
                         android:text="@string/selection_action_remove"
-                        android:theme="@style/ThemeOverlay.Balalaika.Danger"
-                        android:visibility="@{dictionary.installed}" />
+                        android:theme="@style/ThemeOverlay.Balalaika.Danger" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -205,7 +174,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:autoLink="web"
-                        android:text="@{dictionary.summary}"
+                        android:text="@{view_model.dictionary.summary}"
                         app:justify="@{true}"
                         tools:text="@string/impsum" />
 
@@ -221,7 +190,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:autoLink="web"
-                        android:text="@{dictionary.additionalInfo}"
+                        android:text="@{view_model.dictionary.additionalInfo}"
                         app:justify="@{true}"
                         tools:text="@string/impsum" />
 
@@ -236,7 +205,7 @@
                         style="?attr/textAppearanceBody2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@{String.valueOf(dictionary.version)}"
+                        android:text="@{String.valueOf(view_model.dictionary.version)}"
                         tools:text="1.0" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>

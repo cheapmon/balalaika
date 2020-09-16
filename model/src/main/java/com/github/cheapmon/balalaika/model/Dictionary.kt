@@ -15,7 +15,7 @@
  */
 package com.github.cheapmon.balalaika.model
 
-private interface SimpleDictionary {
+interface SimpleDictionary {
     val id: String
     val version: Int
     val name: String
@@ -23,6 +23,17 @@ private interface SimpleDictionary {
     val authors: String
     val additionalInfo: String
 }
+
+infix fun SimpleDictionary.sameAs(other: SimpleDictionary): Boolean =
+    if (this is Dictionary && other is Dictionary) {
+        this == other
+    } else if (this is InstalledDictionary && other is InstalledDictionary) {
+        this == other
+    } else if (this is DownloadableDictionary && other is DownloadableDictionary) {
+        this == other
+    } else {
+        false
+    }
 
 data class Dictionary(
     override val id: String,

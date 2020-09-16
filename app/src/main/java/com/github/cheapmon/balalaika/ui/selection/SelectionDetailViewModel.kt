@@ -17,18 +17,26 @@ package com.github.cheapmon.balalaika.ui.selection
 
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.github.cheapmon.balalaika.data.selection.DictionaryRepository
+import androidx.lifecycle.asLiveData
+import com.github.cheapmon.balalaika.data.repositories.DictionaryRepository
+import com.github.cheapmon.balalaika.model.InstalledDictionary
 import com.github.cheapmon.balalaika.util.navArgs
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 
 /** View model for [SelectionDetailFragment] */
 class SelectionDetailViewModel @ViewModelInject constructor(
     @Assisted savedStateHandle: SavedStateHandle,
-    repository: DictionaryRepository
+    dictionaries: DictionaryRepository
 ) : ViewModel() {
     private val navArgs: SelectionDetailFragmentArgs by navArgs(savedStateHandle)
 
     /** Single dictionary for detailed view */
-    val dictionary = repository.getDictionary(navArgs.id)
+    val dictionary: LiveData<InstalledDictionary?> = dictionaries.getOpenDictionary()
+        .flatMapLatest { dictionary -> dictionaries.getInstalledDictionaries(dictionary) }
+        .map { list -> list.find { it.id == navArgs.id } }
+        .asLiveData()
 }

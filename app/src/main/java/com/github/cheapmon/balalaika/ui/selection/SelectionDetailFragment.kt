@@ -17,17 +17,14 @@ package com.github.cheapmon.balalaika.ui.selection
 
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.github.cheapmon.balalaika.MainViewModel
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.databinding.FragmentSelectionDetailBinding
-import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
+import com.github.cheapmon.balalaika.model.SimpleDictionary
 import com.github.cheapmon.balalaika.ui.BaseFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
 /**
  * Fragment for displaying information about a dictionary
@@ -52,34 +49,29 @@ class SelectionDetailFragment :
 
     /** @suppress */
     override fun observeData(binding: FragmentSelectionDetailBinding, owner: LifecycleOwner) {
-        lifecycleScope.launch {
-            viewModel.dictionary.collect {
-                with(binding) {
-                    dictionary = it
-                    listener = Listener()
-                }
-            }
-        }
+        binding.lifecycleOwner = owner
+        binding.viewModel = viewModel
+        binding.listener = Listener()
     }
 
     /** @suppress */
     inner class Listener {
-        fun onClickActivateButton(dictionary: Dictionary) {
+        fun onClickActivateButton(dictionary: SimpleDictionary) {
             val message = requireContext().getString(R.string.selection_confirm_activate)
             showDialog(message) { activityViewModel.activate(dictionary) }
         }
 
-        fun onClickDeactivateButton(dictionary: Dictionary) {
+        fun onClickDeactivateButton(dictionary: SimpleDictionary) {
             val message = requireContext().getString(R.string.selection_confirm_deactivate)
             showDialog(message) { activityViewModel.deactivate(dictionary) }
         }
 
-        fun onClickUpdateButton(dictionary: Dictionary) {
+        fun onClickUpdateButton(dictionary: SimpleDictionary) {
             val message = requireContext().getString(R.string.selection_confirm_update)
             showDialog(message) { activityViewModel.update(dictionary) }
         }
 
-        fun onClickAddButton(dictionary: Dictionary) {
+        fun onClickAddButton(dictionary: SimpleDictionary) {
             val message = requireContext().getString(
                 R.string.selection_confirm_add,
                 dictionary.name
@@ -87,7 +79,7 @@ class SelectionDetailFragment :
             showDialog(message) { activityViewModel.install(dictionary) }
         }
 
-        fun onClickRemoveButton(dictionary: Dictionary) {
+        fun onClickRemoveButton(dictionary: SimpleDictionary) {
             val message = requireContext().getString(R.string.selection_confirm_remove)
             showDialog(message) { activityViewModel.remove(dictionary) }
         }

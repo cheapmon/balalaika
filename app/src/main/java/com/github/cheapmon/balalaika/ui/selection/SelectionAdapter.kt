@@ -21,12 +21,15 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.databinding.FragmentSelectionItemBinding
-import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
+import com.github.cheapmon.balalaika.model.DownloadableDictionary
+import com.github.cheapmon.balalaika.model.InstalledDictionary
+import com.github.cheapmon.balalaika.model.SimpleDictionary
+import com.github.cheapmon.balalaika.model.sameAs
 
 /* Displays a list of dictionaries */
 class SelectionAdapter(
     private val listener: Listener
-) : ListAdapter<Dictionary, SelectionAdapter.ViewHolder>(Diff) {
+) : ListAdapter<SimpleDictionary, SelectionAdapter.ViewHolder>(Diff) {
     /** Create view */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -39,8 +42,9 @@ class SelectionAdapter(
         val item = getItem(position)
         with(holder.binding) {
             dictionary = item
-            root.setOnClickListener { listener.onClickDictionary(item) }
-            selectionItemButton.setOnClickListener { listener.onClickActivate(item) }
+            isInstalled = item is InstalledDictionary
+            isOpened = item is DownloadableDictionary
+            listener = this@SelectionAdapter.listener
         }
     }
 
@@ -50,17 +54,17 @@ class SelectionAdapter(
     ) : RecyclerView.ViewHolder(binding.root)
 
     /** @suppress */
-    object Diff : DiffUtil.ItemCallback<Dictionary>() {
+    object Diff : DiffUtil.ItemCallback<SimpleDictionary>() {
         override fun areContentsTheSame(
-            oldItem: Dictionary,
-            newItem: Dictionary
+            oldItem: SimpleDictionary,
+            newItem: SimpleDictionary
         ): Boolean {
-            return oldItem == newItem
+            return oldItem sameAs newItem
         }
 
         override fun areItemsTheSame(
-            oldItem: Dictionary,
-            newItem: Dictionary
+            oldItem: SimpleDictionary,
+            newItem: SimpleDictionary
         ): Boolean {
             return oldItem.id == newItem.id
         }
@@ -69,9 +73,9 @@ class SelectionAdapter(
     /** Component that handles actions from this adapter */
     interface Listener {
         /** Callback for whenever a dictionary is clicked */
-        fun onClickDictionary(dictionary: Dictionary)
+        fun onClickDictionary(dictionary: SimpleDictionary)
 
         /** Callback for whenever the "Activate" button is clicked */
-        fun onClickActivate(dictionary: Dictionary)
+        fun onClickReadNow(dictionary: SimpleDictionary)
     }
 }
