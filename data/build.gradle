@@ -87,10 +87,12 @@ protobuf {
 }
 
 dependencies {
+    // Modules
+    implementation project(":model")
+
     // Main dependencies
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "androidx.core:core-ktx:1.3.1"
-    implementation project(":model")
 
     // Room persistence library
     implementation "androidx.room:room-runtime:$room_version"
