@@ -18,8 +18,8 @@ package com.github.cheapmon.balalaika.data.repositories
 import com.github.cheapmon.balalaika.data.db.history.HistoryItemDao
 import com.github.cheapmon.balalaika.data.mappers.HistoryItemToHistoryItemEntity
 import com.github.cheapmon.balalaika.data.mappers.HistoryItemWithCategoryToHistoryItem
-import com.github.cheapmon.balalaika.model.Dictionary
 import com.github.cheapmon.balalaika.model.HistoryItem
+import com.github.cheapmon.balalaika.model.InstalledDictionary
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
@@ -32,16 +32,23 @@ public class HistoryRepository @Inject internal constructor(
     private val toHistoryItem: HistoryItemWithCategoryToHistoryItem,
     private val fromHistoryItem: HistoryItemToHistoryItemEntity
 ) {
-    public fun getHistoryItems(dictionary: Dictionary): Flow<List<HistoryItem>> =
+    public fun getHistoryItems(dictionary: InstalledDictionary): Flow<List<HistoryItem>> =
         dao.getAll(dictionary.id)
             .map { list -> list.map { entity -> toHistoryItem(entity) } }
 
-    public suspend fun addToHistory(dictionary: Dictionary, historyItem: HistoryItem) {
+    public suspend fun addToHistory(dictionary: InstalledDictionary, historyItem: HistoryItem) {
         val entity = fromHistoryItem(historyItem, dictionary)
         dao.removeSimilar(dictionary.id, historyItem.query)
         dao.insert(entity)
     }
 
-    public suspend fun clearHistory(dictionary: Dictionary): Unit =
+    public suspend fun removeFromHistory(
+        dictionary: InstalledDictionary,
+        historyItem: HistoryItem
+    ) {
+        dao.remove(fromHistoryItem(historyItem, dictionary))
+    }
+
+    public suspend fun clearHistory(dictionary: InstalledDictionary): Unit =
         dao.removeInDictionary(dictionary.id)
 }

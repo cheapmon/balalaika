@@ -19,13 +19,11 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.view.View
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.databinding.FragmentHistoryBinding
-import com.github.cheapmon.balalaika.db.entities.history.HistoryEntryWithRestriction
+import com.github.cheapmon.balalaika.model.HistoryItem
 import com.github.cheapmon.balalaika.ui.RecyclerViewFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -66,16 +64,11 @@ class HistoryFragment :
         owner: LifecycleOwner,
         adapter: HistoryAdapter
     ) {
-        viewModel.historyEntries.observe(owner, Observer {
+        binding.lifecycleOwner = owner
+        binding.viewModel = viewModel
+        viewModel.items.observe(owner) {
             adapter.submitList(it)
-            if (it.isEmpty()) {
-                binding.historyEmptyIcon.visibility = View.VISIBLE
-                binding.historyEmptyText.visibility = View.VISIBLE
-            } else {
-                binding.historyEmptyIcon.visibility = View.GONE
-                binding.historyEmptyText.visibility = View.GONE
-            }
-        })
+        }
     }
 
     /**
@@ -110,17 +103,17 @@ class HistoryFragment :
     }
 
     /** Remove single history entry */
-    override fun onClickDeleteButton(historyEntry: HistoryEntryWithRestriction) {
-        viewModel.removeEntry(historyEntry.historyEntry)
+    override fun onClickDeleteButton(historyItem: HistoryItem) {
+        viewModel.removeItem(historyItem)
         Snackbar.make(requireView(), R.string.history_entry_removed, Snackbar.LENGTH_SHORT)
             .show()
     }
 
     /** Repeat search operation */
-    override fun onClickRedoButton(historyEntry: HistoryEntryWithRestriction) {
+    override fun onClickRedoButton(historyItem: HistoryItem) {
         val directions = HistoryFragmentDirections.actionNavHistoryToNavSearch(
-            query = historyEntry.historyEntry.query,
-            restriction = historyEntry.restriction
+            query = historyItem.query,
+            restriction = historyItem.restriction
         )
         findNavController().navigate(directions)
     }

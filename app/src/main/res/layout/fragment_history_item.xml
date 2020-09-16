@@ -20,12 +20,12 @@
     <data>
 
         <variable
-            name="title"
-            type="String" />
+            name="history_item"
+            type="com.github.cheapmon.balalaika.model.HistoryItem" />
 
         <variable
-            name="restriction"
-            type="String" />
+            name="listener"
+            type="com.github.cheapmon.balalaika.ui.history.HistoryAdapter.Listener" />
     </data>
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -33,7 +33,8 @@
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
-        android:focusable="true">
+        android:focusable="true"
+        android:onClick="@{() -> listener.onClickRedoButton(history_item)}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -47,7 +48,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:text="@{title}"
+                android:text="@{history_item.query}"
                 app:layout_constraintBottom_toTopOf="@id/history_item_restriction"
                 app:layout_constraintStart_toEndOf="@+id/history_item_icon"
                 app:layout_constraintTop_toTopOf="parent"
@@ -59,7 +60,7 @@
                 style="?attr/textAppearanceCaption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{restriction}"
+                android:text="@{history_item.restriction}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/history_item_title"
                 app:layout_constraintTop_toBottomOf="@+id/history_item_title"
@@ -79,6 +80,7 @@
                 android:id="@+id/history_item_delete_button"
                 style="@style/Widget.Balalaika.Button.Icon"
                 android:contentDescription="@string/desc_history_item_delete_button"
+                android:onClick="@{() -> listener.onClickDeleteButton(history_item)}"
                 app:icon="@drawable/ic_delete"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

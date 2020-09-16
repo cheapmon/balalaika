@@ -16,14 +16,14 @@
 package com.github.cheapmon.balalaika.data.mappers
 
 import com.github.cheapmon.balalaika.data.db.history.HistoryItemEntity
-import com.github.cheapmon.balalaika.model.Dictionary
 import com.github.cheapmon.balalaika.model.HistoryItem
+import com.github.cheapmon.balalaika.model.InstalledDictionary
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 internal class HistoryItemToHistoryItemEntity @Inject constructor() {
-    operator fun invoke(item: HistoryItem, dictionary: Dictionary): HistoryItemEntity =
+    operator fun invoke(item: HistoryItem, dictionary: InstalledDictionary): HistoryItemEntity =
         HistoryItemEntity(
             categoryId = item.restriction?.category?.id,
             dictionaryId = dictionary.id,

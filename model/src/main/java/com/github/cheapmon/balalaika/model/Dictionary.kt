@@ -30,7 +30,7 @@ data class Dictionary(
     override val name: String,
     override val summary: String,
     override val authors: String,
-    override val additionalInfo: String,
+    override val additionalInfo: String
 ) : SimpleDictionary
 
 data class InstalledDictionary(
@@ -40,5 +40,5 @@ data class InstalledDictionary(
 
 data class DownloadableDictionary(
     private val dictionary: Dictionary,
-    val isInLibrary: Boolean = false,
+    val isInLibrary: Boolean = false
 ) : SimpleDictionary by dictionary

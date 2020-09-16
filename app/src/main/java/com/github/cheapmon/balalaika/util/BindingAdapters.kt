@@ -20,6 +20,8 @@ import android.os.Build
 import android.view.View
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import com.github.cheapmon.balalaika.R
+import com.github.cheapmon.balalaika.model.SearchRestriction
 
 /** Adapters for the data binding library */
 object BindingAdapters {
@@ -59,6 +61,35 @@ object BindingAdapters {
                 LineBreaker.JUSTIFICATION_MODE_INTER_WORD
             view.justificationMode =
                 LineBreaker.JUSTIFICATION_MODE_INTER_WORD
+        }
+    }
+
+    /**
+     * Set the text of a TextView from a [SearchRestriction]
+     *
+     * Example:
+     * ```xml
+     * <data>
+     *   <variable
+     *     name="restriction"
+     *     type="com.github.cheapmon.balalaika.model.SearchRestriction" />
+     * </data>
+     *
+     * <TextView
+     *   android:text="@{restriction}" />
+     * ```
+     */
+    @JvmStatic
+    @BindingAdapter("android:text")
+    fun setText(view: TextView, value: SearchRestriction?) {
+        view.text = if (value == null) {
+            view.resources.getString(R.string.no_restriction)
+        } else {
+            view.resources.getString(
+                R.string.search_restriction,
+                value.category.name,
+                value.text
+            )
         }
     }
 }

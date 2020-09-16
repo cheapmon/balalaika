@@ -20,16 +20,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.databinding.FragmentHistoryItemBinding
-import com.github.cheapmon.balalaika.db.entities.history.HistoryEntry
-import com.github.cheapmon.balalaika.db.entities.history.HistoryEntryWithRestriction
-import com.github.cheapmon.balalaika.db.entities.history.SearchRestriction
+import com.github.cheapmon.balalaika.model.HistoryItem
 
 /** Adapter for [HistoryFragment] */
 class HistoryAdapter(
     private val listener: Listener
-) : ListAdapter<HistoryEntryWithRestriction, HistoryAdapter.ViewHolder>(HistoryDiff) {
+) : ListAdapter<HistoryItem, HistoryAdapter.ViewHolder>(HistoryDiff) {
     /** Create view */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -39,18 +36,10 @@ class HistoryAdapter(
 
     /** Bind item and add listeners */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val entry = getItem(position)
+        val item = getItem(position)
         with(holder.binding) {
-            title = entry.historyEntry.query
-            restriction = when (entry.restriction) {
-                is SearchRestriction.None -> holder.itemView.context.getString(R.string.no_restriction)
-                is SearchRestriction.Some -> root.resources.getString(
-                    R.string.search_restriction,
-                    entry.restriction.category.name, entry.restriction.restriction
-                )
-            }
-            historyItemDeleteButton.setOnClickListener { listener.onClickDeleteButton(entry) }
-            root.setOnClickListener { listener.onClickRedoButton(entry) }
+            historyItem = item
+            listener = this@HistoryAdapter.listener
         }
     }
 
@@ -60,28 +49,20 @@ class HistoryAdapter(
     ) : RecyclerView.ViewHolder(binding.root)
 
     /** @suppress */
-    private object HistoryDiff : DiffUtil.ItemCallback<HistoryEntryWithRestriction>() {
-        override fun areContentsTheSame(
-            oldItem: HistoryEntryWithRestriction,
-            newItem: HistoryEntryWithRestriction
-        ): Boolean {
-            return oldItem == newItem
-        }
+    private object HistoryDiff : DiffUtil.ItemCallback<HistoryItem>() {
+        override fun areItemsTheSame(oldItem: HistoryItem, newItem: HistoryItem): Boolean =
+            oldItem == newItem
 
-        override fun areItemsTheSame(
-            oldItem: HistoryEntryWithRestriction,
-            newItem: HistoryEntryWithRestriction
-        ): Boolean {
-            return oldItem.historyEntry.historyEntryId == newItem.historyEntry.historyEntryId
-        }
+        override fun areContentsTheSame(oldItem: HistoryItem, newItem: HistoryItem): Boolean =
+            oldItem == newItem
     }
 
     /** Component that handles actions from this adapter */
     interface Listener {
-        /** Callback for whenever deletion of a [history entry][HistoryEntry] is requested */
-        fun onClickDeleteButton(historyEntry: HistoryEntryWithRestriction)
+        /** Callback for whenever deletion of a [history item][HistoryItem] is requested */
+        fun onClickDeleteButton(historyItem: HistoryItem)
 
-        /** Callback for whenever a [history entry][HistoryEntry] is clicked */
-        fun onClickRedoButton(historyEntry: HistoryEntryWithRestriction)
+        /** Callback for whenever a [history item][HistoryItem] is clicked */
+        fun onClickRedoButton(historyItem: HistoryItem)
     }
 }
