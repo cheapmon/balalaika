@@ -64,7 +64,7 @@ public class DictionaryEntryRepository @Inject internal constructor(
         query: String,
         searchRestriction: SearchRestriction? = null
     ): Flow<PagingData<DictionaryEntry>> {
-        val view = dictionaryViewDao.findById(dictionaryView.id)
+        val view = dictionaryViewDao.findById(dictionary.id, dictionaryView.id)
             ?: throw IllegalArgumentException("Dictionary view does not exist")
         return Pager(
             config = PagingConfig(pageSize = Constants.PAGE_SIZE),
@@ -105,7 +105,7 @@ public class DictionaryEntryRepository @Inject internal constructor(
 
         override suspend fun load(params: LoadParams<Long>): LoadResult<Long, DictionaryEntry> {
             val pos = params.key ?: startId
-            val view = dictionaryViewDao.findById(dictionaryView.id)
+            val view = dictionaryViewDao.findById(dictionary.id, dictionaryView.id)
                 ?: throw IllegalArgumentException("Dictionary view does not exist")
             val data = cacheEntryDao.getPage(params.loadSize, pos)
                 .mapNotNull { id -> dictionaryEntryDao.findEntryById(dictionary.id, id) }

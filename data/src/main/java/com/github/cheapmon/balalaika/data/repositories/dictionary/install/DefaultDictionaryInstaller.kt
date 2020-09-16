@@ -134,11 +134,11 @@ internal class DefaultDictionaryInstaller @Inject constructor(
         configuration: DictionaryConfigWithRelations?
     ) {
         var sortBy = configuration?.category?.id
-        if (sortBy == null || db.categories().findById(sortBy) == null) {
+        if (sortBy == null || db.categories().findById(dictionary.id, sortBy) == null) {
             sortBy = Constants.DEFAULT_CATEGORY_ID
         }
         var filterBy = configuration?.view?.dictionaryView?.id
-        if (filterBy == null || db.dictionaryViews().findById(filterBy) == null) {
+        if (filterBy == null || db.dictionaryViews().findById(dictionary.id, filterBy) == null) {
             filterBy = Constants.DEFAULT_DICTIONARY_VIEW_ID
         }
         db.configurations().insert(DictionaryConfig(dictionary.id, sortBy, filterBy))

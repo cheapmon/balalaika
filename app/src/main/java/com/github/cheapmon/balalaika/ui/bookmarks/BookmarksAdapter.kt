@@ -21,12 +21,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.databinding.FragmentBookmarksItemBinding
-import com.github.cheapmon.balalaika.db.entities.lexeme.Lexeme
+import com.github.cheapmon.balalaika.model.DictionaryEntry
 
 /** Adapter for [BookmarksFragment] */
 class BookmarksAdapter(
     private val listener: Listener
-) : ListAdapter<Lexeme, BookmarksAdapter.ViewHolder>(BookmarksDiff) {
+) : ListAdapter<DictionaryEntry, BookmarksAdapter.ViewHolder>(BookmarksDiff) {
     /** Create view */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -36,11 +36,10 @@ class BookmarksAdapter(
 
     /** Bind item and add listeners */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val entry = getItem(position)
+        val item = getItem(position)
         with(holder.binding) {
-            lexeme = entry
-            bookmarksItemDeleteButton.setOnClickListener { listener.onClickDeleteButton(entry) }
-            root.setOnClickListener { listener.onClickRedoButton(entry) }
+            entry = item
+            listener = this@BookmarksAdapter.listener
         }
     }
 
@@ -49,17 +48,17 @@ class BookmarksAdapter(
         val binding: FragmentBookmarksItemBinding
     ) : RecyclerView.ViewHolder(binding.root)
 
-    private object BookmarksDiff : DiffUtil.ItemCallback<Lexeme>() {
+    private object BookmarksDiff : DiffUtil.ItemCallback<DictionaryEntry>() {
         override fun areContentsTheSame(
-            oldItem: Lexeme,
-            newItem: Lexeme
+            oldItem: DictionaryEntry,
+            newItem: DictionaryEntry
         ): Boolean {
             return oldItem == newItem
         }
 
         override fun areItemsTheSame(
-            oldItem: Lexeme,
-            newItem: Lexeme
+            oldItem: DictionaryEntry,
+            newItem: DictionaryEntry
         ): Boolean {
             return oldItem.id == newItem.id
         }
@@ -67,10 +66,10 @@ class BookmarksAdapter(
 
     /** Component that handles actions from this adapter */
     interface Listener {
-        /** Callback for whenever deletion of a [lexeme][Lexeme] is requested */
-        fun onClickDeleteButton(lexeme: Lexeme)
+        /** Callback for whenever deletion of a [dictionary entry][DictionaryEntry] is requested */
+        fun onClickDeleteButton(dictionaryEntry: DictionaryEntry)
 
-        /** Callback for whenever a [lexeme][Lexeme] is clicked */
-        fun onClickRedoButton(lexeme: Lexeme)
+        /** Callback for whenever a [dictionary entry][DictionaryEntry] is clicked */
+        fun onClickRedoButton(dictionaryEntry: DictionaryEntry)
     }
 }

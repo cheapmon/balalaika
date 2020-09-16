@@ -36,6 +36,6 @@ internal interface CategoryDao {
     suspend fun removeInDictionary(dictionaryId: String)
 
     /** Find a data category by its id */
-    @Query("""SELECT * FROM categories WHERE id = (:id) LIMIT 1""")
-    suspend fun findById(id: String): CategoryEntity?
+    @Query("""SELECT * FROM categories WHERE dictionary_id = (:dictionaryId) AND id = (:id) LIMIT 1""")
+    suspend fun findById(dictionaryId: String, id: String): CategoryEntity?
 }

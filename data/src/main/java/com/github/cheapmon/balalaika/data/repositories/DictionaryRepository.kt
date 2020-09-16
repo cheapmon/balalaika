@@ -41,10 +41,10 @@ public class DictionaryRepository @Inject internal constructor(
     private val installer: DictionaryInstaller,
     private val toDictionary: DictionaryEntityToDictionary
 ) : DictionaryInstaller by installer {
-    public fun getOpenDictionary(): Flow<Dictionary?> =
+    public fun getOpenDictionary(): Flow<InstalledDictionary?> =
         storage.openDictionary
             .flatMapLatest { it?.let { dictionaryDao.findById(it) } ?: flowOf(null) }
-            .map { it?.let { toDictionary(it) } }
+            .map { it?.let { InstalledDictionary(toDictionary(it), isOpened = true) } }
 
     public fun getInstalledDictionaries(opened: Dictionary?): Flow<List<InstalledDictionary>> =
         dictionaryDao.getAll().map { list ->

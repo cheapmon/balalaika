@@ -16,10 +16,17 @@
 package com.github.cheapmon.balalaika.ui.bookmarks
 
 import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.github.cheapmon.balalaika.data.dictionary.DictionaryEntryRepository
+import com.github.cheapmon.balalaika.data.repositories.BookmarkRepository
+import com.github.cheapmon.balalaika.data.repositories.DictionaryEntryRepository
+import com.github.cheapmon.balalaika.data.repositories.DictionaryRepository
+import com.github.cheapmon.balalaika.model.DictionaryEntry
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 
 /**
@@ -28,18 +35,28 @@ import kotlinx.coroutines.launch
  * @see DictionaryEntryRepository
  */
 class BookmarksViewModel @ViewModelInject constructor(
-    private val repository: DictionaryEntryRepository
+    private val dictionaries: DictionaryRepository,
+    private val bookmarks: BookmarkRepository
 ) : ViewModel() {
     /** All lexemes that are currently bookmarked */
-    val lexemes = repository.bookmarks.asLiveData()
+    val bookmarkedEntries: LiveData<List<DictionaryEntry>> = dictionaries.getOpenDictionary()
+        .flatMapLatest { dictionary ->
+            if (dictionary != null) {
+                bookmarks.getBookmarkedEntries(dictionary)
+            } else {
+                flowOf(emptyList())
+            }
+        }.asLiveData()
 
     /** Remove single bookmark */
-    fun removeBookmark(lexemeId: String) {
-        viewModelScope.launch { repository.toggleBookmark(lexemeId) }
+    fun removeBookmark(dictionaryEntry: DictionaryEntry) = viewModelScope.launch {
+        val openedDictionary = dictionaries.getOpenDictionary().first()
+        if (openedDictionary != null) bookmarks.removeBookmark(openedDictionary, dictionaryEntry)
     }
 
     /** Remove all bookmarks */
-    fun clearBookmarks() {
-        viewModelScope.launch { repository.clearBookmarks() }
+    fun clearBookmarks() = viewModelScope.launch {
+        val openedDictionary = dictionaries.getOpenDictionary().first()
+        if (openedDictionary != null) bookmarks.clearBookmarks(openedDictionary)
     }
 }

@@ -19,13 +19,11 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.view.View
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.databinding.FragmentBookmarksBinding
-import com.github.cheapmon.balalaika.db.entities.lexeme.Lexeme
+import com.github.cheapmon.balalaika.model.DictionaryEntry
 import com.github.cheapmon.balalaika.ui.RecyclerViewFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -66,16 +64,11 @@ class BookmarksFragment :
         owner: LifecycleOwner,
         adapter: BookmarksAdapter
     ) {
-        viewModel.lexemes.observe(owner, Observer {
+        binding.lifecycleOwner = owner
+        binding.viewModel = viewModel
+        viewModel.bookmarkedEntries.observe(owner) {
             adapter.submitList(it)
-            if (it.isEmpty()) {
-                binding.bookmarksEmptyIcon.visibility = View.VISIBLE
-                binding.bookmarksEmptyText.visibility = View.VISIBLE
-            } else {
-                binding.bookmarksEmptyIcon.visibility = View.GONE
-                binding.bookmarksEmptyText.visibility = View.GONE
-            }
-        })
+        }
     }
 
     /**
@@ -110,16 +103,16 @@ class BookmarksFragment :
     }
 
     /** Remove single bookmark */
-    override fun onClickDeleteButton(lexeme: Lexeme) {
-        viewModel.removeBookmark(lexeme.id)
+    override fun onClickDeleteButton(dictionaryEntry: DictionaryEntry) {
+        viewModel.removeBookmark(dictionaryEntry)
         Snackbar.make(requireView(), R.string.bookmarks_item_removed, Snackbar.LENGTH_SHORT)
             .show()
     }
 
     /** Show bookmarked entry in dictionary */
-    override fun onClickRedoButton(lexeme: Lexeme) {
+    override fun onClickRedoButton(dictionaryEntry: DictionaryEntry) {
         val directions =
-            BookmarksFragmentDirections.actionNavBookmarksToNavHome(lexeme.id)
+            BookmarksFragmentDirections.actionNavBookmarksToNavHome(dictionaryEntry.id)
         findNavController().navigate(directions)
     }
 }
