@@ -16,15 +16,13 @@
 package com.github.cheapmon.balalaika.ui.search
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.databinding.FragmentSearchItemBinding
-import com.github.cheapmon.balalaika.db.entities.entry.DictionaryEntry
-import com.github.cheapmon.balalaika.db.entities.history.SearchRestriction
-import com.github.cheapmon.balalaika.db.entities.lexeme.Lexeme
+import com.github.cheapmon.balalaika.model.DictionaryEntry
+import com.github.cheapmon.balalaika.model.SearchRestriction
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetListener
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.Widgets
 import com.github.cheapmon.balalaika.util.highlight
@@ -47,18 +45,10 @@ class SearchAdapter(
         val entry = getItem(position) ?: return
         with(holder.binding) {
             entryTitle.text =
-                entry.lexeme.form.highlight(searchText, root.context)
-            val props = entry.properties.filter { it.property.value.contains(searchText) }
-            if (props.isEmpty()) {
-                entryProperties.visibility = View.GONE
-            } else {
-                entryProperties.visibility = View.VISIBLE
-            }
-            root.setOnClickListener { listener.onClickItem(entry.lexeme) }
+                entry.representation.highlight(searchText, root.context)
+            root.setOnClickListener { listener.onClickItem(entry) }
             entryProperties.removeAllViews()
-            props
-                .groupBy { it.category }
-                .toSortedMap(Comparator { t, t2 -> t.sequence.compareTo(t2.sequence) })
+            entry.properties
                 .forEach { (category, properties) ->
                     val widget = Widgets.get(
                         entryProperties,
@@ -88,7 +78,7 @@ class SearchAdapter(
             oldItem: DictionaryEntry,
             newItem: DictionaryEntry
         ): Boolean {
-            return oldItem.lexeme.id == newItem.lexeme.id
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(
@@ -110,7 +100,7 @@ class SearchAdapter(
 
     /** Component that handles actions from this adapter */
     interface Listener {
-        /** Callback for whenever a [lexeme][Lexeme] is clicked */
-        fun onClickItem(lexeme: Lexeme)
+        /** Callback for whenever a [dictionary entry][DictionaryEntry] is clicked */
+        fun onClickItem(dictionaryEntry: DictionaryEntry)
     }
 }

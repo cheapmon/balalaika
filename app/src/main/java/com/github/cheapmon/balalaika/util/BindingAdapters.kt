@@ -57,10 +57,7 @@ object BindingAdapters {
     @BindingAdapter("justify")
     fun justify(view: TextView, value: Boolean) {
         if (value && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            view.justificationMode =
-                LineBreaker.JUSTIFICATION_MODE_INTER_WORD
-            view.justificationMode =
-                LineBreaker.JUSTIFICATION_MODE_INTER_WORD
+            view.justificationMode = LineBreaker.JUSTIFICATION_MODE_INTER_WORD
         }
     }
 

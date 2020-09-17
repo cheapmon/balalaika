@@ -20,42 +20,60 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.github.cheapmon.balalaika.data.dictionary.DictionaryEntryRepository
-import com.github.cheapmon.balalaika.data.search.SearchRepository
-import com.github.cheapmon.balalaika.db.entities.history.SearchRestriction
+import com.github.cheapmon.balalaika.data.repositories.DictionaryEntryRepository
+import com.github.cheapmon.balalaika.data.repositories.DictionaryRepository
+import com.github.cheapmon.balalaika.model.DictionaryEntry
+import com.github.cheapmon.balalaika.model.InstalledDictionary
+import com.github.cheapmon.balalaika.model.SearchRestriction
 import com.github.cheapmon.balalaika.util.navArgs
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 
 /** View model for [SearchFragment] */
 class SearchViewModel @ViewModelInject constructor(
     @Assisted savedStateHandle: SavedStateHandle,
-    private val searchRepository: SearchRepository,
+    dictionaryRepository: DictionaryRepository,
     dictionaryEntryRepository: DictionaryEntryRepository
 ) : ViewModel() {
     private val navArgs: SearchFragmentArgs by navArgs(savedStateHandle)
 
-    init {
-        navArgs.query?.let { setQuery(it) }
-        navArgs.restriction?.let { setRestriction(it) }
-    }
+    private val _query: MutableStateFlow<String?> =
+        MutableStateFlow(navArgs.query)
+    private val _restriction: MutableStateFlow<SearchRestriction?> =
+        MutableStateFlow(navArgs.restriction)
 
     /** Current search query */
-    val query = searchRepository.query
+    val query: Flow<String?> = _query
 
     /** Current search restriction */
-    val restriction = searchRepository.restriction
-
-    /** Current dictionary, depending on the user configuration */
-    val dictionary = searchRepository.dictionary.cachedIn(viewModelScope)
+    val restriction: Flow<SearchRestriction?> = _restriction
 
     /** Current active dictionary */
-    val currentDictionary = dictionaryEntryRepository.currentDictionary
+    private val openedDictionary: Flow<InstalledDictionary?> =
+        dictionaryRepository.getOpenDictionary()
+
+    /** Current dictionary, depending on the user configuration */
+    val entries: Flow<PagingData<DictionaryEntry>?> =
+        combine(openedDictionary, query, restriction) { d, q, r ->
+            if (d == null || q == null) {
+                flowOf(null)
+            } else {
+                dictionaryEntryRepository.queryDictionaryEntries(d, q, r).cachedIn(viewModelScope)
+            }
+        }.flatMapLatest { it }
 
     /** Set the search query */
-    fun setQuery(query: String) =
-        searchRepository.setQuery(query)
+    fun setQuery(query: String?) {
+        _query.value = query
+    }
 
     /** Set the search restriction */
-    fun setRestriction(restriction: SearchRestriction) =
-        searchRepository.setRestriction(restriction)
+    fun setRestriction(restriction: SearchRestriction?) {
+        _restriction.value = restriction
+    }
 }

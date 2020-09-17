@@ -28,11 +28,11 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
+import androidx.paging.PagingData
 import com.github.cheapmon.balalaika.MainViewModel
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.databinding.FragmentSearchBinding
-import com.github.cheapmon.balalaika.db.entities.history.SearchRestriction
-import com.github.cheapmon.balalaika.db.entities.lexeme.Lexeme
+import com.github.cheapmon.balalaika.model.DictionaryEntry
 import com.github.cheapmon.balalaika.ui.RecyclerViewFragment
 import com.github.cheapmon.balalaika.util.exhaustive
 import dagger.hilt.android.AndroidEntryPoint
@@ -83,7 +83,7 @@ class SearchFragment :
     override fun onCreateBinding(binding: FragmentSearchBinding) {
         super.onCreateBinding(binding)
         binding.searchRestriction.setOnCloseIconClickListener {
-            viewModel.setRestriction(SearchRestriction.None)
+            viewModel.setRestriction(null)
         }
 
         searchView = (activity as? AppCompatActivity)?.findViewById(R.id.main_search)
@@ -111,44 +111,44 @@ class SearchFragment :
                 }
             }
             launch {
-                viewModel.dictionary.collectLatest { data -> adapter.submitData(data) }
+                viewModel.entries.collectLatest { data ->
+                    adapter.submitData(data ?: PagingData.empty())
+                    binding.empty = data == null
+                }
             }
             launch {
+                // TODO: Replace with some kind of event flow
                 viewModel.query.collectLatest { query ->
                     if (!queryIsSet) {
                         searchView?.setQuery(query, false)
                         queryIsSet = true
                     }
-                    adapter.submitSearchText(query)
+                    if (query != null) adapter.submitSearchText(query)
                 }
             }
             launch {
+                // TODO: Use data binding
                 viewModel.restriction.collectLatest { restriction ->
-                    when (restriction) {
-                        is SearchRestriction.None -> {
-                            binding.restriction = ""
-                            binding.searchRestriction.visibility = View.GONE
-                        }
-                        is SearchRestriction.Some -> {
-                            binding.restriction = getString(
-                                R.string.search_restriction,
-                                restriction.category.name, restriction.restriction
-                            )
-                            binding.searchRestriction.visibility = View.VISIBLE
-                        }
-                    }.exhaustive
-                }
-            }
-            launch {
-                viewModel.currentDictionary.collectLatest { binding.empty = it == null }
+                    if (restriction == null) {
+                        binding.restriction = ""
+                        binding.searchRestriction.visibility = View.GONE
+                    } else {
+                        binding.restriction = getString(
+                            R.string.search_restriction,
+                            restriction.category.name,
+                            restriction.text
+                        )
+                        binding.searchRestriction.visibility = View.VISIBLE
+                    }
+                }.exhaustive
             }
         }
     }
 
     /** Show entry in dictionary */
-    override fun onClickItem(lexeme: Lexeme) {
+    override fun onClickItem(dictionaryEntry: DictionaryEntry) {
         activityViewModel.addToHistory()
-        val directions = SearchFragmentDirections.actionNavSearchToNavHome(lexeme.id)
+        val directions = SearchFragmentDirections.actionNavSearchToNavHome(dictionaryEntry.id)
         findNavController().navigate(directions)
     }
 

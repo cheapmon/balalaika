@@ -60,11 +60,10 @@ public class DictionaryEntryRepository @Inject internal constructor(
 
     public suspend fun queryDictionaryEntries(
         dictionary: InstalledDictionary,
-        dictionaryView: DictionaryView,
         query: String,
         searchRestriction: SearchRestriction? = null
     ): Flow<PagingData<DictionaryEntry>> {
-        val view = dictionaryViewDao.findById(dictionary.id, dictionaryView.id)
+        val view = dictionaryViewDao.findById(dictionary.id, Constants.DEFAULT_DICTIONARY_VIEW_ID)
             ?: throw IllegalArgumentException("Dictionary view does not exist")
         return Pager(
             config = PagingConfig(pageSize = Constants.PAGE_SIZE),
