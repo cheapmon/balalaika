@@ -16,9 +16,8 @@
 package com.github.cheapmon.balalaika.ui.dictionary.widgets
 
 import android.view.ViewGroup
-import com.github.cheapmon.balalaika.db.entities.category.Category
-import com.github.cheapmon.balalaika.db.entities.category.WidgetType
-import com.github.cheapmon.balalaika.db.entities.property.PropertyWithCategory
+import com.github.cheapmon.balalaika.model.DataCategory
+import com.github.cheapmon.balalaika.model.Property
 
 /**
  * Widget for morphological information
@@ -26,17 +25,23 @@ import com.github.cheapmon.balalaika.db.entities.property.PropertyWithCategory
  * Property values are divided by `|` symbols. Each morphological part is displayed
  * separately in the context menu.
  *
- * @see WidgetType.MORPHOLOGY
+ * @see Property.Morphology
  */
 class MorphologyWidget(
     parent: ViewGroup,
-    listener: WidgetListener,
-    category: Category,
-    properties: List<PropertyWithCategory>,
-    hasActions: Boolean,
-    searchText: String?
-) : BaseWidget(parent, listener, category, properties, hasActions, searchText) {
-    override val menuItems: Array<String> = properties.flatMap {
-        displayValue(it.property.value).split(Regex("\\|"))
-    }.toTypedArray()
+    category: DataCategory,
+    properties: List<Property.Morphology>,
+    menuListener: WidgetMenuListener
+) : Widget<Property.Morphology>(
+    parent,
+    category,
+    properties,
+    false,
+    menuListener
+) {
+    override fun displayName(property: Property.Morphology): String =
+        property.parts.joinToString("|")
+
+    override val menuItems: Array<String> =
+        properties.flatMap { it.parts }.toTypedArray()
 }

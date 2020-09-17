@@ -18,45 +18,36 @@ package com.github.cheapmon.balalaika.ui.dictionary.widgets
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.db.entities.category.Category
-import com.github.cheapmon.balalaika.db.entities.category.WidgetType
-import com.github.cheapmon.balalaika.db.entities.property.PropertyWithCategory
-import com.github.cheapmon.balalaika.util.ResourceUtil
+import com.github.cheapmon.balalaika.model.DataCategory
+import com.github.cheapmon.balalaika.model.Property
 
 /**
  * Widget for audio playback
  *
- * Property values are of the form `<description>;;;<file>`. The description can be arbitrary,
- * `<file>` must be a valid string identifier of an Android audio resource. For example,
- * `audio.wav` would have the value `audio`.
- *
- * @see WidgetType.AUDIO
+ * @see Property.Audio
  */
 class AudioWidget(
     parent: ViewGroup,
-    listener: WidgetListener,
-    category: Category,
-    properties: List<PropertyWithCategory>,
+    category: DataCategory,
+    properties: List<Property.Audio>,
     hasActions: Boolean,
-    searchText: String?
-) : BaseWidget(parent, listener, category, properties, hasActions, searchText) {
-    override fun displayValue(value: String): String {
-        return value.split(Regex(";;;")).firstOrNull() ?: ""
-    }
+    menuListener: WidgetMenuListener,
+    actionListener: WidgetActionListener<Property.Audio>
+) : Widget<Property.Audio>(
+    parent,
+    category,
+    properties,
+    hasActions,
+    menuListener,
+    actionListener
+) {
+    override fun displayName(property: Property.Audio): String =
+        property.name
 
-    override fun actionIcon(value: String): Int? {
-        // Ignore fields with no file reference
-        value.split(Regex(";;;")).getOrNull(1) ?: return null
-        return R.drawable.ic_audio
-    }
-
-    override fun onClickActionButtonListener(value: String) {
-        val res = value.split(Regex(";;;")).getOrNull(1) ?: return
-        listener.onClickAudioButton(ResourceUtil.raw(parent.context, res))
-    }
+    override fun actionIcon(property: Property.Audio): Int? =
+        R.drawable.ic_audio
 
     // No meaningful context menu actions
     override fun createContextMenu(): AlertDialog? = null
     override val menuItems: Array<String> = arrayOf()
-    override val menuActions: List<() -> Unit> = listOf()
 }

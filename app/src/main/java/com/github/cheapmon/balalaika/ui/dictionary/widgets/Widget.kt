@@ -1,165 +1,98 @@
-/*
- * Copyright 2020 Simon Kaleschke
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.github.cheapmon.balalaika.ui.dictionary.widgets
 
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AlertDialog
-import com.github.cheapmon.balalaika.db.entities.category.Category
-import com.github.cheapmon.balalaika.db.entities.category.WidgetType
-import com.github.cheapmon.balalaika.db.entities.lexeme.Lexeme
-import com.github.cheapmon.balalaika.db.entities.property.Property
-import com.github.cheapmon.balalaika.db.entities.property.PropertyWithCategory
-import com.github.cheapmon.balalaika.model.SearchRestriction
+import com.github.cheapmon.balalaika.R
+import com.github.cheapmon.balalaika.databinding.HelperButtonBinding
+import com.github.cheapmon.balalaika.databinding.WidgetTemplateBinding
+import com.github.cheapmon.balalaika.model.DataCategory
+import com.github.cheapmon.balalaika.model.Property
+import com.github.cheapmon.balalaika.util.ResourceUtil
+import com.github.cheapmon.balalaika.util.setIconById
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-/**
- * Small user interface element for displaying [properties][Property] of [lexemes][Lexeme]
- *
- * Widgets are meant to display a group of properties that belong to the same
- * [data category][Category]. Each widget is required to define [createView] and
- * [createContextMenu]. It is up to the user interface to properly insert the resulting
- * [view][View] at the appropriate position.
- *
- * @see WidgetType
- */
-abstract class Widget(
-    /** Parent of the widget's view */
-    private val parent: ViewGroup,
-    /** Handles any widget actions requested by the user */
-    private val listener: WidgetListener,
-    /** Data category of [properties] */
-    private val category: Category,
-    /** List of properties to be displayed */
-    private val properties: List<PropertyWithCategory>,
-    /** Availability of action buttons to the user */
+// TODO: Highlight search text
+abstract class Widget<T : Property>(
+    protected val parent: ViewGroup,
+    protected val category: DataCategory,
+    protected val properties: List<T>,
     private val hasActions: Boolean,
-    /** An optional search query */
-    private val searchText: String?
+    protected val menuListener: WidgetMenuListener,
+    private val actionListener: WidgetActionListener<T>? = null
 ) {
-    /** Create the widget view */
-    abstract fun createView(): View
+    data class Views(val root: View, val content: ViewGroup)
 
-    /** Create a context menu for the widget */
-    abstract fun createContextMenu(): AlertDialog?
+    private fun createView(): View {
+        val layoutInflater = LayoutInflater.from(parent.context)
+        val (root, contentView) = createContentView(layoutInflater, category)
+        properties.forEach { property ->
+            val propertyView = createPropertyView(
+                layoutInflater,
+                contentView,
+                property,
+                actionListener
+            )
+            contentView.addView(propertyView)
+        }
+        return root
+    }
 
-    /** Combine [createView] and [createContextMenu] */
-    fun create(): View {
-        return createView().apply {
-            if (hasActions) this.setOnLongClickListener {
-                createContextMenu()?.show()
-                true
+    open fun createContextMenu(): AlertDialog? =
+        MaterialAlertDialogBuilder(parent.context)
+            .setIcon(categoryIcon)
+            .setTitle(menuMessage)
+            .setNegativeButton(R.string.cancel, null)
+            .setItems(menuItems) { _, which -> menuListener.onClickMenuItem(menuItems[which]) }
+            .show()
+
+    fun create() = createView().apply {
+        if (hasActions) setOnLongClickListener {
+            createContextMenu()?.show()
+            true
+        }
+    }
+
+    open fun createContentView(
+        inflater: LayoutInflater,
+        category: DataCategory
+    ): Views {
+        val binding = WidgetTemplateBinding.inflate(inflater).apply {
+            title = category.name
+            widgetTemplateIcon.setImageResource(categoryIcon)
+        }
+        return Views(binding.root, binding.widgetTemplateContent)
+    }
+
+    open fun createPropertyView(
+        inflater: LayoutInflater,
+        contentView: ViewGroup,
+        property: T,
+        actionListener: WidgetActionListener<T>?
+    ): View =
+        HelperButtonBinding.inflate(inflater).apply {
+            helperText.text = displayName(property)
+            if (hasActions) {
+                actionIcon(property)?.let { helperButton.setIconById(it) }
+            } else {
+                helperButton.visibility = View.GONE
             }
-        }
-    }
-}
+            helperButton.setOnClickListener { actionListener?.onAction(property) }
+        }.root
 
-/** Component that handles [Widget] actions */
-interface WidgetListener {
-    /** Callback for when an audio action button is clicked */
-    fun onClickAudioButton(resId: Int)
+    abstract fun displayName(property: T): String
 
-    /** Callback for when a search action button is clicked */
-    fun onClickSearchButton(query: String, restriction: SearchRestriction)
+    @DrawableRes
+    open fun actionIcon(property: T): Int? = null
 
-    /** Callback for when a scroll action button is clicked */
-    fun onClickScrollButton(id: String)
+    @DrawableRes
+    open val categoryIcon: Int =
+        ResourceUtil.drawable(parent.context, category.iconName)
 
-    /** Callback for when a link action button is clicked */
-    fun onClickLinkButton(link: String)
-
-    /** Callback for when a Wordnet action button is clicked */
-    fun onClickWordnetButton(word: String, url: String)
-}
-
-/** Helper object to assign appropriate [widgets][Widget] to a list of [properties][Property] */
-object Widgets {
-    /** Assign appropriate widget */
-    fun get(
-        parent: ViewGroup,
-        listener: WidgetListener,
-        category: Category,
-        properties: List<PropertyWithCategory>,
-        hasActions: Boolean = true,
-        searchText: String? = null
-    ): Widget {
-        return when (category.widget) {
-            WidgetType.AUDIO -> AudioWidget(
-                parent,
-                listener,
-                category,
-                properties,
-                hasActions,
-                searchText
-            )
-            WidgetType.EXAMPLE -> ExampleWidget(
-                parent,
-                listener,
-                category,
-                properties,
-                hasActions,
-                searchText
-            )
-            WidgetType.KEY_VALUE -> BaseWidget(
-                parent,
-                listener,
-                category,
-                properties,
-                hasActions,
-                searchText
-            )
-            WidgetType.MORPHOLOGY -> MorphologyWidget(
-                parent,
-                listener,
-                category,
-                properties,
-                hasActions,
-                searchText
-            )
-            WidgetType.PLAIN -> PlainWidget(
-                parent,
-                listener,
-                category,
-                properties,
-                hasActions,
-                searchText
-            )
-            WidgetType.REFERENCE -> ReferenceWidget(
-                parent,
-                listener,
-                category,
-                properties,
-                hasActions,
-                searchText
-            )
-            WidgetType.URL -> UrlWidget(
-                parent,
-                listener,
-                category,
-                properties,
-                hasActions,
-                searchText
-            )
-            WidgetType.WORDNET -> WordnetWidget(
-                parent,
-                listener,
-                category,
-                properties,
-                hasActions,
-                searchText
-            )
-        }
-    }
+    open val menuMessage: String =
+        parent.resources.getString(R.string.dictionary_menu_message)
+    open val menuItems =
+        properties.map { displayName(it) }.toTypedArray()
 }

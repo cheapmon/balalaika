@@ -15,6 +15,7 @@
  */
 package com.github.cheapmon.balalaika.model
 
+// TODO: Make second component optional
 sealed class Property {
     data class Audio(val name: String, val fileName: String) : Property()
     data class Example(val name: String, val content: String) : Property()
