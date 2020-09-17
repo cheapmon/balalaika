@@ -22,16 +22,21 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import androidx.core.net.toUri
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
+import androidx.paging.PagingData
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.databinding.FragmentDictionaryBinding
-import com.github.cheapmon.balalaika.db.entities.entry.DictionaryEntry
-import com.github.cheapmon.balalaika.db.entities.history.SearchRestriction
+import com.github.cheapmon.balalaika.model.DataCategory
+import com.github.cheapmon.balalaika.model.DictionaryEntry
+import com.github.cheapmon.balalaika.model.Property
+import com.github.cheapmon.balalaika.model.SearchRestriction
 import com.github.cheapmon.balalaika.ui.RecyclerViewFragment
-import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetListener
+import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetActionListener
+import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetMenuListener
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -60,7 +65,7 @@ class DictionaryFragment :
         DictionaryViewModel::class,
         R.layout.fragment_dictionary,
         false
-    ), DictionaryAdapter.Listener, WidgetListener {
+    ), DictionaryAdapter.Listener, WidgetMenuListener {
     /** Notify about options menu */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,8 +86,14 @@ class DictionaryFragment :
         binding.entryList
 
     /** @suppress */
-    override fun createRecyclerViewAdapter() =
-        DictionaryAdapter(this, this)
+    override fun createRecyclerViewAdapter() = DictionaryAdapter(
+        this,
+        this,
+        audioActionListener,
+        referenceActionListener,
+        urlActionListener,
+        wordnetActionListener
+    )
 
     /** @suppress */
     override fun observeData(
@@ -92,10 +103,10 @@ class DictionaryFragment :
     ) {
         lifecycleScope.launch {
             launch {
-                viewModel.dictionary.collectLatest { data -> adapter.submitData(data) }
-            }
-            launch {
-                viewModel.currentDictionary.collectLatest { binding.empty = it == null }
+                viewModel.dictionaryEntries.collectLatest { data ->
+                    adapter.submitData(data ?: PagingData.empty())
+                    binding.empty = data == null
+                }
             }
             launch {
                 adapter.loadStateFlow.collect { loadState ->
@@ -140,16 +151,14 @@ class DictionaryFragment :
     private fun showOrderingDialog() {
         lifecycleScope.launch {
             val categories = viewModel.getCategories()
-            val names = categories.map { it.name }.toTypedArray()
-            val selected = categories.indexOfFirst { it.id == viewModel.category.first() }
-            val dictionary = viewModel.currentDictionary.first()
-            if (dictionary != null) {
+            val names = categories?.map { it.name }?.toTypedArray()
+            val selected = categories?.indexOfFirst { it == viewModel.category.first() }
+            if (names != null && selected != null) {
                 MaterialAlertDialogBuilder(requireContext())
                     .setIcon(R.drawable.ic_sort)
                     .setTitle(R.string.menu_order_by)
                     .setSingleChoiceItems(names, selected) { _, which ->
-                        val id = categories[which].id
-                        viewModel.setCategory(id)
+                        viewModel.setCategory(categories[which])
                     }.setPositiveButton(R.string.affirm, null)
                     .show()
             } else {
@@ -166,18 +175,14 @@ class DictionaryFragment :
     private fun showDictionaryViewDialog() {
         lifecycleScope.launch {
             val dictionaryViews = viewModel.getDictionaryViews()
-            val names = dictionaryViews.map { it.dictionaryView.name }.toTypedArray()
-            val selected = dictionaryViews.indexOfFirst {
-                it.dictionaryView.id == viewModel.dictionaryView.first()
-            }
-            val dictionary = viewModel.currentDictionary.first()
-            if (dictionary != null) {
+            val names = dictionaryViews?.map { it.name }?.toTypedArray()
+            val selected = dictionaryViews?.indexOfFirst { it == viewModel.dictionaryView.first() }
+            if (names != null && selected != null) {
                 MaterialAlertDialogBuilder(requireContext())
                     .setIcon(R.drawable.ic_view)
                     .setTitle(R.string.menu_setup_view)
                     .setSingleChoiceItems(names, selected) { _, which ->
-                        val id = dictionaryViews[which].dictionaryView.id
-                        viewModel.setDictionaryView(id)
+                        viewModel.setDictionaryView(dictionaryViews[which])
                     }.setPositiveButton(R.string.affirm, null)
                     .show()
             } else {
@@ -193,52 +198,62 @@ class DictionaryFragment :
 
     /** Add or remove an entry to bookmarks */
     override fun onClickBookmarkButton(entry: DictionaryEntry, isBookmark: Boolean) {
-        viewModel.toggleBookmark(entry.lexeme.id)
+        viewModel.toggleBookmark(entry)
         val message = if (isBookmark) {
-            getString(R.string.dictionary_bookmark_remove, entry.lexeme.form)
+            getString(R.string.dictionary_bookmark_remove, entry.representation)
         } else {
-            getString(R.string.dictionary_bookmark_add, entry.lexeme.form)
+            getString(R.string.dictionary_bookmark_add, entry.representation)
         }
         Snackbar.make(requireView(), message, Snackbar.LENGTH_SHORT).show()
     }
 
     /** Go to base of a lexeme */
-    override fun onClickBaseButton(entry: DictionaryEntry) =
-        viewModel.setInitialKey(entry.base?.id)
+    override fun onClickBaseButton(entry: DictionaryEntry) {
+        viewModel.setInitialEntry(entry.base)
+    }
 
-    /** Play audio file */
-    override fun onClickAudioButton(resId: Int) {
-        try {
-            MediaPlayer.create(context, resId).apply {
-                start()
-                setOnCompletionListener { release() }
+    private val audioActionListener = object : WidgetActionListener<Property.Audio> {
+        /** Play audio file */
+        override fun onAction(property: Property.Audio) {
+            try {
+                MediaPlayer.create(context, property.fileName.toUri()).apply {
+                    start()
+                    setOnCompletionListener { release() }
+                }
+            } catch (ex: Exception) {
+                Snackbar.make(
+                    requireView(),
+                    R.string.dictionary_playback_failed,
+                    Snackbar.LENGTH_SHORT
+                ).show()
             }
-        } catch (ex: Exception) {
-            Snackbar.make(
-                requireView(),
-                R.string.dictionary_playback_failed,
-                Snackbar.LENGTH_SHORT
-            ).show()
         }
     }
 
-    /** Navigate to search */
-    override fun onClickSearchButton(query: String, restriction: SearchRestriction) {
-        val directions =
-            DictionaryFragmentDirections.actionNavHomeToNavSearch(restriction, query)
+    private val referenceActionListener = object : WidgetActionListener<Property.Reference> {
+        override fun onAction(property: Property.Reference) {
+            viewModel.setInitialEntry(property.entry)
+        }
+    }
+
+    private val urlActionListener = object : WidgetActionListener<Property.Url> {
+        override fun onAction(property: Property.Url) {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(property.url)))
+        }
+    }
+
+    private val wordnetActionListener = object : WidgetActionListener<Property.Wordnet> {
+        override fun onAction(property: Property.Wordnet) {
+            WordnetDialog(
+                property.name,
+                viewModel.getWordnetData(property)
+            ).show(parentFragmentManager, null)
+        }
+    }
+
+    override fun onClickMenuItem(item: String, category: DataCategory) {
+        val restriction = SearchRestriction(category, item)
+        val directions = DictionaryFragmentDirections.actionNavHomeToNavSearch(restriction)
         findNavController().navigate(directions)
-    }
-
-    /** Scroll to a dictionary entry */
-    override fun onClickScrollButton(id: String) = viewModel.setInitialKey(id)
-
-    /** Open link in browser */
-    override fun onClickLinkButton(link: String) {
-        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(link)))
-    }
-
-    /** Open Wordnet dialog */
-    override fun onClickWordnetButton(word: String, url: String) {
-        WordnetDialog(word, viewModel.getWordnetData(url)).show(parentFragmentManager, null)
     }
 }

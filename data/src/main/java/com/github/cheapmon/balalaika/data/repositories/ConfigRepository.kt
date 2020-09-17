@@ -10,7 +10,6 @@ import com.github.cheapmon.balalaika.data.mappers.CategoryEntityToDataCategory
 import com.github.cheapmon.balalaika.data.mappers.DictionaryViewWithCategoriesToDictionaryView
 import com.github.cheapmon.balalaika.data.util.Constants
 import com.github.cheapmon.balalaika.model.DataCategory
-import com.github.cheapmon.balalaika.model.Dictionary
 import com.github.cheapmon.balalaika.model.DictionaryView
 import com.github.cheapmon.balalaika.model.InstalledDictionary
 import javax.inject.Inject
@@ -27,16 +26,16 @@ public class ConfigRepository @Inject internal constructor(
     private val toDataCategory: CategoryEntityToDataCategory,
     private val toDictionaryView: DictionaryViewWithCategoriesToDictionaryView
 ) {
-    private fun getConfig(dictionary: Dictionary): Flow<DictionaryConfigWithRelations?> =
+    private fun getConfig(dictionary: InstalledDictionary): Flow<DictionaryConfigWithRelations?> =
         configDao.getConfigFor(dictionary.id)
 
     internal suspend fun getDefaultSortCategory(dictionary: InstalledDictionary): CategoryEntity? =
         categoryDao.findById(dictionary.id, Constants.DEFAULT_CATEGORY_ID)
 
-    public fun getSortCategory(dictionary: Dictionary): Flow<DataCategory?> =
+    public fun getSortCategory(dictionary: InstalledDictionary): Flow<DataCategory?> =
         getConfig(dictionary).map { config -> config?.category?.let { toDataCategory(it) } }
 
-    public fun getSortCategories(dictionary: Dictionary): Flow<List<DataCategory>?> =
+    public fun getSortCategories(dictionary: InstalledDictionary): Flow<List<DataCategory>?> =
         categoryDao.getSortable(dictionary.id)
             .map { list -> list.map { toDataCategory(it) } }
 
@@ -45,10 +44,10 @@ public class ConfigRepository @Inject internal constructor(
     ): DictionaryViewWithCategories? =
         dictionaryViewDao.findById(dictionary.id, Constants.DEFAULT_DICTIONARY_VIEW_ID)
 
-    public fun getDictionaryView(dictionary: Dictionary): Flow<DictionaryView?> =
+    public fun getDictionaryView(dictionary: InstalledDictionary): Flow<DictionaryView?> =
         getConfig(dictionary).map { config -> config?.view?.let { toDictionaryView(it) } }
 
-    public fun getDictionaryViews(dictionary: Dictionary): Flow<List<DictionaryView>?> =
+    public fun getDictionaryViews(dictionary: InstalledDictionary): Flow<List<DictionaryView>?> =
         dictionaryViewDao.getAll(dictionary.id)
             .map { list -> list.map { toDictionaryView(it) } }
 }

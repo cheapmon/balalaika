@@ -22,12 +22,8 @@
         <import type="android.view.View" />
 
         <variable
-            name="base"
-            type="com.github.cheapmon.balalaika.db.entities.lexeme.Lexeme" />
-
-        <variable
-            name="lexeme"
-            type="com.github.cheapmon.balalaika.db.entities.lexeme.Lexeme" />
+            name="entry"
+            type="com.github.cheapmon.balalaika.model.DictionaryEntry" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -52,7 +48,7 @@
                     android:id="@+id/entry_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@{lexeme.form}"
+                    android:text="@{entry.representation}"
                     android:textAppearance="?attr/textAppearanceHeadline6"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/entry_base_button"
@@ -82,7 +78,7 @@
                     android:id="@+id/entry_base_button"
                     style="@style/Widget.Balalaika.Button.Icon"
                     android:contentDescription="@string/desc_dictionary_item_base_button"
-                    android:visibility="@{base == null ? View.GONE : View.VISIBLE}"
+                    android:visibility="@{entry.base == null}"
                     app:icon="@drawable/ic_forward"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/entry_bookmark_button"

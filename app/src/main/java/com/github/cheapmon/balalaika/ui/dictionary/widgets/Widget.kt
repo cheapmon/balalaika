@@ -45,7 +45,9 @@ abstract class Widget<T : Property>(
             .setIcon(categoryIcon)
             .setTitle(menuMessage)
             .setNegativeButton(R.string.cancel, null)
-            .setItems(menuItems) { _, which -> menuListener.onClickMenuItem(menuItems[which]) }
+            .setItems(menuItems) { _, which ->
+                menuListener.onClickMenuItem(menuItems[which], category)
+            }
             .show()
 
     fun create() = createView().apply {

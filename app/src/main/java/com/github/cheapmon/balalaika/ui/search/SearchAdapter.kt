@@ -22,9 +22,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.databinding.FragmentSearchItemBinding
 import com.github.cheapmon.balalaika.model.DictionaryEntry
-import com.github.cheapmon.balalaika.model.SearchRestriction
-import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetListener
-import com.github.cheapmon.balalaika.ui.dictionary.widgets.Widgets
+import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetFactory
 import com.github.cheapmon.balalaika.util.highlight
 
 /** Adapter for [SearchFragment] */
@@ -48,16 +46,10 @@ class SearchAdapter(
                 entry.representation.highlight(searchText, root.context)
             root.setOnClickListener { listener.onClickItem(entry) }
             entryProperties.removeAllViews()
+            val factory = WidgetFactory(entryProperties)
             entry.properties
                 .forEach { (category, properties) ->
-                    val widget = Widgets.get(
-                        entryProperties,
-                        WListener(),
-                        category,
-                        properties,
-                        false,
-                        searchText
-                    )
+                    val widget = factory.get(category, properties)
                     entryProperties.addView(widget.create())
                 }
         }
@@ -87,15 +79,6 @@ class SearchAdapter(
         ): Boolean {
             return oldItem == newItem
         }
-    }
-
-    /** Dummy widget listener that ignores all actions */
-    private class WListener : WidgetListener {
-        override fun onClickAudioButton(resId: Int) = Unit
-        override fun onClickSearchButton(query: String, restriction: SearchRestriction) = Unit
-        override fun onClickScrollButton(id: String) = Unit
-        override fun onClickLinkButton(link: String) = Unit
-        override fun onClickWordnetButton(word: String, url: String) = Unit
     }
 
     /** Component that handles actions from this adapter */

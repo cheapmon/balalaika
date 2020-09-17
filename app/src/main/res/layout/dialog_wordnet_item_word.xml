@@ -20,7 +20,7 @@
 
         <variable
             name="entry"
-            type="com.github.cheapmon.balalaika.data.dictionary.wordnet.WordnetInfo.LexicalEntry" />
+            type="com.github.cheapmon.balalaika.model.WordnetInfo.LexicalEntry" />
     </data>
 
     <LinearLayout

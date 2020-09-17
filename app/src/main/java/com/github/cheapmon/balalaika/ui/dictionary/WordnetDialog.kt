@@ -27,14 +27,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.data.LoadState
-import com.github.cheapmon.balalaika.data.Result
-import com.github.cheapmon.balalaika.data.dictionary.wordnet.WordnetInfo
+import com.github.cheapmon.balalaika.data.result.LoadState
+import com.github.cheapmon.balalaika.data.result.Result
 import com.github.cheapmon.balalaika.databinding.DialogWordnetBinding
 import com.github.cheapmon.balalaika.databinding.DialogWordnetItemDefinitionBinding
 import com.github.cheapmon.balalaika.databinding.DialogWordnetItemExampleBinding
 import com.github.cheapmon.balalaika.databinding.DialogWordnetItemTitleBinding
 import com.github.cheapmon.balalaika.databinding.DialogWordnetItemWordBinding
+import com.github.cheapmon.balalaika.model.WordnetInfo
 import com.github.cheapmon.balalaika.util.exhaustive
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.flow.Flow
@@ -66,8 +66,8 @@ class WordnetDialog(
                 payload.collect { loadState ->
                     binding.inProgress = loadState !is LoadState.Finished
                     if (loadState is LoadState.Finished) {
-                        when (loadState.data) {
-                            is Result.Success -> itemAdapter.submitInfo(loadState.data.data)
+                        when (val data = loadState.data) {
+                            is Result.Success -> itemAdapter.submitInfo(data.data)
                             is Result.Error -> itemAdapter.submitError()
                         }.exhaustive
                     }

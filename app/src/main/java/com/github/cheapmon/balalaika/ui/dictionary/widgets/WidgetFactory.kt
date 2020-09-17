@@ -82,7 +82,7 @@ class WidgetFactory(
 
     private companion object {
         val emptyMenuListener: WidgetMenuListener = object : WidgetMenuListener {
-            override fun onClickMenuItem(item: String) = Unit
+            override fun onClickMenuItem(item: String, category: DataCategory) = Unit
         }
 
         fun <T : Property> emptyActionListener(): WidgetActionListener<T> =

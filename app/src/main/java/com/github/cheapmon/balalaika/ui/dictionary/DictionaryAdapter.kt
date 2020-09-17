@@ -23,16 +23,22 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.databinding.FragmentDictionaryItemBinding
-import com.github.cheapmon.balalaika.db.entities.entry.DictionaryEntry
-import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetListener
-import com.github.cheapmon.balalaika.ui.dictionary.widgets.Widgets
+import com.github.cheapmon.balalaika.model.DictionaryEntry
+import com.github.cheapmon.balalaika.model.Property
+import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetActionListener
+import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetFactory
+import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetMenuListener
 import com.github.cheapmon.balalaika.util.setIconById
 import com.google.android.material.button.MaterialButton
 
 /** Paging Adapter for [DictionaryFragment] */
 class DictionaryAdapter(
     private val listener: Listener,
-    private val widgetListener: WidgetListener
+    private val menuListener: WidgetMenuListener,
+    private val audioActionListener: WidgetActionListener<Property.Audio>,
+    private val referenceActionListener: WidgetActionListener<Property.Reference>,
+    private val urlActionListener: WidgetActionListener<Property.Url>,
+    private val wordnetActionListener: WidgetActionListener<Property.Wordnet>
 ) : PagingDataAdapter<DictionaryEntry, DictionaryAdapter.ViewHolder>(DictionaryDiff) {
     /** Create view */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -59,10 +65,9 @@ class DictionaryAdapter(
         private var isBookmark: Boolean = false
 
         /** Bind single entry to this view holder */
-        fun bind(entry: DictionaryEntry) {
+        fun bind(item: DictionaryEntry) {
             with(binding) {
-                lexeme = entry.lexeme
-                base = entry.base
+                entry = item
                 entryProperties.visibility = View.VISIBLE
                 entryCollapseButton.setOnClickListener {
                     if (entryProperties.visibility == View.GONE) {
@@ -76,7 +81,7 @@ class DictionaryAdapter(
                 entryBaseButton.setOnClickListener {
                     listener.onClickBaseButton(entry)
                 }
-                isBookmark = entry.lexeme.isBookmark
+                isBookmark = item.bookmark != null
                 updateBookmarkButton(entryBookmarkButton)
                 entryBookmarkButton.setOnClickListener {
                     listener.onClickBookmarkButton(entry, isBookmark)
@@ -85,13 +90,19 @@ class DictionaryAdapter(
                 }
                 entryProperties.visibility = View.VISIBLE
                 entryProperties.removeAllViews()
-                entry.properties.groupBy { it.category }
-                    .toSortedMap(Comparator { t, t2 -> t.sequence.compareTo(t2.sequence) })
-                    .forEach { (category, properties) ->
-                        val widget =
-                            Widgets.get(entryProperties, widgetListener, category, properties)
-                        entryProperties.addView(widget.create())
-                    }
+                val factory = WidgetFactory(
+                    entryProperties,
+                    true,
+                    menuListener,
+                    audioActionListener,
+                    referenceActionListener,
+                    urlActionListener,
+                    wordnetActionListener
+                )
+                entry.properties.forEach { (category, properties) ->
+                    val widget = factory.get(category, properties)
+                    entryProperties.addView(widget.create())
+                }
             }
         }
 
@@ -106,7 +117,7 @@ class DictionaryAdapter(
 
     private object DictionaryDiff : DiffUtil.ItemCallback<DictionaryEntry>() {
         override fun areItemsTheSame(oldItem: DictionaryEntry, newItem: DictionaryEntry): Boolean {
-            return oldItem.lexeme.id == newItem.lexeme.id
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(
