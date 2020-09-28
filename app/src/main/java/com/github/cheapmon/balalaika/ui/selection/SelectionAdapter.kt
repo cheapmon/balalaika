@@ -21,10 +21,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.github.cheapmon.balalaika.databinding.FragmentSelectionItemBinding
-import com.github.cheapmon.balalaika.model.DownloadableDictionary
 import com.github.cheapmon.balalaika.model.InstalledDictionary
-import com.github.cheapmon.balalaika.model.SimpleDictionary
-import com.github.cheapmon.balalaika.model.sameAs
 
 /* Displays a list of dictionaries */
 class SelectionAdapter(

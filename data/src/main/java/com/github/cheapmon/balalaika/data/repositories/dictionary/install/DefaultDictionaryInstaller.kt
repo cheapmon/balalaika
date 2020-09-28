@@ -10,8 +10,6 @@ import com.github.cheapmon.balalaika.data.repositories.dictionary.DictionaryData
 import com.github.cheapmon.balalaika.data.result.ProgressState
 import com.github.cheapmon.balalaika.data.result.tryProgress
 import com.github.cheapmon.balalaika.data.util.Constants
-import com.github.cheapmon.balalaika.model.Dictionary
-import com.github.cheapmon.balalaika.model.DownloadableDictionary
 import com.github.cheapmon.balalaika.model.InstalledDictionary
 import com.github.cheapmon.balalaika.model.SimpleDictionary
 import dagger.hilt.android.qualifiers.ApplicationContext

@@ -25,7 +25,6 @@ import com.github.cheapmon.balalaika.MainViewModel
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.databinding.FragmentSelectionListBinding
 import com.github.cheapmon.balalaika.model.InstalledDictionary
-import com.github.cheapmon.balalaika.model.SimpleDictionary
 import com.github.cheapmon.balalaika.ui.RecyclerViewFragment
 import dagger.hilt.android.AndroidEntryPoint
 

@@ -52,8 +52,6 @@ allprojects {
         jcenter()
         maven { url 'http://oss.sonatype.org/content/repositories/snapshots' }
     }
-    apply plugin: "nebula.lint"
-    gradleLint.rules = ["unused-dependency"]
 }
 
 task clean(type: Delete) {

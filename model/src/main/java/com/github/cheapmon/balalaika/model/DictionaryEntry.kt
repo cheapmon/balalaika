@@ -16,8 +16,8 @@
 package com.github.cheapmon.balalaika.model
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
 import java.util.SortedMap
+import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class DictionaryEntry(

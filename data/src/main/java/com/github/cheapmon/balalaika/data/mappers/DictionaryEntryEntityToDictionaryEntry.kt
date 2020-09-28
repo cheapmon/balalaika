@@ -29,7 +29,7 @@ internal class DictionaryEntryEntityToDictionaryEntry @Inject constructor(
             .mapValues { (_, properties) ->
                 properties
                     .filter { view.categories.contains(it.category) }
-                    .mapNotNull { toProperty(it.property, it.category, view) }
+                    .mapNotNull { toProperty(it.property, it.category, view, this) }
             }.toSortedMap { o1, o2 -> o1.sequence.compareTo(o2.sequence) },
         bookmark = entry.bookmark?.let { Bookmark() }
     )

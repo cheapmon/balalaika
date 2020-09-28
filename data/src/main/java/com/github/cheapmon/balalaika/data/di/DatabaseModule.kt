@@ -52,6 +52,10 @@ internal class DatabaseModule {
 
     /** @suppress */
     @Provides
+    fun provideBookmarks(appDatabase: AppDatabase) = appDatabase.bookmarks()
+
+    /** @suppress */
+    @Provides
     fun provideProperties(appDatabase: AppDatabase) = appDatabase.properties()
 
     /** @suppress */

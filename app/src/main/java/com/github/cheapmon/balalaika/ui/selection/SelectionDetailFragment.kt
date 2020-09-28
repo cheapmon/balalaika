@@ -21,9 +21,7 @@ import androidx.navigation.fragment.findNavController
 import com.github.cheapmon.balalaika.MainViewModel
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.databinding.FragmentSelectionDetailBinding
-import com.github.cheapmon.balalaika.model.DownloadableDictionary
 import com.github.cheapmon.balalaika.model.InstalledDictionary
-import com.github.cheapmon.balalaika.model.SimpleDictionary
 import com.github.cheapmon.balalaika.ui.BaseFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint

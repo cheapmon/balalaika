@@ -17,10 +17,11 @@ package com.github.cheapmon.balalaika.data.mappers
 
 import com.github.cheapmon.balalaika.data.db.dictionary.DictionaryEntity
 import com.github.cheapmon.balalaika.model.Dictionary
+import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-internal class DictionaryEntityToDictionary : Mapper<DictionaryEntity, Dictionary> {
+internal class DictionaryEntityToDictionary @Inject constructor() : Mapper<DictionaryEntity, Dictionary> {
     override suspend operator fun invoke(from: DictionaryEntity): Dictionary = Dictionary(
         id = from.id,
         version = from.version,

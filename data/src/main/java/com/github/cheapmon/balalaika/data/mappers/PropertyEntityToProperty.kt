@@ -11,13 +11,13 @@ import javax.inject.Singleton
 
 @Singleton
 internal class PropertyEntityToProperty @Inject constructor(
-    private val dictionaryEntryDao: DictionaryEntryDao,
-    private val toDictionaryEntry: DictionaryEntryEntityToDictionaryEntry
+    private val dictionaryEntryDao: DictionaryEntryDao
 ) {
     suspend operator fun invoke(
         property: PropertyEntity,
         category: CategoryEntity,
-        view: DictionaryViewWithCategories
+        view: DictionaryViewWithCategories,
+        toDictionaryEntry: DictionaryEntryEntityToDictionaryEntry
     ): Property? {
         return when (category.widget) {
             WidgetType.AUDIO -> {
