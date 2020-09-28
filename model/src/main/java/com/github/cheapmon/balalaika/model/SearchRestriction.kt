@@ -15,7 +15,11 @@
  */
 package com.github.cheapmon.balalaika.model
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
 data class SearchRestriction(
     val category: DataCategory,
     val text: String
-)
+) : Parcelable
