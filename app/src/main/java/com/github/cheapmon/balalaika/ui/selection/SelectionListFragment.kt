@@ -90,6 +90,6 @@ class SelectionListFragment(
     }
 
     override fun onClickReadNow(dictionary: SimpleDictionary) {
-        activityViewModel.activate(dictionary)
+        activityViewModel.openDictionary(dictionary)
     }
 }

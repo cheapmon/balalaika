@@ -58,17 +58,17 @@ class SelectionDetailFragment :
     inner class Listener {
         fun onClickActivateButton(dictionary: SimpleDictionary) {
             val message = requireContext().getString(R.string.selection_confirm_activate)
-            showDialog(message) { activityViewModel.activate(dictionary) }
+            showDialog(message) { activityViewModel.openDictionary(dictionary) }
         }
 
         fun onClickDeactivateButton(dictionary: SimpleDictionary) {
             val message = requireContext().getString(R.string.selection_confirm_deactivate)
-            showDialog(message) { activityViewModel.deactivate(dictionary) }
+            showDialog(message) { activityViewModel.closeDictionary(dictionary) }
         }
 
         fun onClickUpdateButton(dictionary: SimpleDictionary) {
             val message = requireContext().getString(R.string.selection_confirm_update)
-            showDialog(message) { activityViewModel.update(dictionary) }
+            showDialog(message) { activityViewModel.updateDictionary(dictionary) }
         }
 
         fun onClickAddButton(dictionary: SimpleDictionary) {
@@ -76,12 +76,12 @@ class SelectionDetailFragment :
                 R.string.selection_confirm_add,
                 dictionary.name
             )
-            showDialog(message) { activityViewModel.install(dictionary) }
+            showDialog(message) { activityViewModel.installDictionary(dictionary) }
         }
 
         fun onClickRemoveButton(dictionary: SimpleDictionary) {
             val message = requireContext().getString(R.string.selection_confirm_remove)
-            showDialog(message) { activityViewModel.remove(dictionary) }
+            showDialog(message) { activityViewModel.removeDictionary(dictionary) }
         }
 
         private fun showDialog(message: String, block: () -> Unit) {
