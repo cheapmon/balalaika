@@ -15,4 +15,8 @@
  */
 package com.github.cheapmon.balalaika.model
 
-class Bookmark
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
+class Bookmark : Parcelable

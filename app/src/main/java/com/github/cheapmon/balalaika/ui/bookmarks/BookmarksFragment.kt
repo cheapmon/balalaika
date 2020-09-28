@@ -112,7 +112,7 @@ class BookmarksFragment :
     /** Show bookmarked entry in dictionary */
     override fun onClickRedoButton(dictionaryEntry: DictionaryEntry) {
         val directions =
-            BookmarksFragmentDirections.actionNavBookmarksToNavHome(dictionaryEntry.id)
+            BookmarksFragmentDirections.actionNavBookmarksToNavHome(dictionaryEntry)
         findNavController().navigate(directions)
     }
 }

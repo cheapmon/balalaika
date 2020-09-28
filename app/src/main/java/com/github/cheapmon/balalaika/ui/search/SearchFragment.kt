@@ -39,6 +39,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 /**
@@ -74,8 +75,7 @@ class SearchFragment :
 
     /** @suppress */
     override fun onDestroyView() {
-        activityViewModel.addToHistory()
-        activityViewModel.toggleSearch()
+        addToHistory()
         super.onDestroyView()
     }
 
@@ -147,15 +147,15 @@ class SearchFragment :
 
     /** Show entry in dictionary */
     override fun onClickItem(dictionaryEntry: DictionaryEntry) {
-        activityViewModel.addToHistory()
-        val directions = SearchFragmentDirections.actionNavSearchToNavHome(dictionaryEntry.id)
+        addToHistory()
+        val directions = SearchFragmentDirections.actionNavSearchToNavHome(dictionaryEntry)
         findNavController().navigate(directions)
     }
 
     /** Add query to history */
     override fun onQueryTextSubmit(query: String?): Boolean {
         hideKeyboard()
-        activityViewModel.addToHistory()
+        addToHistory()
         return true
     }
 
@@ -164,6 +164,13 @@ class SearchFragment :
         val query = newText.toString().trim()
         if (query.length >= 2) viewModel.setQuery(query)
         return true
+    }
+
+    private fun addToHistory() = lifecycleScope.launch {
+        val query = viewModel.query.first() ?: return@launch
+        val restriction = viewModel.restriction.first()
+        activityViewModel.addToHistory(query, restriction)
+        activityViewModel.toggleSearch()
     }
 
     private fun hideKeyboard() {

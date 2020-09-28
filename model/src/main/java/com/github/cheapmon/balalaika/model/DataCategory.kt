@@ -15,9 +15,13 @@
  */
 package com.github.cheapmon.balalaika.model
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
 data class DataCategory(
     val id: String,
     val name: String,
     val iconName: String,
     val sequence: Int
-)
+) : Parcelable

@@ -15,14 +15,32 @@
  */
 package com.github.cheapmon.balalaika.model
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
 // TODO: Make second component optional
-sealed class Property {
+sealed class Property : Parcelable {
+    @Parcelize
     data class Audio(val name: String, val fileName: String) : Property()
+
+    @Parcelize
     data class Example(val name: String, val content: String) : Property()
+
+    @Parcelize
     data class Morphology(val parts: List<String>) : Property()
+
+    @Parcelize
     data class Plain(val value: String) : Property()
+
+    @Parcelize
     data class Reference(val entry: DictionaryEntry) : Property()
+
+    @Parcelize
     data class Simple(val value: String) : Property()
+
+    @Parcelize
     data class Url(val name: String, val url: String) : Property()
+
+    @Parcelize
     data class Wordnet(val name: String, val url: String) : Property()
 }

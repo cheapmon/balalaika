@@ -28,9 +28,9 @@
             android:id="@+id/action_nav_home_to_nav_search"
             app:destination="@id/nav_search" />
         <argument
-            android:name="id"
+            android:name="entry"
             android:defaultValue="@null"
-            app:argType="string"
+            app:argType="com.github.cheapmon.balalaika.model.DictionaryEntry"
             app:nullable="true" />
         <action
             android:id="@+id/select_dictionary"
@@ -45,7 +45,7 @@
         <argument
             android:name="restriction"
             android:defaultValue="@null"
-            app:argType="com.github.cheapmon.balalaika.db.entities.history.SearchRestriction"
+            app:argType="com.github.cheapmon.balalaika.model.SearchRestriction"
             app:nullable="true" />
         <argument
             android:name="query"

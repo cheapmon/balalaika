@@ -15,12 +15,15 @@
  */
 package com.github.cheapmon.balalaika.model
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import java.util.SortedMap
 
+@Parcelize
 data class DictionaryEntry(
     val id: String,
     val representation: String,
     val base: DictionaryEntry?,
     val properties: SortedMap<DataCategory, List<Property>>,
     val bookmark: Bookmark?
-)
+) : Parcelable
