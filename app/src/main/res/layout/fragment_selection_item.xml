@@ -21,11 +21,7 @@
 
         <variable
             name="dictionary"
-            type="com.github.cheapmon.balalaika.model.SimpleDictionary" />
-
-        <variable
-            name="is_installed"
-            type="Boolean" />
+            type="com.github.cheapmon.balalaika.model.InstalledDictionary" />
 
         <variable
             name="is_opened"
@@ -85,7 +81,7 @@
                         android:clickable="false"
                         android:text="@string/selection_is_installed"
                         android:textAppearance="?attr/textAppearanceCaption"
-                        android:visibility="@{is_installed}"
+                        android:visibility="@{dictionary.opened}"
                         app:chipMinHeight="16dp" />
 
                     <com.google.android.material.chip.Chip
@@ -128,7 +124,7 @@
                     android:layout_marginEnd="8dp"
                     android:onClick="@{() -> listener.onClickReadNow(dictionary)}"
                     android:text="@string/selection_action_activate"
-                    android:visibility="@{is_installed &amp;&amp; !is_opened}" />
+                    android:visibility="@{!is_opened}" />
             </LinearLayout>
 
         </LinearLayout>

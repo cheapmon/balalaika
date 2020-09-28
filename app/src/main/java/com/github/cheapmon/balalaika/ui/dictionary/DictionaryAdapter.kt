@@ -79,12 +79,12 @@ class DictionaryAdapter(
                     }
                 }
                 entryBaseButton.setOnClickListener {
-                    listener.onClickBaseButton(entry)
+                    listener.onClickBaseButton(item)
                 }
                 isBookmark = item.bookmark != null
                 updateBookmarkButton(entryBookmarkButton)
                 entryBookmarkButton.setOnClickListener {
-                    listener.onClickBookmarkButton(entry, isBookmark)
+                    listener.onClickBookmarkButton(item, isBookmark)
                     isBookmark = !isBookmark
                     updateBookmarkButton(entryBookmarkButton)
                 }
@@ -99,7 +99,7 @@ class DictionaryAdapter(
                     urlActionListener,
                     wordnetActionListener
                 )
-                entry.properties.forEach { (category, properties) ->
+                item.properties.forEach { (category, properties) ->
                     val widget = factory.get(category, properties)
                     entryProperties.addView(widget.create())
                 }

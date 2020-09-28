@@ -21,6 +21,8 @@ import androidx.navigation.fragment.findNavController
 import com.github.cheapmon.balalaika.MainViewModel
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.databinding.FragmentSelectionDetailBinding
+import com.github.cheapmon.balalaika.model.DownloadableDictionary
+import com.github.cheapmon.balalaika.model.InstalledDictionary
 import com.github.cheapmon.balalaika.model.SimpleDictionary
 import com.github.cheapmon.balalaika.ui.BaseFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -56,30 +58,17 @@ class SelectionDetailFragment :
 
     /** @suppress */
     inner class Listener {
-        fun onClickActivateButton(dictionary: SimpleDictionary) {
+        fun onClickActivateButton(dictionary: InstalledDictionary) {
             val message = requireContext().getString(R.string.selection_confirm_activate)
             showDialog(message) { activityViewModel.openDictionary(dictionary) }
         }
 
-        fun onClickDeactivateButton(dictionary: SimpleDictionary) {
+        fun onClickDeactivateButton(dictionary: InstalledDictionary) {
             val message = requireContext().getString(R.string.selection_confirm_deactivate)
-            showDialog(message) { activityViewModel.closeDictionary(dictionary) }
+            showDialog(message) { activityViewModel.closeDictionary() }
         }
 
-        fun onClickUpdateButton(dictionary: SimpleDictionary) {
-            val message = requireContext().getString(R.string.selection_confirm_update)
-            showDialog(message) { activityViewModel.updateDictionary(dictionary) }
-        }
-
-        fun onClickAddButton(dictionary: SimpleDictionary) {
-            val message = requireContext().getString(
-                R.string.selection_confirm_add,
-                dictionary.name
-            )
-            showDialog(message) { activityViewModel.installDictionary(dictionary) }
-        }
-
-        fun onClickRemoveButton(dictionary: SimpleDictionary) {
+        fun onClickRemoveButton(dictionary: InstalledDictionary) {
             val message = requireContext().getString(R.string.selection_confirm_remove)
             showDialog(message) { activityViewModel.removeDictionary(dictionary) }
         }

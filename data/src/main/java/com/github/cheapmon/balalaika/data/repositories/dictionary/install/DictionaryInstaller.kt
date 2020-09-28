@@ -1,17 +1,18 @@
 package com.github.cheapmon.balalaika.data.repositories.dictionary.install
 
-import com.github.cheapmon.balalaika.model.DownloadableDictionary
+import com.github.cheapmon.balalaika.model.InstalledDictionary
+import com.github.cheapmon.balalaika.model.SimpleDictionary
 
 internal interface DictionaryInstaller {
     fun addDictionaryToLibrary(
-        dictionary: DownloadableDictionary
+        dictionary: SimpleDictionary
     ): InstallationProgress
 
     fun removeDictionaryFromLibrary(
-        dictionary: DownloadableDictionary
+        dictionary: InstalledDictionary
     ): InstallationProgress
 
     fun updateDictionary(
-        dictionary: DownloadableDictionary
+        dictionary: InstalledDictionary
     ): InstallationProgress
 }

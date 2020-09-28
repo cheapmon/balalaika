@@ -10,7 +10,10 @@ import com.github.cheapmon.balalaika.data.repositories.dictionary.DictionaryData
 import com.github.cheapmon.balalaika.data.result.ProgressState
 import com.github.cheapmon.balalaika.data.result.tryProgress
 import com.github.cheapmon.balalaika.data.util.Constants
+import com.github.cheapmon.balalaika.model.Dictionary
 import com.github.cheapmon.balalaika.model.DownloadableDictionary
+import com.github.cheapmon.balalaika.model.InstalledDictionary
+import com.github.cheapmon.balalaika.model.SimpleDictionary
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import java.io.FileNotFoundException
@@ -32,7 +35,7 @@ internal class DefaultDictionaryInstaller @Inject constructor(
     private val db: AppDatabase
 ) : DictionaryInstaller {
     override fun addDictionaryToLibrary(
-        dictionary: DownloadableDictionary
+        dictionary: SimpleDictionary
     ): InstallationProgress = tryProgress {
         progress(ProgressState.InProgress(0, InstallationMessage.InstallCheckSources))
         val dataSource = findDataSource(dictionary)
@@ -52,13 +55,13 @@ internal class DefaultDictionaryInstaller @Inject constructor(
         progress(ProgressState.InProgress(100))
     }.flowOn(dispatcher)
 
-    private suspend fun findDataSource(dictionary: DownloadableDictionary): DictionaryDataSource =
+    private suspend fun findDataSource(dictionary: SimpleDictionary): DictionaryDataSource =
         dataSources.values.find { it.hasDictionary(dictionary.id, dictionary.version) }
             ?: throw IllegalArgumentException("No datasource for this dictionary")
 
     private suspend fun downloadZip(
         dataSource: DictionaryDataSource,
-        dictionary: DownloadableDictionary
+        dictionary: SimpleDictionary
     ): File {
         val bytes = dataSource.getDictionaryContents(dictionary.id, dictionary.version)
         val tempFile = createTempFile("tmp", ".zip", context.filesDir)
@@ -88,7 +91,7 @@ internal class DefaultDictionaryInstaller @Inject constructor(
         throw FileNotFoundException("Could not find $fileName.csv")
 
     override fun removeDictionaryFromLibrary(
-        dictionary: DownloadableDictionary
+        dictionary: InstalledDictionary
     ): InstallationProgress = tryProgress {
         progress(ProgressState.InProgress(0, InstallationMessage.RemoveDeleteEntities))
         removeEntities(dictionary, update = false)
@@ -100,7 +103,7 @@ internal class DefaultDictionaryInstaller @Inject constructor(
     }.flowOn(dispatcher)
 
     override fun updateDictionary(
-        dictionary: DownloadableDictionary
+        dictionary: InstalledDictionary
     ): InstallationProgress = tryProgress {
         progress(ProgressState.InProgress(0, InstallationMessage.UpdateDeleteEntities))
         val configuration = db.configurations().getConfigFor(dictionary.id).first()
@@ -115,7 +118,7 @@ internal class DefaultDictionaryInstaller @Inject constructor(
         progress(ProgressState.InProgress(100))
     }.flowOn(dispatcher)
 
-    private suspend fun removeEntities(dictionary: DownloadableDictionary, update: Boolean) =
+    private suspend fun removeEntities(dictionary: SimpleDictionary, update: Boolean) =
         db.withTransaction {
             if (!update) {
                 db.historyEntries().removeInDictionary(dictionary.id)
@@ -130,7 +133,7 @@ internal class DefaultDictionaryInstaller @Inject constructor(
         }
 
     private suspend fun cleanupConfiguration(
-        dictionary: DownloadableDictionary,
+        dictionary: SimpleDictionary,
         configuration: DictionaryConfigWithRelations?
     ) {
         var sortBy = configuration?.category?.id

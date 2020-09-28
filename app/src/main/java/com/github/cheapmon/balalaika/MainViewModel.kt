@@ -68,7 +68,7 @@ class MainViewModel @ViewModelInject constructor(
     }
 
     /** Deactivate a dictionary */
-    fun closeDictionary(dictionary: InstalledDictionary) = viewModelScope.launch {
+    fun closeDictionary() = viewModelScope.launch {
         dictionaryRepository.closeDictionary()
     }
 
@@ -78,12 +78,12 @@ class MainViewModel @ViewModelInject constructor(
     }
 
     /** Remove a dictionary from the library */
-    fun removeDictionary(dictionary: DownloadableDictionary) = viewModelScope.launch {
+    fun removeDictionary(dictionary: InstalledDictionary) = viewModelScope.launch {
         dictionaryRepository.removeDictionaryFromLibrary(dictionary)
     }
 
     /** Update a dictionary in the library */
-    fun updateDictionary(dictionary: DownloadableDictionary) {
+    fun updateDictionary(dictionary: InstalledDictionary) {
         dictionaryRepository.updateDictionary(dictionary)
     }
 

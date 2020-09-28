@@ -27,7 +27,7 @@ import com.github.cheapmon.balalaika.data.db.view.DictionaryViewEntity
 import com.github.cheapmon.balalaika.data.db.view.DictionaryViewToCategory
 import com.github.cheapmon.balalaika.data.di.IoDispatcher
 import com.github.cheapmon.balalaika.data.util.Constants
-import com.github.cheapmon.balalaika.model.DownloadableDictionary
+import com.github.cheapmon.balalaika.model.SimpleDictionary
 import java.io.InputStreamReader
 import java.util.Locale
 import javax.inject.Inject
@@ -52,7 +52,7 @@ internal class CsvEntityImporter @Inject constructor(
      *
      * _Note_: Uses `withTransaction` to ensure source file validity.
      */
-    suspend fun import(dictionary: DownloadableDictionary, contents: DictionaryContents) =
+    suspend fun import(dictionary: SimpleDictionary, contents: DictionaryContents) =
         withContext(dispatcher) {
             db.withTransaction {
                 db.dictionaries().insertAll(readDictionary(dictionary))
@@ -67,7 +67,7 @@ internal class CsvEntityImporter @Inject constructor(
             }
         }
 
-    private fun readDictionary(dictionary: DownloadableDictionary): List<DictionaryEntity> {
+    private fun readDictionary(dictionary: SimpleDictionary): List<DictionaryEntity> {
         return listOf(
             DictionaryEntity(
                 id = dictionary.id,

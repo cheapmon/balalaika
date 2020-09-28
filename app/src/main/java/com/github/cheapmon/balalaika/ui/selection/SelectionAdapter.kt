@@ -29,7 +29,7 @@ import com.github.cheapmon.balalaika.model.sameAs
 /* Displays a list of dictionaries */
 class SelectionAdapter(
     private val listener: Listener
-) : ListAdapter<SimpleDictionary, SelectionAdapter.ViewHolder>(Diff) {
+) : ListAdapter<InstalledDictionary, SelectionAdapter.ViewHolder>(Diff) {
     /** Create view */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -42,8 +42,6 @@ class SelectionAdapter(
         val item = getItem(position)
         with(holder.binding) {
             dictionary = item
-            isInstalled = item is InstalledDictionary
-            isOpened = item is DownloadableDictionary
             listener = this@SelectionAdapter.listener
         }
     }
@@ -54,17 +52,17 @@ class SelectionAdapter(
     ) : RecyclerView.ViewHolder(binding.root)
 
     /** @suppress */
-    object Diff : DiffUtil.ItemCallback<SimpleDictionary>() {
+    companion object Diff : DiffUtil.ItemCallback<InstalledDictionary>() {
         override fun areContentsTheSame(
-            oldItem: SimpleDictionary,
-            newItem: SimpleDictionary
+            oldItem: InstalledDictionary,
+            newItem: InstalledDictionary
         ): Boolean {
-            return oldItem sameAs newItem
+            return oldItem == newItem
         }
 
         override fun areItemsTheSame(
-            oldItem: SimpleDictionary,
-            newItem: SimpleDictionary
+            oldItem: InstalledDictionary,
+            newItem: InstalledDictionary
         ): Boolean {
             return oldItem.id == newItem.id
         }
@@ -73,9 +71,9 @@ class SelectionAdapter(
     /** Component that handles actions from this adapter */
     interface Listener {
         /** Callback for whenever a dictionary is clicked */
-        fun onClickDictionary(dictionary: SimpleDictionary)
+        fun onClickDictionary(dictionary: InstalledDictionary)
 
         /** Callback for whenever the "Activate" button is clicked */
-        fun onClickReadNow(dictionary: SimpleDictionary)
+        fun onClickReadNow(dictionary: InstalledDictionary)
     }
 }

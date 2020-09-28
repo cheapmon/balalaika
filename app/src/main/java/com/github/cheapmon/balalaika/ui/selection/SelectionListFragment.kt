@@ -82,14 +82,14 @@ class SelectionListFragment(
     }
 
     /** Show dictionary in detail view */
-    override fun onClickDictionary(dictionary: SimpleDictionary) {
+    override fun onClickDictionary(dictionary: InstalledDictionary) {
         val directions = SelectionFragmentDirections.actionNavSelectionToNavSelectionDetail(
             dictionary.id
         )
         findNavController().navigate(directions)
     }
 
-    override fun onClickReadNow(dictionary: SimpleDictionary) {
+    override fun onClickReadNow(dictionary: InstalledDictionary) {
         activityViewModel.openDictionary(dictionary)
     }
 }
