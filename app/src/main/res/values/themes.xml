@@ -39,9 +39,15 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light" />
 
-    <style name="ThemeOverlay.Balalaika.Danger" parent="ThemeOverlay.MaterialComponents.Light">
+    <style name="ThemeOverlay.Balalaika.Danger" parent="">
         <item name="colorPrimary">@color/dangerColor</item>
         <item name="colorPrimaryVariant">@color/dangerColorLight</item>
         <item name="colorPrimaryDark">@color/dangerColorDark</item>
+    </style>
+
+    <style name="ThemeOverlay.Balalaika.Neutral" parent="">
+        <item name="colorPrimary">@color/neutralColor</item>
+        <item name="colorPrimaryVariant">@color/neutralColorLight</item>
+        <item name="colorPrimaryDark">@color/neutralColorDark</item>
     </style>
 </resources>

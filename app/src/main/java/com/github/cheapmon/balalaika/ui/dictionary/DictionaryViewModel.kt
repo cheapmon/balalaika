@@ -55,8 +55,7 @@ class DictionaryViewModel @ViewModelInject constructor(
     private val _dictionaryView: MutableStateFlow<DictionaryView?> = MutableStateFlow(null)
     private val _category: MutableStateFlow<DataCategory?> = MutableStateFlow(null)
 
-    // TODO: MutableStateFlow(navArgs.entry)
-    private val _initialEntry: MutableStateFlow<DictionaryEntry?> = MutableStateFlow(null)
+    private val _initialEntry: MutableStateFlow<DictionaryEntry?> = MutableStateFlow(navArgs.entry)
 
     /** Current selected dictionary view */
     val dictionaryView: Flow<DictionaryView?> = _dictionaryView

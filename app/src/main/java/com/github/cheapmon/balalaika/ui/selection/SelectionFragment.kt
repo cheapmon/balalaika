@@ -26,7 +26,6 @@ import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.databinding.FragmentSelectionBinding
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
-import java.lang.IllegalArgumentException
 
 @AndroidEntryPoint
 class SelectionFragment : Fragment() {
@@ -44,20 +43,24 @@ class SelectionFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val context = requireContext()
-        binding.selectionPager.adapter = SelectionFragmentStateAdapter(this, viewModel)
+        binding.selectionPager.adapter = SelectionFragmentStateAdapter(this, viewModel, Listener())
         TabLayoutMediator(binding.selectionTabs, binding.selectionPager) { tab, position ->
             tab.icon = when (position) {
                 0 -> ContextCompat.getDrawable(context, R.drawable.ic_library)
-                1 -> ContextCompat.getDrawable(context, R.drawable.ic_phone)
-                2 -> ContextCompat.getDrawable(context, R.drawable.ic_download)
-                else -> throw IllegalArgumentException("Position must be <= 2")
+                1 -> ContextCompat.getDrawable(context, R.drawable.ic_download)
+                else -> throw IllegalArgumentException("Position must be <= 1")
             }
             tab.text = when (position) {
                 0 -> context.getString(R.string.selection_tab_list)
-                1 -> context.getString(R.string.selection_tab_local)
-                2 -> context.getString(R.string.selection_tab_download)
-                else -> throw IllegalArgumentException("Position must be <= 2")
+                1 -> context.getString(R.string.selection_tab_download)
+                else -> throw IllegalArgumentException("Position must be <= 1")
             }
         }.attach()
+    }
+
+    inner class Listener {
+        fun goToTab(tab: Int) {
+            binding.selectionTabs.getTabAt(tab)?.select()
+        }
     }
 }

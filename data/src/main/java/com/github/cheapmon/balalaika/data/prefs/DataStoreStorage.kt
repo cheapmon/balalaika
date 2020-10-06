@@ -44,11 +44,21 @@ internal class DataStoreStorage @Inject constructor(
     )
 
     override val openDictionary: Flow<String?> =
-        dataStore.data.map { preferences -> preferences.openDictionary }
+        dataStore.data.map { preferences ->
+            if (preferences.openDictionaryCase == UserPreferences.OpenDictionaryCase.OPEN_DICTIONARY_ID) {
+                preferences.openDictionaryId
+            } else {
+                null
+            }
+        }
 
     override suspend fun setOpenDictionary(dictionaryId: String?) {
         dataStore.updateData { preferences ->
-            preferences.toBuilder().setOpenDictionary(dictionaryId).build()
+            if (dictionaryId == null) {
+                preferences.toBuilder().clearOpenDictionary().build()
+            } else {
+                preferences.toBuilder().setOpenDictionaryId(dictionaryId).build()
+            }
         }
     }
 }

@@ -54,8 +54,6 @@ class ExampleWidget(
     ): View = HelperExampleBinding.inflate(inflater).apply {
         title = displayName(property)
         value = property.content
-        // TODO: Hide if content is blank
-        // else helperExampleContent.visibility = View.GONE
     }.root
 
     override fun displayName(property: Property.Example): String =

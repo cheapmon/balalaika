@@ -16,8 +16,10 @@
 package com.github.cheapmon.balalaika.util
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.text.SpannedString
 import android.util.Log
+import android.widget.Button
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
@@ -32,9 +34,13 @@ import com.github.cheapmon.balalaika.ui.search.SearchAdapter
 import com.google.android.material.button.MaterialButton
 
 /** Convenience method for setting the icon of a `MaterialButton` from a drawable ID */
-fun MaterialButton.setIconById(@DrawableRes id: Int) {
-    this.icon = ContextCompat.getDrawable(this.context, id)
+fun Button.setIconById(@DrawableRes id: Int) = (this as? MaterialButton)?.apply {
+    icon = ContextCompat.getDrawable(this.context, id)
 }
+
+/** Convenience property for retrieving the icon of a `MaterialButton` */
+val Button.icon: Drawable?
+    get() = (this as? MaterialButton)?.icon
 
 /**
  * Highlight part of a string

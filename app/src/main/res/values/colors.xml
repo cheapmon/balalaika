@@ -25,4 +25,7 @@
     <color name="dangerColor">#d32f2f</color>
     <color name="dangerColorLight">#ff6659</color>
     <color name="dangerColorDark">#9a0007</color>
+    <color name="neutralColor">#263238</color>
+    <color name="neutralColorLight">#4f5b62</color>
+    <color name="neutralColorDark">#000a12</color>
 </resources>

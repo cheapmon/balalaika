@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="dictionary"
+            type="com.github.cheapmon.balalaika.model.SimpleDictionary" />
+
+        <variable
+            name="installed"
+            type="Boolean" />
+
+        <variable
+            name="opened"
+            type="Boolean" />
+
+        <variable
+            name="listener"
+            type="com.github.cheapmon.balalaika.ui.selection.SelectionListFragment.Listener" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        style="@style/Widget.Balalaika.Card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="4dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:theme="@style/ThemeOverlay.Balalaika.Neutral">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="82dp"
+            android:contentDescription="@string/selection_is_active"
+            android:visibility="@{installed &amp;&amp; opened}"
+            app:srcCompat="@drawable/ic_book"
+            app:tint="?attr/colorPrimary" />
+
+        <Button
+            android:id="@+id/collapse_button"
+            style="@style/Widget.Balalaika.Button.Icon"
+            android:layout_gravity="end"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            app:icon="@drawable/ic_expand" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:id="@+id/header"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{dictionary.name}"
+                    android:textAppearance="?attr/textAppearanceHeadline6"
+                    tools:text="Dictionary Name" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFeatureSettings="smcp"
+                    android:text="@{dictionary.authors}"
+                    android:textAppearance="?attr/textAppearanceCaption"
+                    android:layout_marginBottom="8dp"
+                    tools:text="Authors" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/body"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    style="?attr/textAppearanceCaption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/selection_summary_title" />
+
+                <TextView
+                    android:id="@+id/summary"
+                    style="?attr/textAppearanceBody2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autoLink="web"
+                    android:text="@{dictionary.summary}"
+                    app:justify="@{true}"
+                    tools:text="@string/impsum" />
+
+                <TextView
+                    style="?attr/textAppearanceCaption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/selection_info_title" />
+
+                <TextView
+                    style="?attr/textAppearanceBody2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:autoLink="web"
+                    android:text="@{dictionary.additionalInfo}"
+                    app:justify="@{true}"
+                    tools:text="@string/impsum" />
+
+                <TextView
+                    style="?attr/textAppearanceCaption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/selection_version_title" />
+
+                <TextView
+                    style="?attr/textAppearanceBody2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{String.valueOf(dictionary.version)}"
+                    tools:text="1" />
+
+                <LinearLayout
+                    android:id="@+id/actions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:onClick="@{() -> listener.onOpenDictionary(dictionary)}"
+                        android:text="@string/selection_action_activate"
+                        android:visibility="@{installed &amp;&amp; !opened}"
+                        app:icon="@drawable/ic_book" />
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:onClick="@{() -> listener.onCloseDictionary(dictionary)}"
+                        android:text="@string/selection_action_deactivate"
+                        android:visibility="@{installed &amp;&amp; opened}"
+                        app:icon="@drawable/ic_close" />
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:onClick="@{() -> listener.onAddDictionary(dictionary)}"
+                        android:text="@string/selection_action_add"
+                        android:visibility="@{!installed}"
+                        app:icon="@drawable/ic_add" />
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:onClick="@{() -> listener.onRemoveDictionary(dictionary)}"
+                        android:text="@string/selection_action_remove"
+                        android:theme="@style/ThemeOverlay.Balalaika.Danger"
+                        android:visibility="@{installed}"
+                        app:icon="@drawable/ic_delete" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</layout>

@@ -20,7 +20,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.github.cheapmon.balalaika.data.repositories.DictionaryRepository
-import com.github.cheapmon.balalaika.model.InstalledDictionary
+import com.github.cheapmon.balalaika.model.SimpleDictionary
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 
@@ -28,19 +30,29 @@ import kotlinx.coroutines.flow.map
 class SelectionViewModel @ViewModelInject constructor(
     private val dictionaries: DictionaryRepository
 ) : ViewModel() {
-    init {
-        refresh()
-    }
+    private val _refreshing = MutableStateFlow(false)
+
+    /** List of downloadable dictionaries is refreshing */
+    val refreshing: LiveData<Boolean> = _refreshing.asLiveData()
 
     /** All installed dictionaries */
-    val installedDictionaries: LiveData<List<InstalledDictionary>> =
+    val installedDictionaries: LiveData<List<SimpleDictionary>> =
         dictionaries.getOpenDictionary()
             .flatMapLatest { dictionaries.getInstalledDictionaries(it) }
             .map { list -> list.sortedBy { !it.isOpened } }
             .asLiveData()
 
+    /** All downloadable dictionaries */
+    val downloadableDictionaries: LiveData<List<SimpleDictionary>> =
+        _refreshing.filter { it }
+            .flatMapLatest {
+                val dictionaries = dictionaries.getDownloadableDictionaries()
+                _refreshing.value = false
+                dictionaries
+            }.asLiveData()
+
     /** Refresh dictionary list from sources */
     fun refresh() {
-        // TODO
+        _refreshing.value = true
     }
 }

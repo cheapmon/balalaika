@@ -20,17 +20,16 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 
 class SelectionFragmentStateAdapter(
     fragment: Fragment,
-    private val viewModel: SelectionViewModel
+    private val viewModel: SelectionViewModel,
+    private val listener: SelectionFragment.Listener
 ) : FragmentStateAdapter(fragment) {
-    override fun getItemCount(): Int = 3
+    override fun getItemCount(): Int = 2
 
     override fun createFragment(position: Int): Fragment = when (position) {
-        // TODO
-        0 -> SelectionListFragment(viewModel.installedDictionaries)
-        // 1 -> SelectionListFragment(viewModel.localDictionaries)
-        1 -> SelectionListFragment(viewModel.installedDictionaries)
-        // 2 -> SelectionListFragment(viewModel.remoteDictionaries)
-        2 -> SelectionListFragment(viewModel.installedDictionaries)
-        else -> throw IllegalArgumentException("Position must be <= 2")
+        0 -> SelectionListFragment(viewModel.installedDictionaries, listener)
+        1 -> SelectionListFragment(viewModel.downloadableDictionaries, listener, true) {
+            viewModel.refresh()
+        }
+        else -> throw IllegalArgumentException("Position must be <= 1")
     }
 }

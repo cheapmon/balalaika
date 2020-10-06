@@ -26,7 +26,6 @@ import com.github.cheapmon.balalaika.model.HistoryItem
 import com.github.cheapmon.balalaika.model.InstalledDictionary
 import com.github.cheapmon.balalaika.model.SearchRestriction
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -77,19 +76,16 @@ class MainViewModel @ViewModelInject constructor(
     }
 
     /** Install a dictionary into the library */
-    fun installDictionary(dictionary: DownloadableDictionary) = viewModelScope.launch {
-        dictionaryRepository.addDictionaryToLibrary(dictionary).collect()
-    }
+    fun installDictionary(dictionary: DownloadableDictionary) =
+        dictionaryRepository.addDictionaryToLibrary(dictionary)
 
     /** Remove a dictionary from the library */
-    fun removeDictionary(dictionary: InstalledDictionary) = viewModelScope.launch {
+    fun removeDictionary(dictionary: InstalledDictionary) =
         dictionaryRepository.removeDictionaryFromLibrary(dictionary)
-    }
 
     /** Update a dictionary in the library */
-    fun updateDictionary(dictionary: InstalledDictionary) {
+    fun updateDictionary(dictionary: InstalledDictionary) =
         dictionaryRepository.updateDictionary(dictionary)
-    }
 
     /** Add search to history */
     fun addToHistory(query: String, restriction: SearchRestriction?) {
