@@ -53,6 +53,7 @@ android {
 
     kotlinOptions {
         jvmTarget = "1.8"
+        useIR = true
         freeCompilerArgs += "-Xuse-experimental=" +
                 "kotlin.Experimental," +
                 "kotlinx.coroutines.ExperimentalCoroutinesApi," +
@@ -60,8 +61,14 @@ android {
                 "kotlinx.coroutines.FlowPreview"
     }
 
+    composeOptions {
+        kotlinCompilerVersion "1.4.10"
+        kotlinCompilerExtensionVersion "1.0.0-alpha04"
+    }
+
     buildFeatures {
         dataBinding = true
+        compose true
     }
 
     dokka {
@@ -108,6 +115,16 @@ dependencies {
     implementation "androidx.viewpager2:viewpager2:1.0.0"
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     implementation "androidx.core:core-ktx:1.3.1"
+
+    // Jetpack Compose
+    implementation "androidx.compose.ui:ui:$compose_version"
+    implementation "androidx.ui:ui-tooling:$compose_version"
+    implementation "androidx.compose.foundation:foundation:$compose_version"
+    implementation "androidx.compose.material:material:$compose_version"
+    implementation "androidx.compose.material:material-icons-core:$compose_version"
+    implementation "androidx.compose.material:material-icons-extended:$compose_version"
+    implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
+    androidTestImplementation "androidx.ui:ui-test:$compose_version"
 
     // Preferences
     implementation "androidx.preference:preference-ktx:1.1.1"
