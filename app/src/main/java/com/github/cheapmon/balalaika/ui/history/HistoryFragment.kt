@@ -16,17 +16,14 @@
 package com.github.cheapmon.balalaika.ui.history
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import androidx.lifecycle.LifecycleOwner
+import android.view.*
+import androidx.compose.ui.platform.ComposeView
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.databinding.FragmentHistoryBinding
 import com.github.cheapmon.balalaika.model.HistoryItem
-import com.github.cheapmon.balalaika.ui.RecyclerViewFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -38,57 +35,39 @@ import dagger.hilt.android.AndroidEntryPoint
  * - Remove one or all entries
  */
 @AndroidEntryPoint
-class HistoryFragment :
-    RecyclerViewFragment<HistoryViewModel, FragmentHistoryBinding, HistoryAdapter>(
-        HistoryViewModel::class,
-        R.layout.fragment_history,
-        true
-    ), HistoryAdapter.Listener {
-    /** Notify about options menu */
+class HistoryFragment : Fragment() {
+    private val viewModel: HistoryViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
     }
 
-    /** @suppress */
-    override fun createRecyclerView(binding: FragmentHistoryBinding) =
-        binding.historyList
-
-    /** @suppress */
-    override fun createRecyclerViewAdapter() =
-        HistoryAdapter(this)
-
-    /** @suppress */
-    override fun observeData(
-        binding: FragmentHistoryBinding,
-        owner: LifecycleOwner,
-        adapter: HistoryAdapter
-    ) {
-        binding.lifecycleOwner = owner
-        binding.viewModel = viewModel
-        viewModel.items.observe(owner) {
-            adapter.submitList(it)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return ComposeView(requireContext()).apply {
+            setContent {
+                HistoryScreen(viewModel, ::onClickHistoryItem)
+            }
         }
     }
 
-    /**
-     * Create options menu
-     *
-     * Consists one one button to remove all entries.
-     */
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_history, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    /** Options menu actions */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.history_clear -> {
                 MaterialAlertDialogBuilder(requireContext())
                     .setTitle(R.string.history_clear_title)
-                    .setPositiveButton(R.string.history_clear_affirm) { _, _ -> clearHistory() }
-                    .setNegativeButton(R.string.history_clear_cancel, null)
+                    .setPositiveButton(R.string.history_clear_affirm) { _, _ ->
+                        viewModel.clearHistory()
+                    }.setNegativeButton(R.string.history_clear_cancel, null)
                     .show()
                 true
             }
@@ -96,24 +75,10 @@ class HistoryFragment :
         }
     }
 
-    /** Remove all history entries */
-    private fun clearHistory() {
-        viewModel.clearHistory()
-        Snackbar.make(requireView(), R.string.history_clear_done, Snackbar.LENGTH_SHORT).show()
-    }
-
-    /** Remove single history entry */
-    override fun onClickDeleteButton(historyItem: HistoryItem) {
-        viewModel.removeItem(historyItem)
-        Snackbar.make(requireView(), R.string.history_entry_removed, Snackbar.LENGTH_SHORT)
-            .show()
-    }
-
-    /** Repeat search operation */
-    override fun onClickRedoButton(historyItem: HistoryItem) {
+    private fun onClickHistoryItem(item: HistoryItem) {
         val directions = HistoryFragmentDirections.actionNavHistoryToNavSearch(
-            query = historyItem.query,
-            restriction = historyItem.restriction
+            query = item.query,
+            restriction = item.restriction
         )
         findNavController().navigate(directions)
     }

@@ -29,7 +29,7 @@ fun BalalaikaTheme(
 
 @Preview(showBackground = true)
 @Composable
-fun BalalaikaThemePreview() {
+private fun BalalaikaThemePreview() {
     BalalaikaTheme {
         Scaffold(
             topBar = {

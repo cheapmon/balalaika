@@ -91,7 +91,7 @@ private fun ColorsPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun LightColorsPreview() {
+private fun LightColorsPreview() {
     BalalaikaTheme {
         ColorsPreview()
     }
@@ -99,7 +99,7 @@ fun LightColorsPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun DarkColorsPreview() {
+private fun DarkColorsPreview() {
     BalalaikaTheme(darkTheme = true) {
         ColorsPreview()
     }

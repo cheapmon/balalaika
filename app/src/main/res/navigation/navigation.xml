@@ -59,8 +59,7 @@
     <fragment
         android:id="@+id/nav_history"
         android:name="com.github.cheapmon.balalaika.ui.history.HistoryFragment"
-        android:label="@string/menu_history"
-        tools:layout="@layout/fragment_history">
+        android:label="@string/menu_history">
         <action
             android:id="@+id/action_nav_history_to_nav_search"
             app:destination="@id/nav_search" />
