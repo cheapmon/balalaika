@@ -18,37 +18,28 @@ package com.github.cheapmon.balalaika.ui.about
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
-import com.github.cheapmon.balalaika.R
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.compose.ui.platform.ComposeView
+import androidx.fragment.app.Fragment
 import dagger.hilt.android.AndroidEntryPoint
 
-/** Fragment for configuring preferences */
 @AndroidEntryPoint
-class AboutFragment : PreferenceFragmentCompat() {
-    /** Load data and add callbacks */
-    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        setPreferencesFromResource(R.xml.preferences, rootKey)
-        findPreference<Preference>("icon")?.apply {
-            setOnPreferenceClickListener {
-                val uri = Uri.parse(getString(R.string.preferences_icon_url))
-                startActivity(Intent(Intent.ACTION_VIEW, uri))
-                true
+class AboutFragment : Fragment() {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return ComposeView(requireContext()).apply {
+            setContent {
+                AboutScreen(::openUrl)
             }
         }
-        findPreference<Preference>("author")?.apply {
-            setOnPreferenceClickListener {
-                val uri = Uri.parse(getString(R.string.preferences_author_url))
-                startActivity(Intent(Intent.ACTION_VIEW, uri))
-                true
-            }
-        }
-        findPreference<Preference>("license")?.apply {
-            setOnPreferenceClickListener {
-                val uri = Uri.parse(getString(R.string.preferences_license_url))
-                startActivity(Intent(Intent.ACTION_VIEW, uri))
-                true
-            }
-        }
+    }
+
+    private fun openUrl(uri: Uri) {
+        startActivity(Intent(Intent.ACTION_VIEW, uri))
     }
 }

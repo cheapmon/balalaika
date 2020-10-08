@@ -16,13 +16,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.ui.tooling.preview.Preview
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.components.EmptyMessage
 import com.github.cheapmon.balalaika.model.HistoryItem
 import com.github.cheapmon.balalaika.model.SearchRestriction
 import com.github.cheapmon.balalaika.theme.BalalaikaTheme
+import com.github.cheapmon.balalaika.theme.listItemIconSize
 import com.github.cheapmon.balalaika.util.sampleHistoryItems
 
 @Composable
@@ -75,7 +75,7 @@ private fun HistoryList(
                 icon = {
                     Icon(
                         asset = Icons.Default.Search,
-                        modifier = Modifier.preferredSize(40.dp)
+                        modifier = Modifier.preferredSize(listItemIconSize)
                     )
                 },
                 secondaryText = { Text(text = item.restriction.text()) },
