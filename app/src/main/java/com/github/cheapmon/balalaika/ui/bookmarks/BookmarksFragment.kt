@@ -16,17 +16,14 @@
 package com.github.cheapmon.balalaika.ui.bookmarks
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import androidx.lifecycle.LifecycleOwner
+import android.view.*
+import androidx.compose.ui.platform.ComposeView
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.databinding.FragmentBookmarksBinding
 import com.github.cheapmon.balalaika.model.DictionaryEntry
-import com.github.cheapmon.balalaika.ui.RecyclerViewFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -38,36 +35,24 @@ import dagger.hilt.android.AndroidEntryPoint
  * - Remove one or all bookmarks
  */
 @AndroidEntryPoint
-class BookmarksFragment :
-    RecyclerViewFragment<BookmarksViewModel, FragmentBookmarksBinding, BookmarksAdapter>(
-        BookmarksViewModel::class,
-        R.layout.fragment_bookmarks,
-        true
-    ), BookmarksAdapter.Listener {
+class BookmarksFragment : Fragment() {
+    private val viewModel: BookmarksViewModel by viewModels()
+
     /** Notify about options menu */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
     }
 
-    /** @suppress */
-    override fun createRecyclerView(binding: FragmentBookmarksBinding) =
-        binding.bookmarksList
-
-    /** @suppress */
-    override fun createRecyclerViewAdapter() =
-        BookmarksAdapter(this)
-
-    /** @suppress */
-    override fun observeData(
-        binding: FragmentBookmarksBinding,
-        owner: LifecycleOwner,
-        adapter: BookmarksAdapter
-    ) {
-        binding.lifecycleOwner = owner
-        binding.viewModel = viewModel
-        viewModel.bookmarkedEntries.observe(owner) {
-            adapter.submitList(it)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return ComposeView(requireContext()).apply {
+            setContent {
+                BookmarksScreen(viewModel, ::onClickEntry)
+            }
         }
     }
 
@@ -87,7 +72,7 @@ class BookmarksFragment :
             R.id.bookmarks_clear -> {
                 MaterialAlertDialogBuilder(requireContext())
                     .setTitle(R.string.bookmarks_clear_title)
-                    .setPositiveButton(R.string.bookmarks_clear_affirm) { _, _ -> clearBookmarks() }
+                    .setPositiveButton(R.string.bookmarks_clear_affirm) { _, _ -> viewModel.clearBookmarks() }
                     .setNegativeButton(R.string.bookmarks_clear_cancel, null)
                     .show()
                 true
@@ -96,23 +81,8 @@ class BookmarksFragment :
         }
     }
 
-    /** Remove all bookmarks */
-    private fun clearBookmarks() {
-        viewModel.clearBookmarks()
-        Snackbar.make(requireView(), R.string.bookmarks_clear_done, Snackbar.LENGTH_SHORT).show()
-    }
-
-    /** Remove single bookmark */
-    override fun onClickDeleteButton(dictionaryEntry: DictionaryEntry) {
-        viewModel.removeBookmark(dictionaryEntry)
-        Snackbar.make(requireView(), R.string.bookmarks_item_removed, Snackbar.LENGTH_SHORT)
-            .show()
-    }
-
-    /** Show bookmarked entry in dictionary */
-    override fun onClickRedoButton(dictionaryEntry: DictionaryEntry) {
-        val directions =
-            BookmarksFragmentDirections.actionNavBookmarksToNavHome(dictionaryEntry)
+    private fun onClickEntry(entry: DictionaryEntry) {
+        val directions = BookmarksFragmentDirections.actionNavBookmarksToNavHome(entry)
         findNavController().navigate(directions)
     }
 }

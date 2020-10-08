@@ -67,8 +67,7 @@
     <fragment
         android:id="@+id/nav_bookmarks"
         android:name="com.github.cheapmon.balalaika.ui.bookmarks.BookmarksFragment"
-        android:label="@string/menu_bookmarks"
-        tools:layout="@layout/fragment_bookmarks">
+        android:label="@string/menu_bookmarks">
         <action
             android:id="@+id/action_nav_bookmarks_to_nav_home"
             app:destination="@id/nav_home" />

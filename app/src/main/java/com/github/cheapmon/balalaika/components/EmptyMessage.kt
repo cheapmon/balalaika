@@ -24,7 +24,7 @@ import com.github.cheapmon.balalaika.theme.itemSpacing
 fun EmptyMessage(
     modifier: Modifier = Modifier,
     icon: VectorAsset = Icons.Default.Close,
-    message: @Composable () -> Unit = {},
+    message: @Composable () -> Unit = {}
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
