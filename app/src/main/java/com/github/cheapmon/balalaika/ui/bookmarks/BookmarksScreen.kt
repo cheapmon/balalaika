@@ -19,10 +19,9 @@ import androidx.compose.ui.unit.dp
 import androidx.ui.tooling.preview.Preview
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.components.EmptyMessage
-import com.github.cheapmon.balalaika.model.Bookmark
 import com.github.cheapmon.balalaika.model.DictionaryEntry
 import com.github.cheapmon.balalaika.theme.BalalaikaTheme
-import java.util.*
+import com.github.cheapmon.balalaika.util.sampleDictionaryEntries
 
 @Composable
 fun BookmarksScreen(
@@ -104,29 +103,6 @@ private fun BookmarksEmptyMessagePreview() {
 @Composable
 private fun BookmarksListPreview() {
     BalalaikaTheme {
-        BookmarksList(
-            entries = listOf(
-                DictionaryEntry(
-                    id = "entry",
-                    representation = "Dictionary entry",
-                    base = DictionaryEntry(
-                        id = "base",
-                        representation = "Base",
-                        base = null,
-                        properties = TreeMap(emptyMap()),
-                        bookmark = null
-                    ),
-                    properties = TreeMap(emptyMap()),
-                    bookmark = Bookmark()
-                ),
-                DictionaryEntry(
-                    id = "entry2",
-                    representation = "Second dictionary entry",
-                    base = null,
-                    properties = TreeMap(emptyMap()),
-                    bookmark = Bookmark()
-                )
-            )
-        )
+        BookmarksList(entries = sampleDictionaryEntries.filter { it.bookmark != null })
     }
 }

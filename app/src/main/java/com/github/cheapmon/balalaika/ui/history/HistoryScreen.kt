@@ -20,10 +20,10 @@ import androidx.compose.ui.unit.dp
 import androidx.ui.tooling.preview.Preview
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.components.EmptyMessage
-import com.github.cheapmon.balalaika.model.DataCategory
 import com.github.cheapmon.balalaika.model.HistoryItem
 import com.github.cheapmon.balalaika.model.SearchRestriction
 import com.github.cheapmon.balalaika.theme.BalalaikaTheme
+import com.github.cheapmon.balalaika.util.sampleHistoryItems
 
 @Composable
 fun HistoryScreen(
@@ -111,20 +111,6 @@ private fun HistoryEmptyMessagePreview() {
 @Composable
 private fun HistoryListPreview() {
     BalalaikaTheme {
-        HistoryList(
-            items = listOf(
-                HistoryItem(
-                    query = "query",
-                    restriction = SearchRestriction(
-                        category = DataCategory(
-                            id = "test",
-                            name = "category",
-                            iconName = "ic_book",
-                            sequence = 0
-                        ), text = "restriction"
-                    )
-                )
-            )
-        )
+        HistoryList(items = sampleHistoryItems)
     }
 }
