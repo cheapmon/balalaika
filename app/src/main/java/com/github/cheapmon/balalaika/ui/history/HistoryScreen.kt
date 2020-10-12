@@ -22,6 +22,7 @@ import com.github.cheapmon.balalaika.components.EmptyMessage
 import com.github.cheapmon.balalaika.model.HistoryItem
 import com.github.cheapmon.balalaika.model.SearchRestriction
 import com.github.cheapmon.balalaika.theme.BalalaikaTheme
+import com.github.cheapmon.balalaika.theme.IconColor
 import com.github.cheapmon.balalaika.theme.listItemIconSize
 import com.github.cheapmon.balalaika.util.sampleHistoryItems
 
@@ -75,13 +76,17 @@ private fun HistoryList(
                 icon = {
                     Icon(
                         asset = Icons.Default.Search,
-                        modifier = Modifier.preferredSize(listItemIconSize)
+                        modifier = Modifier.preferredSize(listItemIconSize),
+                        tint = IconColor()
                     )
                 },
                 secondaryText = { Text(text = item.restriction.text()) },
                 trailing = {
                     IconButton(onClick = { onDeleteItem(item) }) {
-                        Icon(Icons.Default.Delete)
+                        Icon(
+                            asset = Icons.Default.Delete,
+                            tint = IconColor()
+                        )
                     }
                 }
             ) {

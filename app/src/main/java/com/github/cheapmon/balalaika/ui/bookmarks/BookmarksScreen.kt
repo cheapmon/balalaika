@@ -20,6 +20,7 @@ import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.components.EmptyMessage
 import com.github.cheapmon.balalaika.model.DictionaryEntry
 import com.github.cheapmon.balalaika.theme.BalalaikaTheme
+import com.github.cheapmon.balalaika.theme.IconColor
 import com.github.cheapmon.balalaika.theme.listItemIconSize
 import com.github.cheapmon.balalaika.util.sampleDictionaryEntries
 
@@ -72,7 +73,8 @@ private fun BookmarksList(
                 icon = {
                     Icon(
                         asset = Icons.Default.Bookmark,
-                        modifier = Modifier.preferredSize(listItemIconSize)
+                        modifier = Modifier.preferredSize(listItemIconSize),
+                        tint = IconColor()
                     )
                 },
                 secondaryText = entry.base?.let {
@@ -80,7 +82,10 @@ private fun BookmarksList(
                 },
                 trailing = {
                     IconButton(onClick = { onDeleteEntry(entry) }) {
-                        Icon(Icons.Default.Delete)
+                        Icon(
+                            asset = Icons.Default.Delete,
+                            tint = IconColor()
+                        )
                     }
                 }
             ) {

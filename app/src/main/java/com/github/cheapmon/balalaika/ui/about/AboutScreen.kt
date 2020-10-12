@@ -21,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.ui.tooling.preview.Preview
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.theme.BalalaikaTheme
+import com.github.cheapmon.balalaika.theme.IconColor
 import com.github.cheapmon.balalaika.theme.listItemIconSize
 
 @Composable
@@ -68,8 +69,8 @@ private fun HeaderItem(
         icon = {
             Icon(
                 asset = icon,
-                tint = MaterialTheme.colors.onSurface.copy(alpha = 0.8f),
-                modifier = Modifier.preferredWidth(listItemIconSize)
+                modifier = Modifier.preferredWidth(listItemIconSize),
+                tint = IconColor()
             )
         }
     ) {
@@ -91,8 +92,8 @@ private fun InfoItem(
         icon = {
             Icon(
                 asset = icon,
-                tint = MaterialTheme.colors.onSurface.copy(alpha = 0.8f),
-                modifier = Modifier.preferredSize(listItemIconSize)
+                modifier = Modifier.preferredSize(listItemIconSize),
+                tint = IconColor()
             )
         },
         modifier = Modifier.clickable(onClick = onClick),

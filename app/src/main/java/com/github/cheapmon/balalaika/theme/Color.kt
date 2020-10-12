@@ -56,6 +56,9 @@ val darkColors = Colors(
 )
 
 @Composable
+fun IconColor() = MaterialTheme.colors.onSurface.copy(alpha = 0.8f)
+
+@Composable
 private fun ColorsPreview() {
     Column {
         TopAppBar(

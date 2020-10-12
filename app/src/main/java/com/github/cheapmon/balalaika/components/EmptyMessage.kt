@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.VectorAsset
 import androidx.ui.tooling.preview.Preview
 import com.github.cheapmon.balalaika.theme.BalalaikaTheme
-import com.github.cheapmon.balalaika.theme.bigIconAlpha
+import com.github.cheapmon.balalaika.theme.IconColor
 import com.github.cheapmon.balalaika.theme.bigIconSize
 import com.github.cheapmon.balalaika.theme.itemSpacing
 
@@ -33,7 +33,7 @@ fun EmptyMessage(
     ) {
         Icon(
             asset = icon.copy(defaultWidth = bigIconSize, defaultHeight = bigIconSize),
-            tint = MaterialTheme.colors.onSurface.copy(alpha = bigIconAlpha)
+            tint = IconColor()
         )
         message()
     }
