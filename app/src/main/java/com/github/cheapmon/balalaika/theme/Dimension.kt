@@ -3,6 +3,12 @@ package com.github.cheapmon.balalaika.theme
 import androidx.compose.ui.unit.dp
 
 val itemSpacing = 8.dp
+val itemPadding = 16.dp
+
+val paragraphSpacing = 16.dp
+
+val headerGap = 32.dp
+val headerMaxWidth = 300.dp
 
 val bigIconSize = 120.dp
 

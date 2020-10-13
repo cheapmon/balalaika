@@ -78,7 +78,8 @@ val typography = Typography(
         ),
         body2 = TextStyle(
                 fontWeight = FontWeight.Normal,
-                fontSize = 14.sp
+                fontSize = 14.sp,
+                lineHeight = 18.sp
         ),
         button = TextStyle(
                 fontFamily = roboto,
