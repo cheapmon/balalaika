@@ -7,7 +7,7 @@ val itemPadding = 16.dp
 
 val paragraphSpacing = 16.dp
 
-val headerGap = 32.dp
+val headerGap = 24.dp
 val headerMaxWidth = 300.dp
 
 val bigIconSize = 120.dp
