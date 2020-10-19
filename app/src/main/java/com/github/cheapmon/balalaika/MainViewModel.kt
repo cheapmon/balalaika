@@ -21,14 +21,13 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.github.cheapmon.balalaika.data.repositories.DictionaryRepository
 import com.github.cheapmon.balalaika.data.repositories.HistoryRepository
+import com.github.cheapmon.balalaika.data.repositories.dictionary.install.InstallationMessage
+import com.github.cheapmon.balalaika.data.result.ProgressState
 import com.github.cheapmon.balalaika.model.DownloadableDictionary
 import com.github.cheapmon.balalaika.model.HistoryItem
 import com.github.cheapmon.balalaika.model.InstalledDictionary
 import com.github.cheapmon.balalaika.model.SearchRestriction
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 /**
@@ -66,26 +65,33 @@ class MainViewModel @ViewModelInject constructor(
     }
 
     /** Activate a dictionary */
-    fun openDictionary(dictionary: InstalledDictionary) = viewModelScope.launch {
-        dictionaryRepository.openDictionary(dictionary)
+    fun openDictionary(dictionary: InstalledDictionary) {
+        viewModelScope.launch {
+            dictionaryRepository.openDictionary(dictionary)
+        }
     }
 
     /** Deactivate a dictionary */
-    fun closeDictionary() = viewModelScope.launch {
-        dictionaryRepository.closeDictionary()
+    fun closeDictionary() {
+        viewModelScope.launch {
+            dictionaryRepository.closeDictionary()
+        }
     }
 
     /** Install a dictionary into the library */
-    fun installDictionary(dictionary: DownloadableDictionary) =
-        dictionaryRepository.addDictionaryToLibrary(dictionary)
+    fun installDictionary(dictionary: DownloadableDictionary): Flow<ProgressState<Unit, InstallationMessage, Throwable>> {
+        return dictionaryRepository.addDictionaryToLibrary(dictionary)
+    }
 
     /** Remove a dictionary from the library */
-    fun removeDictionary(dictionary: InstalledDictionary) =
-        dictionaryRepository.removeDictionaryFromLibrary(dictionary)
+    fun removeDictionary(dictionary: InstalledDictionary): Flow<ProgressState<Unit, InstallationMessage, Throwable>> {
+        return dictionaryRepository.removeDictionaryFromLibrary(dictionary)
+    }
 
     /** Update a dictionary in the library */
-    fun updateDictionary(dictionary: InstalledDictionary) =
-        dictionaryRepository.updateDictionary(dictionary)
+    fun updateDictionary(dictionary: InstalledDictionary): Flow<ProgressState<Unit, InstallationMessage, Throwable>> {
+        return dictionaryRepository.updateDictionary(dictionary)
+    }
 
     /** Add search to history */
     fun addToHistory(query: String, restriction: SearchRestriction?) {

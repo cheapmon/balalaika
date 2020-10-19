@@ -1,6 +1,7 @@
 package com.github.cheapmon.balalaika.util
 
 import com.github.cheapmon.balalaika.model.*
+import com.github.cheapmon.balalaika.model.Dictionary
 import java.util.*
 
 private val wordclass = DataCategory(
@@ -68,5 +69,29 @@ val sampleHistoryItems = listOf(
             category = wordclass,
             text = "adjective"
         )
+    )
+)
+
+val dictCC = Dictionary(
+    id = "sample",
+    version = 1,
+    name = "Sample dictionary",
+    authors = "Paul Hemetsberger",
+    summary = "dict.cc is not only an online dictionary. It's an attempt to create a platform where users from all over the world can share their knowledge in the field of translations. Every visitor can suggest new translations and correct or confirm other users' suggestions. The challenging and most important part of the project is the so-called Contribute! system making this process possible. To guarantee that the users' work is not lost in case something happens to the maintainer of dict.cc (Paul Hemetsberger), the resulting vocabulary database can be, downloaded anytime.",
+    additionalInfo = "https://www.dict.cc/?s=about%3A&l=e"
+)
+
+val sampleDictionaries: List<SimpleDictionary> = listOf(
+    InstalledDictionary(
+        dictionary = dictCC,
+        isOpened = true
+    ),
+    InstalledDictionary(
+        dictionary = dictCC.copy(id = "sample2"),
+        isOpened = false
+    ),
+    DownloadableDictionary(
+        dictionary = dictCC.copy(id = "sample3"),
+        isInLibrary = false
     )
 )

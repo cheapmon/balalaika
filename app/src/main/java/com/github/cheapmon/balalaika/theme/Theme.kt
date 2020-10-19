@@ -15,16 +15,29 @@ import androidx.ui.tooling.preview.Preview
 @Composable
 fun BalalaikaTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
+    colors: Colors? = null,
     content: @Composable () -> Unit
 ) {
-    val colors = if (darkTheme) darkColors else lightColors
-
     MaterialTheme(
-        colors = colors,
+        colors = colors ?: if (darkTheme) darkColors else lightColors,
         typography = typography,
         shapes = shapes,
         content = content
     )
+}
+
+@Composable
+fun DangerTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
+    val colors = if (darkTheme) {
+        darkColors.copy(primary = red200)
+    } else {
+        lightColors.copy(primary = red700)
+    }
+
+    BalalaikaTheme(darkTheme = darkTheme, colors = colors, content = content)
 }
 
 @Preview(showBackground = true)

@@ -19,48 +19,30 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
+import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.databinding.FragmentSelectionBinding
-import com.google.android.material.tabs.TabLayoutMediator
+import com.github.cheapmon.balalaika.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SelectionFragment : Fragment() {
-    lateinit var binding: FragmentSelectionBinding
     private val viewModel: SelectionViewModel by viewModels()
+    private val activityViewModel: MainViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentSelectionBinding.inflate(inflater)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val context = requireContext()
-        binding.selectionPager.adapter = SelectionFragmentStateAdapter(this, viewModel, Listener())
-        TabLayoutMediator(binding.selectionTabs, binding.selectionPager) { tab, position ->
-            tab.icon = when (position) {
-                0 -> ContextCompat.getDrawable(context, R.drawable.ic_library)
-                1 -> ContextCompat.getDrawable(context, R.drawable.ic_download)
-                else -> throw IllegalArgumentException("Position must be <= 1")
+        return ComposeView(requireContext()).apply {
+            setContent {
+                DictionaryScreen(
+                    viewModel = viewModel,
+                    activityViewModel = activityViewModel
+                )
             }
-            tab.text = when (position) {
-                0 -> context.getString(R.string.selection_tab_list)
-                1 -> context.getString(R.string.selection_tab_download)
-                else -> throw IllegalArgumentException("Position must be <= 1")
-            }
-        }.attach()
-    }
-
-    inner class Listener {
-        fun goToTab(tab: Int) {
-            binding.selectionTabs.getTabAt(tab)?.select()
         }
     }
 }

@@ -2,7 +2,7 @@ package com.github.cheapmon.balalaika.theme
 
 import androidx.compose.ui.unit.dp
 
-val itemSpacing = 8.dp
+val itemSpacing = 4.dp
 val itemPadding = 16.dp
 
 val paragraphSpacing = 16.dp
