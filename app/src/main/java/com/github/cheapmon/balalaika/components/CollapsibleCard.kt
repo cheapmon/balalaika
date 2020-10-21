@@ -10,6 +10,7 @@ import androidx.compose.material.Card
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -38,6 +39,7 @@ fun CollapsibleCard(
     initialState: CollapsibleCardState = CollapsibleCardState.COLLAPSED,
     modifier: Modifier = Modifier,
     header: @Composable () -> Unit = {},
+    actions: @Composable () -> Unit = {},
     body: @Composable () -> Unit = {}
 ) {
     var state by remember(id) { mutableStateOf(initialState) }
@@ -55,12 +57,15 @@ fun CollapsibleCard(
                 Box(modifier = Modifier.preferredWidthIn(max = headerMaxWidth)) {
                     header()
                 }
-                IconButton(onClick = { state = state.flip() }) {
-                    Icon(
-                        asset = Icons.Default.KeyboardArrowUp,
-                        modifier = Modifier.drawLayer(rotationX = transitionState[rotationX]),
-                        tint = IconColor()
-                    )
+                Row {
+                    actions()
+                    IconButton(onClick = { state = state.flip() }) {
+                        Icon(
+                            asset = Icons.Default.KeyboardArrowUp,
+                            modifier = Modifier.drawLayer(rotationX = transitionState[rotationX]),
+                            tint = IconColor()
+                        )
+                    }
                 }
             }
             if (state == CollapsibleCardState.EXPANDED) {
@@ -107,6 +112,11 @@ private fun CollapsibleCardPreview() {
                 Column {
                     Text(text = "This is a headline", style = MaterialTheme.typography.h6)
                     Text(text = "This is a subtitle", style = MaterialTheme.typography.subtitle1)
+                }
+            },
+            actions = {
+                IconButton(onClick = {}) {
+                    Icon(asset = Icons.Default.Book)
                 }
             }
         ) {
