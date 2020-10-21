@@ -21,24 +21,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.github.cheapmon.balalaika.data.repositories.BookmarkRepository
-import com.github.cheapmon.balalaika.data.repositories.ConfigRepository
-import com.github.cheapmon.balalaika.data.repositories.DictionaryEntryRepository
-import com.github.cheapmon.balalaika.data.repositories.DictionaryRepository
-import com.github.cheapmon.balalaika.data.repositories.WordnetRepository
+import com.github.cheapmon.balalaika.data.repositories.*
 import com.github.cheapmon.balalaika.data.result.LoadState
-import com.github.cheapmon.balalaika.model.DataCategory
-import com.github.cheapmon.balalaika.model.DictionaryEntry
-import com.github.cheapmon.balalaika.model.DictionaryView
-import com.github.cheapmon.balalaika.model.Property
-import com.github.cheapmon.balalaika.model.WordnetInfo
+import com.github.cheapmon.balalaika.model.*
 import com.github.cheapmon.balalaika.util.navArgs
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 /** View model for [DictionaryFragment] */
@@ -52,16 +39,19 @@ class DictionaryViewModel @ViewModelInject constructor(
 ) : ViewModel() {
     private val navArgs: DictionaryFragmentArgs by navArgs(savedStateHandle)
 
-    private val _dictionaryView: MutableStateFlow<DictionaryView?> = MutableStateFlow(null)
-    private val _category: MutableStateFlow<DataCategory?> = MutableStateFlow(null)
-
     private val _initialEntry: MutableStateFlow<DictionaryEntry?> = MutableStateFlow(navArgs.entry)
 
     /** Current selected dictionary view */
-    val dictionaryView: Flow<DictionaryView?> = _dictionaryView
+    val dictionaryView: Flow<DictionaryView?> = dictionaries.getOpenDictionary()
+        .flatMapLatest { dictionary ->
+            dictionary?.let { config.getDictionaryView(it) } ?: flowOf(null)
+        }
 
     /** Current selected category to order by */
-    val category: Flow<DataCategory?> = _category
+    val category: Flow<DataCategory?> = dictionaries.getOpenDictionary()
+        .flatMapLatest { dictionary ->
+            dictionary?.let { config.getSortCategory(it) } ?: flowOf(null)
+        }
 
     /**
      * Adapt dictionary presentation to user configuration
@@ -72,27 +62,38 @@ class DictionaryViewModel @ViewModelInject constructor(
      * - Initial entry
      */
     val dictionaryEntries =
-        combine(
-            dictionaries.getOpenDictionary(),
-            dictionaryView,
-            category,
-            _initialEntry
-        ) { d, v, c, i ->
-            if (d == null || v == null || c == null) {
+        combine(dictionaries.getOpenDictionary(), _initialEntry) { d, i ->
+            if (d == null) {
                 flowOf(null)
             } else {
-                entries.getDictionaryEntries(d, v, c, i).cachedIn(viewModelScope)
+                combine(dictionaryView, category) { v, c ->
+                    if (v == null || c == null) {
+                        flowOf(null)
+                    } else {
+                        entries.getDictionaryEntries(d, v, c, i).cachedIn(viewModelScope)
+                    }
+                }.flatMapLatest { it }
             }
         }.flatMapLatest { it }
 
     /** Set the dictionary view */
-    fun setDictionaryView(dictionaryView: DictionaryView) = viewModelScope.launch {
-        _dictionaryView.value = dictionaryView
+    fun setDictionaryView(dictionaryView: DictionaryView) {
+        viewModelScope.launch {
+            val dictionary = dictionaries.getOpenDictionary().first() ?: return@launch
+            val category = category.first() ?: return@launch
+
+            config.updateConfig(dictionary, category, dictionaryView)
+        }
     }
 
     /** Set the dictionary ordering */
-    fun setCategory(category: DataCategory) = viewModelScope.launch {
-        _category.value = category
+    fun setCategory(category: DataCategory) {
+        viewModelScope.launch {
+            val dictionary = dictionaries.getOpenDictionary().first() ?: return@launch
+            val view = dictionaryView.first() ?: return@launch
+
+            config.updateConfig(dictionary, category, view)
+        }
     }
 
     /** Set the first entry to display */
