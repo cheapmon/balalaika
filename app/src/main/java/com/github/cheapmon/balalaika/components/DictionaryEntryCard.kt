@@ -27,7 +27,7 @@ fun DictionaryEntryCard(
     modifier: Modifier = Modifier,
     onClickBase: (DictionaryEntry) -> Unit = {},
     onBookmark: (DictionaryEntry) -> Unit = {},
-    onClickProperty: (Property) -> Unit = {}
+    onClickProperty: PropertyAction<Property> = emptyPropertyAction()
 ) {
     val base = dictionaryEntry.base
     val bookmark = dictionaryEntry.bookmark
@@ -71,7 +71,7 @@ fun DictionaryEntryCard(
 private fun PropertyList(
     properties: SortedMap<DataCategory, List<Property>>,
     modifier: Modifier = Modifier,
-    onClickProperty: (Property) -> Unit = {}
+    onClickProperty: PropertyAction<Property> = emptyPropertyAction()
 ) {
     Column(modifier = modifier) {
         properties.forEach { (category, list) ->

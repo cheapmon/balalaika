@@ -26,12 +26,16 @@ import com.github.cheapmon.balalaika.util.ResourceUtil
 import com.github.cheapmon.balalaika.util.exhaustive
 import com.github.cheapmon.balalaika.util.fullEntry
 
+typealias PropertyAction<T> = (DataCategory, T, String) -> Unit
+
+fun <T : Property> emptyPropertyAction(): PropertyAction<T> = { _, _, _ -> }
+
 @Composable
 fun WidgetFor(
     category: DataCategory,
     properties: List<Property>,
     modifier: Modifier = Modifier,
-    onEvent: (Property) -> Unit = {}
+    onEvent: PropertyAction<Property> = emptyPropertyAction()
 ) {
     when (properties.firstOrNull()) {
         is Property.Audio -> {
@@ -59,6 +63,7 @@ fun WidgetFor(
         }
         is Property.Plain -> {
             PlainWidget(
+                category = category,
                 properties = properties.filterIsInstance<Property.Plain>(),
                 onPlain = onEvent
             )
@@ -134,16 +139,17 @@ private fun <T : Property> DefaultWidget(
 
 @Composable
 private fun <T : Property> ActionItem(
+    category: DataCategory,
     property: T,
     text: String,
     icon: VectorAsset? = null,
     modifier: Modifier = Modifier,
-    onAction: (T) -> Unit = {}
+    onAction: PropertyAction<T> = emptyPropertyAction()
 ) {
     Row(
         modifier = modifier
             .clip(simpleShape)
-            .clickable(onClick = { onAction(property) })
+            .clickable(onClick = { onAction(category, property, text) })
             .padding(itemPadding / 2),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(itemSpacing)
@@ -153,16 +159,16 @@ private fun <T : Property> ActionItem(
     }
 }
 
-
 @Composable
 private fun AudioWidget(
     category: DataCategory,
     properties: List<Property.Audio>,
     modifier: Modifier = Modifier,
-    onAudio: (Property.Audio) -> Unit = {}
+    onAudio: PropertyAction<Property.Audio> = emptyPropertyAction()
 ) {
     DefaultWidget(category = category, properties = properties, modifier = modifier) { property ->
         ActionItem(
+            category = category,
             property = property,
             text = property.name,
             icon = Icons.Default.PlayCircleOutline,
@@ -214,11 +220,16 @@ private fun MorphologyWidget(
     category: DataCategory,
     properties: List<Property.Morphology>,
     modifier: Modifier = Modifier,
-    onMorphology: (Property.Morphology) -> Unit = {}
+    onMorphology: PropertyAction<Property.Morphology> = emptyPropertyAction()
 ) {
     DefaultWidget(category = category, properties = properties, modifier = modifier) { property ->
         property.parts.forEach { part ->
-            ActionItem(property = property, text = part, onAction = onMorphology)
+            ActionItem(
+                category = category,
+                property = property,
+                text = part,
+                onAction = onMorphology
+            )
         }
     }
 }
@@ -226,12 +237,18 @@ private fun MorphologyWidget(
 @OptIn(ExperimentalLayout::class)
 @Composable
 private fun PlainWidget(
+    category: DataCategory,
     properties: List<Property.Plain>,
-    onPlain: (Property.Plain) -> Unit = {}
+    onPlain: PropertyAction<Property.Plain> = emptyPropertyAction()
 ) {
     FlowRow(mainAxisSpacing = itemSpacing) {
         properties.forEach { property ->
-            ActionItem(property = property, text = property.value, onAction = onPlain)
+            ActionItem(
+                category = category,
+                property = property,
+                text = property.value,
+                onAction = onPlain
+            )
         }
     }
 }
@@ -241,10 +258,11 @@ private fun ReferenceWidget(
     category: DataCategory,
     properties: List<Property.Reference>,
     modifier: Modifier = Modifier,
-    onReference: (Property.Reference) -> Unit = {}
+    onReference: PropertyAction<Property.Reference> = emptyPropertyAction()
 ) {
     DefaultWidget(category = category, properties = properties, modifier = modifier) { property ->
         ActionItem(
+            category = category,
             property = property,
             text = property.entry.representation,
             icon = Icons.Default.NorthEast,
@@ -258,10 +276,15 @@ private fun SimpleWidget(
     category: DataCategory,
     properties: List<Property.Simple>,
     modifier: Modifier = Modifier,
-    onSimple: (Property.Simple) -> Unit = {}
+    onSimple: PropertyAction<Property.Simple> = emptyPropertyAction()
 ) {
     DefaultWidget(category = category, properties = properties, modifier = modifier) { property ->
-        ActionItem(property = property, text = property.value, onAction = onSimple)
+        ActionItem(
+            category = category,
+            property = property,
+            text = property.value,
+            onAction = onSimple
+        )
     }
 }
 
@@ -270,10 +293,11 @@ private fun UrlWidget(
     category: DataCategory,
     properties: List<Property.Url>,
     modifier: Modifier = Modifier,
-    onUrl: (Property.Url) -> Unit = {}
+    onUrl: PropertyAction<Property.Url> = emptyPropertyAction()
 ) {
     DefaultWidget(category = category, properties = properties, modifier = modifier) { property ->
         ActionItem(
+            category = category,
             property = property,
             text = property.name,
             icon = Icons.Default.Link,
@@ -287,10 +311,11 @@ private fun WordnetWidget(
     category: DataCategory,
     properties: List<Property.Wordnet>,
     modifier: Modifier = Modifier,
-    onWordnet: (Property.Wordnet) -> Unit = {}
+    onWordnet: PropertyAction<Property.Wordnet> = emptyPropertyAction()
 ) {
     DefaultWidget(category = category, properties = properties, modifier = modifier) { property ->
         ActionItem(
+            category = category,
             property = property,
             text = property.name,
             icon = Icons.Default.PresentToAll,
