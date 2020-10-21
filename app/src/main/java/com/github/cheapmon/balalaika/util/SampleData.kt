@@ -32,7 +32,7 @@ private val happy = DictionaryEntry(
     bookmark = Bookmark()
 )
 
-private val happier = DictionaryEntry(
+val happier = DictionaryEntry(
     id = "happier",
     representation = "happier",
     base = happy,
@@ -56,7 +56,108 @@ private val garbage = DictionaryEntry(
     bookmark = null
 )
 
-val sampleDictionaryEntries = listOf(happy, happier, garbage)
+private val audio = DataCategory(
+    id = "audio",
+    name = "Audio",
+    iconName = "ic_audio",
+    sequence = 0
+)
+
+private val example = DataCategory(
+    id = "example",
+    name = "Example",
+    iconName = "ic_book",
+    sequence = 1
+)
+
+private val morphology = DataCategory(
+    id = "morphology",
+    name = "Morphology",
+    iconName = "ic_view",
+    sequence = 2
+)
+
+private val plain = DataCategory(
+    id = "plain",
+    name = "Plain",
+    iconName = "ic_circle",
+    sequence = 3
+)
+
+private val reference = DataCategory(
+    id = "reference",
+    name = "Reference",
+    iconName = "ic_subject",
+    sequence = 4
+)
+
+private val simple = DataCategory(
+    id = "simple",
+    name = "Simple",
+    iconName = "ic_info",
+    sequence = 5
+)
+
+private val url = DataCategory(
+    id = "url",
+    name = "Url",
+    iconName = "ic_source",
+    sequence = 6
+)
+
+private val wordnet = DataCategory(
+    id = "wordnet",
+    name = "Wordnet",
+    iconName = "ic_flag",
+    sequence = 7
+)
+
+val fullEntry = DictionaryEntry(
+    id = "full_entry",
+    representation = "Full entry",
+    base = null,
+    properties = mapOf(
+        audio to listOf(
+            Property.Audio(name = "File", fileName = "file"),
+            Property.Audio(name = "File 2", fileName = "file2")
+        ),
+        example to listOf(
+            Property.Example("This is an example", "This is an example"),
+            Property.Example("This is an example", "This is an example")
+        ),
+        morphology to listOf(
+            Property.Morphology(listOf("ex", "am", "ple"))
+        ),
+        plain to listOf(
+            Property.Plain("Plain"), Property.Plain("example")
+        ),
+        reference to listOf(
+            Property.Reference(happier),
+            Property.Reference(happier)
+        ),
+        simple to listOf(
+            Property.Simple("This"),
+            Property.Simple("is"),
+            Property.Simple("a"),
+            Property.Simple("long"),
+            Property.Simple("example"),
+            Property.Simple("with"),
+            Property.Simple("many"),
+            Property.Simple("properties")
+        ),
+        url to listOf(
+            Property.Url("example", "https://www.example.org"),
+            Property.Url("example", "https://www.example.org")
+        ),
+        wordnet to listOf(
+            Property.Wordnet("example", "https://www.example.org"),
+            Property.Wordnet("example", "https://www.example.org")
+        )
+    ).toSortedMap { o1, o2 -> o1.sequence.compareTo(o2.sequence) },
+    bookmark = Bookmark()
+)
+
+val sampleDictionaryEntries = listOf(happy, happier, garbage, fullEntry)
 
 val sampleHistoryItems = listOf(
     HistoryItem(

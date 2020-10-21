@@ -4,6 +4,7 @@ import androidx.compose.ui.unit.dp
 
 val itemSpacing = 4.dp
 val itemPadding = 16.dp
+val itemMaxWidth = 200.dp
 
 val paragraphSpacing = 16.dp
 
