@@ -19,15 +19,17 @@ import android.content.Intent
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
+import android.view.*
 import androidx.core.net.toUri
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.paging.PagingData
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.databinding.FragmentDictionaryBinding
 import com.github.cheapmon.balalaika.model.DataCategory
@@ -37,6 +39,7 @@ import com.github.cheapmon.balalaika.model.SearchRestriction
 import com.github.cheapmon.balalaika.ui.RecyclerViewFragment
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetActionListener
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetMenuListener
+import com.github.cheapmon.balalaika.util.exhaustive
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -60,47 +63,39 @@ import kotlinx.coroutines.launch
  */
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class DictionaryFragment :
-    RecyclerViewFragment<DictionaryViewModel, FragmentDictionaryBinding, DictionaryAdapter>(
-        DictionaryViewModel::class,
-        R.layout.fragment_dictionary,
-        false
-    ), DictionaryAdapter.Listener, WidgetMenuListener {
+class DictionaryFragment : Fragment() {
+    private val viewModel: DictionaryViewModel by viewModels()
+
+    lateinit var binding: FragmentDictionaryBinding
+    lateinit var adapter: DictionaryAdapter
+
     /** Notify about options menu */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
     }
 
-    /** @suppress */
-    override fun onCreateBinding(binding: FragmentDictionaryBinding) {
-        super.onCreateBinding(binding)
-        binding.dictionaryEmptyButton.setOnClickListener {
-            val directions = DictionaryFragmentDirections.selectDictionary()
-            findNavController().navigate(directions)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentDictionaryBinding.inflate(inflater, container, false).apply {
+            dictionaryEmptyButton.setOnClickListener {
+                val directions = DictionaryFragmentDirections.selectDictionary()
+                findNavController().navigate(directions)
+            }
+            adapter = createRecyclerViewAdapter()
+            with(entryList) {
+                adapter = this@DictionaryFragment.adapter
+                layoutManager = LinearLayoutManager(context)
+                setHasFixedSize(true)
+            }
         }
+        return binding.root
     }
 
-    /** @suppress */
-    override fun createRecyclerView(binding: FragmentDictionaryBinding) =
-        binding.entryList
-
-    /** @suppress */
-    override fun createRecyclerViewAdapter() = DictionaryAdapter(
-        this,
-        this,
-        audioActionListener,
-        referenceActionListener,
-        urlActionListener,
-        wordnetActionListener
-    )
-
-    /** @suppress */
-    override fun observeData(
-        binding: FragmentDictionaryBinding,
-        owner: LifecycleOwner,
-        adapter: DictionaryAdapter
-    ) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         lifecycleScope.launch {
             launch {
                 viewModel.dictionaryEntries.collectLatest { data ->
@@ -115,6 +110,13 @@ class DictionaryFragment :
             }
         }
     }
+
+    /** @suppress */
+    private fun createRecyclerViewAdapter() = DictionaryAdapter(
+        onClickBase = this::onClickBaseButton,
+        onBookmark = this::onClickBookmarkButton,
+        onClickProperty = this::onClickProperty
+    )
 
     /** Create options menu */
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -197,9 +199,9 @@ class DictionaryFragment :
     }
 
     /** Add or remove an entry to bookmarks */
-    override fun onClickBookmarkButton(entry: DictionaryEntry, isBookmark: Boolean) {
+    private fun onClickBookmarkButton(entry: DictionaryEntry) {
         viewModel.toggleBookmark(entry)
-        val message = if (isBookmark) {
+        val message = if (entry.bookmark != null) {
             getString(R.string.dictionary_bookmark_remove, entry.representation)
         } else {
             getString(R.string.dictionary_bookmark_add, entry.representation)
@@ -208,8 +210,22 @@ class DictionaryFragment :
     }
 
     /** Go to base of a lexeme */
-    override fun onClickBaseButton(entry: DictionaryEntry) {
+    private fun onClickBaseButton(entry: DictionaryEntry) {
         viewModel.setInitialEntry(entry.base)
+    }
+
+    /** Actions when a property is clicked */
+    private fun onClickProperty(category: DataCategory, property: Property, text: String) {
+        when(property) {
+            is Property.Audio -> audioActionListener.onAction(property)
+            is Property.Example -> {}
+            is Property.Morphology -> searchWithRestriction(text, category)
+            is Property.Plain -> searchWithRestriction(text, category)
+            is Property.Reference -> referenceActionListener.onAction(property)
+            is Property.Simple -> searchWithRestriction(text, category)
+            is Property.Url -> urlActionListener.onAction(property)
+            is Property.Wordnet -> wordnetActionListener.onAction(property)
+        }.exhaustive
     }
 
     private val audioActionListener = object : WidgetActionListener<Property.Audio> {
@@ -251,7 +267,7 @@ class DictionaryFragment :
         }
     }
 
-    override fun onClickMenuItem(item: String, category: DataCategory) {
+    private fun searchWithRestriction(item: String, category: DataCategory) {
         val restriction = SearchRestriction(category, item)
         val directions = DictionaryFragmentDirections.actionNavHomeToNavSearch(restriction)
         findNavController().navigate(directions)

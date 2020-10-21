@@ -15,36 +15,25 @@
  */
 package com.github.cheapmon.balalaika.ui.dictionary
 
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import androidx.compose.ui.platform.ComposeView
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.databinding.FragmentDictionaryItemBinding
+import com.github.cheapmon.balalaika.components.DictionaryEntryCard
+import com.github.cheapmon.balalaika.model.DataCategory
 import com.github.cheapmon.balalaika.model.DictionaryEntry
 import com.github.cheapmon.balalaika.model.Property
-import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetActionListener
-import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetFactory
-import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetMenuListener
-import com.github.cheapmon.balalaika.util.setIconById
-import com.google.android.material.button.MaterialButton
 
 /** Paging Adapter for [DictionaryFragment] */
 class DictionaryAdapter(
-    private val listener: Listener,
-    private val menuListener: WidgetMenuListener,
-    private val audioActionListener: WidgetActionListener<Property.Audio>,
-    private val referenceActionListener: WidgetActionListener<Property.Reference>,
-    private val urlActionListener: WidgetActionListener<Property.Url>,
-    private val wordnetActionListener: WidgetActionListener<Property.Wordnet>
+    private val onClickBase: (DictionaryEntry) -> Unit,
+    private val onBookmark: (DictionaryEntry) -> Unit,
+    private val onClickProperty: (DataCategory, Property, String) -> Unit
 ) : PagingDataAdapter<DictionaryEntry, DictionaryAdapter.ViewHolder>(DictionaryDiff) {
     /** Create view */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val layoutInflater = LayoutInflater.from(parent.context)
-        val binding = FragmentDictionaryItemBinding.inflate(layoutInflater, parent, false)
-        return ViewHolder(binding)
+        return ViewHolder(ComposeView(parent.context))
     }
 
     /**
@@ -60,57 +49,16 @@ class DictionaryAdapter(
     }
 
     /** @suppress */
-    inner class ViewHolder(private val binding: FragmentDictionaryItemBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        private var isBookmark: Boolean = false
-
+    inner class ViewHolder(private val view: ComposeView) : RecyclerView.ViewHolder(view) {
         /** Bind single entry to this view holder */
         fun bind(item: DictionaryEntry) {
-            with(binding) {
-                entry = item
-                entryProperties.visibility = View.VISIBLE
-                entryCollapseButton.setOnClickListener {
-                    if (entryProperties.visibility == View.GONE) {
-                        entryProperties.visibility = View.VISIBLE
-                        entryCollapseButton.setIconById(R.drawable.ic_arrow_up)
-                    } else {
-                        entryProperties.visibility = View.GONE
-                        entryCollapseButton.setIconById(R.drawable.ic_arrow_down)
-                    }
-                }
-                entryBaseButton.setOnClickListener {
-                    listener.onClickBaseButton(item)
-                }
-                isBookmark = item.bookmark != null
-                updateBookmarkButton(entryBookmarkButton)
-                entryBookmarkButton.setOnClickListener {
-                    listener.onClickBookmarkButton(item, isBookmark)
-                    isBookmark = !isBookmark
-                    updateBookmarkButton(entryBookmarkButton)
-                }
-                entryProperties.visibility = View.VISIBLE
-                entryProperties.removeAllViews()
-                val factory = WidgetFactory(
-                    entryProperties,
-                    true,
-                    menuListener,
-                    audioActionListener,
-                    referenceActionListener,
-                    urlActionListener,
-                    wordnetActionListener
+            view.setContent {
+                DictionaryEntryCard(
+                    dictionaryEntry = item,
+                    onClickBase = onClickBase,
+                    onBookmark = onBookmark,
+                    onClickProperty = onClickProperty
                 )
-                item.properties.forEach { (category, properties) ->
-                    val widget = factory.get(category, properties)
-                    entryProperties.addView(widget.create())
-                }
-            }
-        }
-
-        private fun updateBookmarkButton(button: MaterialButton) {
-            if (isBookmark) {
-                button.setIconById(R.drawable.ic_bookmark)
-            } else {
-                button.setIconById(R.drawable.ic_bookmark_border)
             }
         }
     }
@@ -126,14 +74,5 @@ class DictionaryAdapter(
         ): Boolean {
             return oldItem == newItem
         }
-    }
-
-    /** Component that handles actions from this adapter */
-    interface Listener {
-        /** Callback for whenever a bookmark button is clicked */
-        fun onClickBookmarkButton(entry: DictionaryEntry, isBookmark: Boolean)
-
-        /** Callback for whenever a base button is clicked */
-        fun onClickBaseButton(entry: DictionaryEntry)
     }
 }
