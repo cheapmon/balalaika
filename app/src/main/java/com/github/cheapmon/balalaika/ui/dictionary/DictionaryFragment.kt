@@ -230,10 +230,7 @@ class DictionaryFragment : Fragment() {
 
     private val wordnetActionListener = object : WidgetActionListener<Property.Wordnet> {
         override fun onAction(property: Property.Wordnet) {
-            WordnetDialog(
-                property.name,
-                viewModel.getWordnetData(property)
-            ).show(parentFragmentManager, null)
+            viewModel.setWordnetParam(property)
         }
     }
 

@@ -123,6 +123,13 @@ class DictionaryViewModel @ViewModelInject constructor(
             config.getDictionaryViews(it).first()
         }
 
+    private val _wordnetParam: MutableStateFlow<Property.Wordnet?> = MutableStateFlow(null)
+    val wordnetParam: Flow<Property.Wordnet?> = _wordnetParam
+
+    fun setWordnetParam(property: Property.Wordnet?) {
+        _wordnetParam.value = property
+    }
+
     /** Load Wordnet information for a word */
     fun getWordnetData(property: Property.Wordnet): Flow<LoadState<WordnetInfo, Throwable>> =
         wordnet.getWordnetData(property.url)

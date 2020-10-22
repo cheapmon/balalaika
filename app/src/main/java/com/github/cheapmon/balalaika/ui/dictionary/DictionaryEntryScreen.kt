@@ -42,6 +42,8 @@ fun DictionaryEntryScreen(
         .filterNotNull()
         .collectAsLazyPagingItems()
 
+    val wordnetParam: Property.Wordnet? by viewModel.wordnetParam.collectAsState(initial = null)
+
     BalalaikaTheme {
         Surface(modifier = modifier) {
             if (!empty) {
@@ -54,6 +56,11 @@ fun DictionaryEntryScreen(
             } else {
                 DictionaryEntryEmptyMessage(onOpenDictionaries)
             }
+            DictionaryEntryDialog(
+                viewModel = viewModel,
+                wordnetParam = wordnetParam,
+                onDismiss = { viewModel.setWordnetParam(null) }
+            )
         }
     }
 }
@@ -93,6 +100,22 @@ private fun DictionaryEntryEmptyMessage(
                     .toUpperCase(Locale.current)
             )
         }
+    }
+}
+
+@Composable
+private fun DictionaryEntryDialog(
+    viewModel: DictionaryViewModel,
+    wordnetParam: Property.Wordnet?,
+    onDismiss: () -> Unit = {}
+) {
+    if (wordnetParam != null) {
+        val payload = viewModel.getWordnetData(wordnetParam)
+        WordnetDialog(
+            word = wordnetParam.name,
+            payload = payload,
+            onDismiss = onDismiss
+        )
     }
 }
 

@@ -15,202 +15,154 @@
  */
 package com.github.cheapmon.balalaika.ui.dictionary
 
-import android.app.Dialog
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
+import androidx.compose.foundation.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.ExperimentalLazyDsl
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.ui.tooling.preview.Preview
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.data.result.LoadState
 import com.github.cheapmon.balalaika.data.result.Result
-import com.github.cheapmon.balalaika.databinding.DialogWordnetBinding
-import com.github.cheapmon.balalaika.databinding.DialogWordnetItemDefinitionBinding
-import com.github.cheapmon.balalaika.databinding.DialogWordnetItemExampleBinding
-import com.github.cheapmon.balalaika.databinding.DialogWordnetItemTitleBinding
-import com.github.cheapmon.balalaika.databinding.DialogWordnetItemWordBinding
 import com.github.cheapmon.balalaika.model.WordnetInfo
+import com.github.cheapmon.balalaika.theme.*
 import com.github.cheapmon.balalaika.util.exhaustive
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.github.cheapmon.balalaika.util.sampleWordnetInfo
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 
-/** Dialog for displaying Wordnet data for a word */
-class WordnetDialog(
-    private val word: String,
-    private val payload: Flow<LoadState<WordnetInfo, Throwable>>
-) : DialogFragment() {
-    private lateinit var binding: DialogWordnetBinding
+@Composable
+fun WordnetDialog(
+    word: String,
+    payload: Flow<LoadState<WordnetInfo, Throwable>>,
+    onDismiss: () -> Unit = {}
+) {
+    val loadState by payload.collectAsState(initial = LoadState.Init())
 
-    /** Create dialog and bind data */
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        requireActivity().let {
-            val itemAdapter = Adapter(
-                wordsTitle = requireContext().getString(R.string.dictionary_wordnet_words),
-                definitionsTitle = requireContext().getString(R.string.dictionary_wordnet_definitions),
-                emptyMessage = requireContext().getString(R.string.dictionary_wordnet_empty),
-                errorMessage = requireContext().getString(R.string.selection_error_internal)
-            )
-            binding = DialogWordnetBinding.inflate(it.layoutInflater)
-            binding.dialogWordnetList.apply {
-                adapter = itemAdapter
-                layoutManager = LinearLayoutManager(context)
-                setHasFixedSize(true)
+    WordnetDialog(word, loadState, onDismiss = onDismiss)
+}
+
+@Composable
+private fun WordnetDialog(
+    word: String,
+    loadState: LoadState<WordnetInfo, Throwable>,
+    modifier: Modifier = Modifier,
+    onDismiss: () -> Unit = {}
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        modifier = modifier,
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text(text = stringResource(id = R.string.affirm))
             }
-            lifecycleScope.launchWhenCreated {
-                payload.collect { loadState ->
-                    binding.inProgress = loadState !is LoadState.Finished
-                    if (loadState is LoadState.Finished) {
+        },
+        title = {
+            Text(
+                text = stringResource(id = R.string.dictionary_wordnet_title, word),
+                style = MaterialTheme.typography.h5
+            )
+        },
+        text = {
+            Box(modifier = Modifier.preferredHeightIn(max = dialogMaxHeight)) {
+                when (loadState) {
+                    is LoadState.Finished -> {
                         when (val data = loadState.data) {
-                            is Result.Success -> itemAdapter.submitInfo(data.data)
-                            is Result.Error -> itemAdapter.submitError()
+                            is Result.Error -> {
+                                Text(text = stringResource(id = R.string.dictionary_wordnet_empty))
+                            }
+                            is Result.Success -> {
+                                WordnetInfo(data.data)
+                            }
                         }.exhaustive
                     }
-                }
+                    else -> {
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    }
+                }.exhaustive
             }
-            MaterialAlertDialogBuilder(requireContext())
-                .setTitle(requireContext().getString(R.string.dictionary_wordnet_title, word))
-                .setView(binding.root)
-                .setPositiveButton(R.string.affirm, null)
-                .create()
         }
+    )
+}
 
-    private sealed class Item {
-        data class TitleItem(val title: String) : Item()
-        data class WordItem(val entry: WordnetInfo.LexicalEntry) : Item()
-        data class DefinitionItem(val definition: String) : Item()
-        data class ExampleItem(val example: String) : Item()
-        object Space : Item()
-    }
-
-    private class Adapter(
-        private val wordsTitle: String,
-        private val definitionsTitle: String,
-        private val emptyMessage: String,
-        private val errorMessage: String
-    ) : ListAdapter<Item, ViewHolder>(Diff) {
-        fun submitInfo(info: WordnetInfo) {
-            val list = mutableListOf<Item>()
-            info.entries.let {
-                if (it.isNotEmpty()) {
-                    list.add(Item.TitleItem(wordsTitle))
-                    list.addAll(it.map { entry -> Item.WordItem(entry) })
-                    list.addAll(arrayOf(Item.Space, Item.Space, Item.Space))
-                }
+@OptIn(ExperimentalLazyDsl::class)
+@Composable
+private fun WordnetInfo(
+    data: WordnetInfo,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(modifier = modifier) {
+        if (data.entries.isNotEmpty()) {
+            item {
+                Text(
+                    text = stringResource(id = R.string.dictionary_wordnet_words),
+                    style = MaterialTheme.typography.h6
+                )
             }
-            info.definitions.let {
-                if (it.isNotEmpty()) {
-                    list.add(Item.TitleItem(definitionsTitle))
-                    it.forEach { definition ->
-                        list.add(Item.DefinitionItem(definition.explanation))
-                        list.addAll(definition.examples.map { ex -> Item.ExampleItem(ex) })
-                        list.add(Item.Space)
+            data.entries.forEach { entry ->
+                item {
+                    Row(
+                        modifier = Modifier.fillParentMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(itemSpacing)
+                    ) {
+                        Text(text = entry.representation, style = MaterialTheme.typography.body2)
+                        Text(
+                            text = entry.partOfSpeech,
+                            style = MaterialTheme.typography.caption,
+                            color = SubtitleColor()
+                        )
                     }
                 }
             }
-            if (list.isEmpty()) list.add(Item.TitleItem(emptyMessage))
-            submitList(list)
         }
-
-        fun submitError() = submitList(listOf(Item.TitleItem(errorMessage)))
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-            val layoutInflater = LayoutInflater.from(parent.context)
-            return when (viewType) {
-                TYPE_TITLE -> ViewHolder.TitleViewHolder(
-                    DialogWordnetItemTitleBinding.inflate(layoutInflater)
+        if (data.entries.isNotEmpty() && data.definitions.isNotEmpty()) {
+            item { Spacer(modifier = Modifier.preferredHeight(itemPadding)) }
+        }
+        if (data.definitions.isNotEmpty()) {
+            item {
+                Text(
+                    text = stringResource(id = R.string.dictionary_wordnet_definitions),
+                    style = MaterialTheme.typography.h6
                 )
-                TYPE_WORD -> ViewHolder.WordViewHolder(
-                    DialogWordnetItemWordBinding.inflate(layoutInflater)
-                )
-                TYPE_DEFINITION -> ViewHolder.DefinitionViewHolder(
-                    DialogWordnetItemDefinitionBinding.inflate(layoutInflater)
-                )
-                TYPE_EXAMPLE -> ViewHolder.ExampleViewHolder(
-                    DialogWordnetItemExampleBinding.inflate(layoutInflater)
-                )
-                TYPE_SPACE -> ViewHolder.SpaceViewHolder(
-                    layoutInflater.inflate(R.layout.dialog_wordnet_item_space, parent, false)
-                )
-                else -> throw IllegalArgumentException("Unsupported view type")
             }
-        }
-
-        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            val item = getItem(position)
-            holder.bind(item)
-        }
-
-        override fun getItemViewType(position: Int): Int {
-            return when (getItem(position)) {
-                is Item.TitleItem -> TYPE_TITLE
-                is Item.WordItem -> TYPE_WORD
-                is Item.DefinitionItem -> TYPE_DEFINITION
-                is Item.ExampleItem -> TYPE_EXAMPLE
-                is Item.Space -> TYPE_SPACE
+            data.definitions.forEach { definition ->
+                item {
+                    Text(
+                        text = "\uA78F ${definition.explanation}",
+                        style = MaterialTheme.typography.body2
+                    )
+                }
+                definition.examples.forEach {
+                    item {
+                        Text(
+                            text = "\u25CB $it",
+                            style = MaterialTheme.typography.caption,
+                            color = SubtitleColor(),
+                            modifier = Modifier.padding(start = itemPadding)
+                        )
+                    }
+                }
             }
-        }
-
-        companion object {
-            const val TYPE_TITLE = 1
-            const val TYPE_WORD = 2
-            const val TYPE_DEFINITION = 3
-            const val TYPE_EXAMPLE = 4
-            const val TYPE_SPACE = 5
-        }
-
-        object Diff : DiffUtil.ItemCallback<Item>() {
-            override fun areItemsTheSame(oldItem: Item, newItem: Item) = oldItem == newItem
-            override fun areContentsTheSame(oldItem: Item, newItem: Item) = oldItem == newItem
         }
     }
+}
 
-    private sealed class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        class TitleViewHolder(val binding: DialogWordnetItemTitleBinding) :
-            ViewHolder(binding.root)
-
-        class WordViewHolder(val binding: DialogWordnetItemWordBinding) :
-            ViewHolder(binding.root)
-
-        class DefinitionViewHolder(val binding: DialogWordnetItemDefinitionBinding) :
-            ViewHolder(binding.root)
-
-        class ExampleViewHolder(val binding: DialogWordnetItemExampleBinding) :
-            ViewHolder(binding.root)
-
-        class SpaceViewHolder(view: View) :
-            ViewHolder(view)
-
-        fun bind(item: Item) {
-            when (item) {
-                is Item.TitleItem -> bind(item)
-                is Item.WordItem -> bind(item)
-                is Item.DefinitionItem -> bind(item)
-                is Item.ExampleItem -> bind(item)
-                is Item.Space -> {
-                }
-            }.exhaustive
-        }
-
-        fun bind(item: Item.TitleItem) {
-            if (this is TitleViewHolder) this.binding.title = item.title
-        }
-
-        fun bind(item: Item.WordItem) {
-            if (this is WordViewHolder) this.binding.entry = item.entry
-        }
-
-        fun bind(item: Item.DefinitionItem) {
-            if (this is DefinitionViewHolder) this.binding.definition = item.definition
-        }
-
-        fun bind(item: Item.ExampleItem) {
-            if (this is ExampleViewHolder) this.binding.example = "\uA78F " + item.example
+@Preview
+@Composable
+private fun WordnetInfoPreview() {
+    BalalaikaTheme {
+        Surface {
+            WordnetInfo(data = sampleWordnetInfo)
         }
     }
 }

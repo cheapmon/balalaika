@@ -196,3 +196,18 @@ val sampleDictionaries: List<SimpleDictionary> = listOf(
         isInLibrary = false
     )
 )
+
+val sampleWordnetInfo = WordnetInfo(
+    entries = listOf(
+        WordnetInfo.LexicalEntry("happier", "adjective"),
+        WordnetInfo.LexicalEntry("happiest", "adjective")
+    ), definitions = listOf(
+        WordnetInfo.Definition(
+            "being joyful",
+            listOf(
+                "I am so very happy",
+                "He seems to be a happy person"
+            )
+        )
+    )
+)

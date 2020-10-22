@@ -14,3 +14,5 @@ val headerMaxWidth = 300.dp
 val bigIconSize = 120.dp
 
 val listItemIconSize = 40.dp
+
+val dialogMaxHeight = 300.dp
