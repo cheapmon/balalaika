@@ -20,32 +20,23 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.view.*
+import androidx.compose.ui.platform.ComposeView
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.paging.LoadState
-import androidx.paging.PagingData
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.databinding.FragmentDictionaryBinding
 import com.github.cheapmon.balalaika.model.DataCategory
 import com.github.cheapmon.balalaika.model.DictionaryEntry
 import com.github.cheapmon.balalaika.model.Property
 import com.github.cheapmon.balalaika.model.SearchRestriction
-import com.github.cheapmon.balalaika.ui.RecyclerViewFragment
 import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetActionListener
-import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetMenuListener
 import com.github.cheapmon.balalaika.util.exhaustive
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -66,9 +57,6 @@ import kotlinx.coroutines.launch
 class DictionaryFragment : Fragment() {
     private val viewModel: DictionaryViewModel by viewModels()
 
-    lateinit var binding: FragmentDictionaryBinding
-    lateinit var adapter: DictionaryAdapter
-
     /** Notify about options menu */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,43 +68,18 @@ class DictionaryFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentDictionaryBinding.inflate(inflater, container, false).apply {
-            dictionaryEmptyButton.setOnClickListener {
-                val directions = DictionaryFragmentDirections.selectDictionary()
-                findNavController().navigate(directions)
-            }
-            adapter = createRecyclerViewAdapter()
-            with(entryList) {
-                adapter = this@DictionaryFragment.adapter
-                layoutManager = LinearLayoutManager(context)
-                setHasFixedSize(true)
-            }
-        }
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        lifecycleScope.launch {
-            launch {
-                viewModel.dictionaryEntries.collectLatest { data ->
-                    adapter.submitData(data ?: PagingData.empty())
-                    binding.empty = data == null
-                }
-            }
-            launch {
-                adapter.loadStateFlow.collect { loadState ->
-                    binding.inProgress = loadState.refresh is LoadState.Loading
-                }
+        return ComposeView(requireContext()).apply {
+            setContent {
+                DictionaryEntryScreen(
+                    viewModel = viewModel,
+                    onClickBase = ::onClickBaseButton,
+                    onBookmark = ::onClickBookmarkButton,
+                    onClickProperty = ::onClickProperty,
+                    onOpenDictionaries = ::onOpenDictionaries
+                )
             }
         }
     }
-
-    /** @suppress */
-    private fun createRecyclerViewAdapter() = DictionaryAdapter(
-        onClickBase = this::onClickBaseButton,
-        onBookmark = this::onClickBookmarkButton,
-        onClickProperty = this::onClickProperty
-    )
 
     /** Create options menu */
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -198,6 +161,12 @@ class DictionaryFragment : Fragment() {
         }
     }
 
+    /** Open dictionary screen */
+    private fun onOpenDictionaries() {
+        val directions = DictionaryFragmentDirections.selectDictionary()
+        findNavController().navigate(directions)
+    }
+
     /** Add or remove an entry to bookmarks */
     private fun onClickBookmarkButton(entry: DictionaryEntry) {
         viewModel.toggleBookmark(entry)
@@ -216,9 +185,10 @@ class DictionaryFragment : Fragment() {
 
     /** Actions when a property is clicked */
     private fun onClickProperty(category: DataCategory, property: Property, text: String) {
-        when(property) {
+        when (property) {
             is Property.Audio -> audioActionListener.onAction(property)
-            is Property.Example -> {}
+            is Property.Example -> {
+            }
             is Property.Morphology -> searchWithRestriction(text, category)
             is Property.Plain -> searchWithRestriction(text, category)
             is Property.Reference -> referenceActionListener.onAction(property)
