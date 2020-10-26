@@ -28,11 +28,7 @@ import com.github.cheapmon.balalaika.model.DictionaryEntry
 import com.github.cheapmon.balalaika.model.InstalledDictionary
 import com.github.cheapmon.balalaika.model.SearchRestriction
 import com.github.cheapmon.balalaika.util.navArgs
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.*
 
 /** View model for [SearchFragment] */
 class SearchViewModel @ViewModelInject constructor(
@@ -60,10 +56,11 @@ class SearchViewModel @ViewModelInject constructor(
     /** Current dictionary, depending on the user configuration */
     val entries: Flow<PagingData<DictionaryEntry>?> =
         combine(openedDictionary, query, restriction) { d, q, r ->
-            if (d == null || q == null) {
+            if (d == null) {
                 flowOf(null)
             } else {
-                dictionaryEntryRepository.queryDictionaryEntries(d, q, r).cachedIn(viewModelScope)
+                dictionaryEntryRepository.queryDictionaryEntries(d, q ?: "", r)
+                    .cachedIn(viewModelScope)
             }
         }.flatMapLatest { it }
 

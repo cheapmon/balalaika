@@ -47,7 +47,7 @@ fun CollapsibleCard(
     val rotationX = FloatPropKey()
     val transitionState = createTransition(state = state, rotationX = rotationX)
 
-    Card(modifier = modifier.padding(vertical = itemSpacing).fillMaxWidth()) {
+    Card(modifier = Modifier.padding(vertical = itemSpacing).fillMaxWidth().then(modifier)) {
         Column(modifier = Modifier.padding(itemPadding).animateContentSize()) {
             Row(
                 modifier = Modifier.fillMaxWidth(),

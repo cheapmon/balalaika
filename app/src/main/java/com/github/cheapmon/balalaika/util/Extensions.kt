@@ -30,7 +30,6 @@ import androidx.navigation.NavArgs
 import androidx.navigation.NavArgsLazy
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.model.DictionaryEntry
-import com.github.cheapmon.balalaika.ui.search.SearchAdapter
 import com.google.android.material.button.MaterialButton
 
 /** Convenience method for setting the icon of a `MaterialButton` from a drawable ID */
@@ -47,8 +46,6 @@ val Button.icon: Drawable?
  *
  * This is used in the user interface to indicate matching [dictionary entries][DictionaryEntry]
  * for a search query.
- *
- * @see SearchAdapter
  */
 fun String.highlight(text: String?, context: Context): SpannedString {
     val contents = this

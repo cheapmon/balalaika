@@ -31,7 +31,6 @@ import com.github.cheapmon.balalaika.model.DataCategory
 import com.github.cheapmon.balalaika.model.DictionaryEntry
 import com.github.cheapmon.balalaika.model.Property
 import com.github.cheapmon.balalaika.model.SearchRestriction
-import com.github.cheapmon.balalaika.ui.dictionary.widgets.WidgetActionListener
 import com.github.cheapmon.balalaika.util.exhaustive
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -196,6 +195,10 @@ class DictionaryFragment : Fragment() {
             is Property.Url -> urlActionListener.onAction(property)
             is Property.Wordnet -> wordnetActionListener.onAction(property)
         }.exhaustive
+    }
+
+    private interface WidgetActionListener<T : Property> {
+        fun onAction(property: T)
     }
 
     private val audioActionListener = object : WidgetActionListener<Property.Audio> {

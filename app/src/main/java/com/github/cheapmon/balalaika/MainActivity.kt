@@ -21,7 +21,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -32,7 +31,6 @@ import com.github.cheapmon.balalaika.databinding.ActivityMainBinding
 import com.github.cheapmon.balalaika.databinding.AppBarMainBinding
 import com.github.cheapmon.balalaika.databinding.NavDictionaryBinding
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 /** Main activity for Balalaika */
@@ -67,7 +65,6 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         setupNavView(navView)
-        observeData(activityBinding)
     }
 
     private fun setupNavView(navView: NavigationView) {
@@ -76,24 +73,6 @@ class MainActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         navView.addHeaderView(binding.root)
-    }
-
-    private fun observeData(binding: ActivityMainBinding) {
-        val barBinding = binding.appBarMain
-        barBinding.lifecycleOwner = this
-        barBinding.viewModel = viewModel
-
-        val contentBinding = barBinding.mainContent
-        contentBinding.lifecycleOwner = this
-        contentBinding.viewModel = viewModel
-
-        viewModel.messages.observe(this, Observer {
-            Snackbar.make(binding.root, it, Snackbar.LENGTH_SHORT).show()
-        })
-
-        viewModel.showSearch.observe(this, Observer {
-            if (it) barBinding.mainSearch.requestFocus()
-        })
     }
 
     /** @suppress */

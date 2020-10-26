@@ -4,7 +4,7 @@ import com.github.cheapmon.balalaika.model.*
 import com.github.cheapmon.balalaika.model.Dictionary
 import java.util.*
 
-private val wordclass = DataCategory(
+val wordclass = DataCategory(
     id = "wordclass",
     name = "Wordclass",
     iconName = "ic_book",

@@ -27,7 +27,8 @@ import com.github.cheapmon.balalaika.model.DownloadableDictionary
 import com.github.cheapmon.balalaika.model.HistoryItem
 import com.github.cheapmon.balalaika.model.InstalledDictionary
 import com.github.cheapmon.balalaika.model.SearchRestriction
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 /**
@@ -43,26 +44,6 @@ class MainViewModel @ViewModelInject constructor(
 ) : ViewModel() {
     /** Currently active dictionary */
     val currentDictionary = dictionaryRepository.getOpenDictionary().asLiveData()
-
-    private val _operationsInProgress = MutableStateFlow(0)
-
-    /** Progress of any running operations */
-    val progress = _operationsInProgress.map { it != 0 }.asLiveData()
-
-    private val _messages = MutableStateFlow<String?>(null)
-
-    /** Messages about operations to be displayed in the UI */
-    val messages = _messages.filterNotNull().asLiveData()
-
-    private val _showSearch = MutableStateFlow(false)
-
-    /** Whether to show the search field in the app bar */
-    val showSearch = _showSearch.asLiveData()
-
-    /** Toggle the search field */
-    fun toggleSearch() {
-        _showSearch.value = !_showSearch.value
-    }
 
     /** Activate a dictionary */
     fun openDictionary(dictionary: InstalledDictionary) {
