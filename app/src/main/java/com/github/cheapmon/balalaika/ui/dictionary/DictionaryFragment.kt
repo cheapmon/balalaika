@@ -169,6 +169,7 @@ class DictionaryFragment : Fragment() {
     /** Add or remove an entry to bookmarks */
     private fun onClickBookmarkButton(entry: DictionaryEntry) {
         viewModel.toggleBookmark(entry)
+        viewModel.refresh()
         val message = if (entry.bookmark != null) {
             getString(R.string.dictionary_bookmark_remove, entry.representation)
         } else {

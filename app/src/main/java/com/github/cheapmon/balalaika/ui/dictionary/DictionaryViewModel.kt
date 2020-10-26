@@ -53,6 +53,12 @@ class DictionaryViewModel @ViewModelInject constructor(
             dictionary?.let { config.getSortCategory(it) } ?: flowOf(null)
         }
 
+    private val _refresh = MutableStateFlow(false)
+
+    fun refresh() {
+        _refresh.value = !_refresh.value
+    }
+
     /**
      * Adapt dictionary presentation to user configuration
      *
@@ -66,7 +72,7 @@ class DictionaryViewModel @ViewModelInject constructor(
             if (d == null) {
                 flowOf(null)
             } else {
-                combine(dictionaryView, category) { v, c ->
+                combine(dictionaryView, category, _refresh) { v, c, _ ->
                     if (v == null || c == null) {
                         flowOf(null)
                     } else {
