@@ -18,6 +18,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.VectorAsset
 import androidx.compose.ui.platform.ContextAmbient
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.ui.tooling.preview.Preview
 import com.github.cheapmon.balalaika.model.DataCategory
 import com.github.cheapmon.balalaika.model.Property
@@ -36,6 +37,7 @@ fun WidgetFor(
     properties: List<Property>,
     enabled: Boolean = true,
     modifier: Modifier = Modifier,
+    transformText: @Composable (String) -> AnnotatedString = { AnnotatedString(it) },
     onEvent: PropertyAction<Property> = emptyPropertyAction()
 ) {
     when (properties.firstOrNull()) {
@@ -45,6 +47,7 @@ fun WidgetFor(
                 properties = properties.filterIsInstance<Property.Audio>(),
                 enabled = enabled,
                 modifier = modifier,
+                transformText = transformText,
                 onAudio = onEvent
             )
         }
@@ -52,7 +55,8 @@ fun WidgetFor(
             ExampleWidget(
                 category = category,
                 properties = properties.filterIsInstance<Property.Example>(),
-                modifier = modifier
+                modifier = modifier,
+                transformText = transformText
             )
         }
         is Property.Morphology -> {
@@ -61,6 +65,7 @@ fun WidgetFor(
                 properties = properties.filterIsInstance<Property.Morphology>(),
                 enabled = enabled,
                 modifier = modifier,
+                transformText = transformText,
                 onMorphology = onEvent
             )
         }
@@ -69,6 +74,7 @@ fun WidgetFor(
                 category = category,
                 properties = properties.filterIsInstance<Property.Plain>(),
                 enabled = enabled,
+                transformText = transformText,
                 onPlain = onEvent
             )
         }
@@ -78,6 +84,7 @@ fun WidgetFor(
                 properties = properties.filterIsInstance<Property.Reference>(),
                 enabled = enabled,
                 modifier = modifier,
+                transformText = transformText,
                 onReference = onEvent
             )
         }
@@ -87,6 +94,7 @@ fun WidgetFor(
                 properties = properties.filterIsInstance<Property.Simple>(),
                 enabled = enabled,
                 modifier = modifier,
+                transformText = transformText,
                 onSimple = onEvent
             )
         }
@@ -96,6 +104,7 @@ fun WidgetFor(
                 properties = properties.filterIsInstance<Property.Url>(),
                 enabled = enabled,
                 modifier = modifier,
+                transformText = transformText,
                 onUrl = onEvent
             )
         }
@@ -105,6 +114,7 @@ fun WidgetFor(
                 properties = properties.filterIsInstance<Property.Wordnet>(),
                 enabled = enabled,
                 modifier = modifier,
+                transformText = transformText,
                 onWordnet = onEvent
             )
         }
@@ -153,6 +163,7 @@ private fun <T : Property> ActionItem(
     icon: VectorAsset? = null,
     enabled: Boolean = true,
     modifier: Modifier = Modifier,
+    transformText: @Composable (String) -> AnnotatedString = { AnnotatedString(it) },
     onAction: PropertyAction<T> = emptyPropertyAction()
 ) {
     Row(
@@ -163,7 +174,7 @@ private fun <T : Property> ActionItem(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(itemSpacing)
     ) {
-        Text(text = text, style = MaterialTheme.typography.body2)
+        Text(text = transformText(text), style = MaterialTheme.typography.body2)
         if (icon != null) Icon(asset = icon)
     }
 }
@@ -174,6 +185,7 @@ private fun AudioWidget(
     properties: List<Property.Audio>,
     enabled: Boolean = true,
     modifier: Modifier = Modifier,
+    transformText: @Composable (String) -> AnnotatedString = { AnnotatedString(it) },
     onAudio: PropertyAction<Property.Audio> = emptyPropertyAction()
 ) {
     DefaultWidget(category = category, properties = properties, modifier = modifier) { property ->
@@ -183,6 +195,7 @@ private fun AudioWidget(
             text = property.name,
             icon = Icons.Default.PlayCircleOutline,
             enabled = enabled,
+            transformText = transformText,
             onAction = onAudio
         )
     }
@@ -192,7 +205,8 @@ private fun AudioWidget(
 private fun ExampleWidget(
     category: DataCategory,
     properties: List<Property.Example>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    transformText: @Composable (String) -> AnnotatedString = { AnnotatedString(it) }
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -215,11 +229,14 @@ private fun ExampleWidget(
             properties.forEach { property ->
                 Column(horizontalAlignment = Alignment.End) {
                     Text(
-                        text = property.name,
+                        text = transformText(property.name),
                         style = MaterialTheme.typography.caption,
                         color = SubtitleColor()
                     )
-                    Text(text = property.content, style = MaterialTheme.typography.body2)
+                    Text(
+                        text = transformText(property.content),
+                        style = MaterialTheme.typography.body2
+                    )
                 }
             }
         }
@@ -232,6 +249,7 @@ private fun MorphologyWidget(
     properties: List<Property.Morphology>,
     enabled: Boolean = true,
     modifier: Modifier = Modifier,
+    transformText: @Composable (String) -> AnnotatedString = { AnnotatedString(it) },
     onMorphology: PropertyAction<Property.Morphology> = emptyPropertyAction()
 ) {
     DefaultWidget(category = category, properties = properties, modifier = modifier) { property ->
@@ -241,6 +259,7 @@ private fun MorphologyWidget(
                 property = property,
                 text = part,
                 enabled = enabled,
+                transformText = transformText,
                 onAction = onMorphology
             )
         }
@@ -253,6 +272,7 @@ private fun PlainWidget(
     category: DataCategory,
     properties: List<Property.Plain>,
     enabled: Boolean = true,
+    transformText: @Composable (String) -> AnnotatedString = { AnnotatedString(it) },
     onPlain: PropertyAction<Property.Plain> = emptyPropertyAction()
 ) {
     FlowRow(mainAxisSpacing = itemSpacing) {
@@ -262,6 +282,7 @@ private fun PlainWidget(
                 property = property,
                 text = property.value,
                 enabled = enabled,
+                transformText = transformText,
                 onAction = onPlain
             )
         }
@@ -274,6 +295,7 @@ private fun ReferenceWidget(
     properties: List<Property.Reference>,
     enabled: Boolean = true,
     modifier: Modifier = Modifier,
+    transformText: @Composable (String) -> AnnotatedString = { AnnotatedString(it) },
     onReference: PropertyAction<Property.Reference> = emptyPropertyAction()
 ) {
     DefaultWidget(category = category, properties = properties, modifier = modifier) { property ->
@@ -283,6 +305,7 @@ private fun ReferenceWidget(
             text = property.entry.representation,
             icon = Icons.Default.NorthEast,
             enabled = enabled,
+            transformText = transformText,
             onAction = onReference
         )
     }
@@ -294,6 +317,7 @@ private fun SimpleWidget(
     properties: List<Property.Simple>,
     enabled: Boolean = true,
     modifier: Modifier = Modifier,
+    transformText: @Composable (String) -> AnnotatedString = { AnnotatedString(it) },
     onSimple: PropertyAction<Property.Simple> = emptyPropertyAction()
 ) {
     DefaultWidget(category = category, properties = properties, modifier = modifier) { property ->
@@ -302,6 +326,7 @@ private fun SimpleWidget(
             property = property,
             text = property.value,
             enabled = enabled,
+            transformText = transformText,
             onAction = onSimple
         )
     }
@@ -313,6 +338,7 @@ private fun UrlWidget(
     properties: List<Property.Url>,
     enabled: Boolean = true,
     modifier: Modifier = Modifier,
+    transformText: @Composable (String) -> AnnotatedString = { AnnotatedString(it) },
     onUrl: PropertyAction<Property.Url> = emptyPropertyAction()
 ) {
     DefaultWidget(category = category, properties = properties, modifier = modifier) { property ->
@@ -322,6 +348,7 @@ private fun UrlWidget(
             text = property.name,
             icon = Icons.Default.Link,
             enabled = enabled,
+            transformText = transformText,
             onAction = onUrl
         )
     }
@@ -333,6 +360,7 @@ private fun WordnetWidget(
     properties: List<Property.Wordnet>,
     enabled: Boolean = true,
     modifier: Modifier = Modifier,
+    transformText: @Composable (String) -> AnnotatedString = { AnnotatedString(it) },
     onWordnet: PropertyAction<Property.Wordnet> = emptyPropertyAction()
 ) {
     DefaultWidget(category = category, properties = properties, modifier = modifier) { property ->
@@ -342,6 +370,7 @@ private fun WordnetWidget(
             text = property.name,
             icon = Icons.Default.PresentToAll,
             enabled = enabled,
+            transformText = transformText,
             onAction = onWordnet
         )
     }

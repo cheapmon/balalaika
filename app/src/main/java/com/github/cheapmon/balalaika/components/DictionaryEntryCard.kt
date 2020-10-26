@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.AnnotatedString
 import androidx.ui.tooling.preview.Preview
 import com.github.cheapmon.balalaika.model.Bookmark
 import com.github.cheapmon.balalaika.model.DataCategory
@@ -26,6 +27,7 @@ fun DictionaryEntryCard(
     dictionaryEntry: DictionaryEntry,
     enabled: Boolean = true,
     modifier: Modifier = Modifier,
+    transformText: @Composable (String) -> AnnotatedString = { AnnotatedString(it) },
     onClickBase: (DictionaryEntry) -> Unit = {},
     onBookmark: (DictionaryEntry) -> Unit = {},
     onClickProperty: PropertyAction<Property> = emptyPropertyAction()
@@ -39,10 +41,13 @@ fun DictionaryEntryCard(
         modifier = modifier,
         header = {
             Column {
-                Text(text = dictionaryEntry.representation, style = MaterialTheme.typography.h6)
+                Text(
+                    text = transformText(dictionaryEntry.representation),
+                    style = MaterialTheme.typography.h6
+                )
                 if (base != null) {
                     Text(
-                        text = base.representation,
+                        text = transformText(base.representation),
                         style = MaterialTheme.typography.subtitle1,
                         color = SubtitleColor(),
                         modifier = Modifier.clickable(
@@ -66,7 +71,8 @@ fun DictionaryEntryCard(
     ) {
         PropertyList(
             properties = dictionaryEntry.properties,
-            onClickProperty = onClickProperty
+            onClickProperty = onClickProperty,
+            transformText = transformText
         )
     }
 }
@@ -76,6 +82,7 @@ private fun PropertyList(
     properties: SortedMap<DataCategory, List<Property>>,
     enabled: Boolean = true,
     modifier: Modifier = Modifier,
+    transformText: @Composable (String) -> AnnotatedString = { AnnotatedString(it) },
     onClickProperty: PropertyAction<Property> = emptyPropertyAction()
 ) {
     Column(modifier = modifier) {
@@ -84,6 +91,7 @@ private fun PropertyList(
                 category = category,
                 properties = list,
                 enabled = enabled,
+                transformText = transformText,
                 onEvent = onClickProperty
             )
         }

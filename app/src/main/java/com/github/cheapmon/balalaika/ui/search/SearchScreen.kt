@@ -6,10 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.ExperimentalLazyDsl
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Card
-import androidx.compose.material.Surface
-import androidx.compose.material.TextButton
-import androidx.compose.material.TextField
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
@@ -17,7 +14,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.annotatedString
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.intl.Locale
+import androidx.compose.ui.text.toLowerCase
 import androidx.ui.tooling.preview.Preview
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.components.DictionaryEntryCard
@@ -66,7 +68,11 @@ fun SearchScreen(
                 if (empty) {
                     SearchEmptyMessage()
                 } else {
-                    SearchList(entries, onClickEntry = { onClickEntry(it, query, restriction) })
+                    SearchList(
+                        entries,
+                        query,
+                        onClickEntry = { onClickEntry(it, query, restriction) }
+                    )
                 }
             }
         }
@@ -127,6 +133,7 @@ private fun SearchEmptyMessage() {
 @Composable
 private fun SearchList(
     entries: LazyPagingItems<DictionaryEntry>,
+    query: String?,
     modifier: Modifier = Modifier,
     onClickEntry: (DictionaryEntry) -> Unit = {}
 ) {
@@ -136,8 +143,30 @@ private fun SearchList(
                 DictionaryEntryCard(
                     dictionaryEntry = entry,
                     enabled = false,
-                    modifier = Modifier.clickable(onClick = { onClickEntry(entry) })
+                    modifier = Modifier.clickable(onClick = { onClickEntry(entry) }),
+                    transformText = { text -> highlightQuery(text, query) }
                 )
+            }
+        }
+    }
+}
+
+@Composable
+private fun highlightQuery(text: String, query: String?): AnnotatedString {
+    val queryLower = query?.toLowerCase(Locale.current) ?: ""
+    val textLower = text.toLowerCase(Locale.current)
+
+    return if (queryLower == "" || !textLower.contains(queryLower)) {
+        AnnotatedString(text)
+    } else {
+        annotatedString {
+            // Split before and after text
+            text.split(Regex("(?<=$query)|(?=$query)", RegexOption.IGNORE_CASE)).forEach {
+                if (it.toLowerCase(Locale.current) == queryLower) {
+                    pushStyle(SpanStyle(color = MaterialTheme.colors.primary))
+                    append(it)
+                    pop()
+                } else append(it)
             }
         }
     }
