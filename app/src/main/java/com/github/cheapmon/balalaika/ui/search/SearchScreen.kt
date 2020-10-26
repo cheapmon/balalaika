@@ -135,6 +135,7 @@ private fun SearchList(
             if (entry != null) {
                 DictionaryEntryCard(
                     dictionaryEntry = entry,
+                    enabled = false,
                     modifier = Modifier.clickable(onClick = { onClickEntry(entry) })
                 )
             }

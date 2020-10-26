@@ -34,6 +34,7 @@ fun <T : Property> emptyPropertyAction(): PropertyAction<T> = { _, _, _ -> }
 fun WidgetFor(
     category: DataCategory,
     properties: List<Property>,
+    enabled: Boolean = true,
     modifier: Modifier = Modifier,
     onEvent: PropertyAction<Property> = emptyPropertyAction()
 ) {
@@ -42,6 +43,7 @@ fun WidgetFor(
             AudioWidget(
                 category = category,
                 properties = properties.filterIsInstance<Property.Audio>(),
+                enabled = enabled,
                 modifier = modifier,
                 onAudio = onEvent
             )
@@ -57,6 +59,7 @@ fun WidgetFor(
             MorphologyWidget(
                 category = category,
                 properties = properties.filterIsInstance<Property.Morphology>(),
+                enabled = enabled,
                 modifier = modifier,
                 onMorphology = onEvent
             )
@@ -65,6 +68,7 @@ fun WidgetFor(
             PlainWidget(
                 category = category,
                 properties = properties.filterIsInstance<Property.Plain>(),
+                enabled = enabled,
                 onPlain = onEvent
             )
         }
@@ -72,6 +76,7 @@ fun WidgetFor(
             ReferenceWidget(
                 category = category,
                 properties = properties.filterIsInstance<Property.Reference>(),
+                enabled = enabled,
                 modifier = modifier,
                 onReference = onEvent
             )
@@ -80,6 +85,7 @@ fun WidgetFor(
             SimpleWidget(
                 category = category,
                 properties = properties.filterIsInstance<Property.Simple>(),
+                enabled = enabled,
                 modifier = modifier,
                 onSimple = onEvent
             )
@@ -88,6 +94,7 @@ fun WidgetFor(
             UrlWidget(
                 category = category,
                 properties = properties.filterIsInstance<Property.Url>(),
+                enabled = enabled,
                 modifier = modifier,
                 onUrl = onEvent
             )
@@ -96,6 +103,7 @@ fun WidgetFor(
             WordnetWidget(
                 category = category,
                 properties = properties.filterIsInstance<Property.Wordnet>(),
+                enabled = enabled,
                 modifier = modifier,
                 onWordnet = onEvent
             )
@@ -143,13 +151,14 @@ private fun <T : Property> ActionItem(
     property: T,
     text: String,
     icon: VectorAsset? = null,
+    enabled: Boolean = true,
     modifier: Modifier = Modifier,
     onAction: PropertyAction<T> = emptyPropertyAction()
 ) {
     Row(
         modifier = modifier
             .clip(simpleShape)
-            .clickable(onClick = { onAction(category, property, text) })
+            .clickable(onClick = { onAction(category, property, text) }, enabled = enabled)
             .padding(itemPadding / 2),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(itemSpacing)
@@ -163,6 +172,7 @@ private fun <T : Property> ActionItem(
 private fun AudioWidget(
     category: DataCategory,
     properties: List<Property.Audio>,
+    enabled: Boolean = true,
     modifier: Modifier = Modifier,
     onAudio: PropertyAction<Property.Audio> = emptyPropertyAction()
 ) {
@@ -172,6 +182,7 @@ private fun AudioWidget(
             property = property,
             text = property.name,
             icon = Icons.Default.PlayCircleOutline,
+            enabled = enabled,
             onAction = onAudio
         )
     }
@@ -219,6 +230,7 @@ private fun ExampleWidget(
 private fun MorphologyWidget(
     category: DataCategory,
     properties: List<Property.Morphology>,
+    enabled: Boolean = true,
     modifier: Modifier = Modifier,
     onMorphology: PropertyAction<Property.Morphology> = emptyPropertyAction()
 ) {
@@ -228,6 +240,7 @@ private fun MorphologyWidget(
                 category = category,
                 property = property,
                 text = part,
+                enabled = enabled,
                 onAction = onMorphology
             )
         }
@@ -239,6 +252,7 @@ private fun MorphologyWidget(
 private fun PlainWidget(
     category: DataCategory,
     properties: List<Property.Plain>,
+    enabled: Boolean = true,
     onPlain: PropertyAction<Property.Plain> = emptyPropertyAction()
 ) {
     FlowRow(mainAxisSpacing = itemSpacing) {
@@ -247,6 +261,7 @@ private fun PlainWidget(
                 category = category,
                 property = property,
                 text = property.value,
+                enabled = enabled,
                 onAction = onPlain
             )
         }
@@ -257,6 +272,7 @@ private fun PlainWidget(
 private fun ReferenceWidget(
     category: DataCategory,
     properties: List<Property.Reference>,
+    enabled: Boolean = true,
     modifier: Modifier = Modifier,
     onReference: PropertyAction<Property.Reference> = emptyPropertyAction()
 ) {
@@ -266,6 +282,7 @@ private fun ReferenceWidget(
             property = property,
             text = property.entry.representation,
             icon = Icons.Default.NorthEast,
+            enabled = enabled,
             onAction = onReference
         )
     }
@@ -275,6 +292,7 @@ private fun ReferenceWidget(
 private fun SimpleWidget(
     category: DataCategory,
     properties: List<Property.Simple>,
+    enabled: Boolean = true,
     modifier: Modifier = Modifier,
     onSimple: PropertyAction<Property.Simple> = emptyPropertyAction()
 ) {
@@ -283,6 +301,7 @@ private fun SimpleWidget(
             category = category,
             property = property,
             text = property.value,
+            enabled = enabled,
             onAction = onSimple
         )
     }
@@ -292,6 +311,7 @@ private fun SimpleWidget(
 private fun UrlWidget(
     category: DataCategory,
     properties: List<Property.Url>,
+    enabled: Boolean = true,
     modifier: Modifier = Modifier,
     onUrl: PropertyAction<Property.Url> = emptyPropertyAction()
 ) {
@@ -301,6 +321,7 @@ private fun UrlWidget(
             property = property,
             text = property.name,
             icon = Icons.Default.Link,
+            enabled = enabled,
             onAction = onUrl
         )
     }
@@ -310,6 +331,7 @@ private fun UrlWidget(
 private fun WordnetWidget(
     category: DataCategory,
     properties: List<Property.Wordnet>,
+    enabled: Boolean = true,
     modifier: Modifier = Modifier,
     onWordnet: PropertyAction<Property.Wordnet> = emptyPropertyAction()
 ) {
@@ -319,6 +341,7 @@ private fun WordnetWidget(
             property = property,
             text = property.name,
             icon = Icons.Default.PresentToAll,
+            enabled = enabled,
             onAction = onWordnet
         )
     }

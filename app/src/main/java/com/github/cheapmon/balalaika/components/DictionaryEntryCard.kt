@@ -24,6 +24,7 @@ import java.util.*
 @Composable
 fun DictionaryEntryCard(
     dictionaryEntry: DictionaryEntry,
+    enabled: Boolean = true,
     modifier: Modifier = Modifier,
     onClickBase: (DictionaryEntry) -> Unit = {},
     onBookmark: (DictionaryEntry) -> Unit = {},
@@ -44,13 +45,16 @@ fun DictionaryEntryCard(
                         text = base.representation,
                         style = MaterialTheme.typography.subtitle1,
                         color = SubtitleColor(),
-                        modifier = Modifier.clickable(onClick = { onClickBase(base) })
+                        modifier = Modifier.clickable(
+                            onClick = { onClickBase(base) },
+                            enabled = enabled
+                        )
                     )
                 }
             }
         },
         actions = {
-            IconButton(onClick = { onBookmark(dictionaryEntry) }) {
+            IconButton(onClick = { onBookmark(dictionaryEntry) }, enabled = enabled) {
                 val asset = if (bookmark == null) {
                     Icons.Default.BookmarkBorder
                 } else {
@@ -70,6 +74,7 @@ fun DictionaryEntryCard(
 @Composable
 private fun PropertyList(
     properties: SortedMap<DataCategory, List<Property>>,
+    enabled: Boolean = true,
     modifier: Modifier = Modifier,
     onClickProperty: PropertyAction<Property> = emptyPropertyAction()
 ) {
@@ -78,6 +83,7 @@ private fun PropertyList(
             WidgetFor(
                 category = category,
                 properties = list,
+                enabled = enabled,
                 onEvent = onClickProperty
             )
         }
