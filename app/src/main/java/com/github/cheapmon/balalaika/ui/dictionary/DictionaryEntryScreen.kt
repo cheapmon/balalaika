@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.toUpperCase
+import androidx.navigation.NavController
 import androidx.ui.tooling.preview.Preview
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.components.DictionaryEntryCard
@@ -21,6 +22,7 @@ import com.github.cheapmon.balalaika.components.emptyPropertyAction
 import com.github.cheapmon.balalaika.model.DictionaryEntry
 import com.github.cheapmon.balalaika.model.Property
 import com.github.cheapmon.balalaika.theme.BalalaikaTheme
+import com.github.cheapmon.balalaika.ui.BalalaikaScaffold
 import com.github.cheapmon.balalaika.util.LazyPagingItems
 import com.github.cheapmon.balalaika.util.collectAsLazyPagingItems
 import com.github.cheapmon.balalaika.util.items
@@ -30,7 +32,7 @@ import kotlinx.coroutines.flow.onEach
 @Composable
 fun DictionaryEntryScreen(
     viewModel: DictionaryViewModel,
-    modifier: Modifier = Modifier,
+    navController: NavController,
     onClickBase: (DictionaryEntry) -> Unit = {},
     onBookmark: (DictionaryEntry) -> Unit = {},
     onClickProperty: PropertyAction<Property> = emptyPropertyAction(),
@@ -44,24 +46,25 @@ fun DictionaryEntryScreen(
 
     val wordnetParam: Property.Wordnet? by viewModel.wordnetParam.collectAsState(initial = null)
 
-    BalalaikaTheme {
-        Surface(modifier = modifier) {
-            if (!empty) {
-                DictionaryEntryList(
-                    entries = entries,
-                    onClickBase = onClickBase,
-                    onBookmark = onBookmark,
-                    onClickProperty = onClickProperty
-                )
-            } else {
-                DictionaryEntryEmptyMessage(onOpenDictionaries)
-            }
-            DictionaryEntryDialog(
-                viewModel = viewModel,
-                wordnetParam = wordnetParam,
-                onDismiss = { viewModel.setWordnetParam(null) }
+    BalalaikaScaffold(
+        navController = navController,
+        title = stringResource(id = R.string.menu_dictionary)
+    ) {
+        if (!empty) {
+            DictionaryEntryList(
+                entries = entries,
+                onClickBase = onClickBase,
+                onBookmark = onBookmark,
+                onClickProperty = onClickProperty
             )
+        } else {
+            DictionaryEntryEmptyMessage(onOpenDictionaries)
         }
+        DictionaryEntryDialog(
+            viewModel = viewModel,
+            wordnetParam = wordnetParam,
+            onDismiss = { viewModel.setWordnetParam(null) }
+        )
     }
 }
 

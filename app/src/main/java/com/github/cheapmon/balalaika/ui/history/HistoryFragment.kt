@@ -50,7 +50,7 @@ class HistoryFragment : Fragment() {
     ): View? {
         return ComposeView(requireContext()).apply {
             setContent {
-                HistoryScreen(viewModel, ::onClickHistoryItem)
+                HistoryScreen(viewModel, findNavController(), ::onClickHistoryItem)
             }
         }
     }

@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import com.github.cheapmon.balalaika.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -40,7 +41,8 @@ class SelectionFragment : Fragment() {
             setContent {
                 DictionaryScreen(
                     viewModel = viewModel,
-                    activityViewModel = activityViewModel
+                    activityViewModel = activityViewModel,
+                    navController = findNavController()
                 )
             }
         }

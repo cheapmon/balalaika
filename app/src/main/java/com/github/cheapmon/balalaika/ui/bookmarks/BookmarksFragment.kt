@@ -51,7 +51,7 @@ class BookmarksFragment : Fragment() {
     ): View? {
         return ComposeView(requireContext()).apply {
             setContent {
-                BookmarksScreen(viewModel, ::onClickEntry)
+                BookmarksScreen(viewModel, findNavController(), ::onClickEntry)
             }
         }
     }

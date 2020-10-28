@@ -52,6 +52,7 @@ class SearchFragment : Fragment() {
             setContent {
                 SearchScreen(
                     viewModel = viewModel,
+                    navController = findNavController(),
                     onQueryChange = ::addToHistory,
                     onClickEntry = ::onClickItem
                 )

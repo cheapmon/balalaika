@@ -20,6 +20,7 @@ import androidx.compose.ui.text.annotatedString
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.toLowerCase
+import androidx.navigation.NavController
 import androidx.ui.tooling.preview.Preview
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.components.DictionaryEntryCard
@@ -29,6 +30,7 @@ import com.github.cheapmon.balalaika.model.SearchRestriction
 import com.github.cheapmon.balalaika.theme.BalalaikaTheme
 import com.github.cheapmon.balalaika.theme.itemPadding
 import com.github.cheapmon.balalaika.theme.itemSpacing
+import com.github.cheapmon.balalaika.ui.BalalaikaScaffold
 import com.github.cheapmon.balalaika.util.LazyPagingItems
 import com.github.cheapmon.balalaika.util.collectAsLazyPagingItems
 import com.github.cheapmon.balalaika.util.items
@@ -39,7 +41,7 @@ import kotlinx.coroutines.flow.onEach
 @Composable
 fun SearchScreen(
     viewModel: SearchViewModel,
-    modifier: Modifier = Modifier,
+    navController: NavController,
     onQueryChange: (String?, SearchRestriction?) -> Unit = { _, _ -> },
     onClickEntry: (DictionaryEntry, String?, SearchRestriction?) -> Unit = { _, _, _ -> }
 ) {
@@ -53,27 +55,28 @@ fun SearchScreen(
         .filterNotNull()
         .collectAsLazyPagingItems()
 
-    BalalaikaTheme {
-        Surface(modifier = modifier) {
-            Column {
-                SearchHeader(
-                    query = query,
-                    onQueryChange = { q, r ->
-                        viewModel.setQuery(q)
-                        onQueryChange(q, r)
-                    },
-                    restriction = restriction,
-                    onClickRestriction = { viewModel.setRestriction(null) }
+    BalalaikaScaffold(
+        navController = navController,
+        title = stringResource(id = R.string.menu_search)
+    ) {
+        Column {
+            SearchHeader(
+                query = query,
+                onQueryChange = { q, r ->
+                    viewModel.setQuery(q)
+                    onQueryChange(q, r)
+                },
+                restriction = restriction,
+                onClickRestriction = { viewModel.setRestriction(null) }
+            )
+            if (empty) {
+                SearchEmptyMessage()
+            } else {
+                SearchList(
+                    entries,
+                    query,
+                    onClickEntry = { onClickEntry(it, query, restriction) }
                 )
-                if (empty) {
-                    SearchEmptyMessage()
-                } else {
-                    SearchList(
-                        entries,
-                        query,
-                        onClickEntry = { onClickEntry(it, query, restriction) }
-                    )
-                }
             }
         }
     }

@@ -5,22 +5,25 @@ import androidx.compose.foundation.Icon
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.LinearProgressIndicator
+import androidx.compose.material.Tab
+import androidx.compose.material.TabRow
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CloudDownload
 import androidx.compose.material.icons.filled.LibraryBooks
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.VectorAsset
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavController
 import com.github.cheapmon.balalaika.MainViewModel
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.model.DownloadableDictionary
 import com.github.cheapmon.balalaika.model.InstalledDictionary
 import com.github.cheapmon.balalaika.model.SimpleDictionary
-import com.github.cheapmon.balalaika.theme.BalalaikaTheme
+import com.github.cheapmon.balalaika.ui.BalalaikaScaffold
 import com.github.cheapmon.balalaika.util.exhaustive
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onCompletion
@@ -46,7 +49,7 @@ private enum class DictionaryTab(
 fun DictionaryScreen(
     viewModel: SelectionViewModel,
     activityViewModel: MainViewModel,
-    modifier: Modifier = Modifier
+    navController: NavController
 ) {
     var selectedTab: DictionaryTab by remember { mutableStateOf(DictionaryTab.Library) }
     var progress: Boolean by remember { mutableStateOf(false) }
@@ -79,33 +82,27 @@ fun DictionaryScreen(
         }
     }
 
-    BalalaikaTheme {
-        Scaffold(
-            modifier = modifier,
-            floatingActionButton = {
-                FloatingActionButton(onClick = { viewModel.refresh() }) {
-                    Icon(asset = Icons.Default.Refresh)
-                }
+    BalalaikaScaffold(
+        navController = navController,
+        title = stringResource(id = R.string.menu_selection)
+    ) {
+        Column {
+            if (progress) {
+                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             }
-        ) {
-            Column {
-                if (progress) {
-                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-                }
-                Tabs(
-                    selectedTab,
-                    onSelectTab = { selectedTab = it }
-                )
-                Body(
-                    installedDictionaries,
-                    downloadableDictionaries,
-                    selectedTab,
-                    onOpen,
-                    onClose,
-                    onAdd,
-                    onRemove
-                )
-            }
+            Tabs(
+                selectedTab,
+                onSelectTab = { selectedTab = it }
+            )
+            Body(
+                installedDictionaries,
+                downloadableDictionaries,
+                selectedTab,
+                onOpen,
+                onClose,
+                onAdd,
+                onRemove
+            )
         }
     }
 }

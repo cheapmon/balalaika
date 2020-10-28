@@ -71,6 +71,7 @@ class DictionaryFragment : Fragment() {
             setContent {
                 DictionaryEntryScreen(
                     viewModel = viewModel,
+                    navController = findNavController(),
                     onClickBase = ::onClickBaseButton,
                     onBookmark = ::onClickBookmarkButton,
                     onClickProperty = ::onClickProperty,

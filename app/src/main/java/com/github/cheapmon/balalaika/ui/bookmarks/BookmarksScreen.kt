@@ -6,7 +6,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.preferredSize
 import androidx.compose.foundation.lazy.LazyColumnFor
-import androidx.compose.material.*
+import androidx.compose.material.Divider
+import androidx.compose.material.IconButton
+import androidx.compose.material.ListItem
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Delete
@@ -15,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavController
 import androidx.ui.tooling.preview.Preview
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.components.EmptyMessage
@@ -22,27 +26,35 @@ import com.github.cheapmon.balalaika.model.DictionaryEntry
 import com.github.cheapmon.balalaika.theme.BalalaikaTheme
 import com.github.cheapmon.balalaika.theme.IconColor
 import com.github.cheapmon.balalaika.theme.listItemIconSize
+import com.github.cheapmon.balalaika.ui.BalalaikaScaffold
 import com.github.cheapmon.balalaika.util.sampleDictionaryEntries
 
 @Composable
 fun BookmarksScreen(
     viewModel: BookmarksViewModel,
+    navController: NavController,
     onClickEntry: (DictionaryEntry) -> Unit = {}
 ) {
     val entries by viewModel.bookmarkedEntries.observeAsState()
 
-    BalalaikaTheme {
-        Surface {
-            entries.orEmpty().let { entries ->
-                if (entries.isEmpty()) {
-                    BookmarksEmptyMessage()
-                } else {
-                    BookmarksList(
-                        entries = entries,
-                        onClickEntry = onClickEntry,
-                        onDeleteEntry = { viewModel.removeBookmark(it) }
-                    )
-                }
+    BalalaikaScaffold(
+        navController = navController,
+        title = stringResource(id = R.string.menu_bookmarks),
+        actions = {
+            IconButton(onClick = { viewModel.clearBookmarks() }) {
+                Icon(asset = Icons.Default.Delete)
+            }
+        }
+    ) {
+        entries.orEmpty().let { entries ->
+            if (entries.isEmpty()) {
+                BookmarksEmptyMessage()
+            } else {
+                BookmarksList(
+                    entries = entries,
+                    onClickEntry = onClickEntry,
+                    onDeleteEntry = { viewModel.removeBookmark(it) }
+                )
             }
         }
     }

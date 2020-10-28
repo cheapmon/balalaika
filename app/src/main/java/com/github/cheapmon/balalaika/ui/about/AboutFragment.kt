@@ -23,6 +23,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -34,7 +35,7 @@ class AboutFragment : Fragment() {
     ): View? {
         return ComposeView(requireContext()).apply {
             setContent {
-                AboutScreen(::openUrl)
+                AboutScreen(findNavController(), ::openUrl)
             }
         }
     }
