@@ -15,53 +15,11 @@
  */
 package com.github.cheapmon.balalaika.util
 
-import android.content.Context
-import android.graphics.drawable.Drawable
-import android.text.SpannedString
 import android.util.Log
-import android.widget.Button
-import androidx.annotation.DrawableRes
-import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
-import androidx.core.text.buildSpannedString
-import androidx.core.text.color
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavArgs
 import androidx.navigation.NavArgsLazy
-import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.model.DictionaryEntry
-import com.google.android.material.button.MaterialButton
-
-/** Convenience method for setting the icon of a `MaterialButton` from a drawable ID */
-fun Button.setIconById(@DrawableRes id: Int) = (this as? MaterialButton)?.apply {
-    icon = ContextCompat.getDrawable(this.context, id)
-}
-
-/** Convenience property for retrieving the icon of a `MaterialButton` */
-val Button.icon: Drawable?
-    get() = (this as? MaterialButton)?.icon
-
-/**
- * Highlight part of a string
- *
- * This is used in the user interface to indicate matching [dictionary entries][DictionaryEntry]
- * for a search query.
- */
-fun String.highlight(text: String?, context: Context): SpannedString {
-    val contents = this
-    return if (text == null || text == "" || !contents.contains(text)) {
-        buildSpannedString { append(contents) }
-    } else {
-        val color = ContextCompat.getColor(context, R.color.mainColor)
-        buildSpannedString {
-            // Split before and after text
-            contents.split(Regex("(?<=$text)|(?=$text)")).forEach {
-                if (it == text) color(color) { append(it) }
-                else append(it)
-            }
-        }
-    }
-}
 
 /** Exhaustive matching for `when` in statements */
 val <T> T.exhaustive: T
