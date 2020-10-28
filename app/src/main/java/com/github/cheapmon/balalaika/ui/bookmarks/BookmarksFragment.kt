@@ -21,9 +21,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.model.DictionaryEntry
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -38,12 +36,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class BookmarksFragment : Fragment() {
     private val viewModel: BookmarksViewModel by viewModels()
 
-    /** Notify about options menu */
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -53,31 +45,6 @@ class BookmarksFragment : Fragment() {
             setContent {
                 BookmarksScreen(viewModel, findNavController(), ::onClickEntry)
             }
-        }
-    }
-
-    /**
-     * Create options menu
-     *
-     * This only consists of one button to remove all bookmarks.
-     */
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_bookmarks, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    /** Options menu actions */
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.bookmarks_clear -> {
-                MaterialAlertDialogBuilder(requireContext())
-                    .setTitle(R.string.bookmarks_clear_title)
-                    .setPositiveButton(R.string.bookmarks_clear_affirm) { _, _ -> viewModel.clearBookmarks() }
-                    .setNegativeButton(R.string.bookmarks_clear_cancel, null)
-                    .show()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
         }
     }
 

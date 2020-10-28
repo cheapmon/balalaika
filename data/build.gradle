@@ -18,7 +18,6 @@ plugins {
     id "org.jetbrains.kotlin.android"
     id "org.jetbrains.kotlin.android.extensions"
     id "org.jetbrains.kotlin.kapt"
-    id 'org.jlleitschuh.gradle.ktlint'
     id "com.google.protobuf" version "0.8.12"
 }
 

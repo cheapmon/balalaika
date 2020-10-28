@@ -24,7 +24,6 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.model.DataCategory
@@ -32,12 +31,9 @@ import com.github.cheapmon.balalaika.model.DictionaryEntry
 import com.github.cheapmon.balalaika.model.Property
 import com.github.cheapmon.balalaika.model.SearchRestriction
 import com.github.cheapmon.balalaika.util.exhaustive
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 
 /**
  * Fragment for dictionary usage
@@ -55,12 +51,6 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class DictionaryFragment : Fragment() {
     private val viewModel: DictionaryViewModel by viewModels()
-
-    /** Notify about options menu */
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -81,39 +71,7 @@ class DictionaryFragment : Fragment() {
         }
     }
 
-    /** Create options menu */
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_dictionary, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    /**
-     * Options menu actions
-     *
-     * - Change dictionary ordering
-     * - Change dictionary view
-     * - Navigate to search
-     */
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_order_by -> {
-                showOrderingDialog()
-                true
-            }
-            R.id.action_setup_view -> {
-                showDictionaryViewDialog()
-                true
-            }
-            R.id.action_search -> {
-                val directions = DictionaryFragmentDirections.actionNavHomeToNavSearch()
-                findNavController().navigate(directions)
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-    private fun showOrderingDialog() {
+    /*private fun showOrderingDialog() {
         lifecycleScope.launch {
             val categories = viewModel.getCategories()
             val names = categories?.map { it.name }?.toTypedArray()
@@ -135,9 +93,9 @@ class DictionaryFragment : Fragment() {
                     .show()
             }
         }
-    }
+    }*/
 
-    private fun showDictionaryViewDialog() {
+    /*private fun showDictionaryViewDialog() {
         lifecycleScope.launch {
             val dictionaryViews = viewModel.getDictionaryViews()
             val names = dictionaryViews?.map { it.name }?.toTypedArray()
@@ -159,7 +117,7 @@ class DictionaryFragment : Fragment() {
                     .show()
             }
         }
-    }
+    }*/
 
     /** Open dictionary screen */
     private fun onOpenDictionaries() {

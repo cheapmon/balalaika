@@ -21,9 +21,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.model.HistoryItem
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -38,11 +36,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class HistoryFragment : Fragment() {
     private val viewModel: HistoryViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -52,26 +45,6 @@ class HistoryFragment : Fragment() {
             setContent {
                 HistoryScreen(viewModel, findNavController(), ::onClickHistoryItem)
             }
-        }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_history, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.history_clear -> {
-                MaterialAlertDialogBuilder(requireContext())
-                    .setTitle(R.string.history_clear_title)
-                    .setPositiveButton(R.string.history_clear_affirm) { _, _ ->
-                        viewModel.clearHistory()
-                    }.setNegativeButton(R.string.history_clear_cancel, null)
-                    .show()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
         }
     }
 

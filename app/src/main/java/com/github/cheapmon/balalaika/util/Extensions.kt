@@ -15,7 +15,6 @@
  */
 package com.github.cheapmon.balalaika.util
 
-import android.util.Log
 import androidx.core.os.bundleOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavArgs
@@ -24,41 +23,6 @@ import androidx.navigation.NavArgsLazy
 /** Exhaustive matching for `when` in statements */
 val <T> T.exhaustive: T
     get() = this
-
-/** Logger for any class */
-class Logger(private val name: String) {
-    /** @suppress */
-    fun assert(msg: Any?) = log(Log.ASSERT, msg)
-
-    /** @suppress */
-    fun debug(msg: Any?) = log(Log.DEBUG, msg)
-
-    /** @suppress */
-    fun error(msg: Any?) = log(Log.ERROR, msg)
-
-    /** @suppress */
-    fun info(msg: Any?) = log(Log.INFO, msg)
-
-    /** @suppress */
-    fun verbose(msg: Any?) = log(Log.VERBOSE, msg)
-
-    /** @suppress */
-    fun warn(msg: Any?) = log(Log.WARN, msg)
-    private fun log(priority: Int, msg: Any?) = Log.println(priority, name, msg.toString())
-}
-
-/**
- * Access the [logger][Logger] for a class
- *
- * Sample usage:
- * ```
- * logger {
- *   info("Some information")
- *   debug(someValue)
- * }
- * ```
- */
-inline fun <reified T> T.logger(block: Logger.() -> Unit) = Logger(T::class.java.name).block()
 
 /**
  * `Lazy` delegate to access fragment arguments inside of a `ViewModel`

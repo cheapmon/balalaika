@@ -19,8 +19,6 @@ plugins {
     id "androidx.navigation.safeargs.kotlin"
     id "kotlin-kapt"
     id "dagger.hilt.android.plugin"
-    id "org.jetbrains.dokka-android"
-    id "org.jlleitschuh.gradle.ktlint"
 }
 
 android {
@@ -67,18 +65,7 @@ android {
     }
 
     buildFeatures {
-        dataBinding = true
         compose true
-    }
-
-    dokka {
-        moduleName = "Balalaika"
-
-        outputFormat = "html"
-        outputDirectory = "$buildDir/javadoc"
-        jdkVersion = 8
-
-        includes = ["packages.md"]
     }
 
     /*
@@ -112,8 +99,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "androidx.appcompat:appcompat:1.2.0"
     implementation "androidx.constraintlayout:constraintlayout:2.0.2"
-    implementation "androidx.viewpager2:viewpager2:1.0.0"
-    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     implementation "androidx.core:core-ktx:1.3.2"
 
     // Jetpack Compose
@@ -126,15 +111,9 @@ dependencies {
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
     androidTestImplementation "androidx.ui:ui-test:$compose_version"
 
-    // Preferences
-    implementation "androidx.preference:preference-ktx:1.1.1"
-
     // Navigation
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
-
-    // Material Design components
-    implementation 'com.google.android.material:material:1.3.0-alpha03'
 
     // Paging support
     implementation "androidx.paging:paging-runtime-ktx:$paging_version"
