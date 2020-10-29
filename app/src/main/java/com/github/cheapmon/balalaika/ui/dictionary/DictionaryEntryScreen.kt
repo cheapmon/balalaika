@@ -13,6 +13,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.toUpperCase
 import androidx.navigation.NavController
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 import androidx.ui.tooling.preview.Preview
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.components.DictionaryEntryCard
@@ -23,9 +26,6 @@ import com.github.cheapmon.balalaika.model.DictionaryEntry
 import com.github.cheapmon.balalaika.model.Property
 import com.github.cheapmon.balalaika.theme.BalalaikaTheme
 import com.github.cheapmon.balalaika.ui.BalalaikaScaffold
-import com.github.cheapmon.balalaika.util.LazyPagingItems
-import com.github.cheapmon.balalaika.util.collectAsLazyPagingItems
-import com.github.cheapmon.balalaika.util.items
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.onEach
 

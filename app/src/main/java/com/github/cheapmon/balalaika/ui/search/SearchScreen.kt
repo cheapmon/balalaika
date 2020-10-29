@@ -1,6 +1,5 @@
 package com.github.cheapmon.balalaika.ui.search
 
-import androidx.compose.material.Icon
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -21,6 +20,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.toLowerCase
 import androidx.navigation.NavController
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 import androidx.ui.tooling.preview.Preview
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.components.DictionaryEntryCard
@@ -31,9 +33,6 @@ import com.github.cheapmon.balalaika.theme.BalalaikaTheme
 import com.github.cheapmon.balalaika.theme.itemPadding
 import com.github.cheapmon.balalaika.theme.itemSpacing
 import com.github.cheapmon.balalaika.ui.BalalaikaScaffold
-import com.github.cheapmon.balalaika.util.LazyPagingItems
-import com.github.cheapmon.balalaika.util.collectAsLazyPagingItems
-import com.github.cheapmon.balalaika.util.items
 import com.github.cheapmon.balalaika.util.wordclass
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.onEach

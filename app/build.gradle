@@ -109,6 +109,7 @@ dependencies {
     implementation "androidx.compose.material:material-icons-core:$compose_version"
     implementation "androidx.compose.material:material-icons-extended:$compose_version"
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
+    implementation "androidx.paging:paging-compose:1.0.0-alpha01"
     androidTestImplementation "androidx.ui:ui-test:$compose_version"
 
     // Navigation
