@@ -1,27 +1,29 @@
 package com.github.cheapmon.balalaika.ui.dictionary
 
 import androidx.compose.foundation.Text
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.ExperimentalLazyDsl
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Surface
-import androidx.compose.material.TextButton
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Sort
 import androidx.compose.material.icons.filled.ViewArray
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.intl.Locale
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.toUpperCase
 import androidx.navigation.NavController
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import androidx.ui.tooling.preview.Preview
+import com.github.cheapmon.balalaika.MainViewModel
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.components.DictionaryEntryCard
 import com.github.cheapmon.balalaika.components.EmptyMessage
@@ -37,6 +39,7 @@ import kotlinx.coroutines.flow.onEach
 @Composable
 fun DictionaryEntryScreen(
     viewModel: DictionaryViewModel,
+    activityViewModel: MainViewModel,
     navController: NavController,
     onChangeOrder: () -> Unit = {},
     onChangeView: () -> Unit = {},
@@ -54,9 +57,31 @@ fun DictionaryEntryScreen(
 
     val wordnetParam: Property.Wordnet? by viewModel.wordnetParam.collectAsState(initial = null)
 
+    val dictionary by activityViewModel.currentDictionary.observeAsState()
+
     BalalaikaScaffold(
         navController = navController,
-        title = stringResource(id = R.string.menu_dictionary),
+        title = {
+            Column(modifier = Modifier.clickable(onClick = { navController.navigate(R.id.nav_selection) })) {
+                when (val d = dictionary) {
+                    null -> {
+                        Text(text = stringResource(id = R.string.menu_dictionary))
+                    }
+                    else -> {
+                        Text(
+                            text = stringResource(id = R.string.menu_dictionary),
+                            style = MaterialTheme.typography.body2
+                        )
+                        Text(
+                            text = d.name,
+                            style = MaterialTheme.typography.caption,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                }
+            }
+        },
         actions = {
             IconButton(onClick = onChangeOrder) {
                 Icon(asset = Icons.Default.Sort)

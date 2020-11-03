@@ -18,6 +18,23 @@ fun BalalaikaScaffold(
     floatingActionButton: @Composable () -> Unit = {},
     bodyContent: @Composable (PaddingValues) -> Unit = {}
 ) {
+    BalalaikaScaffold(
+        navController = navController,
+        title = { Text(text = title) },
+        actions = actions,
+        floatingActionButton = floatingActionButton,
+        bodyContent = bodyContent
+    )
+}
+
+@Composable
+fun BalalaikaScaffold(
+    navController: NavController,
+    title: @Composable () -> Unit = {},
+    actions: @Composable RowScope.() -> Unit = {},
+    floatingActionButton: @Composable () -> Unit = {},
+    bodyContent: @Composable (PaddingValues) -> Unit = {}
+) {
     val scaffoldState = rememberScaffoldState()
 
     BalalaikaTheme {
@@ -25,7 +42,7 @@ fun BalalaikaScaffold(
             scaffoldState = scaffoldState,
             topBar = {
                 TopAppBar(
-                    title = { Text(text = title) },
+                    title = title,
                     navigationIcon = {
                         IconButton(onClick = { scaffoldState.drawerState.open() }) {
                             Icon(asset = Icons.Default.Menu)

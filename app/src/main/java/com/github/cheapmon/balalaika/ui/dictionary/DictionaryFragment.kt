@@ -26,9 +26,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.github.cheapmon.balalaika.MainViewModel
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.model.DataCategory
 import com.github.cheapmon.balalaika.model.DictionaryEntry
@@ -57,6 +59,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class DictionaryFragment : Fragment() {
     private val viewModel: DictionaryViewModel by viewModels()
+    private val activityViewModel: MainViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -67,6 +70,7 @@ class DictionaryFragment : Fragment() {
             setContent {
                 DictionaryEntryScreen(
                     viewModel = viewModel,
+                    activityViewModel = activityViewModel,
                     navController = findNavController(),
                     onChangeOrder = ::showOrderingDialog,
                     onChangeView = ::showDictionaryViewDialog,

@@ -1,5 +1,7 @@
 package com.github.cheapmon.balalaika.ui.search
 
+import androidx.compose.foundation.BaseTextField
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -17,6 +19,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.annotatedString
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.toLowerCase
 import androidx.navigation.NavController
