@@ -14,12 +14,14 @@ import com.github.cheapmon.balalaika.theme.BalalaikaTheme
 fun BalalaikaScaffold(
     navController: NavController,
     title: String,
+    scaffoldState: ScaffoldState = rememberScaffoldState(),
     actions: @Composable RowScope.() -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
     bodyContent: @Composable (PaddingValues) -> Unit = {}
 ) {
     BalalaikaScaffold(
         navController = navController,
+        scaffoldState = scaffoldState,
         title = { Text(text = title) },
         actions = actions,
         floatingActionButton = floatingActionButton,
@@ -30,13 +32,12 @@ fun BalalaikaScaffold(
 @Composable
 fun BalalaikaScaffold(
     navController: NavController,
+    scaffoldState: ScaffoldState = rememberScaffoldState(),
     title: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
     bodyContent: @Composable (PaddingValues) -> Unit = {}
 ) {
-    val scaffoldState = rememberScaffoldState()
-
     BalalaikaTheme {
         Scaffold(
             scaffoldState = scaffoldState,

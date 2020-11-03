@@ -1,23 +1,20 @@
 package com.github.cheapmon.balalaika.ui.bookmarks
 
-import androidx.compose.material.Icon
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.preferredSize
 import androidx.compose.foundation.lazy.LazyColumnFor
-import androidx.compose.material.Divider
-import androidx.compose.material.IconButton
-import androidx.compose.material.ListItem
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.intl.Locale
+import androidx.compose.ui.text.toUpperCase
 import androidx.navigation.NavController
 import androidx.ui.tooling.preview.Preview
 import com.github.cheapmon.balalaika.R
@@ -28,7 +25,9 @@ import com.github.cheapmon.balalaika.theme.IconColor
 import com.github.cheapmon.balalaika.theme.listItemIconSize
 import com.github.cheapmon.balalaika.ui.BalalaikaScaffold
 import com.github.cheapmon.balalaika.util.sampleDictionaryEntries
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BookmarksScreen(
     viewModel: BookmarksViewModel,
@@ -36,12 +35,16 @@ fun BookmarksScreen(
     onClickEntry: (DictionaryEntry) -> Unit = {}
 ) {
     val entries by viewModel.bookmarkedEntries.observeAsState()
+    var showDialog by remember { mutableStateOf(false) }
+    val scaffoldState = rememberScaffoldState()
+    val scope = rememberCoroutineScope()
 
     BalalaikaScaffold(
         navController = navController,
+        scaffoldState = scaffoldState,
         title = stringResource(id = R.string.menu_bookmarks),
         actions = {
-            IconButton(onClick = { viewModel.clearBookmarks() }) {
+            IconButton(onClick = { showDialog = true }) {
                 Icon(asset = Icons.Default.Delete)
             }
         }
@@ -57,7 +60,47 @@ fun BookmarksScreen(
                 )
             }
         }
+        if (showDialog) {
+            val doneMessage = stringResource(id = R.string.bookmarks_clear_done)
+
+            BookmarksDialog(
+                onConfirm = {
+                    showDialog = false
+                    viewModel.clearBookmarks()
+                    scope.launch {
+                        with(scaffoldState.snackbarHostState) {
+                            currentSnackbarData?.dismiss()
+                            showSnackbar(
+                                message = doneMessage,
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+                    }
+                },
+                onDismiss = { showDialog = false }
+            )
+        }
     }
+}
+
+@Composable
+private fun BookmarksDialog(onConfirm: () -> Unit = {}, onDismiss: () -> Unit = {}) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text(text = stringResource(id = R.string.affirm).toUpperCase(Locale.current))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(text = stringResource(id = R.string.cancel).toUpperCase(Locale.current))
+            }
+        },
+        title = {
+            Text(text = stringResource(id = R.string.bookmarks_clear_title))
+        }
+    )
 }
 
 @Composable
