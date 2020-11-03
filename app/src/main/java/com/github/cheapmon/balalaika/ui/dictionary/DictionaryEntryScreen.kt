@@ -3,10 +3,15 @@ package com.github.cheapmon.balalaika.ui.dictionary
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.lazy.ExperimentalLazyDsl
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Surface
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MenuBook
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Sort
+import androidx.compose.material.icons.filled.ViewArray
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -33,6 +38,9 @@ import kotlinx.coroutines.flow.onEach
 fun DictionaryEntryScreen(
     viewModel: DictionaryViewModel,
     navController: NavController,
+    onChangeOrder: () -> Unit = {},
+    onChangeView: () -> Unit = {},
+    onNavigateToSearch: () -> Unit = {},
     onClickBase: (DictionaryEntry) -> Unit = {},
     onBookmark: (DictionaryEntry) -> Unit = {},
     onClickProperty: PropertyAction<Property> = emptyPropertyAction(),
@@ -48,7 +56,18 @@ fun DictionaryEntryScreen(
 
     BalalaikaScaffold(
         navController = navController,
-        title = stringResource(id = R.string.menu_dictionary)
+        title = stringResource(id = R.string.menu_dictionary),
+        actions = {
+            IconButton(onClick = onChangeOrder) {
+                Icon(asset = Icons.Default.Sort)
+            }
+            IconButton(onClick = onChangeView) {
+                Icon(asset = Icons.Default.ViewArray)
+            }
+            IconButton(onClick = onNavigateToSearch) {
+                Icon(asset = Icons.Default.Search)
+            }
+        }
     ) {
         if (!empty) {
             DictionaryEntryList(

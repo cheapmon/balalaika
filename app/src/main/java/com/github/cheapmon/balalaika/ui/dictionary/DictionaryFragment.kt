@@ -19,11 +19,15 @@ import android.content.Intent
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.model.DataCategory
@@ -34,6 +38,8 @@ import com.github.cheapmon.balalaika.util.exhaustive
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 /**
  * Fragment for dictionary usage
@@ -62,6 +68,9 @@ class DictionaryFragment : Fragment() {
                 DictionaryEntryScreen(
                     viewModel = viewModel,
                     navController = findNavController(),
+                    onChangeOrder = ::showOrderingDialog,
+                    onChangeView = ::showDictionaryViewDialog,
+                    onNavigateToSearch = ::onOpenSearch,
                     onClickBase = ::onClickBaseButton,
                     onBookmark = ::onClickBookmarkButton,
                     onClickProperty = ::onClickProperty,
@@ -71,13 +80,13 @@ class DictionaryFragment : Fragment() {
         }
     }
 
-    /*private fun showOrderingDialog() {
+    private fun showOrderingDialog() {
         lifecycleScope.launch {
             val categories = viewModel.getCategories()
             val names = categories?.map { it.name }?.toTypedArray()
             val selected = categories?.indexOfFirst { it == viewModel.category.first() }
             if (names != null && selected != null) {
-                MaterialAlertDialogBuilder(requireContext())
+                AlertDialog.Builder(requireContext())
                     .setIcon(R.drawable.ic_sort)
                     .setTitle(R.string.menu_order_by)
                     .setSingleChoiceItems(names, selected) { _, which ->
@@ -85,7 +94,7 @@ class DictionaryFragment : Fragment() {
                     }.setPositiveButton(R.string.affirm, null)
                     .show()
             } else {
-                MaterialAlertDialogBuilder(requireContext())
+                AlertDialog.Builder(requireContext())
                     .setIcon(R.drawable.ic_sort)
                     .setTitle(R.string.menu_order_by)
                     .setMessage(R.string.dictionary_empty)
@@ -93,15 +102,15 @@ class DictionaryFragment : Fragment() {
                     .show()
             }
         }
-    }*/
+    }
 
-    /*private fun showDictionaryViewDialog() {
+    private fun showDictionaryViewDialog() {
         lifecycleScope.launch {
             val dictionaryViews = viewModel.getDictionaryViews()
             val names = dictionaryViews?.map { it.name }?.toTypedArray()
             val selected = dictionaryViews?.indexOfFirst { it == viewModel.dictionaryView.first() }
             if (names != null && selected != null) {
-                MaterialAlertDialogBuilder(requireContext())
+                AlertDialog.Builder(requireContext())
                     .setIcon(R.drawable.ic_view)
                     .setTitle(R.string.menu_setup_view)
                     .setSingleChoiceItems(names, selected) { _, which ->
@@ -109,7 +118,7 @@ class DictionaryFragment : Fragment() {
                     }.setPositiveButton(R.string.affirm, null)
                     .show()
             } else {
-                MaterialAlertDialogBuilder(requireContext())
+                AlertDialog.Builder(requireContext())
                     .setIcon(R.drawable.ic_view)
                     .setTitle(R.string.menu_setup_view)
                     .setMessage(R.string.dictionary_empty)
@@ -117,7 +126,12 @@ class DictionaryFragment : Fragment() {
                     .show()
             }
         }
-    }*/
+    }
+
+    private fun onOpenSearch() {
+        val directions = DictionaryFragmentDirections.actionNavHomeToNavSearch()
+        findNavController().navigate(directions)
+    }
 
     /** Open dictionary screen */
     private fun onOpenDictionaries() {
