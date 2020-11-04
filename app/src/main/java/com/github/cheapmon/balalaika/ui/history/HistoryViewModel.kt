@@ -26,6 +26,7 @@ import com.github.cheapmon.balalaika.model.HistoryItem
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 /** View model for [HistoryFragment] */
@@ -39,7 +40,7 @@ class HistoryViewModel @ViewModelInject constructor(
     val items: LiveData<List<HistoryItem>> =
         openedDictionary.flatMapLatest { dictionary ->
             if (dictionary != null) {
-                historyItems.getHistoryItems(dictionary)
+                historyItems.getHistoryItems(dictionary).map { it.reversed() }
             } else {
                 flowOf(emptyList())
             }

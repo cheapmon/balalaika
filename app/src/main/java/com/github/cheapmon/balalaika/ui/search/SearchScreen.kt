@@ -41,8 +41,8 @@ import kotlinx.coroutines.flow.onEach
 @Composable
 fun SearchScreen(
     navController: NavController,
-    onQueryChange: (String?, SearchRestriction?) -> Unit = { _, _ -> },
-    onClickEntry: (DictionaryEntry, String?, SearchRestriction?) -> Unit = { _, _, _ -> }
+    onQuerySubmit: (String?, SearchRestriction?) -> Unit = { _, _ -> },
+    onClickEntry: (DictionaryEntry) -> Unit = {}
 ) {
     val viewModel: SearchViewModel = viewModel()
 
@@ -63,34 +63,29 @@ fun SearchScreen(
         Column {
             SearchHeader(
                 query = query,
-                onQueryChange = { q, r ->
-                    viewModel.setQuery(q)
-                    onQueryChange(q, r)
-                },
+                onQueryChange = { viewModel.setQuery(it) },
+                onQuerySubmit = onQuerySubmit,
                 restriction = restriction,
                 onClickRestriction = { viewModel.setRestriction(null) }
             )
             if (empty) {
                 SearchEmptyMessage()
             } else {
-                SearchList(
-                    entries,
-                    query,
-                    onClickEntry = { onClickEntry(it, query, restriction) }
-                )
+                SearchList(entries, query, onClickEntry = onClickEntry)
             }
         }
     }
 
     onDispose {
-        onQueryChange(query, restriction)
+        onQuerySubmit(query, restriction)
     }
 }
 
 @Composable
 private fun SearchHeader(
     query: String?,
-    onQueryChange: (String?, SearchRestriction?) -> Unit = { _, _ -> },
+    onQueryChange: (String?) -> Unit = {},
+    onQuerySubmit: (String?, SearchRestriction?) -> Unit = { _, _ -> },
     restriction: SearchRestriction?,
     onClickRestriction: () -> Unit = {},
     modifier: Modifier = Modifier
@@ -102,10 +97,13 @@ private fun SearchHeader(
         ) {
             TextField(
                 value = query ?: "",
-                onValueChange = { onQueryChange(it, restriction) },
+                onValueChange = { onQueryChange(it) },
                 modifier = Modifier.fillMaxWidth(),
                 imeAction = ImeAction.Search,
-                onImeActionPerformed = { _, controller -> controller?.hideSoftwareKeyboard() },
+                onImeActionPerformed = { _, controller ->
+                    controller?.hideSoftwareKeyboard()
+                    onQuerySubmit(query, restriction)
+                },
                 label = { Text(text = stringResource(R.string.search_query)) }
             )
             if (restriction != null) {

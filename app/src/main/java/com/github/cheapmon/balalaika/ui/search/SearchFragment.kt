@@ -22,7 +22,6 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.github.cheapmon.balalaika.MainViewModel
 import com.github.cheapmon.balalaika.model.DictionaryEntry
@@ -51,7 +50,7 @@ class SearchFragment : Fragment() {
             setContent {
                 SearchScreen(
                     navController = findNavController(),
-                    onQueryChange = ::addToHistory,
+                    onQuerySubmit = ::addToHistory,
                     onClickEntry = ::onClickItem
                 )
             }
@@ -59,12 +58,7 @@ class SearchFragment : Fragment() {
     }
 
     /** Show entry in dictionary */
-    private fun onClickItem(
-        dictionaryEntry: DictionaryEntry,
-        query: String?,
-        restriction: SearchRestriction?
-    ) {
-        addToHistory(query, restriction)
+    private fun onClickItem(dictionaryEntry: DictionaryEntry) {
         val directions = SearchFragmentDirections.actionNavSearchToNavHome(dictionaryEntry)
         findNavController().navigate(directions)
     }
