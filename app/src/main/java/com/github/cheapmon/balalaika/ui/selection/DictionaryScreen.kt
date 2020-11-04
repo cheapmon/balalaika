@@ -17,6 +17,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.VectorAsset
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.viewinterop.viewModel
 import androidx.navigation.NavController
 import com.github.cheapmon.balalaika.MainViewModel
 import com.github.cheapmon.balalaika.R
@@ -47,10 +48,11 @@ private enum class DictionaryTab(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun DictionaryScreen(
-    viewModel: SelectionViewModel,
     activityViewModel: MainViewModel,
     navController: NavController
 ) {
+    val viewModel: SelectionViewModel = viewModel()
+
     var selectedTab: DictionaryTab by remember { mutableStateOf(DictionaryTab.Library) }
     var progress: Boolean by remember { mutableStateOf(false) }
 

@@ -65,7 +65,6 @@ class DictionaryFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 DictionaryEntryScreen(
-                    viewModel = viewModel,
                     activityViewModel = activityViewModel,
                     navController = findNavController(),
                     onNavigateToSearch = ::onOpenSearch,

@@ -34,8 +34,6 @@ import dagger.hilt.android.AndroidEntryPoint
  */
 @AndroidEntryPoint
 class BookmarksFragment : Fragment() {
-    private val viewModel: BookmarksViewModel by viewModels()
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -43,7 +41,7 @@ class BookmarksFragment : Fragment() {
     ): View? {
         return ComposeView(requireContext()).apply {
             setContent {
-                BookmarksScreen(viewModel, findNavController(), ::onClickEntry)
+                BookmarksScreen(findNavController(), ::onClickEntry)
             }
         }
     }

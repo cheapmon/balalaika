@@ -22,14 +22,12 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.github.cheapmon.balalaika.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SelectionFragment : Fragment() {
-    private val viewModel: SelectionViewModel by viewModels()
     private val activityViewModel: MainViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -40,7 +38,6 @@ class SelectionFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 DictionaryScreen(
-                    viewModel = viewModel,
                     activityViewModel = activityViewModel,
                     navController = findNavController()
                 )

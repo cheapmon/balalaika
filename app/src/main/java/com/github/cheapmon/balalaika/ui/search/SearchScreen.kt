@@ -1,7 +1,5 @@
 package com.github.cheapmon.balalaika.ui.search
 
-import androidx.compose.foundation.BaseTextField
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -19,9 +17,9 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.annotatedString
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.toLowerCase
+import androidx.compose.ui.viewinterop.viewModel
 import androidx.navigation.NavController
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -42,11 +40,12 @@ import kotlinx.coroutines.flow.onEach
 
 @Composable
 fun SearchScreen(
-    viewModel: SearchViewModel,
     navController: NavController,
     onQueryChange: (String?, SearchRestriction?) -> Unit = { _, _ -> },
     onClickEntry: (DictionaryEntry, String?, SearchRestriction?) -> Unit = { _, _, _ -> }
 ) {
+    val viewModel: SearchViewModel = viewModel()
+
     val query: String? by viewModel.query.collectAsState(initial = null)
     val restriction: SearchRestriction? by viewModel.restriction.collectAsState(initial = null)
 

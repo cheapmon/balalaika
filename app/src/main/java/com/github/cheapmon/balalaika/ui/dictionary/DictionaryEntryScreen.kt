@@ -18,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.toUpperCase
+import androidx.compose.ui.viewinterop.viewModel
 import androidx.navigation.NavController
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -44,7 +45,6 @@ private enum class DictionaryDialogState {
 
 @Composable
 fun DictionaryEntryScreen(
-    viewModel: DictionaryViewModel,
     activityViewModel: MainViewModel,
     navController: NavController,
     onNavigateToSearch: () -> Unit = {},
@@ -53,6 +53,8 @@ fun DictionaryEntryScreen(
     onClickProperty: PropertyAction<Property> = emptyPropertyAction(),
     onOpenDictionaries: () -> Unit = {}
 ) {
+    val viewModel: DictionaryViewModel = viewModel()
+
     var empty by remember { mutableStateOf(true) }
     val entries = viewModel.dictionaryEntries
         .onEach { empty = it == null }

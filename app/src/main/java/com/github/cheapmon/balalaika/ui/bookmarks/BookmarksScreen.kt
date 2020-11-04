@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.toUpperCase
+import androidx.compose.ui.viewinterop.viewModel
 import androidx.navigation.NavController
 import androidx.ui.tooling.preview.Preview
 import com.github.cheapmon.balalaika.R
@@ -30,10 +31,11 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BookmarksScreen(
-    viewModel: BookmarksViewModel,
     navController: NavController,
     onClickEntry: (DictionaryEntry) -> Unit = {}
 ) {
+    val viewModel: BookmarksViewModel = viewModel()
+
     val entries by viewModel.bookmarkedEntries.observeAsState()
     var showDialog by remember { mutableStateOf(false) }
     val scaffoldState = rememberScaffoldState()

@@ -39,7 +39,6 @@ import dagger.hilt.android.AndroidEntryPoint
  */
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
-    private val viewModel: SearchViewModel by viewModels()
     private val activityViewModel: MainViewModel by activityViewModels()
 
     /** @suppress */
@@ -51,7 +50,6 @@ class SearchFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 SearchScreen(
-                    viewModel = viewModel,
                     navController = findNavController(),
                     onQueryChange = ::addToHistory,
                     onClickEntry = ::onClickItem

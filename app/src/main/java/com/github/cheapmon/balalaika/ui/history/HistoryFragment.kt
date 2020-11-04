@@ -16,10 +16,11 @@
 package com.github.cheapmon.balalaika.ui.history
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.github.cheapmon.balalaika.model.HistoryItem
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,8 +35,6 @@ import dagger.hilt.android.AndroidEntryPoint
  */
 @AndroidEntryPoint
 class HistoryFragment : Fragment() {
-    private val viewModel: HistoryViewModel by viewModels()
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -43,7 +42,7 @@ class HistoryFragment : Fragment() {
     ): View? {
         return ComposeView(requireContext()).apply {
             setContent {
-                HistoryScreen(viewModel, findNavController(), ::onClickHistoryItem)
+                HistoryScreen(findNavController(), ::onClickHistoryItem)
             }
         }
     }
