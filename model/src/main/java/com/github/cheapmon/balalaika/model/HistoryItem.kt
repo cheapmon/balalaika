@@ -16,6 +16,7 @@
 package com.github.cheapmon.balalaika.model
 
 data class HistoryItem(
+    val id: Long = 0,
     val query: String,
     val restriction: SearchRestriction?
 )

@@ -25,6 +25,7 @@ import javax.inject.Singleton
 internal class HistoryItemToHistoryItemEntity @Inject constructor() {
     operator fun invoke(item: HistoryItem, dictionary: InstalledDictionary): HistoryItemEntity =
         HistoryItemEntity(
+            id = item.id,
             categoryId = item.restriction?.category?.id,
             dictionaryId = dictionary.id,
             restriction = item.restriction?.text,

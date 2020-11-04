@@ -34,6 +34,7 @@ internal class HistoryItemWithCategoryToHistoryItem @Inject constructor(
                 )
             } else null
         return HistoryItem(
+            id = from.historyItem.id,
             query = from.historyItem.query,
             restriction = searchRestriction
         )

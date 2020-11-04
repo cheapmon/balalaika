@@ -79,7 +79,7 @@ class MainViewModel @ViewModelInject constructor(
         viewModelScope.launch {
             val dictionary = dictionaryRepository.getOpenDictionary().first() ?: return@launch
             if (query.isBlank()) return@launch
-            val item = HistoryItem(query, restriction)
+            val item = HistoryItem(query = query, restriction = restriction)
             historyRepository.addToHistory(dictionary, item)
         }
     }
