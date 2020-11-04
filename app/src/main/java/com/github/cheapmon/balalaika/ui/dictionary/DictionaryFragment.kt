@@ -22,13 +22,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.github.cheapmon.balalaika.MainViewModel
 import com.github.cheapmon.balalaika.R
@@ -40,8 +38,6 @@ import com.github.cheapmon.balalaika.util.exhaustive
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 
 /**
  * Fragment for dictionary usage
@@ -72,62 +68,12 @@ class DictionaryFragment : Fragment() {
                     viewModel = viewModel,
                     activityViewModel = activityViewModel,
                     navController = findNavController(),
-                    onChangeOrder = ::showOrderingDialog,
-                    onChangeView = ::showDictionaryViewDialog,
                     onNavigateToSearch = ::onOpenSearch,
                     onClickBase = ::onClickBaseButton,
                     onBookmark = ::onClickBookmarkButton,
                     onClickProperty = ::onClickProperty,
                     onOpenDictionaries = ::onOpenDictionaries
                 )
-            }
-        }
-    }
-
-    private fun showOrderingDialog() {
-        lifecycleScope.launch {
-            val categories = viewModel.getCategories()
-            val names = categories?.map { it.name }?.toTypedArray()
-            val selected = categories?.indexOfFirst { it == viewModel.category.first() }
-            if (names != null && selected != null) {
-                AlertDialog.Builder(requireContext())
-                    .setIcon(R.drawable.ic_sort)
-                    .setTitle(R.string.menu_order_by)
-                    .setSingleChoiceItems(names, selected) { _, which ->
-                        viewModel.setCategory(categories[which])
-                    }.setPositiveButton(R.string.affirm, null)
-                    .show()
-            } else {
-                AlertDialog.Builder(requireContext())
-                    .setIcon(R.drawable.ic_sort)
-                    .setTitle(R.string.menu_order_by)
-                    .setMessage(R.string.dictionary_empty)
-                    .setPositiveButton(R.string.affirm, null)
-                    .show()
-            }
-        }
-    }
-
-    private fun showDictionaryViewDialog() {
-        lifecycleScope.launch {
-            val dictionaryViews = viewModel.getDictionaryViews()
-            val names = dictionaryViews?.map { it.name }?.toTypedArray()
-            val selected = dictionaryViews?.indexOfFirst { it == viewModel.dictionaryView.first() }
-            if (names != null && selected != null) {
-                AlertDialog.Builder(requireContext())
-                    .setIcon(R.drawable.ic_view)
-                    .setTitle(R.string.menu_setup_view)
-                    .setSingleChoiceItems(names, selected) { _, which ->
-                        viewModel.setDictionaryView(dictionaryViews[which])
-                    }.setPositiveButton(R.string.affirm, null)
-                    .show()
-            } else {
-                AlertDialog.Builder(requireContext())
-                    .setIcon(R.drawable.ic_view)
-                    .setTitle(R.string.menu_setup_view)
-                    .setMessage(R.string.dictionary_empty)
-                    .setPositiveButton(R.string.affirm, null)
-                    .show()
             }
         }
     }

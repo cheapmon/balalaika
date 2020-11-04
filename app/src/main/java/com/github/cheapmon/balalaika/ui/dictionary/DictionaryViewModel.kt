@@ -118,15 +118,15 @@ class DictionaryViewModel @ViewModelInject constructor(
     }
 
     /** All available sortable categories */
-    suspend fun getCategories(): List<DataCategory>? =
-        dictionaries.getOpenDictionary().first()?.let {
-            config.getSortCategories(it).first()
+    fun getCategories(): Flow<List<DataCategory>?> =
+        dictionaries.getOpenDictionary().flatMapLatest {
+            it?.let { config.getSortCategories(it) } ?: flowOf(null)
         }
 
     /** All available dictionary views */
-    suspend fun getDictionaryViews(): List<DictionaryView>? =
-        dictionaries.getOpenDictionary().first()?.let {
-            config.getDictionaryViews(it).first()
+    fun getDictionaryViews(): Flow<List<DictionaryView>?> =
+        dictionaries.getOpenDictionary().flatMapLatest {
+            it?.let { config.getDictionaryViews(it) } ?: flowOf(null)
         }
 
     private val _wordnetParam: MutableStateFlow<Property.Wordnet?> = MutableStateFlow(null)

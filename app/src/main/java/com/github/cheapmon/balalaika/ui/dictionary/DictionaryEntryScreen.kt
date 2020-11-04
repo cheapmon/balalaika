@@ -25,24 +25,28 @@ import androidx.paging.compose.items
 import androidx.ui.tooling.preview.Preview
 import com.github.cheapmon.balalaika.MainViewModel
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.components.DictionaryEntryCard
-import com.github.cheapmon.balalaika.components.EmptyMessage
-import com.github.cheapmon.balalaika.components.PropertyAction
-import com.github.cheapmon.balalaika.components.emptyPropertyAction
+import com.github.cheapmon.balalaika.components.*
+import com.github.cheapmon.balalaika.model.DataCategory
 import com.github.cheapmon.balalaika.model.DictionaryEntry
+import com.github.cheapmon.balalaika.model.DictionaryView
 import com.github.cheapmon.balalaika.model.Property
 import com.github.cheapmon.balalaika.theme.BalalaikaTheme
 import com.github.cheapmon.balalaika.ui.BalalaikaScaffold
+import com.github.cheapmon.balalaika.util.exhaustive
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.onEach
+
+private enum class DictionaryDialogState {
+    NONE,
+    ORDER,
+    VIEW
+}
 
 @Composable
 fun DictionaryEntryScreen(
     viewModel: DictionaryViewModel,
     activityViewModel: MainViewModel,
     navController: NavController,
-    onChangeOrder: () -> Unit = {},
-    onChangeView: () -> Unit = {},
     onNavigateToSearch: () -> Unit = {},
     onClickBase: (DictionaryEntry) -> Unit = {},
     onBookmark: (DictionaryEntry) -> Unit = {},
@@ -55,6 +59,7 @@ fun DictionaryEntryScreen(
         .filterNotNull()
         .collectAsLazyPagingItems()
 
+    val (dialogState, onChangeDialogState) = remember { mutableStateOf(DictionaryDialogState.NONE) }
     val wordnetParam: Property.Wordnet? by viewModel.wordnetParam.collectAsState(initial = null)
 
     val dictionary by activityViewModel.currentDictionary.observeAsState()
@@ -83,10 +88,10 @@ fun DictionaryEntryScreen(
             }
         },
         actions = {
-            IconButton(onClick = onChangeOrder) {
+            IconButton(onClick = { onChangeDialogState(DictionaryDialogState.ORDER) }) {
                 Icon(asset = Icons.Default.Sort)
             }
-            IconButton(onClick = onChangeView) {
+            IconButton(onClick = { onChangeDialogState(DictionaryDialogState.VIEW) }) {
                 Icon(asset = Icons.Default.ViewArray)
             }
             IconButton(onClick = onNavigateToSearch) {
@@ -109,6 +114,7 @@ fun DictionaryEntryScreen(
             wordnetParam = wordnetParam,
             onDismiss = { viewModel.setWordnetParam(null) }
         )
+        DictionaryDialog(viewModel, dialogState, onChangeDialogState)
     }
 }
 
@@ -163,6 +169,55 @@ private fun DictionaryEntryDialog(
             payload = payload,
             onDismiss = onDismiss
         )
+    }
+}
+
+@Composable
+private fun DictionaryDialog(
+    viewModel: DictionaryViewModel,
+    state: DictionaryDialogState = DictionaryDialogState.NONE,
+    onChangeState: (DictionaryDialogState) -> Unit = {}
+) {
+    val categories: List<DataCategory>? by viewModel.getCategories().collectAsState(initial = null)
+    val category: DataCategory? by viewModel.category.collectAsState(initial = null)
+    val onChangeCategory: (DataCategory) -> Unit = { viewModel.setCategory(it) }
+
+    val views: List<DictionaryView>? by viewModel.getDictionaryViews()
+        .collectAsState(initial = null)
+    val view: DictionaryView? by viewModel.dictionaryView.collectAsState(initial = null)
+    val onChangeView: (DictionaryView) -> Unit = { viewModel.setDictionaryView(it) }
+
+    val dismiss = { onChangeState(DictionaryDialogState.NONE) }
+
+    BalalaikaTheme {
+        Surface {
+            when (state) {
+                DictionaryDialogState.NONE -> {
+                }
+                DictionaryDialogState.ORDER -> {
+                    ChoiceDialog(
+                        title = stringResource(id = R.string.menu_order_by),
+                        items = categories.orEmpty(),
+                        selectedItem = category,
+                        itemName = { it.name },
+                        onItemSelected = onChangeCategory,
+                        onConfirm = dismiss,
+                        onDismiss = dismiss
+                    ) { Text(text = stringResource(id = R.string.dictionary_empty)) }
+                }
+                DictionaryDialogState.VIEW -> {
+                    ChoiceDialog(
+                        title = stringResource(id = R.string.menu_setup_view),
+                        items = views.orEmpty(),
+                        selectedItem = view,
+                        itemName = { it.name },
+                        onItemSelected = onChangeView,
+                        onConfirm = dismiss,
+                        onDismiss = dismiss
+                    ) { Text(text = stringResource(id = R.string.dictionary_empty)) }
+                }
+            }.exhaustive
+        }
     }
 }
 
