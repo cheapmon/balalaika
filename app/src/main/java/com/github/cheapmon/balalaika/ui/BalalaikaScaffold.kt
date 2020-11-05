@@ -54,9 +54,11 @@ fun BalalaikaScaffold(
             },
             drawerContent = {
                 NavigationDrawer(
-                    navController = navController,
-                    drawerState = scaffoldState.drawerState,
-                    destinationId = navController.currentDestination?.id
+                    currentScreen = navController.currentDestination?.id
+                        ?.let { id -> screenFor(id) } ?: Screen.Dictionary,
+                    onNavigate = { screen ->
+                        scaffoldState.drawerState.close { navController.navigate(screen.id()) }
+                    }
                 )
             },
             floatingActionButton = floatingActionButton,

@@ -16,6 +16,7 @@
 plugins {
     id "com.android.application"
     id "kotlin-android"
+    id "kotlin-android-extensions"
     id "androidx.navigation.safeargs.kotlin"
     id "kotlin-kapt"
     id "dagger.hilt.android.plugin"
@@ -110,6 +111,7 @@ dependencies {
     implementation "androidx.compose.material:material-icons-extended:$compose_version"
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
     implementation "androidx.paging:paging-compose:1.0.0-alpha01"
+    implementation "androidx.navigation:navigation-compose:1.0.0-alpha01"
     androidTestImplementation "androidx.ui:ui-test:$compose_version"
 
     // Navigation
