@@ -14,6 +14,18 @@ import androidx.ui.tooling.preview.PreviewParameter
 import com.github.cheapmon.balalaika.util.DarkThemeProvider
 
 @Composable
+val MaterialColors
+    get() = MaterialTheme.colors
+
+@Composable
+val MaterialTypography
+    get() = MaterialTheme.typography
+
+@Composable
+val MaterialShapes
+    get() = MaterialTheme.shapes
+
+@Composable
 fun BalalaikaTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     colors: Colors? = null,

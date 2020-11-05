@@ -32,6 +32,7 @@ import com.github.cheapmon.balalaika.components.EmptyMessage
 import com.github.cheapmon.balalaika.model.DictionaryEntry
 import com.github.cheapmon.balalaika.model.SearchRestriction
 import com.github.cheapmon.balalaika.theme.BalalaikaTheme
+import com.github.cheapmon.balalaika.theme.MaterialColors
 import com.github.cheapmon.balalaika.theme.itemPadding
 import com.github.cheapmon.balalaika.theme.itemSpacing
 import com.github.cheapmon.balalaika.ui.BalalaikaScaffold
@@ -167,7 +168,7 @@ private fun highlightQuery(text: String, query: String?): AnnotatedString {
             // Split before and after text
             text.split(Regex("(?<=$query)|(?=$query)", RegexOption.IGNORE_CASE)).forEach {
                 if (it.toLowerCase(Locale.current) == queryLower) {
-                    pushStyle(SpanStyle(color = MaterialTheme.colors.primary))
+                    pushStyle(SpanStyle(color = MaterialColors.primary))
                     append(it)
                     pop()
                 } else append(it)

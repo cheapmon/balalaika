@@ -24,9 +24,7 @@ import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.components.EmptyMessage
 import com.github.cheapmon.balalaika.model.HistoryItem
 import com.github.cheapmon.balalaika.model.SearchRestriction
-import com.github.cheapmon.balalaika.theme.BalalaikaTheme
-import com.github.cheapmon.balalaika.theme.IconColor
-import com.github.cheapmon.balalaika.theme.listItemIconSize
+import com.github.cheapmon.balalaika.theme.*
 import com.github.cheapmon.balalaika.ui.BalalaikaScaffold
 import com.github.cheapmon.balalaika.util.DarkThemeProvider
 import com.github.cheapmon.balalaika.util.sampleHistoryItems
@@ -121,7 +119,7 @@ private fun HistoryEmptyMessage() {
     ) {
         Text(
             text = stringResource(id = R.string.history_empty),
-            style = MaterialTheme.typography.body2
+            style = MaterialTypography.body2
         )
     }
 }
@@ -140,7 +138,7 @@ private fun HistoryList(
                     Icon(
                         asset = Icons.Default.Search,
                         modifier = Modifier.preferredSize(listItemIconSize),
-                        tint = IconColor()
+                        tint = MaterialColors.onSurfaceLight
                     )
                 },
                 secondaryText = { Text(text = item.restriction.text()) },
@@ -148,7 +146,7 @@ private fun HistoryList(
                     IconButton(onClick = { onDeleteItem(item) }) {
                         Icon(
                             asset = Icons.Default.Delete,
-                            tint = IconColor()
+                            tint = MaterialColors.onSurfaceLight
                         )
                     }
                 }

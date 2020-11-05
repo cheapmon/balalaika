@@ -16,9 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.tooling.preview.PreviewParameter
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.theme.BalalaikaTheme
-import com.github.cheapmon.balalaika.theme.itemPadding
-import com.github.cheapmon.balalaika.theme.itemSpacing
+import com.github.cheapmon.balalaika.theme.*
 import com.github.cheapmon.balalaika.util.DarkThemeProvider
 
 @Composable
@@ -48,14 +46,14 @@ fun NavigationDrawer(
 private fun BalalaikaLogo() {
     Surface(
         elevation = 4.dp,
-        contentColor = contentColorFor(MaterialTheme.colors.primary)
+        contentColor = contentColorFor(MaterialColors.primary)
     ) {
         Column(
             modifier = Modifier.background(
                 brush = HorizontalGradient(
                     colors = listOf(
-                        MaterialTheme.colors.primaryVariant,
-                        MaterialTheme.colors.primary
+                        MaterialColors.primaryVariant,
+                        MaterialColors.primary
                     ),
                     startX = 0f,
                     endX = 500f
@@ -76,7 +74,7 @@ private fun BalalaikaLogo() {
                 ) {
                     Text(
                         text = stringResource(id = R.string.app_name),
-                        style = MaterialTheme.typography.h5
+                        style = MaterialTypography.h5
                     )
                     Icon(asset = vectorResource(id = R.drawable.ic_balalaika))
                 }
@@ -104,12 +102,12 @@ private fun NavButton(
     selected: Boolean = false
 ) {
     val foregroundColor = if (selected) {
-        MaterialTheme.colors.primaryVariant
+        MaterialColors.primaryVariant
     } else {
-        MaterialTheme.colors.onSurface.copy(alpha = .8f)
+        MaterialColors.onSurface.copy(alpha = .8f)
     }
     val backgroundColor = if (selected) {
-        MaterialTheme.colors.primary.copy(alpha = .2f)
+        MaterialColors.primary.copy(alpha = .2f)
     } else {
         Color.Transparent
     }
@@ -129,7 +127,7 @@ private fun NavButton(
             Icon(asset = icon)
             Text(
                 text = title,
-                style = MaterialTheme.typography.body1
+                style = MaterialTypography.body1
             )
         }
     }

@@ -14,9 +14,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.toUpperCase
 import com.github.cheapmon.balalaika.R
+import com.github.cheapmon.balalaika.theme.MaterialShapes
 import com.github.cheapmon.balalaika.theme.itemPadding
 import com.github.cheapmon.balalaika.theme.itemSpacing
-import com.github.cheapmon.balalaika.theme.simpleShape
 
 @Composable
 fun SimpleDialog(
@@ -66,7 +66,7 @@ fun <T> ChoiceDialog(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clip(simpleShape)
+                            .clip(MaterialShapes.small)
                             .clickable(onClick = { onItemSelected(item) })
                             .padding(itemPadding / 4),
                         horizontalArrangement = Arrangement.spacedBy(itemSpacing),

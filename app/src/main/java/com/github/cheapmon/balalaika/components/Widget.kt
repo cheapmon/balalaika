@@ -5,7 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.NorthEast
@@ -145,7 +144,7 @@ private fun <T : Property> DefaultWidget(
             val id = ResourceUtil.drawable(ContextAmbient.current, category.iconName)
 
             Icon(asset = vectorResource(id = id))
-            Text(text = category.name, style = MaterialTheme.typography.body1)
+            Text(text = category.name, style = MaterialTypography.body1)
         }
         Box(modifier = Modifier.preferredWidthIn(max = itemMaxWidth)) {
             FlowRow(mainAxisAlignment = FlowMainAxisAlignment.End) {
@@ -170,13 +169,13 @@ private fun <T : Property> ActionItem(
 ) {
     Row(
         modifier = modifier
-            .clip(simpleShape)
+            .clip(MaterialShapes.small)
             .clickable(onClick = { onAction(category, property, text) }, enabled = enabled)
             .padding(itemPadding / 2),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(itemSpacing)
     ) {
-        Text(text = transformText(text), style = MaterialTheme.typography.body2)
+        Text(text = transformText(text), style = MaterialTypography.body2)
         if (icon != null) Icon(asset = icon)
     }
 }
@@ -222,7 +221,7 @@ private fun ExampleWidget(
             val id = ResourceUtil.drawable(ContextAmbient.current, category.iconName)
 
             Icon(asset = vectorResource(id = id))
-            Text(text = category.name, style = MaterialTheme.typography.body1)
+            Text(text = category.name, style = MaterialTypography.body1)
         }
         Column(
             verticalArrangement = Arrangement.spacedBy(itemSpacing),
@@ -232,12 +231,12 @@ private fun ExampleWidget(
                 Column(horizontalAlignment = Alignment.End) {
                     Text(
                         text = transformText(property.name),
-                        style = MaterialTheme.typography.caption,
-                        color = SubtitleColor()
+                        style = MaterialTypography.caption,
+                        color = MaterialColors.onSurfaceLight
                     )
                     Text(
                         text = transformText(property.content),
-                        style = MaterialTheme.typography.body2
+                        style = MaterialTypography.body2
                     )
                 }
             }

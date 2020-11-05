@@ -5,7 +5,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.ExperimentalLazyDsl
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.*
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.Surface
+import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.Search
@@ -33,6 +36,7 @@ import com.github.cheapmon.balalaika.model.DictionaryEntry
 import com.github.cheapmon.balalaika.model.DictionaryView
 import com.github.cheapmon.balalaika.model.Property
 import com.github.cheapmon.balalaika.theme.BalalaikaTheme
+import com.github.cheapmon.balalaika.theme.MaterialTypography
 import com.github.cheapmon.balalaika.ui.BalalaikaScaffold
 import com.github.cheapmon.balalaika.util.DarkThemeProvider
 import com.github.cheapmon.balalaika.util.exhaustive
@@ -79,11 +83,11 @@ fun DictionaryEntryScreen(
                     else -> {
                         Text(
                             text = stringResource(id = R.string.menu_dictionary),
-                            style = MaterialTheme.typography.body2
+                            style = MaterialTypography.body2
                         )
                         Text(
                             text = d.name,
-                            style = MaterialTheme.typography.caption,
+                            style = MaterialTypography.caption,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )

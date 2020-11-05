@@ -5,7 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
@@ -19,7 +18,9 @@ import com.github.cheapmon.balalaika.model.DataCategory
 import com.github.cheapmon.balalaika.model.DictionaryEntry
 import com.github.cheapmon.balalaika.model.Property
 import com.github.cheapmon.balalaika.theme.BalalaikaTheme
-import com.github.cheapmon.balalaika.theme.SubtitleColor
+import com.github.cheapmon.balalaika.theme.MaterialColors
+import com.github.cheapmon.balalaika.theme.MaterialTypography
+import com.github.cheapmon.balalaika.theme.onSurfaceLight
 import com.github.cheapmon.balalaika.util.DarkThemeProvider
 import com.github.cheapmon.balalaika.util.happier
 import java.util.*
@@ -45,13 +46,13 @@ fun DictionaryEntryCard(
             Column {
                 Text(
                     text = transformText(dictionaryEntry.representation),
-                    style = MaterialTheme.typography.h6
+                    style = MaterialTypography.h6
                 )
                 if (base != null) {
                     Text(
                         text = transformText(base.representation),
-                        style = MaterialTheme.typography.subtitle1,
-                        color = SubtitleColor(),
+                        style = MaterialTypography.subtitle1,
+                        color = MaterialColors.onSurfaceLight,
                         modifier = Modifier.clickable(
                             onClick = { onClickBase(base) },
                             enabled = enabled

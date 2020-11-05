@@ -2,7 +2,6 @@ package com.github.cheapmon.balalaika.theme
 
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Typography
 import androidx.compose.runtime.Composable
@@ -109,19 +108,19 @@ fun TypographyPreview(
     BalalaikaTheme(darkTheme = darkTheme) {
         Surface {
             Column {
-                Text(text = "Headline 1", style = MaterialTheme.typography.h1)
-                Text(text = "Headline 2", style = MaterialTheme.typography.h2)
-                Text(text = "Headline 3", style = MaterialTheme.typography.h3)
-                Text(text = "Headline 4", style = MaterialTheme.typography.h4)
-                Text(text = "Headline 5", style = MaterialTheme.typography.h5)
-                Text(text = "Headline 6", style = MaterialTheme.typography.h6)
-                Text(text = "Subtitle 1", style = MaterialTheme.typography.subtitle1)
-                Text(text = "Subtitle 2", style = MaterialTheme.typography.subtitle2)
-                Text(text = "Body 1", style = MaterialTheme.typography.body1)
-                Text(text = "Body 2", style = MaterialTheme.typography.body2)
-                Text(text = "BUTTON", style = MaterialTheme.typography.button)
-                Text(text = "Caption", style = MaterialTheme.typography.caption)
-                Text(text = "OVERLINE", style = MaterialTheme.typography.overline)
+                Text(text = "Headline 1", style = MaterialTypography.h1)
+                Text(text = "Headline 2", style = MaterialTypography.h2)
+                Text(text = "Headline 3", style = MaterialTypography.h3)
+                Text(text = "Headline 4", style = MaterialTypography.h4)
+                Text(text = "Headline 5", style = MaterialTypography.h5)
+                Text(text = "Headline 6", style = MaterialTypography.h6)
+                Text(text = "Subtitle 1", style = MaterialTypography.subtitle1)
+                Text(text = "Subtitle 2", style = MaterialTypography.subtitle2)
+                Text(text = "Body 1", style = MaterialTypography.body1)
+                Text(text = "Body 2", style = MaterialTypography.body2)
+                Text(text = "BUTTON", style = MaterialTypography.button)
+                Text(text = "Caption", style = MaterialTypography.caption)
+                Text(text = "OVERLINE", style = MaterialTypography.overline)
             }
         }
     }

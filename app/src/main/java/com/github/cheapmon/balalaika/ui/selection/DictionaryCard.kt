@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,9 +17,7 @@ import androidx.ui.tooling.preview.PreviewParameter
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.components.CollapsibleCard
 import com.github.cheapmon.balalaika.model.SimpleDictionary
-import com.github.cheapmon.balalaika.theme.BalalaikaTheme
-import com.github.cheapmon.balalaika.theme.SubtitleColor
-import com.github.cheapmon.balalaika.theme.paragraphSpacing
+import com.github.cheapmon.balalaika.theme.*
 import com.github.cheapmon.balalaika.util.DarkThemeProvider
 import com.github.cheapmon.balalaika.util.dictCC
 
@@ -55,12 +52,12 @@ private fun DictionaryCardHeader(
         Column {
             Text(
                 text = dictionary.name,
-                style = MaterialTheme.typography.h6
+                style = MaterialTypography.h6
             )
             Text(
                 text = dictionary.authors,
-                style = MaterialTheme.typography.subtitle1,
-                color = SubtitleColor()
+                style = MaterialTypography.subtitle1,
+                color = MaterialColors.onSurfaceLight
             )
         }
     }
@@ -97,12 +94,12 @@ private fun InfoItem(
     Column {
         Text(
             text = title.toUpperCase(Locale.current),
-            style = MaterialTheme.typography.overline,
-            color = SubtitleColor()
+            style = MaterialTypography.overline,
+            color = MaterialColors.onSurfaceLight
         )
         Text(
             text = body,
-            style = MaterialTheme.typography.body2,
+            style = MaterialTypography.body2,
             textAlign = TextAlign.Justify
         )
     }

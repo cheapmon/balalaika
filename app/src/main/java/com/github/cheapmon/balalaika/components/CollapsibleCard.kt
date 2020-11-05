@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -65,7 +64,7 @@ fun CollapsibleCard(
                         Icon(
                             asset = Icons.Default.KeyboardArrowUp,
                             modifier = Modifier.drawLayer(rotationX = transitionState[rotationX]),
-                            tint = IconColor()
+                            tint = MaterialColors.onSurfaceLight
                         )
                     }
                 }
@@ -114,8 +113,8 @@ private fun CollapsibleCardPreview(
             initialState = CollapsibleCardState.EXPANDED,
             header = {
                 Column {
-                    Text(text = "This is a headline", style = MaterialTheme.typography.h6)
-                    Text(text = "This is a subtitle", style = MaterialTheme.typography.subtitle1)
+                    Text(text = "This is a headline", style = MaterialTypography.h6)
+                    Text(text = "This is a subtitle", style = MaterialTypography.subtitle1)
                 }
             },
             actions = {
@@ -126,7 +125,7 @@ private fun CollapsibleCardPreview(
         ) {
             Text(
                 text = stringResource(id = R.string.impsum),
-                style = MaterialTheme.typography.body2,
+                style = MaterialTypography.body2,
                 textAlign = TextAlign.Justify
             )
         }

@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Button
 import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Book
@@ -17,10 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.VectorAsset
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.tooling.preview.PreviewParameter
-import com.github.cheapmon.balalaika.theme.BalalaikaTheme
-import com.github.cheapmon.balalaika.theme.IconColor
-import com.github.cheapmon.balalaika.theme.bigIconSize
-import com.github.cheapmon.balalaika.theme.itemSpacing
+import com.github.cheapmon.balalaika.theme.*
 import com.github.cheapmon.balalaika.util.DarkThemeProvider
 
 @Composable
@@ -36,7 +32,7 @@ fun EmptyMessage(
     ) {
         Icon(
             asset = icon.copy(defaultWidth = bigIconSize, defaultHeight = bigIconSize),
-            tint = IconColor()
+            tint = MaterialColors.onSurfaceLight
         )
         message()
     }
@@ -50,7 +46,7 @@ private fun EmptyMessagePreview(
     BalalaikaTheme(darkTheme = darkTheme) {
         Surface {
             EmptyMessage(icon = Icons.Default.Book) {
-                Text(text = "You have no books", style = MaterialTheme.typography.body2)
+                Text(text = "You have no books", style = MaterialTypography.body2)
                 Button(onClick = {}) { Text(text = "GET BOOKS") }
             }
         }

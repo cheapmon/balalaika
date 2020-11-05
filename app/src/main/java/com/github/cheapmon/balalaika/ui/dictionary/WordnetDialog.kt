@@ -19,7 +19,10 @@ import androidx.compose.foundation.Text
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.ExperimentalLazyDsl
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.*
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Surface
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -67,7 +70,7 @@ private fun WordnetDialog(
         title = {
             Text(
                 text = stringResource(id = R.string.dictionary_wordnet_title, word),
-                style = MaterialTheme.typography.h5
+                style = MaterialTypography.h5
             )
         },
         text = {
@@ -108,7 +111,7 @@ private fun WordnetInfo(
             item {
                 Text(
                     text = stringResource(id = R.string.dictionary_wordnet_words),
-                    style = MaterialTheme.typography.h6
+                    style = MaterialTypography.h6
                 )
             }
             data.entries.forEach { entry ->
@@ -117,11 +120,11 @@ private fun WordnetInfo(
                         modifier = Modifier.fillParentMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(itemSpacing)
                     ) {
-                        Text(text = entry.representation, style = MaterialTheme.typography.body2)
+                        Text(text = entry.representation, style = MaterialTypography.body2)
                         Text(
                             text = entry.partOfSpeech,
-                            style = MaterialTheme.typography.caption,
-                            color = SubtitleColor()
+                            style = MaterialTypography.caption,
+                            color = MaterialColors.onSurfaceLight
                         )
                     }
                 }
@@ -134,22 +137,22 @@ private fun WordnetInfo(
             item {
                 Text(
                     text = stringResource(id = R.string.dictionary_wordnet_definitions),
-                    style = MaterialTheme.typography.h6
+                    style = MaterialTypography.h6
                 )
             }
             data.definitions.forEach { definition ->
                 item {
                     Text(
                         text = "\uA78F ${definition.explanation}",
-                        style = MaterialTheme.typography.body2
+                        style = MaterialTypography.body2
                     )
                 }
                 definition.examples.forEach {
                     item {
                         Text(
                             text = "\u25CB $it",
-                            style = MaterialTheme.typography.caption,
-                            color = SubtitleColor(),
+                            style = MaterialTypography.caption,
+                            color = MaterialColors.onSurfaceLight,
                             modifier = Modifier.padding(start = itemPadding)
                         )
                     }

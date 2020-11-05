@@ -2,15 +2,14 @@ package com.github.cheapmon.balalaika.ui.about
 
 import android.net.Uri
 import androidx.annotation.StringRes
-import androidx.compose.material.Icon
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.preferredSize
 import androidx.compose.foundation.layout.preferredWidth
 import androidx.compose.material.Divider
+import androidx.compose.material.Icon
 import androidx.compose.material.ListItem
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
@@ -21,8 +20,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.ui.tooling.preview.Preview
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.theme.IconColor
+import com.github.cheapmon.balalaika.theme.MaterialColors
 import com.github.cheapmon.balalaika.theme.listItemIconSize
+import com.github.cheapmon.balalaika.theme.onSurfaceLight
 import com.github.cheapmon.balalaika.ui.BalalaikaScaffold
 
 @Composable
@@ -75,13 +75,13 @@ private fun HeaderItem(
             Icon(
                 asset = icon,
                 modifier = Modifier.preferredWidth(listItemIconSize),
-                tint = IconColor()
+                tint = MaterialColors.onSurfaceLight
             )
         }
     ) {
         Text(
             text = stringResource(id = textId),
-            color = MaterialTheme.colors.secondary
+            color = MaterialColors.secondary
         )
     }
 }
@@ -98,7 +98,7 @@ private fun InfoItem(
             Icon(
                 asset = icon,
                 modifier = Modifier.preferredSize(listItemIconSize),
-                tint = IconColor()
+                tint = MaterialColors.onSurfaceLight
             )
         },
         modifier = Modifier.clickable(onClick = onClick),

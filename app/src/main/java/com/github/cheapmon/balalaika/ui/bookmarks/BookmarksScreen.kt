@@ -22,9 +22,7 @@ import androidx.ui.tooling.preview.PreviewParameter
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.components.EmptyMessage
 import com.github.cheapmon.balalaika.model.DictionaryEntry
-import com.github.cheapmon.balalaika.theme.BalalaikaTheme
-import com.github.cheapmon.balalaika.theme.IconColor
-import com.github.cheapmon.balalaika.theme.listItemIconSize
+import com.github.cheapmon.balalaika.theme.*
 import com.github.cheapmon.balalaika.ui.BalalaikaScaffold
 import com.github.cheapmon.balalaika.util.DarkThemeProvider
 import com.github.cheapmon.balalaika.util.sampleDictionaryEntries
@@ -114,7 +112,7 @@ private fun BookmarksEmptyMessage() {
     ) {
         Text(
             text = stringResource(id = R.string.bookmarks_empty),
-            style = MaterialTheme.typography.body2
+            style = MaterialTypography.body2
         )
     }
 }
@@ -133,7 +131,7 @@ private fun BookmarksList(
                     Icon(
                         asset = Icons.Default.Bookmark,
                         modifier = Modifier.preferredSize(listItemIconSize),
-                        tint = IconColor()
+                        tint = MaterialColors.onSurfaceLight
                     )
                 },
                 secondaryText = entry.base?.let {
@@ -143,7 +141,7 @@ private fun BookmarksList(
                     IconButton(onClick = { onDeleteEntry(entry) }) {
                         Icon(
                             asset = Icons.Default.Delete,
-                            tint = IconColor()
+                            tint = MaterialColors.onSurfaceLight
                         )
                     }
                 }

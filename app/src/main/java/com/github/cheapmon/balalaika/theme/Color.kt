@@ -3,7 +3,6 @@ package com.github.cheapmon.balalaika.theme
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Colors
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -57,15 +56,7 @@ val darkColors = Colors(
     isLight = false
 )
 
-@Composable
-fun IconColor() = MaterialTheme.colors.onSurface.copy(alpha = 0.8f)
-
-@Composable
-fun SubtitleColor() = MaterialTheme.colors.onSurface.copy(alpha = 0.8f)
-
-@Composable
-val MaterialColors
-    get() = MaterialTheme.colors
+val Colors.onSurfaceLight get() = onSurface.copy(alpha = 0.8f)
 
 @Preview
 @Composable
