@@ -14,12 +14,14 @@ import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.toUpperCase
 import androidx.ui.tooling.preview.Preview
+import androidx.ui.tooling.preview.PreviewParameter
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.components.CollapsibleCard
 import com.github.cheapmon.balalaika.model.SimpleDictionary
 import com.github.cheapmon.balalaika.theme.BalalaikaTheme
 import com.github.cheapmon.balalaika.theme.SubtitleColor
 import com.github.cheapmon.balalaika.theme.paragraphSpacing
+import com.github.cheapmon.balalaika.util.DarkThemeProvider
 import com.github.cheapmon.balalaika.util.dictCC
 
 @Composable
@@ -108,8 +110,10 @@ private fun InfoItem(
 
 @Preview
 @Composable
-private fun DictionaryCardPreview() {
-    BalalaikaTheme {
+private fun DictionaryCardPreview(
+    @PreviewParameter(DarkThemeProvider::class) darkTheme: Boolean
+) {
+    BalalaikaTheme(darkTheme = darkTheme) {
         DictionaryCard(dictionary = dictCC)
     }
 }

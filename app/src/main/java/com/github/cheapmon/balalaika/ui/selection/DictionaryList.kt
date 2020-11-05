@@ -4,6 +4,7 @@ import androidx.compose.foundation.Text
 import androidx.compose.foundation.layout.ExperimentalLayout
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.lazy.LazyColumnFor
+import androidx.compose.material.Surface
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LibraryBooks
@@ -13,6 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.toUpperCase
 import androidx.ui.tooling.preview.Preview
+import androidx.ui.tooling.preview.PreviewParameter
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.components.EmptyMessage
 import com.github.cheapmon.balalaika.model.DownloadableDictionary
@@ -21,6 +23,7 @@ import com.github.cheapmon.balalaika.model.SimpleDictionary
 import com.github.cheapmon.balalaika.theme.BalalaikaTheme
 import com.github.cheapmon.balalaika.theme.DangerTheme
 import com.github.cheapmon.balalaika.theme.itemSpacing
+import com.github.cheapmon.balalaika.util.DarkThemeProvider
 import com.github.cheapmon.balalaika.util.exhaustive
 import com.github.cheapmon.balalaika.util.sampleDictionaries
 
@@ -139,10 +142,14 @@ private fun ReadActions(
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-private fun DictionaryListPreview() {
-    BalalaikaTheme {
-        DictionaryList(dictionaries = sampleDictionaries)
+private fun DictionaryListPreview(
+    @PreviewParameter(DarkThemeProvider::class) darkTheme: Boolean
+) {
+    BalalaikaTheme(darkTheme = darkTheme) {
+        Surface {
+            DictionaryList(dictionaries = sampleDictionaries)
+        }
     }
 }

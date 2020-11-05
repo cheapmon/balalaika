@@ -24,6 +24,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import androidx.ui.tooling.preview.Preview
+import androidx.ui.tooling.preview.PreviewParameter
 import com.github.cheapmon.balalaika.MainViewModel
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.components.*
@@ -33,6 +34,7 @@ import com.github.cheapmon.balalaika.model.DictionaryView
 import com.github.cheapmon.balalaika.model.Property
 import com.github.cheapmon.balalaika.theme.BalalaikaTheme
 import com.github.cheapmon.balalaika.ui.BalalaikaScaffold
+import com.github.cheapmon.balalaika.util.DarkThemeProvider
 import com.github.cheapmon.balalaika.util.exhaustive
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.onEach
@@ -225,8 +227,10 @@ private fun DictionaryDialog(
 
 @Preview
 @Composable
-private fun DictionaryEntryEmptyMessagePreview() {
-    BalalaikaTheme {
+private fun DictionaryEntryEmptyMessagePreview(
+    @PreviewParameter(DarkThemeProvider::class) darkTheme: Boolean
+) {
+    BalalaikaTheme(darkTheme = darkTheme) {
         Surface {
             DictionaryEntryEmptyMessage()
         }

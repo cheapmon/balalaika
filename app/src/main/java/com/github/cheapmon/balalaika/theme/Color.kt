@@ -8,6 +8,8 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.ui.tooling.preview.Preview
+import androidx.ui.tooling.preview.PreviewParameter
+import com.github.cheapmon.balalaika.util.DarkThemeProvider
 
 val lightBlue700 = Color(0xff0288d1)
 val lightBlue800 = Color(0xff0277bd)
@@ -62,51 +64,31 @@ fun IconColor() = MaterialTheme.colors.onSurface.copy(alpha = 0.8f)
 fun SubtitleColor() = MaterialTheme.colors.onSurface.copy(alpha = 0.8f)
 
 @Composable
-private fun ColorsPreview() {
-    Column {
-        TopAppBar(
-            backgroundColor = MaterialTheme.colors.primary,
-            title = { Text(text = "Primary", color = MaterialTheme.colors.onPrimary) }
-        )
-        TopAppBar(
-            backgroundColor = MaterialTheme.colors.primaryVariant,
-            title = { Text(text = "Primary Variant", color = MaterialTheme.colors.onPrimary) }
-        )
-        TopAppBar(
-            backgroundColor = MaterialTheme.colors.secondary,
-            title = { Text(text = "Secondary", color = MaterialTheme.colors.onSecondary) }
-        )
-        TopAppBar(
-            backgroundColor = MaterialTheme.colors.secondaryVariant,
-            title = { Text(text = "Secondary variant", color = MaterialTheme.colors.onSecondary) }
-        )
-        TopAppBar(
-            backgroundColor = MaterialTheme.colors.background,
-            title = { Text(text = "Background", color = MaterialTheme.colors.onBackground) }
-        )
-        TopAppBar(
-            backgroundColor = MaterialTheme.colors.surface,
-            title = { Text(text = "Surface", color = MaterialTheme.colors.onSurface) }
-        )
-        TopAppBar(
-            backgroundColor = MaterialTheme.colors.error,
-            title = { Text(text = "Error", color = MaterialTheme.colors.onError) }
-        )
-    }
-}
+val MaterialColors
+    get() = MaterialTheme.colors
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-private fun LightColorsPreview() {
-    BalalaikaTheme {
-        ColorsPreview()
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun DarkColorsPreview() {
-    BalalaikaTheme(darkTheme = true) {
-        ColorsPreview()
+private fun ColorsPreview(
+    @PreviewParameter(DarkThemeProvider::class) darkTheme: Boolean
+) {
+    BalalaikaTheme(darkTheme = darkTheme) {
+        val colors = listOf(
+            Triple("Primary", MaterialColors.primary, MaterialColors.onPrimary),
+            Triple("Primary V2", MaterialColors.primaryVariant, MaterialColors.onPrimary),
+            Triple("Secondary", MaterialColors.secondary, MaterialColors.onSecondary),
+            Triple("Secondary V2", MaterialColors.secondaryVariant, MaterialColors.onSecondary),
+            Triple("Background", MaterialColors.background, MaterialColors.onBackground),
+            Triple("Surface", MaterialColors.surface, MaterialColors.onSurface),
+            Triple("Error", MaterialColors.error, MaterialColors.onError)
+        )
+        Column {
+            colors.forEach { (text, background, foreground) ->
+                TopAppBar(
+                    backgroundColor = background,
+                    title = { Text(text = text, color = foreground) }
+                )
+            }
+        }
     }
 }

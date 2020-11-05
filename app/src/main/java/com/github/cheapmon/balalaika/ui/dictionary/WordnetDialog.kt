@@ -27,11 +27,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.ui.tooling.preview.Preview
+import androidx.ui.tooling.preview.PreviewParameter
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.data.result.LoadState
 import com.github.cheapmon.balalaika.data.result.Result
 import com.github.cheapmon.balalaika.model.WordnetInfo
 import com.github.cheapmon.balalaika.theme.*
+import com.github.cheapmon.balalaika.util.DarkThemeProvider
 import com.github.cheapmon.balalaika.util.exhaustive
 import com.github.cheapmon.balalaika.util.sampleWordnetInfo
 import kotlinx.coroutines.flow.Flow
@@ -159,8 +161,10 @@ private fun WordnetInfo(
 
 @Preview
 @Composable
-private fun WordnetInfoPreview() {
-    BalalaikaTheme {
+private fun WordnetInfoPreview(
+    @PreviewParameter(DarkThemeProvider::class) darkTheme: Boolean
+) {
+    BalalaikaTheme(darkTheme = darkTheme) {
         Surface {
             WordnetInfo(data = sampleWordnetInfo)
         }

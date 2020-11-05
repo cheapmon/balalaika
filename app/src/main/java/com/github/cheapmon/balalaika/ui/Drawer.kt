@@ -14,10 +14,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.ui.tooling.preview.Preview
+import androidx.ui.tooling.preview.PreviewParameter
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.theme.BalalaikaTheme
 import com.github.cheapmon.balalaika.theme.itemPadding
 import com.github.cheapmon.balalaika.theme.itemSpacing
+import com.github.cheapmon.balalaika.util.DarkThemeProvider
 
 @Composable
 fun NavigationDrawer(
@@ -133,20 +135,12 @@ private fun NavButton(
     }
 }
 
-@Preview("Navigation drawer")
+@Preview
 @Composable
-private fun NavigationDrawerPreview() {
-    BalalaikaTheme {
-        Surface {
-            NavigationDrawer()
-        }
-    }
-}
-
-@Preview("Navigation drawer dark")
-@Composable
-private fun NavigationDrawerPreviewDark() {
-    BalalaikaTheme(darkTheme = true) {
+private fun NavigationDrawerPreview(
+    @PreviewParameter(DarkThemeProvider::class) darkTheme: Boolean
+) {
+    BalalaikaTheme(darkTheme = darkTheme) {
         Surface {
             NavigationDrawer()
         }

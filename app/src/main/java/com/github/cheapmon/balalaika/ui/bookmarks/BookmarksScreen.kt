@@ -18,6 +18,7 @@ import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.viewinterop.viewModel
 import androidx.navigation.NavController
 import androidx.ui.tooling.preview.Preview
+import androidx.ui.tooling.preview.PreviewParameter
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.components.EmptyMessage
 import com.github.cheapmon.balalaika.model.DictionaryEntry
@@ -25,6 +26,7 @@ import com.github.cheapmon.balalaika.theme.BalalaikaTheme
 import com.github.cheapmon.balalaika.theme.IconColor
 import com.github.cheapmon.balalaika.theme.listItemIconSize
 import com.github.cheapmon.balalaika.ui.BalalaikaScaffold
+import com.github.cheapmon.balalaika.util.DarkThemeProvider
 import com.github.cheapmon.balalaika.util.sampleDictionaryEntries
 import kotlinx.coroutines.launch
 
@@ -153,18 +155,26 @@ private fun BookmarksList(
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-private fun BookmarksEmptyMessagePreview() {
-    BalalaikaTheme {
-        BookmarksEmptyMessage()
+private fun BookmarksEmptyMessagePreview(
+    @PreviewParameter(DarkThemeProvider::class) darkTheme: Boolean
+) {
+    BalalaikaTheme(darkTheme = darkTheme) {
+        Surface {
+            BookmarksEmptyMessage()
+        }
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-private fun BookmarksListPreview() {
-    BalalaikaTheme {
-        BookmarksList(entries = sampleDictionaryEntries.filter { it.bookmark != null })
+private fun BookmarksListPreview(
+    @PreviewParameter(DarkThemeProvider::class) darkTheme: Boolean
+) {
+    BalalaikaTheme(darkTheme = darkTheme) {
+        Surface {
+            BookmarksList(entries = sampleDictionaryEntries.filter { it.bookmark != null })
+        }
     }
 }

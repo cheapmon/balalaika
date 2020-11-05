@@ -1,9 +1,9 @@
 package com.github.cheapmon.balalaika.components
 
-import androidx.compose.material.Icon
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
@@ -13,12 +13,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.ui.tooling.preview.Preview
+import androidx.ui.tooling.preview.PreviewParameter
 import com.github.cheapmon.balalaika.model.Bookmark
 import com.github.cheapmon.balalaika.model.DataCategory
 import com.github.cheapmon.balalaika.model.DictionaryEntry
 import com.github.cheapmon.balalaika.model.Property
 import com.github.cheapmon.balalaika.theme.BalalaikaTheme
 import com.github.cheapmon.balalaika.theme.SubtitleColor
+import com.github.cheapmon.balalaika.util.DarkThemeProvider
 import com.github.cheapmon.balalaika.util.happier
 import java.util.*
 
@@ -98,12 +100,14 @@ private fun PropertyList(
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-private fun DictionaryEntryCardPreview() {
+private fun DictionaryEntryCardPreview(
+    @PreviewParameter(DarkThemeProvider::class) darkTheme: Boolean
+) {
     var entry by remember { mutableStateOf(happier) }
 
-    BalalaikaTheme {
+    BalalaikaTheme(darkTheme = darkTheme) {
         DictionaryEntryCard(
             dictionaryEntry = entry,
             onBookmark = {

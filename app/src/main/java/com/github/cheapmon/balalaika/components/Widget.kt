@@ -1,10 +1,10 @@
 package com.github.cheapmon.balalaika.components
 
-import androidx.compose.material.Icon
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Link
@@ -20,9 +20,11 @@ import androidx.compose.ui.platform.ContextAmbient
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.ui.tooling.preview.Preview
+import androidx.ui.tooling.preview.PreviewParameter
 import com.github.cheapmon.balalaika.model.DataCategory
 import com.github.cheapmon.balalaika.model.Property
 import com.github.cheapmon.balalaika.theme.*
+import com.github.cheapmon.balalaika.util.DarkThemeProvider
 import com.github.cheapmon.balalaika.util.ResourceUtil
 import com.github.cheapmon.balalaika.util.exhaustive
 import com.github.cheapmon.balalaika.util.fullEntry
@@ -376,10 +378,12 @@ private fun WordnetWidget(
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-private fun WidgetPreview() {
-    BalalaikaTheme {
+private fun WidgetPreview(
+    @PreviewParameter(DarkThemeProvider::class) darkTheme: Boolean
+) {
+    BalalaikaTheme(darkTheme = darkTheme) {
         Card(modifier = Modifier.padding(vertical = itemSpacing)) {
             Column(modifier = Modifier.padding(itemPadding)) {
                 fullEntry.properties.forEach { (category, list) ->

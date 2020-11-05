@@ -19,6 +19,7 @@ import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.viewinterop.viewModel
 import androidx.navigation.NavController
 import androidx.ui.tooling.preview.Preview
+import androidx.ui.tooling.preview.PreviewParameter
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.components.EmptyMessage
 import com.github.cheapmon.balalaika.model.HistoryItem
@@ -27,6 +28,7 @@ import com.github.cheapmon.balalaika.theme.BalalaikaTheme
 import com.github.cheapmon.balalaika.theme.IconColor
 import com.github.cheapmon.balalaika.theme.listItemIconSize
 import com.github.cheapmon.balalaika.ui.BalalaikaScaffold
+import com.github.cheapmon.balalaika.util.DarkThemeProvider
 import com.github.cheapmon.balalaika.util.sampleHistoryItems
 import kotlinx.coroutines.launch
 
@@ -165,18 +167,26 @@ private fun SearchRestriction?.text(): String = if (this != null) {
     stringResource(id = R.string.no_restriction)
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-private fun HistoryEmptyMessagePreview() {
-    BalalaikaTheme {
-        HistoryEmptyMessage()
+private fun HistoryEmptyMessagePreview(
+    @PreviewParameter(DarkThemeProvider::class) darkTheme: Boolean
+) {
+    BalalaikaTheme(darkTheme = darkTheme) {
+        Surface {
+            HistoryEmptyMessage()
+        }
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-private fun HistoryListPreview() {
-    BalalaikaTheme {
-        HistoryList(items = sampleHistoryItems)
+private fun HistoryListPreview(
+    @PreviewParameter(DarkThemeProvider::class) darkTheme: Boolean
+) {
+    BalalaikaTheme(darkTheme = darkTheme) {
+        Surface {
+            HistoryList(items = sampleHistoryItems)
+        }
     }
 }

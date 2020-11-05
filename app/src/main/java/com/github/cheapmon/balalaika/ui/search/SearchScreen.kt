@@ -25,6 +25,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import androidx.ui.tooling.preview.Preview
+import androidx.ui.tooling.preview.PreviewParameter
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.components.DictionaryEntryCard
 import com.github.cheapmon.balalaika.components.EmptyMessage
@@ -34,6 +35,7 @@ import com.github.cheapmon.balalaika.theme.BalalaikaTheme
 import com.github.cheapmon.balalaika.theme.itemPadding
 import com.github.cheapmon.balalaika.theme.itemSpacing
 import com.github.cheapmon.balalaika.ui.BalalaikaScaffold
+import com.github.cheapmon.balalaika.util.DarkThemeProvider
 import com.github.cheapmon.balalaika.util.wordclass
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.onEach
@@ -176,12 +178,14 @@ private fun highlightQuery(text: String, query: String?): AnnotatedString {
 
 @Preview
 @Composable
-private fun SearchHeaderPreview() {
+private fun SearchHeaderPreview(
+    @PreviewParameter(DarkThemeProvider::class) darkTheme: Boolean
+) {
     var restriction: SearchRestriction? by remember {
         mutableStateOf(SearchRestriction(wordclass, "Noun"))
     }
 
-    BalalaikaTheme {
+    BalalaikaTheme(darkTheme = darkTheme) {
         Surface {
             SearchHeader(
                 query = "Query",
@@ -194,8 +198,10 @@ private fun SearchHeaderPreview() {
 
 @Preview
 @Composable
-private fun SearchEmptyMessagePreview() {
-    BalalaikaTheme {
+private fun SearchEmptyMessagePreview(
+    @PreviewParameter(DarkThemeProvider::class) darkTheme: Boolean
+) {
+    BalalaikaTheme(darkTheme = darkTheme) {
         Surface {
             SearchEmptyMessage()
         }

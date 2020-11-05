@@ -3,10 +3,10 @@ package com.github.cheapmon.balalaika.components
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.*
 import androidx.compose.animation.transition
-import androidx.compose.material.Icon
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
+import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
@@ -19,8 +19,10 @@ import androidx.compose.ui.drawLayer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.ui.tooling.preview.Preview
+import androidx.ui.tooling.preview.PreviewParameter
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.theme.*
+import com.github.cheapmon.balalaika.util.DarkThemeProvider
 
 enum class CollapsibleCardState {
     COLLAPSED, EXPANDED
@@ -102,10 +104,12 @@ private fun createTransition(
     )
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-private fun CollapsibleCardPreview() {
-    BalalaikaTheme {
+private fun CollapsibleCardPreview(
+    @PreviewParameter(DarkThemeProvider::class) darkTheme: Boolean
+) {
+    BalalaikaTheme(darkTheme = darkTheme) {
         CollapsibleCard(
             initialState = CollapsibleCardState.EXPANDED,
             header = {

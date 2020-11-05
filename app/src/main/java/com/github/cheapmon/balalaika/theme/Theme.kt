@@ -1,6 +1,5 @@
 package com.github.cheapmon.balalaika.theme
 
-import androidx.compose.material.Icon
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.*
@@ -11,6 +10,8 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.ui.tooling.preview.Preview
+import androidx.ui.tooling.preview.PreviewParameter
+import com.github.cheapmon.balalaika.util.DarkThemeProvider
 
 @Composable
 fun BalalaikaTheme(
@@ -40,10 +41,12 @@ fun DangerTheme(
     BalalaikaTheme(darkTheme = darkTheme, colors = colors, content = content)
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-private fun BalalaikaThemePreview() {
-    BalalaikaTheme {
+private fun BalalaikaThemePreview(
+    @PreviewParameter(DarkThemeProvider::class) darkTheme: Boolean
+) {
+    BalalaikaTheme(darkTheme = darkTheme) {
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -67,10 +70,9 @@ private fun BalalaikaThemePreview() {
                 FloatingActionButton(onClick = {}) {
                     Icon(asset = Icons.Default.Book)
                 }
-            },
-            drawerContent = { ShapesPreview() }
+            }
         ) {
-            TypographyPreview()
+            TypographyPreview(darkTheme = darkTheme)
         }
     }
 }
