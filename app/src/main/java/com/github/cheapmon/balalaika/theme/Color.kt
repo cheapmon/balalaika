@@ -1,6 +1,6 @@
 package com.github.cheapmon.balalaika.theme
 
-import androidx.compose.foundation.Text
+import androidx.compose.material.Text
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Colors
 import androidx.compose.material.TopAppBar

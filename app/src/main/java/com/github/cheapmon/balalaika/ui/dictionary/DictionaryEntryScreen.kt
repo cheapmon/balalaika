@@ -1,9 +1,8 @@
 package com.github.cheapmon.balalaika.ui.dictionary
 
-import androidx.compose.foundation.Text
+import androidx.compose.material.Text
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.lazy.ExperimentalLazyDsl
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -126,7 +125,6 @@ fun DictionaryEntryScreen(
     }
 }
 
-@OptIn(ExperimentalLazyDsl::class)
 @Composable
 private fun DictionaryEntryList(
     entries: LazyPagingItems<DictionaryEntry>,

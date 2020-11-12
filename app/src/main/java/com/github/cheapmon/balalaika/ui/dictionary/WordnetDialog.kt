@@ -15,9 +15,8 @@
  */
 package com.github.cheapmon.balalaika.ui.dictionary
 
-import androidx.compose.foundation.Text
+import androidx.compose.material.Text
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.ExperimentalLazyDsl
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.CircularProgressIndicator
@@ -100,7 +99,6 @@ private fun WordnetDialog(
     )
 }
 
-@OptIn(ExperimentalLazyDsl::class)
 @Composable
 private fun WordnetInfo(
     data: WordnetInfo,

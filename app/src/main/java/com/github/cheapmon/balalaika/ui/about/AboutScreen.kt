@@ -2,7 +2,7 @@ package com.github.cheapmon.balalaika.ui.about
 
 import android.net.Uri
 import androidx.annotation.StringRes
-import androidx.compose.foundation.Text
+import androidx.compose.material.Text
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.preferredSize

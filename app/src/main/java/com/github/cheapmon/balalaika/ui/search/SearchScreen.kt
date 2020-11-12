@@ -1,10 +1,9 @@
 package com.github.cheapmon.balalaika.ui.search
 
-import androidx.compose.foundation.Text
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.ExperimentalLazyDsl
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -102,7 +101,7 @@ private fun SearchHeader(
                 value = query ?: "",
                 onValueChange = { onQueryChange(it) },
                 modifier = Modifier.fillMaxWidth(),
-                imeAction = ImeAction.Search,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                 onImeActionPerformed = { _, controller ->
                     controller?.hideSoftwareKeyboard()
                     onQuerySubmit(query, restriction)
@@ -134,7 +133,6 @@ private fun SearchEmptyMessage() {
     }
 }
 
-@OptIn(ExperimentalLazyDsl::class)
 @Composable
 private fun SearchList(
     entries: LazyPagingItems<DictionaryEntry>,
