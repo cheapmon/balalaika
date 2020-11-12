@@ -28,6 +28,7 @@ internal class DictionaryEntryEntityToDictionaryEntry @Inject constructor(
             .mapKeys { (category, _) -> toDataCategory(category) }
             .mapValues { (_, properties) ->
                 properties
+                    .filter { it.property.dictionaryId == entry.lexeme.dictionaryId }
                     .filter { view.categories.contains(it.category) }
                     .mapNotNull { toProperty(it.property, it.category, view, this) }
             }.toSortedMap { o1, o2 -> o1.sequence.compareTo(o2.sequence) },

@@ -49,8 +49,8 @@ public class DictionaryEntryRepository @Inject internal constructor(
         category: DataCategory,
         initialEntry: DictionaryEntry?
     ): Flow<PagingData<DictionaryEntry>> {
-        val initialKey = initialEntry?.id?.let { cacheEntryDao.findEntry(it) }
         refreshCache(dictionary, dictionaryView, category)
+        val initialKey = initialEntry?.id?.let { cacheEntryDao.findEntry(it) }
         return Pager(
             config = PagingConfig(pageSize = Constants.PAGE_SIZE),
             initialKey = initialKey,
