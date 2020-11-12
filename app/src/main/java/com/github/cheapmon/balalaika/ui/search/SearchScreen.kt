@@ -106,7 +106,8 @@ private fun SearchHeader(
                     controller?.hideSoftwareKeyboard()
                     onQuerySubmit(query, restriction)
                 },
-                label = { Text(text = stringResource(R.string.search_query)) }
+                label = { Text(text = stringResource(R.string.search_query)) },
+                maxLines = 1
             )
             if (restriction != null) {
                 TextButton(onClick = onClickRestriction) {
