@@ -13,26 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.cheapmon.balalaika
+package com.github.cheapmon.balalaika.data
 
-import com.github.cheapmon.balalaika.data.dictionary.wordnet.RDFNode
-import com.github.cheapmon.balalaika.data.dictionary.wordnet.RDFNode.CanonicalFormNode
-import com.github.cheapmon.balalaika.data.dictionary.wordnet.RDFNode.DefinitionNode
-import com.github.cheapmon.balalaika.data.dictionary.wordnet.RDFNode.LexicalConceptNode
-import com.github.cheapmon.balalaika.data.dictionary.wordnet.RDFNode.LexicalEntryNode
-import com.github.cheapmon.balalaika.data.dictionary.wordnet.RDFNode.PartOfSpeechNode
-import com.github.cheapmon.balalaika.data.dictionary.wordnet.WordnetInfo
-import com.github.cheapmon.balalaika.data.dictionary.wordnet.WordnetInfo.Definition
-import com.github.cheapmon.balalaika.data.dictionary.wordnet.WordnetInfo.LexicalEntry
-import com.github.cheapmon.balalaika.data.dictionary.wordnet.WordnetInfoMapper
+import com.github.cheapmon.balalaika.data.mappers.RDFNodeToWordnetInfo
+import com.github.cheapmon.balalaika.data.repositories.wordnet.RDFNode
+import com.github.cheapmon.balalaika.data.repositories.wordnet.RDFNode.*
+import com.github.cheapmon.balalaika.model.WordnetInfo
+import com.github.cheapmon.balalaika.model.WordnetInfo.Definition
+import com.github.cheapmon.balalaika.model.WordnetInfo.LexicalEntry
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class WordnetInfoMapperTest {
-    private val mapper = WordnetInfoMapper()
+@OptIn(ExperimentalCoroutinesApi::class)
+internal class RDFNodeToWordnetInfoTest {
+    private val mapper = RDFNodeToWordnetInfo()
 
     @Test
-    fun `maps from RDF node`() {
+    fun `maps from RDF node`(): Unit = runBlockingTest {
         val node = RDFNode(
             lexicalEntryList = listOf(
                 LexicalEntryNode(
@@ -88,7 +87,7 @@ class WordnetInfoMapperTest {
                 )
             )
         )
-        val wordnetInfo = mapper.map(node)
+        val wordnetInfo = mapper(node)
         assertEquals(
             WordnetInfo(
                 entries = listOf(

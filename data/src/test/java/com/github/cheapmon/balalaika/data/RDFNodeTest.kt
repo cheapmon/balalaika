@@ -13,22 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.cheapmon.balalaika
+package com.github.cheapmon.balalaika.data
 
-import com.github.cheapmon.balalaika.data.dictionary.wordnet.RDFNode
-import com.github.cheapmon.balalaika.data.dictionary.wordnet.RDFNode.CanonicalFormNode
-import com.github.cheapmon.balalaika.data.dictionary.wordnet.RDFNode.DefinitionNode
-import com.github.cheapmon.balalaika.data.dictionary.wordnet.RDFNode.LexicalConceptNode
-import com.github.cheapmon.balalaika.data.dictionary.wordnet.RDFNode.LexicalEntryNode
-import com.github.cheapmon.balalaika.data.dictionary.wordnet.RDFNode.PartOfSpeechNode
+import com.github.cheapmon.balalaika.data.repositories.wordnet.RDFNode
+import com.github.cheapmon.balalaika.data.repositories.wordnet.RDFNode.*
 import com.tickaroo.tikxml.TikXml
-import java.io.InputStream
 import okio.buffer
 import okio.source
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.io.InputStream
+import java.lang.NullPointerException
 
-class WordnetParserTest {
+internal class RDFNodeTest {
     private val serializer = TikXml.Builder().exceptionOnUnreadXml(false).build()
 
     @Test
@@ -40,9 +37,7 @@ class WordnetParserTest {
                         rdf:resource="http://wordnet-rdf.princeton.edu/ontology#adjective"/>"""
         )
         assertEquals(
-            PartOfSpeechNode(
-                resource = "http://wordnet-rdf.princeton.edu/ontology#adjective"
-            ),
+            PartOfSpeechNode(resource = "http://wordnet-rdf.princeton.edu/ontology#adjective"),
             node
         )
     }
@@ -58,9 +53,7 @@ class WordnetParserTest {
                     </ontolex:canonicalForm>"""
         )
         assertEquals(
-            CanonicalFormNode(
-                writtenRep = "petitioner"
-            ),
+            CanonicalFormNode(writtenRep = "petitioner"),
             node
         )
     }
@@ -84,12 +77,8 @@ class WordnetParserTest {
         )
         assertEquals(
             LexicalEntryNode(
-                CanonicalFormNode(
-                    writtenRep = "petitioner"
-                ),
-                PartOfSpeechNode(
-                    resource = "http://wordnet-rdf.princeton.edu/ontology#noun"
-                )
+                CanonicalFormNode(writtenRep = "petitioner"),
+                PartOfSpeechNode(resource = "http://wordnet-rdf.princeton.edu/ontology#noun")
             ),
             node
         )
@@ -107,9 +96,7 @@ class WordnetParserTest {
                     </wn:definition>"""
         )
         assertEquals(
-            DefinitionNode(
-                value = "one praying humbly for something; \"a suppliant for her favors\""
-            ),
+            DefinitionNode(value = "one praying humbly for something; \"a suppliant for her favors\""),
             node
         )
     }
@@ -138,9 +125,7 @@ class WordnetParserTest {
         )
         assertEquals(
             LexicalConceptNode(
-                definition = DefinitionNode(
-                    value = "one praying humbly for something; \"a suppliant for her favors\""
-                )
+                definition = DefinitionNode(value = "one praying humbly for something; \"a suppliant for her favors\"")
             ),
             node
         )
@@ -154,55 +139,31 @@ class WordnetParserTest {
             RDFNode(
                 lexicalEntryList = listOf(
                     LexicalEntryNode(
-                        canonicalForm = CanonicalFormNode(
-                            writtenRep = "petitioner"
-                        ),
-                        partOfSpeech = PartOfSpeechNode(
-                            resource = "&wn;noun"
-                        )
+                        canonicalForm = CanonicalFormNode(writtenRep = "petitioner"),
+                        partOfSpeech = PartOfSpeechNode(resource = "&wn;noun")
                     ),
                     LexicalEntryNode(
-                        canonicalForm = CanonicalFormNode(
-                            writtenRep = "requester"
-                        ),
-                        partOfSpeech = PartOfSpeechNode(
-                            resource = "&wn;noun"
-                        )
+                        canonicalForm = CanonicalFormNode(writtenRep = "requester"),
+                        partOfSpeech = PartOfSpeechNode(resource = "&wn;noun")
                     ),
                     LexicalEntryNode(
-                        canonicalForm = CanonicalFormNode(
-                            writtenRep = "suer"
-                        ),
-                        partOfSpeech = PartOfSpeechNode(
-                            resource = "&wn;noun"
-                        )
+                        canonicalForm = CanonicalFormNode(writtenRep = "suer"),
+                        partOfSpeech = PartOfSpeechNode(resource = "&wn;noun")
                     ),
                     LexicalEntryNode(
-                        canonicalForm = CanonicalFormNode(
-                            writtenRep = "suppliant"
-                        ),
-                        partOfSpeech = PartOfSpeechNode(
-                            resource = "&wn;noun"
-                        )
+                        canonicalForm = CanonicalFormNode(writtenRep = "suppliant"),
+                        partOfSpeech = PartOfSpeechNode(resource = "&wn;noun")
                     ),
                     LexicalEntryNode(
-                        canonicalForm = CanonicalFormNode(
-                            writtenRep = "supplicant"
-                        ),
-                        partOfSpeech = PartOfSpeechNode(
-                            resource = "&wn;noun"
-                        )
+                        canonicalForm = CanonicalFormNode(writtenRep = "supplicant"),
+                        partOfSpeech = PartOfSpeechNode(resource = "&wn;noun")
                     )
                 ), lexicalConceptList = listOf(
                     LexicalConceptNode(
-                        definition = DefinitionNode(
-                            value = "one praying humbly for something; &quot;a suppliant for her favors&quot;"
-                        )
+                        definition = DefinitionNode(value = "one praying humbly for something; &quot;a suppliant for her favors&quot;")
                     ),
                     LexicalConceptNode(
-                        definition = DefinitionNode(
-                            value = "someone who petitions a court for redress of a grievance or recovery of a right"
-                        )
+                        definition = DefinitionNode(value = "someone who petitions a court for redress of a grievance or recovery of a right")
                     )
                 )
             ),
@@ -210,7 +171,7 @@ class WordnetParserTest {
         )
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test(expected = NullPointerException::class)
     fun `does not parse wrong node type`() {
         serializer.read<CanonicalFormNode>("""<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />""")
     }

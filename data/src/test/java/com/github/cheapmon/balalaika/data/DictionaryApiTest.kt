@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.cheapmon.balalaika
+package com.github.cheapmon.balalaika.data
 
-import com.github.cheapmon.balalaika.data.selection.DictionaryApi
+import com.github.cheapmon.balalaika.data.repositories.dictionary.DictionaryApi
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -26,7 +26,7 @@ import org.junit.Test
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-class ApiTest {
+internal class DictionaryApiTest {
     private lateinit var server: MockWebServer
     private lateinit var api: DictionaryApi
 
@@ -49,7 +49,7 @@ class ApiTest {
     @Test
     fun `parses empty list`() = runBlocking {
         server.enqueue(MockResponse().setResponseCode(200).setBody("[]"))
-        val list = api.listDictionaries()
+        val list = api.getDictionaryList()
         assertTrue(list.isEmpty())
     }
 }

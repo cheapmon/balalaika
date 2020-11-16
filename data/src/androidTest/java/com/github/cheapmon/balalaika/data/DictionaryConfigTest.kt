@@ -41,14 +41,14 @@ import java.io.IOException
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
-public class DictionaryConfigTest {
+internal class DictionaryConfigTest {
     private lateinit var db: AppDatabase
 
     @get:Rule
-    public val rule: InstantTaskExecutorRule = InstantTaskExecutorRule()
+    val rule: InstantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Before
-    public fun createDb(): Unit = runBlockingTest {
+    fun createDb(): Unit = runBlockingTest {
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java).build()
         db.dictionaries().insertAll(
@@ -121,12 +121,12 @@ public class DictionaryConfigTest {
 
     @After
     @Throws(IOException::class)
-    public fun closeDb() {
+    fun closeDb() {
         db.close()
     }
 
     @Test
-    public fun insertConfig(): Unit = runBlockingTest {
+    fun insertConfig(): Unit = runBlockingTest {
         db.configurations().insert(
             DictionaryConfig(id = "dic_a", sortBy = "cat_a", filterBy = "all")
         )
@@ -136,7 +136,7 @@ public class DictionaryConfigTest {
     }
 
     @Test
-    public fun replaceConfigOnInsert(): Unit = runBlockingTest {
+    fun replaceConfigOnInsert(): Unit = runBlockingTest {
         db.configurations().insert(
             DictionaryConfig(id = "dic_a", sortBy = "cat_a", filterBy = "all")
         )
@@ -150,19 +150,19 @@ public class DictionaryConfigTest {
     }
 
     @Test(expected = SQLiteConstraintException::class)
-    public fun useAppropriateForeignKeys(): Unit = runBlockingTest {
+    fun useAppropriateForeignKeys(): Unit = runBlockingTest {
         db.configurations().insert(
             DictionaryConfig("dic_a", "cat_c", "none")
         )
     }
 
     @Test(expected = SQLiteConstraintException::class)
-    public fun enforceForeignKeys(): Unit = runBlockingTest {
+    fun enforceForeignKeys(): Unit = runBlockingTest {
         db.configurations().insert(DictionaryConfig("asdf", "jklö", "uiop"))
     }
 
     @Test
-    public fun updateConfig(): Unit = runBlockingTest {
+    fun updateConfig(): Unit = runBlockingTest {
         db.configurations().insert(
             DictionaryConfig(id = "dic_a", sortBy = "cat_a", filterBy = "all")
         )
@@ -176,7 +176,7 @@ public class DictionaryConfigTest {
     }
 
     @Test
-    public fun getConfig(): Unit = runBlockingTest {
+    fun getConfig(): Unit = runBlockingTest {
         db.configurations().insert(
             DictionaryConfig(id = "dic_a", sortBy = "cat_a", filterBy = "all")
         )
@@ -188,7 +188,7 @@ public class DictionaryConfigTest {
     }
 
     @Test
-    public fun removeConfig(): Unit = runBlockingTest {
+    fun removeConfig(): Unit = runBlockingTest {
         db.configurations().insert(
             DictionaryConfig(id = "dic_a", sortBy = "cat_a", filterBy = "all")
         )
