@@ -28,7 +28,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
-@ExperimentalCoroutinesApi
+@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
 internal class DefaultDictionaryInstallerTest {
     private lateinit var db: AppDatabase
@@ -53,6 +53,7 @@ internal class DefaultDictionaryInstallerTest {
             importer,
             db
         )
+        context.filesDir.listFiles()?.forEach { it.deleteRecursively() }
     }
 
     @After
@@ -73,6 +74,6 @@ internal class DefaultDictionaryInstallerTest {
         Assert.assertTrue(result is ProgressState.Finished && result.data is Result.Success)
         Assert.assertEquals(1, db.dictionaries().count())
         Assert.assertEquals(3, db.lexemes().count())
-        Assert.assertEquals(0, context.filesDir.listFiles().size)
+        Assert.assertArrayEquals(emptyArray(), context.filesDir.listFiles().orEmpty())
     }
 }

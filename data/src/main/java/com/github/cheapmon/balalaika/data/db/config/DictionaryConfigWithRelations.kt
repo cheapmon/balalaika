@@ -22,7 +22,7 @@ import com.github.cheapmon.balalaika.data.db.view.DictionaryViewEntity
 import com.github.cheapmon.balalaika.data.db.view.DictionaryViewWithCategories
 
 internal data class DictionaryConfigWithRelations(
-    @Embedded val historyItem: DictionaryConfig,
+    @Embedded val config: DictionaryConfig,
     @Relation(
         parentColumn = "sort_by",
         entityColumn = "id"

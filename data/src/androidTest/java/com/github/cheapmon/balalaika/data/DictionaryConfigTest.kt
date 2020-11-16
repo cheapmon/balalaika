@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.cheapmon.balalaika
+package com.github.cheapmon.balalaika.data
 
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
@@ -21,39 +21,39 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.github.cheapmon.balalaika.db.AppDatabase
-import com.github.cheapmon.balalaika.db.entities.category.Category
-import com.github.cheapmon.balalaika.db.entities.category.WidgetType
-import com.github.cheapmon.balalaika.db.entities.config.DictionaryConfig
-import com.github.cheapmon.balalaika.db.entities.dictionary.Dictionary
-import com.github.cheapmon.balalaika.db.entities.view.DictionaryView
-import com.github.cheapmon.balalaika.db.entities.view.DictionaryViewToCategory
-import java.io.IOException
+import com.github.cheapmon.balalaika.data.db.AppDatabase
+import com.github.cheapmon.balalaika.data.db.category.CategoryEntity
+import com.github.cheapmon.balalaika.data.db.category.WidgetType
+import com.github.cheapmon.balalaika.data.db.config.DictionaryConfig
+import com.github.cheapmon.balalaika.data.db.dictionary.DictionaryEntity
+import com.github.cheapmon.balalaika.data.db.view.DictionaryViewEntity
+import com.github.cheapmon.balalaika.data.db.view.DictionaryViewToCategory
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertNull
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.io.IOException
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
-class DictionaryConfigTest {
+public class DictionaryConfigTest {
     private lateinit var db: AppDatabase
 
     @get:Rule
-    val rule = InstantTaskExecutorRule()
+    public val rule: InstantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Before
-    fun createDb() = runBlockingTest {
+    public fun createDb(): Unit = runBlockingTest {
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java).build()
         db.dictionaries().insertAll(
             listOf(
-                Dictionary(
+                DictionaryEntity(
                     id = "dic_a",
                     version = 0,
                     name = "Dictionary A",
@@ -61,7 +61,7 @@ class DictionaryConfigTest {
                     authors = "",
                     additionalInfo = ""
                 ),
-                Dictionary(
+                DictionaryEntity(
                     id = "dic_b",
                     version = 0,
                     name = "Dictionary B",
@@ -73,7 +73,7 @@ class DictionaryConfigTest {
         )
         db.categories().insertAll(
             listOf(
-                Category(
+                CategoryEntity(
                     id = "cat_a",
                     dictionaryId = "dic_a",
                     name = "Category A",
@@ -81,9 +81,9 @@ class DictionaryConfigTest {
                     iconName = "ic_circle",
                     sequence = 0,
                     hidden = false,
-                    orderBy = false
+                    sortable = false
                 ),
-                Category(
+                CategoryEntity(
                     id = "cat_b",
                     dictionaryId = "dic_a",
                     name = "Category B",
@@ -91,9 +91,9 @@ class DictionaryConfigTest {
                     iconName = "ic_circle",
                     sequence = 0,
                     hidden = false,
-                    orderBy = false
+                    sortable = false
                 ),
-                Category(
+                CategoryEntity(
                     id = "cat_c",
                     dictionaryId = "dic_b",
                     name = "Category C",
@@ -101,14 +101,14 @@ class DictionaryConfigTest {
                     iconName = "ic_circle",
                     sequence = 0,
                     hidden = false,
-                    orderBy = false
+                    sortable = false
                 )
             )
         )
         db.dictionaryViews().insertViews(
             listOf(
-                DictionaryView("all", "dic_a", "All"),
-                DictionaryView("none", "dic_b", "None")
+                DictionaryViewEntity("all", "dic_a", "All"),
+                DictionaryViewEntity("none", "dic_b", "None")
             )
         )
         db.dictionaryViews().insertRelation(
@@ -121,83 +121,76 @@ class DictionaryConfigTest {
 
     @After
     @Throws(IOException::class)
-    fun closeDb() {
+    public fun closeDb() {
         db.close()
     }
 
     @Test
-    @Throws(Exception::class)
-    fun insertConfig() = runBlockingTest {
+    public fun insertConfig(): Unit = runBlockingTest {
         db.configurations().insert(
-            DictionaryConfig(id = "dic_a", orderBy = "cat_a", filterBy = "all")
+            DictionaryConfig(id = "dic_a", sortBy = "cat_a", filterBy = "all")
         )
         db.configurations().insert(
-            DictionaryConfig(id = "dic_b", orderBy = "cat_c", filterBy = "none")
+            DictionaryConfig(id = "dic_b", sortBy = "cat_c", filterBy = "none")
         )
     }
 
     @Test
-    @Throws(Exception::class)
-    fun replaceConfigOnInsert() = runBlockingTest {
+    public fun replaceConfigOnInsert(): Unit = runBlockingTest {
         db.configurations().insert(
-            DictionaryConfig(id = "dic_a", orderBy = "cat_a", filterBy = "all")
+            DictionaryConfig(id = "dic_a", sortBy = "cat_a", filterBy = "all")
         )
         db.configurations().insert(
-            DictionaryConfig(id = "dic_a", orderBy = "cat_b", filterBy = "all")
+            DictionaryConfig(id = "dic_a", sortBy = "cat_b", filterBy = "all")
         )
         assertEquals(
-            db.configurations().getConfigFor("dic_a").first(),
-            DictionaryConfig(id = "dic_a", orderBy = "cat_b", filterBy = "all")
+            DictionaryConfig(id = "dic_a", sortBy = "cat_b", filterBy = "all"),
+            db.configurations().getConfigFor("dic_a").first()?.config
         )
     }
 
     @Test(expected = SQLiteConstraintException::class)
-    @Throws(Exception::class)
-    fun useAppropriateForeignKeys() = runBlockingTest {
+    public fun useAppropriateForeignKeys(): Unit = runBlockingTest {
         db.configurations().insert(
             DictionaryConfig("dic_a", "cat_c", "none")
         )
     }
 
     @Test(expected = SQLiteConstraintException::class)
-    @Throws(Exception::class)
-    fun enforceForeignKeys() = runBlockingTest {
+    public fun enforceForeignKeys(): Unit = runBlockingTest {
         db.configurations().insert(DictionaryConfig("asdf", "jklö", "uiop"))
     }
 
     @Test
-    @Throws(Exception::class)
-    fun updateConfig() = runBlockingTest {
+    public fun updateConfig(): Unit = runBlockingTest {
         db.configurations().insert(
-            DictionaryConfig(id = "dic_a", orderBy = "cat_a", filterBy = "all")
+            DictionaryConfig(id = "dic_a", sortBy = "cat_a", filterBy = "all")
         )
         db.configurations().update(
-            DictionaryConfig(id = "dic_a", orderBy = "cat_b", filterBy = "all")
+            DictionaryConfig(id = "dic_a", sortBy = "cat_b", filterBy = "all")
         )
         assertEquals(
-            db.configurations().getConfigFor("dic_a").first(),
-            DictionaryConfig(id = "dic_a", orderBy = "cat_b", filterBy = "all")
+            DictionaryConfig(id = "dic_a", sortBy = "cat_b", filterBy = "all"),
+            db.configurations().getConfigFor("dic_a").first()?.config
         )
     }
 
     @Test
-    @Throws(Exception::class)
-    fun getConfig() = runBlockingTest {
+    public fun getConfig(): Unit = runBlockingTest {
         db.configurations().insert(
-            DictionaryConfig(id = "dic_a", orderBy = "cat_a", filterBy = "all")
+            DictionaryConfig(id = "dic_a", sortBy = "cat_a", filterBy = "all")
         )
         assertEquals(
-            db.configurations().getConfigFor("dic_a").first(),
-            DictionaryConfig(id = "dic_a", orderBy = "cat_a", filterBy = "all")
+            DictionaryConfig(id = "dic_a", sortBy = "cat_a", filterBy = "all"),
+            db.configurations().getConfigFor("dic_a").first()?.config
         )
         assertNull(db.configurations().getConfigFor("garbage").first())
     }
 
     @Test
-    @Throws(Exception::class)
-    fun removeConfig() = runBlockingTest {
+    public fun removeConfig(): Unit = runBlockingTest {
         db.configurations().insert(
-            DictionaryConfig(id = "dic_a", orderBy = "cat_a", filterBy = "all")
+            DictionaryConfig(id = "dic_a", sortBy = "cat_a", filterBy = "all")
         )
         assertNotNull(db.configurations().getConfigFor("dic_a").first())
         db.configurations().removeConfigFor("dic_a")
