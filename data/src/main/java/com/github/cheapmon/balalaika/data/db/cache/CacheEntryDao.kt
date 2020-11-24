@@ -22,6 +22,10 @@ import androidx.room.Query
 /** Database link for cache entries */
 @Dao
 internal interface CacheEntryDao {
+    /** Get all cache entries */
+    @Query("SELECT * FROM cache_entries")
+    suspend fun getAll(): List<CacheEntry>
+
     /** Get some entries from the main cache */
     @Query("""SELECT lexeme_id FROM cache_entries LIMIT (:count) OFFSET (:offset)""")
     suspend fun getPage(count: Int, offset: Long): List<String>
@@ -37,4 +41,7 @@ internal interface CacheEntryDao {
     /** Remove all main cache entries */
     @Query("DELETE FROM cache_entries")
     suspend fun clear()
+
+    @Query("SELECT COUNT(*) FROM cache_entries")
+    suspend fun count(): Int
 }

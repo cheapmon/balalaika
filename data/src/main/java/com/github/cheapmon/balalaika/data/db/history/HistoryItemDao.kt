@@ -39,6 +39,10 @@ internal interface HistoryItemDao {
     )
     fun getAll(dictionaryId: String): Flow<List<HistoryItemWithCategory>>
 
+    /** Get all [history items][HistoryItemEntity] */
+    @Query("SELECT * FROM search_history")
+    suspend fun getAll(): List<HistoryItemEntity>
+
     /** Insert a [history item][HistoryItemEntity] into the database */
     @Insert
     suspend fun insert(historyItem: HistoryItemEntity)
@@ -59,4 +63,8 @@ internal interface HistoryItemDao {
     /** Remove all search history items associated with a dictionary */
     @Query("""DELETE FROM search_history WHERE dictionary_id = (:dictionaryId)""")
     suspend fun removeInDictionary(dictionaryId: String)
+
+    /** Total number of history items */
+    @Query("SELECT COUNT(*) FROM search_history")
+    suspend fun count(): Int
 }

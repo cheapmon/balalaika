@@ -23,6 +23,10 @@ import kotlinx.coroutines.flow.Flow
 /** Database link for [data categories][CategoryEntity] */
 @Dao
 internal interface CategoryDao {
+    /** Get all data categories */
+    @Query("SELECT * FROM categories")
+    suspend fun getAll(): List<CategoryEntity>
+
     /** Get all data categories that can be used to order dictionary entries */
     @Query("""SELECT * FROM categories WHERE dictionary_id = (:dictionaryId) AND sortable = 1""")
     fun getSortable(dictionaryId: String): Flow<List<CategoryEntity>>
@@ -38,4 +42,8 @@ internal interface CategoryDao {
     /** Find a data category by its id */
     @Query("""SELECT * FROM categories WHERE dictionary_id = (:dictionaryId) AND id = (:id) LIMIT 1""")
     suspend fun findById(dictionaryId: String, id: String): CategoryEntity?
+
+    /** Total number of categories */
+    @Query("SELECT COUNT(*) FROM categories")
+    suspend fun count(): Int
 }

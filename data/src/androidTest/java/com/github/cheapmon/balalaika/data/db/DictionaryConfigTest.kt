@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.cheapmon.balalaika.data
+package com.github.cheapmon.balalaika.data.db
 
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
@@ -21,7 +21,6 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.github.cheapmon.balalaika.data.db.AppDatabase
 import com.github.cheapmon.balalaika.data.db.category.CategoryEntity
 import com.github.cheapmon.balalaika.data.db.category.WidgetType
 import com.github.cheapmon.balalaika.data.db.config.DictionaryConfig

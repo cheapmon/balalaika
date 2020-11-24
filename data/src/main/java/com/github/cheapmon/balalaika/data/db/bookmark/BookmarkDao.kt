@@ -46,4 +46,7 @@ internal interface BookmarkDao {
                 WHERE dictionary_id = (:dictionaryId)"""
     )
     suspend fun removeInDictionary(dictionaryId: String)
+
+    @Query("SELECT COUNT(*) FROM bookmarks")
+    suspend fun count(): Int
 }

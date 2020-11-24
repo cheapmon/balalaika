@@ -28,6 +28,9 @@ internal interface LexemeDao {
     @Query("SELECT * FROM lexemes WHERE id = (:id) LIMIT 1")
     suspend fun getLexemeById(id: String): LexemeWithBase?
 
+    @Query("SELECT * FROM lexemes")
+    fun getAll(): List<LexemeEntity>
+
     /** Insert all [lexemes][LexemeEntity] into the database */
     @Insert
     suspend fun insertAll(lexemes: List<LexemeEntity>)
