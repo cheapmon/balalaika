@@ -1,4 +1,4 @@
-package com.github.cheapmon.balalaika.data
+package com.github.cheapmon.balalaika.data.repositories
 
 import android.content.Context
 import androidx.room.Room

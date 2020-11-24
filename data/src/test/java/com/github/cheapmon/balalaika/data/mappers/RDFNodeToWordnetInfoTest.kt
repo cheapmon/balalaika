@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.cheapmon.balalaika.data
+package com.github.cheapmon.balalaika.data.mappers
 
 import com.github.cheapmon.balalaika.data.mappers.RDFNodeToWordnetInfo
 import com.github.cheapmon.balalaika.data.repositories.wordnet.RDFNode

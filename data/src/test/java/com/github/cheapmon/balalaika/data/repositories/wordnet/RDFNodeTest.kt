@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.cheapmon.balalaika.data
+package com.github.cheapmon.balalaika.data.repositories.wordnet
 
-import com.github.cheapmon.balalaika.data.repositories.wordnet.RDFNode
 import com.github.cheapmon.balalaika.data.repositories.wordnet.RDFNode.*
 import com.tickaroo.tikxml.TikXml
 import okio.buffer

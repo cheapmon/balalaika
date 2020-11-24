@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.cheapmon.balalaika.data
+package com.github.cheapmon.balalaika.data.repositories.dictionary
 
-import com.github.cheapmon.balalaika.data.repositories.dictionary.DictionaryApi
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
