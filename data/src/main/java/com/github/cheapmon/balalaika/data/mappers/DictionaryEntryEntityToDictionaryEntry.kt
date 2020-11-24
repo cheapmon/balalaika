@@ -13,8 +13,8 @@ internal class DictionaryEntryEntityToDictionaryEntry @Inject constructor(
     private val dictionaryEntryDao: DictionaryEntryDao,
     private val toDataCategory: CategoryEntityToDataCategory,
     private val toProperty: PropertyEntityToProperty
-) {
-    suspend operator fun invoke(
+) : DictionaryEntryEntityToDictionaryEntryMapper {
+    override suspend operator fun invoke(
         entry: DictionaryEntryEntity,
         view: DictionaryViewWithCategories
     ): DictionaryEntry = DictionaryEntry(

@@ -17,7 +17,7 @@ internal class PropertyEntityToProperty @Inject constructor(
         property: PropertyEntity,
         category: CategoryEntity,
         view: DictionaryViewWithCategories,
-        toDictionaryEntry: DictionaryEntryEntityToDictionaryEntry
+        toDictionaryEntry: DictionaryEntryEntityToDictionaryEntryMapper
     ): Property? {
         return when (category.widget) {
             WidgetType.AUDIO -> {

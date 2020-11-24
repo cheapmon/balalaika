@@ -19,4 +19,6 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class Bookmark : Parcelable
+class Bookmark : Parcelable {
+    override fun equals(other: Any?): Boolean = other is Bookmark
+}
