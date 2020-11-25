@@ -1,5 +1,8 @@
 package com.github.cheapmon.balalaika.data.repositories
 
+import com.github.cheapmon.balalaika.data.db.FakeCategoryDao
+import com.github.cheapmon.balalaika.data.db.FakeConfigDao
+import com.github.cheapmon.balalaika.data.db.FakeDictionaryViewDao
 import com.github.cheapmon.balalaika.data.db.category.CategoryEntity
 import com.github.cheapmon.balalaika.data.db.category.WidgetType
 import com.github.cheapmon.balalaika.data.db.view.DictionaryViewEntity

@@ -5,7 +5,7 @@ import com.github.cheapmon.balalaika.data.db.bookmark.BookmarkEntity
 import com.github.cheapmon.balalaika.data.db.entry.DictionaryEntryDao
 import com.github.cheapmon.balalaika.data.db.view.DictionaryViewDao
 import com.github.cheapmon.balalaika.data.db.view.DictionaryViewWithCategories
-import com.github.cheapmon.balalaika.data.mappers.DictionaryEntryEntityToDictionaryEntry
+import com.github.cheapmon.balalaika.data.mappers.DictionaryEntryEntityToDictionaryEntryMapper
 import com.github.cheapmon.balalaika.data.util.Constants
 import com.github.cheapmon.balalaika.model.DictionaryEntry
 import com.github.cheapmon.balalaika.model.InstalledDictionary
@@ -19,7 +19,7 @@ public class BookmarkRepository @Inject internal constructor(
     private val bookmarkDao: BookmarkDao,
     private val viewDao: DictionaryViewDao,
     private val dictionaryEntryDao: DictionaryEntryDao,
-    private val toDictionaryEntry: DictionaryEntryEntityToDictionaryEntry
+    private val toDictionaryEntry: DictionaryEntryEntityToDictionaryEntryMapper
 ) {
     private suspend fun getDefaultDictionaryView(dictionary: InstalledDictionary): DictionaryViewWithCategories? =
         viewDao.findById(dictionary.id, Constants.DEFAULT_DICTIONARY_VIEW_ID)

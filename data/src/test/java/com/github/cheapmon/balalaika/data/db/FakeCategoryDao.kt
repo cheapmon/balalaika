@@ -1,4 +1,4 @@
-package com.github.cheapmon.balalaika.data.repositories
+package com.github.cheapmon.balalaika.data.db
 
 import com.github.cheapmon.balalaika.data.db.category.CategoryDao
 import com.github.cheapmon.balalaika.data.db.category.CategoryEntity
