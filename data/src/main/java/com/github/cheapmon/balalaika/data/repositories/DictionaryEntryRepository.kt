@@ -15,33 +15,25 @@
  */
 package com.github.cheapmon.balalaika.data.repositories
 
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
-import androidx.paging.PagingSource
-import androidx.paging.map
+import androidx.paging.*
 import com.github.cheapmon.balalaika.data.db.cache.CacheEntry
 import com.github.cheapmon.balalaika.data.db.cache.CacheEntryDao
 import com.github.cheapmon.balalaika.data.db.entry.DictionaryEntryDao
 import com.github.cheapmon.balalaika.data.db.view.DictionaryViewDao
-import com.github.cheapmon.balalaika.data.mappers.DictionaryEntryEntityToDictionaryEntry
+import com.github.cheapmon.balalaika.data.mappers.DictionaryEntryEntityToDictionaryEntryMapper
 import com.github.cheapmon.balalaika.data.util.Constants
-import com.github.cheapmon.balalaika.model.DataCategory
-import com.github.cheapmon.balalaika.model.DictionaryEntry
-import com.github.cheapmon.balalaika.model.DictionaryView
-import com.github.cheapmon.balalaika.model.InstalledDictionary
-import com.github.cheapmon.balalaika.model.SearchRestriction
-import javax.inject.Inject
-import javax.inject.Singleton
+import com.github.cheapmon.balalaika.model.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @Singleton
 public class DictionaryEntryRepository @Inject internal constructor(
     private val dictionaryEntryDao: DictionaryEntryDao,
     private val cacheEntryDao: CacheEntryDao,
     private val dictionaryViewDao: DictionaryViewDao,
-    private val toDictionaryEntry: DictionaryEntryEntityToDictionaryEntry
+    private val toDictionaryEntry: DictionaryEntryEntityToDictionaryEntryMapper
 ) {
     public suspend fun getDictionaryEntries(
         dictionary: InstalledDictionary,

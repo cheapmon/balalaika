@@ -32,7 +32,8 @@ internal class FakeDictionaryEntryDao : DictionaryEntryDao {
     ): PagingSource<Int, DictionaryEntryEntity> {
         return object : PagingSource<Int, DictionaryEntryEntity>() {
             override suspend fun load(params: LoadParams<Int>): LoadResult<Int, DictionaryEntryEntity> {
-                return LoadResult.Page(entries, null, null)
+                val result = entries.filter { it.lexeme.form.contains(query) }
+                return LoadResult.Page(result, null, null)
             }
         }
     }
@@ -42,13 +43,7 @@ internal class FakeDictionaryEntryDao : DictionaryEntryDao {
         query: String,
         categoryId: String,
         restriction: String
-    ): PagingSource<Int, DictionaryEntryEntity> {
-        return object : PagingSource<Int, DictionaryEntryEntity>() {
-            override suspend fun load(params: LoadParams<Int>): LoadResult<Int, DictionaryEntryEntity> {
-                return LoadResult.Page(entries, null, null)
-            }
-        }
-    }
+    ): PagingSource<Int, DictionaryEntryEntity> = findLexemes(dictionaryId, query)
 
     internal fun insert(vararg entries: DictionaryEntryEntity) = this.entries.addAll(entries)
     internal fun clear() = entries.clear()
