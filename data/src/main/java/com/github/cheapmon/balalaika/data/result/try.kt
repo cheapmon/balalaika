@@ -16,9 +16,9 @@
 package com.github.cheapmon.balalaika.data.result
 
 import android.util.Log
-import kotlin.experimental.ExperimentalTypeInference
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlin.experimental.ExperimentalTypeInference
 
 /**
  * Run [block] and wrap it in a [Result]
@@ -26,11 +26,14 @@ import kotlinx.coroutines.flow.flow
  * _Note_: This catches _any_ error encountered while performing [block]. Handling of errors
  * is up to the caller.
  */
-internal suspend fun <T> tryRun(block: suspend () -> T): Result<T, Throwable> {
+internal suspend fun <T> tryRun(
+    log: (Throwable) -> Unit = { Log.e(Result::class.java.name, "Operation failed", it) },
+    block: suspend () -> T,
+): Result<T, Throwable> {
     return try {
         Result.Success(block())
     } catch (t: Throwable) {
-        Log.e(Result::class.java.name, "Operation failed with\n$t")
+        log(t)
         Result.Error(t)
     }
 }
@@ -39,7 +42,7 @@ internal suspend fun <T> tryRun(block: suspend () -> T): Result<T, Throwable> {
 internal fun <T> tryLoad(block: suspend () -> T): Flow<LoadState<T, Throwable>> = flow {
     emit(LoadState.Init())
     emit(LoadState.Loading())
-    emit(LoadState.Finished(tryRun(block)))
+    emit(LoadState.Finished(tryRun(block = block)))
 }
 
 /**
