@@ -66,6 +66,7 @@ internal fun <T> tryLoad(
  */
 @OptIn(ExperimentalTypeInference::class)
 internal fun <T, M> tryProgress(
+    log: (Throwable) -> Unit = { Log.e(Result::class.java.name, "Operation failed", it) },
     @BuilderInference
     block: suspend ProgressState.Listener<M>.() -> T
 ): Flow<ProgressState<T, M, Throwable>> = flow {
@@ -77,5 +78,5 @@ internal fun <T, M> tryProgress(
             emit(inProgress.copy(percentage = percentage))
         }
     }
-    emit(ProgressState.Finished(tryRun { block(listener) }))
+    emit(ProgressState.Finished(tryRun(log) { block(listener) }))
 }
