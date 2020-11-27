@@ -39,10 +39,13 @@ internal suspend fun <T> tryRun(
 }
 
 /** Run [block] and wrap the operation in a [LoadState] */
-internal fun <T> tryLoad(block: suspend () -> T): Flow<LoadState<T, Throwable>> = flow {
+internal fun <T> tryLoad(
+    log: (Throwable) -> Unit = { Log.e(Result::class.java.name, "Operation failed", it) },
+    block: suspend () -> T
+): Flow<LoadState<T, Throwable>> = flow {
     emit(LoadState.Init())
     emit(LoadState.Loading())
-    emit(LoadState.Finished(tryRun(block = block)))
+    emit(LoadState.Finished(tryRun(log, block)))
 }
 
 /**
