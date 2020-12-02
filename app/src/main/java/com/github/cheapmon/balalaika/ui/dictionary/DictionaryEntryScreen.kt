@@ -1,13 +1,8 @@
 package com.github.cheapmon.balalaika.ui.dictionary
 
-import androidx.compose.material.Text
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Surface
-import androidx.compose.material.TextButton
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.Search
@@ -22,9 +17,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.viewinterop.viewModel
 import androidx.navigation.NavController
-import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.tooling.preview.PreviewParameter
 import com.github.cheapmon.balalaika.MainViewModel
@@ -40,7 +33,6 @@ import com.github.cheapmon.balalaika.ui.BalalaikaScaffold
 import com.github.cheapmon.balalaika.util.DarkThemeProvider
 import com.github.cheapmon.balalaika.util.exhaustive
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.onEach
 
 private enum class DictionaryDialogState {
     NONE,
@@ -60,9 +52,7 @@ fun DictionaryEntryScreen(
 ) {
     val viewModel: DictionaryViewModel = viewModel()
 
-    var empty by remember { mutableStateOf(true) }
     val entries = viewModel.dictionaryEntries
-        .onEach { empty = it == null }
         .filterNotNull()
         .collectAsLazyPagingItems()
 
@@ -106,44 +96,21 @@ fun DictionaryEntryScreen(
             }
         }
     ) {
-        if (!empty) {
-            DictionaryEntryList(
-                entries = entries,
-                onClickBase = onClickBase,
-                onBookmark = onBookmark,
-                onClickProperty = onClickProperty
-            )
-        } else {
-            DictionaryEntryEmptyMessage(onOpenDictionaries)
-        }
-        DictionaryEntryDialog(
-            viewModel = viewModel,
-            wordnetParam = wordnetParam,
-            onDismiss = { viewModel.setWordnetParam(null) }
+        DictionaryEntryList(
+            entries = entries,
+            onClickBase = onClickBase,
+            onBookmark = onBookmark,
+            onClickProperty = onClickProperty,
+            dialog = {
+                DictionaryEntryDialog(
+                    viewModel = viewModel,
+                    wordnetParam = wordnetParam,
+                    onDismiss = { viewModel.setWordnetParam(null) }
+                )
+            },
+            emptyMessage = { DictionaryEntryEmptyMessage(onOpenDictionaries) }
         )
         DictionaryDialog(viewModel, dialogState, onChangeDialogState)
-    }
-}
-
-@Composable
-private fun DictionaryEntryList(
-    entries: LazyPagingItems<DictionaryEntry>,
-    modifier: Modifier = Modifier,
-    onClickBase: (DictionaryEntry) -> Unit = {},
-    onBookmark: (DictionaryEntry) -> Unit = {},
-    onClickProperty: PropertyAction<Property> = emptyPropertyAction()
-) {
-    LazyColumn(modifier = modifier) {
-        items(entries) { entry ->
-            if (entry != null) {
-                DictionaryEntryCard(
-                    dictionaryEntry = entry,
-                    onClickBase = onClickBase,
-                    onBookmark = onBookmark,
-                    onClickProperty = onClickProperty
-                )
-            }
-        }
     }
 }
 

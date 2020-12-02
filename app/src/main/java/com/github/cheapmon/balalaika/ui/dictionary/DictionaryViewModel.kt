@@ -22,8 +22,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.github.cheapmon.balalaika.data.repositories.*
-import com.github.cheapmon.balalaika.data.result.LoadState
-import com.github.cheapmon.balalaika.model.*
+import com.github.cheapmon.balalaika.model.DataCategory
+import com.github.cheapmon.balalaika.model.DictionaryEntry
+import com.github.cheapmon.balalaika.model.DictionaryView
+import com.github.cheapmon.balalaika.ui.DefaultWordnetViewModel
+import com.github.cheapmon.balalaika.ui.WordnetViewModel
 import com.github.cheapmon.balalaika.util.navArgs
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -35,8 +38,8 @@ class DictionaryViewModel @ViewModelInject constructor(
     private val entries: DictionaryEntryRepository,
     private val bookmarks: BookmarkRepository,
     private val config: ConfigRepository,
-    private val wordnet: WordnetRepository
-) : ViewModel() {
+    wordnet: WordnetRepository
+) : ViewModel(), WordnetViewModel by DefaultWordnetViewModel(wordnet) {
     private val navArgs: DictionaryFragmentArgs by navArgs(savedStateHandle)
 
     private val _initialEntry: MutableStateFlow<DictionaryEntry?> = MutableStateFlow(navArgs.entry)
@@ -128,15 +131,4 @@ class DictionaryViewModel @ViewModelInject constructor(
         dictionaries.getOpenDictionary().flatMapLatest {
             it?.let { config.getDictionaryViews(it) } ?: flowOf(null)
         }
-
-    private val _wordnetParam: MutableStateFlow<Property.Wordnet?> = MutableStateFlow(null)
-    val wordnetParam: Flow<Property.Wordnet?> = _wordnetParam
-
-    fun setWordnetParam(property: Property.Wordnet?) {
-        _wordnetParam.value = property
-    }
-
-    /** Load Wordnet information for a word */
-    fun getWordnetData(property: Property.Wordnet): Flow<LoadState<WordnetInfo, Throwable>> =
-        wordnet.getWordnetData(property.url)
 }
