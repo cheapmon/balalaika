@@ -1,8 +1,6 @@
 package com.github.cheapmon.balalaika.ui.search
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -18,17 +16,14 @@ import androidx.compose.ui.text.annotatedString
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.toLowerCase
-import androidx.compose.ui.viewinterop.viewModel
 import androidx.navigation.NavController
-import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.tooling.preview.PreviewParameter
 import com.github.cheapmon.balalaika.R
-import com.github.cheapmon.balalaika.components.DictionaryEntryCard
-import com.github.cheapmon.balalaika.components.EmptyMessage
+import com.github.cheapmon.balalaika.components.*
 import com.github.cheapmon.balalaika.model.DictionaryEntry
+import com.github.cheapmon.balalaika.model.Property
 import com.github.cheapmon.balalaika.model.SearchRestriction
 import com.github.cheapmon.balalaika.theme.BalalaikaTheme
 import com.github.cheapmon.balalaika.theme.MaterialColors
@@ -43,13 +38,15 @@ import kotlinx.coroutines.flow.onEach
 @Composable
 fun SearchScreen(
     navController: NavController,
+    viewModel: SearchViewModel,
     onQuerySubmit: (String?, SearchRestriction?) -> Unit = { _, _ -> },
-    onClickEntry: (DictionaryEntry) -> Unit = {}
+    onClickBase: (DictionaryEntry) -> Unit = {},
+    onBookmark: (DictionaryEntry) -> Unit = {},
+    onClickProperty: PropertyAction<Property> = emptyPropertyAction()
 ) {
-    val viewModel: SearchViewModel = viewModel()
-
     val query: String? by viewModel.query.collectAsState(initial = null)
     val restriction: SearchRestriction? by viewModel.restriction.collectAsState(initial = null)
+    val wordnetParam: Property.Wordnet? by viewModel.wordnetParam.collectAsState(initial = null)
 
     var empty: Boolean by remember { mutableStateOf(false) }
 
@@ -70,11 +67,21 @@ fun SearchScreen(
                 restriction = restriction,
                 onClickRestriction = { viewModel.setRestriction(null) }
             )
-            if (empty) {
-                SearchEmptyMessage()
-            } else {
-                SearchList(entries, query, onClickEntry = onClickEntry)
-            }
+            DictionaryEntryList(
+                entries = entries,
+                isEmpty = empty,
+                onClickBase = onClickBase,
+                onBookmark = onBookmark,
+                onClickProperty = onClickProperty,
+                dialog = {
+                    SearchWordnetDialog(
+                        viewModel = viewModel,
+                        wordnetParam = wordnetParam,
+                        onDismiss = { viewModel.setWordnetParam(null) }
+                    )
+                },
+                emptyMessage = { SearchEmptyMessage() }
+            )
         }
     }
 
@@ -135,23 +142,18 @@ private fun SearchEmptyMessage() {
 }
 
 @Composable
-private fun SearchList(
-    entries: LazyPagingItems<DictionaryEntry>,
-    query: String?,
-    modifier: Modifier = Modifier,
-    onClickEntry: (DictionaryEntry) -> Unit = {}
+private fun SearchWordnetDialog(
+    viewModel: SearchViewModel,
+    wordnetParam: Property.Wordnet?,
+    onDismiss: () -> Unit = {}
 ) {
-    LazyColumn(modifier = modifier) {
-        items(entries) { entry ->
-            if (entry != null) {
-                DictionaryEntryCard(
-                    dictionaryEntry = entry,
-                    enabled = false,
-                    modifier = Modifier.clickable(onClick = { onClickEntry(entry) }),
-                    transformText = { text -> highlightQuery(text, query) }
-                )
-            }
-        }
+    if (wordnetParam != null) {
+        val payload = viewModel.getWordnetData(wordnetParam)
+        WordnetDialog(
+            word = wordnetParam.name,
+            payload = payload,
+            onDismiss = onDismiss
+        )
     }
 }
 

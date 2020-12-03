@@ -22,26 +22,38 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.github.cheapmon.balalaika.data.repositories.BookmarkRepository
 import com.github.cheapmon.balalaika.data.repositories.DictionaryEntryRepository
 import com.github.cheapmon.balalaika.data.repositories.DictionaryRepository
+import com.github.cheapmon.balalaika.data.repositories.WordnetRepository
 import com.github.cheapmon.balalaika.model.DictionaryEntry
 import com.github.cheapmon.balalaika.model.InstalledDictionary
 import com.github.cheapmon.balalaika.model.SearchRestriction
+import com.github.cheapmon.balalaika.ui.DefaultWordnetViewModel
+import com.github.cheapmon.balalaika.ui.WordnetViewModel
+import com.github.cheapmon.balalaika.ui.bookmarks.BookmarksViewModel
+import com.github.cheapmon.balalaika.ui.bookmarks.DefaultBookmarksViewModel
 import com.github.cheapmon.balalaika.util.navArgs
 import kotlinx.coroutines.flow.*
 
 /** View model for [SearchFragment] */
 class SearchViewModel @ViewModelInject constructor(
     @Assisted savedStateHandle: SavedStateHandle,
-    dictionaryRepository: DictionaryRepository,
-    dictionaryEntryRepository: DictionaryEntryRepository
-) : ViewModel() {
+    dictionaries: DictionaryRepository,
+    entries: DictionaryEntryRepository,
+    bookmarks: BookmarkRepository,
+    wordnet: WordnetRepository
+) : ViewModel(),
+    WordnetViewModel by DefaultWordnetViewModel(wordnet),
+    BookmarksViewModel by DefaultBookmarksViewModel(dictionaries, bookmarks, wordnet) {
     private val navArgs: SearchFragmentArgs by navArgs(savedStateHandle)
 
     private val _query: MutableStateFlow<String?> =
         MutableStateFlow(navArgs.query)
     private val _restriction: MutableStateFlow<SearchRestriction?> =
         MutableStateFlow(navArgs.restriction)
+
+    private val _refresh = MutableStateFlow(false)
 
     /** Current search query */
     val query: Flow<String?> = _query
@@ -51,16 +63,17 @@ class SearchViewModel @ViewModelInject constructor(
 
     /** Current active dictionary */
     private val openedDictionary: Flow<InstalledDictionary?> =
-        dictionaryRepository.getOpenDictionary()
+        dictionaries.getOpenDictionary()
 
     /** Current dictionary, depending on the user configuration */
     val entries: Flow<PagingData<DictionaryEntry>?> =
-        combine(openedDictionary, query, restriction) { d, q, r ->
+        combine(openedDictionary, query, restriction, _refresh) { d, q, r, _ ->
             if (d == null) {
                 flowOf(null)
             } else {
-                dictionaryEntryRepository.queryDictionaryEntries(d, q ?: "", r)
-                    .cachedIn(viewModelScope)
+                _refresh.flatMapLatest {
+                    entries.queryDictionaryEntries(d, q ?: "", r).cachedIn(viewModelScope)
+                }
             }
         }.flatMapLatest { it }
 
@@ -72,5 +85,9 @@ class SearchViewModel @ViewModelInject constructor(
     /** Set the search restriction */
     fun setRestriction(restriction: SearchRestriction?) {
         _restriction.value = restriction
+    }
+
+    fun refresh() {
+        _refresh.value = !_refresh.value
     }
 }
