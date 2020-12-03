@@ -16,11 +16,13 @@
 package com.github.cheapmon.balalaika.ui.bookmarks
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.github.cheapmon.balalaika.components.emptyPropertyAction
 import com.github.cheapmon.balalaika.model.DictionaryEntry
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -41,11 +43,16 @@ class BookmarksFragment : Fragment() {
     ): View? {
         return ComposeView(requireContext()).apply {
             setContent {
-                BookmarksScreen(findNavController(), ::onClickEntry)
+                BookmarksScreen(
+                    navController = findNavController(),
+                    onClickBase = ::onClickEntry,
+                    onClickProperty = emptyPropertyAction() // TODO: Same as DictionaryFragment
+                )
             }
         }
     }
 
+    // TODO: Open search
     private fun onClickEntry(entry: DictionaryEntry) {
         val directions = BookmarksFragmentDirections.actionNavBookmarksToNavHome(entry)
         findNavController().navigate(directions)
