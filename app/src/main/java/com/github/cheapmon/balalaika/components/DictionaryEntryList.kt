@@ -12,6 +12,7 @@ import com.github.cheapmon.balalaika.model.Property
 @Composable
 fun DictionaryEntryList(
     entries: LazyPagingItems<DictionaryEntry>,
+    isEmpty: Boolean = false,
     modifier: Modifier = Modifier,
     onClickBase: (DictionaryEntry) -> Unit = {},
     onBookmark: (DictionaryEntry) -> Unit = {},
@@ -21,7 +22,7 @@ fun DictionaryEntryList(
 ) {
     DictionaryEntryList(
         modifier = modifier,
-        isEmpty = entries.itemCount == 0,
+        isEmpty = isEmpty,
         dialog = dialog,
         emptyMessage = emptyMessage
     ) {
@@ -41,6 +42,7 @@ fun DictionaryEntryList(
 @Composable
 fun DictionaryEntryList(
     entries: List<DictionaryEntry>,
+    isEmpty: Boolean = false,
     modifier: Modifier = Modifier,
     onClickBase: (DictionaryEntry) -> Unit = {},
     onBookmark: (DictionaryEntry) -> Unit = {},
@@ -50,7 +52,7 @@ fun DictionaryEntryList(
 ) {
     DictionaryEntryList(
         modifier = modifier,
-        isEmpty = entries.isEmpty(),
+        isEmpty = isEmpty,
         dialog = dialog,
         emptyMessage = emptyMessage
     ) {

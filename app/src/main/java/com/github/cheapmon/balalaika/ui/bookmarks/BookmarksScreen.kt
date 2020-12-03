@@ -8,7 +8,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.toUpperCase
-import androidx.compose.ui.viewinterop.viewModel
 import androidx.navigation.NavController
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.tooling.preview.PreviewParameter
@@ -20,18 +19,21 @@ import com.github.cheapmon.balalaika.theme.BalalaikaTheme
 import com.github.cheapmon.balalaika.theme.MaterialTypography
 import com.github.cheapmon.balalaika.ui.BalalaikaScaffold
 import com.github.cheapmon.balalaika.util.DarkThemeProvider
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BookmarksScreen(
     navController: NavController,
+    viewModel: DefaultBookmarksViewModel,
     onClickBase: (DictionaryEntry) -> Unit = {},
     onClickProperty: PropertyAction<Property> = emptyPropertyAction()
 ) {
-    val viewModel: DefaultBookmarksViewModel = viewModel()
-
-    val entries by viewModel.bookmarkedEntries.collectAsState(initial = emptyList())
+    var empty by remember { mutableStateOf(false) }
+    val entries by viewModel.bookmarkedEntries
+        .onEach { empty = it.isEmpty() }
+        .collectAsState(initial = emptyList())
     val wordnetParam: Property.Wordnet? by viewModel.wordnetParam.collectAsState(initial = null)
     var showDialog by remember { mutableStateOf(false) }
     val scaffoldState = rememberScaffoldState()
@@ -49,6 +51,7 @@ fun BookmarksScreen(
     ) {
         DictionaryEntryList(
             entries = entries,
+            isEmpty = empty,
             onClickBase = onClickBase,
             onBookmark = { viewModel.toggleBookmark(it) },
             onClickProperty = onClickProperty,

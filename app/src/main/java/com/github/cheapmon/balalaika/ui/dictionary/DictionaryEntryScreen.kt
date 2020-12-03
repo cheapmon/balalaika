@@ -33,6 +33,7 @@ import com.github.cheapmon.balalaika.ui.BalalaikaScaffold
 import com.github.cheapmon.balalaika.util.DarkThemeProvider
 import com.github.cheapmon.balalaika.util.exhaustive
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.onEach
 
 private enum class DictionaryDialogState {
     NONE,
@@ -52,7 +53,9 @@ fun DictionaryEntryScreen(
 ) {
     val viewModel: DictionaryViewModel = viewModel()
 
+    var empty by remember { mutableStateOf(false) }
     val entries = viewModel.dictionaryEntries
+        .onEach { empty = it == null }
         .filterNotNull()
         .collectAsLazyPagingItems()
 
@@ -98,6 +101,7 @@ fun DictionaryEntryScreen(
     ) {
         DictionaryEntryList(
             entries = entries,
+            isEmpty = empty,
             onClickBase = onClickBase,
             onBookmark = onBookmark,
             onClickProperty = onClickProperty,

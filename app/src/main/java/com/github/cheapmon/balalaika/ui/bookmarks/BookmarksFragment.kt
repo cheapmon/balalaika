@@ -15,15 +15,25 @@
  */
 package com.github.cheapmon.balalaika.ui.bookmarks
 
+import android.content.Intent
+import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.github.cheapmon.balalaika.components.emptyPropertyAction
+import com.github.cheapmon.balalaika.R
+import com.github.cheapmon.balalaika.model.DataCategory
 import com.github.cheapmon.balalaika.model.DictionaryEntry
+import com.github.cheapmon.balalaika.model.Property
+import com.github.cheapmon.balalaika.model.SearchRestriction
+import com.github.cheapmon.balalaika.util.exhaustive
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -36,6 +46,8 @@ import dagger.hilt.android.AndroidEntryPoint
  */
 @AndroidEntryPoint
 class BookmarksFragment : Fragment() {
+    private val viewModel: DefaultBookmarksViewModel by viewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -44,17 +56,71 @@ class BookmarksFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 BookmarksScreen(
+                    viewModel = viewModel,
                     navController = findNavController(),
-                    onClickBase = ::onClickEntry,
-                    onClickProperty = emptyPropertyAction() // TODO: Same as DictionaryFragment
+                    onClickBase = ::onClickBaseButton,
+                    onClickProperty = ::onClickProperty
                 )
             }
         }
     }
 
-    // TODO: Open search
-    private fun onClickEntry(entry: DictionaryEntry) {
-        val directions = BookmarksFragmentDirections.actionNavBookmarksToNavHome(entry)
+    /** Go to base of a lexeme */
+    private fun onClickBaseButton(entry: DictionaryEntry) {
+        search(entry.representation)
+    }
+
+    /** Actions when a property is clicked */
+    private fun onClickProperty(category: DataCategory, property: Property, text: String) {
+        when (property) {
+            is Property.Audio -> onAudio(property)
+            is Property.Example -> {
+            }
+            is Property.Morphology -> searchWithRestriction(text, category)
+            is Property.Plain -> searchWithRestriction(text, category)
+            is Property.Reference -> onReference(property)
+            is Property.Simple -> searchWithRestriction(text, category)
+            is Property.Url -> onUrl(property)
+            is Property.Wordnet -> onWordnet(property)
+        }.exhaustive
+    }
+
+    /** Play audio file */
+    private fun onAudio(property: Property.Audio) {
+        try {
+            MediaPlayer.create(context, property.fileName.toUri()).apply {
+                start()
+                setOnCompletionListener { release() }
+            }
+        } catch (ex: Exception) {
+            Snackbar.make(
+                requireView(),
+                R.string.dictionary_playback_failed,
+                Snackbar.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    private fun onReference(property: Property.Reference) {
+        search(property.entry.representation)
+    }
+
+    private fun onUrl(property: Property.Url) {
+        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(property.url)))
+    }
+
+    private fun onWordnet(property: Property.Wordnet) {
+        viewModel.setWordnetParam(property)
+    }
+
+    private fun search(item: String) {
+        val directions = BookmarksFragmentDirections.bookmarksToSearch(query = item)
+        findNavController().navigate(directions)
+    }
+
+    private fun searchWithRestriction(item: String, category: DataCategory) {
+        val restriction = SearchRestriction(category, item)
+        val directions = BookmarksFragmentDirections.bookmarksToSearch(restriction)
         findNavController().navigate(directions)
     }
 }
