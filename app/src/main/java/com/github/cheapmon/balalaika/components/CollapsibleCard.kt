@@ -45,7 +45,7 @@ fun CollapsibleCard(
 ) {
     var state by remember(id) { mutableStateOf(initialState) }
 
-    val rotationX = FloatPropKey()
+    val rotationX = FloatPropKey(label = "rotationX")
     val transitionState = createTransition(state = state, rotationX = rotationX)
 
     Card(modifier = Modifier.padding(vertical = itemSpacing).fillMaxWidth().then(modifier)) {
