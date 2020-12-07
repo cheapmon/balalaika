@@ -31,12 +31,6 @@ Without Android Studio, follow these steps:
     adb install -t ./app/build/outputs/apk/debug/app-debug.apk
     ```
 
-## Tooling
-Balalaika provides the following tools:
-- `validate` checks input files for correctness
-
-For further documentation, check the respective READMEs
-
 ## Screenshots
 <img src="screenshot/xhosa-screen1.png?raw=true" alt="Dictionary" width="250"><img src="screenshot/xhosa-screen2.png?raw=true" alt="Additional functions" width="250"><img src="screenshot/xhosa-screen3.png?raw=true" alt="Preferences" width="250">
 
