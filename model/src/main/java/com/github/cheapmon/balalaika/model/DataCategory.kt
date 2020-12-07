@@ -18,6 +18,32 @@ package com.github.cheapmon.balalaika.model
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
+/**
+ * Data category of a dictionary entry
+ *
+ * A dictionary might hold many different pieces of information, for example:
+ * - Orthographic information
+ * - Part of speech
+ * - Morphology
+ * - Example sentences
+ * - Pronunciation of words
+ *
+ * Additionally, each piece of information might be displayed differently.
+ * Since a lot of languages are only sparsely documented and might require very unique data
+ * categories to represent information, we cannot possibly provide all data categories which might
+ * be used in a dictionary context.
+ *
+ * Instead of data category _type_, we simply differentiate based on data category _presentation_.
+ * This kind of differentiation enables a flexible and wide-spread language support, which is one
+ * of the main goals of this project.
+ *
+ * @property id Unique identifier of this data category
+ * @property name Display name of this data category
+ * @property iconName File name of the icon for this property used in the user interface
+ * @property sequence Order in which the data categories are shown
+ *
+ * @see Property
+ */
 @Parcelize
 data class DataCategory(
     val id: String,

@@ -18,28 +18,75 @@ package com.github.cheapmon.balalaika.model
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
+/**
+ * Property of a [dictionary entry][DictionaryEntry] based on a [data category][DataCategory]
+ */
 sealed class Property : Parcelable {
+    /**
+     * Property for audio files associated with a [dictionary entry][DictionaryEntry]
+     *
+     * @property name Display name of this property
+     * @property fileName Name of audio file associated with this property
+     */
     @Parcelize
     data class Audio(val name: String, val fileName: String) : Property()
 
+    /**
+     * Property for example sentences
+     *
+     * @property name Example definition
+     * @property content Example sentence for the [definition][name]
+     */
     @Parcelize
     data class Example(val name: String, val content: String) : Property()
 
+    /**
+     * Property for morphological information
+     *
+     * @property parts Morphological parts of an orthographic representation
+     */
     @Parcelize
     data class Morphology(val parts: List<String>) : Property()
 
+    /**
+     * Plain-text property value
+     *
+     * @property value Property value
+     */
     @Parcelize
     data class Plain(val value: String) : Property()
 
+    /**
+     * Property for in-dictionary reference
+     *
+     * @property entry Dictionary entry this property points to
+     */
     @Parcelize
     data class Reference(val entry: DictionaryEntry) : Property()
 
+    /**
+     * Simple key-value property
+     *
+     * @property value Property value
+     */
     @Parcelize
     data class Simple(val value: String) : Property()
 
+    /**
+     * Property for hyperlinks
+     *
+     * @property name Display name of this hyperlink
+     * @property url Hyperlink
+     */
     @Parcelize
     data class Url(val name: String, val url: String) : Property()
 
+    /**
+     * Property for additional information from the Wordnet project
+     *
+     * @property name Display name of this value
+     * @property url Wordnet-URL to fetch additional information from
+     */
     @Parcelize
     data class Wordnet(val name: String, val url: String) : Property()
 }

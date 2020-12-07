@@ -15,6 +15,20 @@
  */
 package com.github.cheapmon.balalaika.model
 
+/**
+ * Limited view on dictionary entries
+ *
+ * A dictionary view essentially gives a name to a subset of all available
+ * [data categories][DataCategory] with a certain task in mind. Selecting a dictionary view in the
+ * user interface results in only a certain number of properties being shown. For example, for
+ * certain translation tasks it may suffice to only show the lexeme and the translation itself.
+ *
+ * @property id Unique identifier for this dictionary view
+ * @property name Display name of this dictionary view
+ * @property categories List of data categories included in this dictionary view
+ *
+ * @see DataCategory
+ */
 data class DictionaryView(
     val id: String,
     val name: String,

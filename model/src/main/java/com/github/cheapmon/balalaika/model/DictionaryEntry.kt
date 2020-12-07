@@ -16,9 +16,19 @@
 package com.github.cheapmon.balalaika.model
 
 import android.os.Parcelable
-import java.util.SortedMap
 import kotlinx.android.parcel.Parcelize
+import java.util.*
 
+/**
+ * Full entry in a dictionary, grouped with its base, properties and bookmarks
+ *
+ * @property id Unique identifier of this dictionary entry
+ * @property representation Orthographic representation of this dictionary entry
+ * @property base (Optional) base of this dictionary entry
+ * @property properties Properties associated with this dictionary entry, sorted by the data
+ *                      category they belong to
+ * @property bookmark (Optional) bookmark
+ */
 @Parcelize
 data class DictionaryEntry(
     val id: String,

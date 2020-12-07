@@ -18,6 +18,17 @@ package com.github.cheapmon.balalaika.model
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
+/**
+ * Restriction on a search query
+ *
+ * The search query will only be executed on dictionary entries where [category] has a certain
+ * [value][text].
+ *
+ * @property category Data category
+ * @property text Restriction text
+ *
+ * @see HistoryItem
+ */
 @Parcelize
 data class SearchRestriction(
     val category: DataCategory,

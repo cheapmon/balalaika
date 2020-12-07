@@ -18,7 +18,22 @@ package com.github.cheapmon.balalaika.model
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
+/**
+ * Bookmark metadata for a [dictionary entry][DictionaryEntry]
+ *
+ * _Note_: Since this might be expanded in the future, we define bookmarks in a separate class.
+ */
 @Parcelize
 class Bookmark : Parcelable {
+    /**
+     * Return `true` if this bookmark is equal to `other`
+     *
+     * _Note_: Since bookmark has no associated properties, equality is trivial.
+     */
     override fun equals(other: Any?): Boolean = other is Bookmark
+
+    /**
+     * Hashcode of this bookmark
+     */
+    override fun hashCode(): Int = javaClass.hashCode()
 }

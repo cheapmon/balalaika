@@ -15,6 +15,13 @@
  */
 package com.github.cheapmon.balalaika.model
 
+/**
+ * Item in search history
+ *
+ * @property id Unique identifier of this history item
+ * @property query Search query
+ * @property restriction (Optional) restriction on [query]
+ */
 data class HistoryItem(
     val id: Long = 0,
     val query: String,

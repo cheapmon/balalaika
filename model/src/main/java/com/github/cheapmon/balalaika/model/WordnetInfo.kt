@@ -15,26 +15,35 @@
  */
 package com.github.cheapmon.balalaika.model
 
-/** Information about a word */
+/**
+ * Information about a word from the Wordnet project
+ *
+ * @property entries List of related lexical entries associated with a word
+ * @property definitions List of definitions for a word
+ */
 data class WordnetInfo(
-    /** List of related words */
     val entries: List<LexicalEntry>,
-    /** List of definitions */
     val definitions: List<Definition>
 ) {
-    /** Related word */
+    /**
+     * Related word
+     *
+     * @property representation Representation of the word
+     * @property partOfSpeech Part-of-speech of the word
+     */
     data class LexicalEntry(
-        /** Written representation of this word */
         val representation: String,
-        /** Part of speech of this word (e.g. noun) */
         val partOfSpeech: String
     )
 
-    /** Definition of a word */
+    /**
+     * Definition of a word
+     *
+     * @property explanation Explanation text of the definition
+     * @property examples List of example sentences for the definition
+     */
     data class Definition(
-        /** Explanation */
         val explanation: String,
-        /** Example sentences */
         val examples: List<String>
     )
 }
