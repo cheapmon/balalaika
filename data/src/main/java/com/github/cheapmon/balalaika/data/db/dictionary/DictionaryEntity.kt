@@ -18,20 +18,10 @@ package com.github.cheapmon.balalaika.data.db.dictionary
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.github.cheapmon.balalaika.model.Dictionary
 
 /**
- * Description and metadata for a dictionary
- *
- * Encapsulates information about a dictionary from any source in the user interface. Instances of
- * this class are provided by some local or remote sources and saved into the
- * database.
- *
- * Dictionaries are identified by their [id], which must be unique across all sources, local or
- * remote. Using this approach, we enable dictionaries to be included in the application bundle
- * and to be updated from a remote source.
- *
- * Invalidation of dictionaries is achieved via the [version] number. There is currently no way
- * implemented to compare the contents of two dictionaries with the same [id].
+ * Database representation for a [dictionary][Dictionary]
  */
 @Entity(tableName = "dictionaries")
 internal data class DictionaryEntity(

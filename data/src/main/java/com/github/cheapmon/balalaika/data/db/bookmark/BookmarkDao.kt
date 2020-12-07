@@ -20,8 +20,10 @@ import androidx.room.Insert
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
+/** Database link for bookmarks */
 @Dao
 internal interface BookmarkDao {
+    /** Find a bookmark for a [lexeme][lexemeId] in a [dictionary][dictionaryId] */
     @Query(
         """SELECT * FROM bookmarks
                 WHERE dictionary_id = (:dictionaryId) AND lexeme_id = (:lexemeId)
@@ -29,24 +31,29 @@ internal interface BookmarkDao {
     )
     suspend fun findById(dictionaryId: String, lexemeId: String): BookmarkEntity?
 
+    /** Get all bookmarks in a [dictionary][dictionaryId] */
     @Query("SELECT * FROM bookmarks WHERE dictionary_id = (:dictionaryId)")
     fun getAll(dictionaryId: String): Flow<List<BookmarkEntity>>
 
+    /** Insert a bookmark for a lexeme */
     @Insert
     suspend fun insert(bookmark: BookmarkEntity)
 
+    /** Remove a bookmark for a [lexeme][lexemeId] in a [dictionary][dictionaryId] */
     @Query(
         """DELETE FROM bookmarks
                 WHERE lexeme_id = (:lexemeId) AND dictionary_id = (:dictionaryId)"""
     )
     suspend fun remove(dictionaryId: String, lexemeId: String)
 
+    /** Remove all bookmarks for a [dictionary][dictionaryId] */
     @Query(
         """DELETE FROM bookmarks
                 WHERE dictionary_id = (:dictionaryId)"""
     )
     suspend fun removeInDictionary(dictionaryId: String)
 
+    /** Total number of bookmarks */
     @Query("SELECT COUNT(*) FROM bookmarks")
     suspend fun count(): Int
 }

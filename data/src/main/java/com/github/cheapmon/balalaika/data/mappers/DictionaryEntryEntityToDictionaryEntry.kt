@@ -8,12 +8,20 @@ import com.github.cheapmon.balalaika.model.DictionaryEntry
 import javax.inject.Inject
 import javax.inject.Singleton
 
+/**
+ * Map from a [DictionaryEntryEntity] to a [DictionaryEntry]
+ *
+ * @property dictionaryEntryDao Database link
+ * @property toDataCategory Mapper for data categories
+ * @property toProperty Mapper for properties
+ */
 @Singleton
 internal class DictionaryEntryEntityToDictionaryEntry @Inject constructor(
     private val dictionaryEntryDao: DictionaryEntryDao,
     private val toDataCategory: CategoryEntityToDataCategory,
     private val toProperty: PropertyEntityToProperty
 ) : DictionaryEntryEntityToDictionaryEntryMapper {
+    /** @suppress */
     override suspend operator fun invoke(
         entry: DictionaryEntryEntity,
         view: DictionaryViewWithCategories

@@ -9,10 +9,16 @@ import com.github.cheapmon.balalaika.model.Property
 import javax.inject.Inject
 import javax.inject.Singleton
 
+/**
+ * Map from a [PropertyEntity] to a [Property]
+ *
+ * @property dictionaryEntryDao Database link for dictionary entries
+ */
 @Singleton
 internal class PropertyEntityToProperty @Inject constructor(
     private val dictionaryEntryDao: DictionaryEntryDao
 ) {
+    /** @suppress */
     suspend operator fun invoke(
         property: PropertyEntity,
         category: CategoryEntity,
@@ -47,6 +53,7 @@ internal class PropertyEntityToProperty @Inject constructor(
         }
     }
 
+    /** @suppress */
     private fun extractNameAndValue(input: String): Pair<String, String>? {
         val parts = input.split(";;;")
         val name = parts.getOrNull(0)

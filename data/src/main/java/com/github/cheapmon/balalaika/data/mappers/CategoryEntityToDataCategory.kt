@@ -20,8 +20,13 @@ import com.github.cheapmon.balalaika.model.DataCategory
 import javax.inject.Inject
 import javax.inject.Singleton
 
+/**
+ * Map from a [CategoryEntity] to a [DataCategory]
+ */
 @Singleton
-internal class CategoryEntityToDataCategory @Inject constructor() : Mapper<CategoryEntity, DataCategory> {
+internal class CategoryEntityToDataCategory @Inject constructor() :
+    Mapper<CategoryEntity, DataCategory> {
+    /** @suppress */
     override suspend fun invoke(from: CategoryEntity): DataCategory = DataCategory(
         id = from.id,
         name = from.name,

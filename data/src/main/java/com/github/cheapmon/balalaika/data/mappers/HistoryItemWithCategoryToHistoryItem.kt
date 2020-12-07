@@ -21,10 +21,16 @@ import com.github.cheapmon.balalaika.model.SearchRestriction
 import javax.inject.Inject
 import javax.inject.Singleton
 
+/**
+ * Map from a [HistoryItemWithCategory] to a [HistoryItem]
+ *
+ * @property mapper Mapper for data categories
+ */
 @Singleton
 internal class HistoryItemWithCategoryToHistoryItem @Inject constructor(
     private val mapper: CategoryEntityToDataCategory
 ) : Mapper<HistoryItemWithCategory, HistoryItem> {
+    /** @suppress */
     override suspend operator fun invoke(from: HistoryItemWithCategory): HistoryItem {
         val searchRestriction =
             if (from.category != null && from.historyItem.restriction != null) {

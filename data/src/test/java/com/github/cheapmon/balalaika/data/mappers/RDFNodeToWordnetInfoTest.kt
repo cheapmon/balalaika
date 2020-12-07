@@ -15,7 +15,6 @@
  */
 package com.github.cheapmon.balalaika.data.mappers
 
-import com.github.cheapmon.balalaika.data.mappers.RDFNodeToWordnetInfo
 import com.github.cheapmon.balalaika.data.repositories.wordnet.RDFNode
 import com.github.cheapmon.balalaika.data.repositories.wordnet.RDFNode.*
 import com.github.cheapmon.balalaika.model.WordnetInfo

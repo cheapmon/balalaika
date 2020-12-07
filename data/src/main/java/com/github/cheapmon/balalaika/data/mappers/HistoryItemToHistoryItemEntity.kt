@@ -21,6 +21,7 @@ import com.github.cheapmon.balalaika.model.InstalledDictionary
 import javax.inject.Inject
 import javax.inject.Singleton
 
+/** Map from a [HistoryItem] to a [HistoryItemEntity] */
 @Singleton
 internal class HistoryItemToHistoryItemEntity @Inject constructor() {
     operator fun invoke(item: HistoryItem, dictionary: InstalledDictionary): HistoryItemEntity =

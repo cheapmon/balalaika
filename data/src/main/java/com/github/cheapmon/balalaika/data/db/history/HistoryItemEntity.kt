@@ -15,19 +15,13 @@
  */
 package com.github.cheapmon.balalaika.data.db.history
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.Index
-import androidx.room.PrimaryKey
+import androidx.room.*
 import com.github.cheapmon.balalaika.data.db.category.CategoryEntity
 import com.github.cheapmon.balalaika.data.db.dictionary.DictionaryEntity
+import com.github.cheapmon.balalaika.model.HistoryItem
 
 /**
- * Item in search history
- *
- * An item consists of a [query] and an optional restriction (fields [categoryId] and
- * [restriction]).
+ * Database representation of a [history item][HistoryItem]
  */
 @Entity(
     tableName = "search_history",

@@ -21,13 +21,14 @@ import androidx.datastore.Serializer
 import androidx.datastore.createDataStore
 import com.github.cheapmon.balalaika.data.UserPreferences
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import java.io.InputStream
 import java.io.OutputStream
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 
+/** User preferences storage using Jetpack DataStore */
 @Singleton
 internal class DataStoreStorage @Inject constructor(
     @ApplicationContext context: Context

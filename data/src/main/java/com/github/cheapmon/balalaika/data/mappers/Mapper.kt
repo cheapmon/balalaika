@@ -15,6 +15,8 @@
  */
 package com.github.cheapmon.balalaika.data.mappers
 
+/** Converter from [A] to [B] */
 internal interface Mapper<A : Any, B : Any> {
+    /** @suppress */
     suspend operator fun invoke(from: A): B
 }

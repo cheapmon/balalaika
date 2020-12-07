@@ -20,8 +20,13 @@ import com.github.cheapmon.balalaika.model.Dictionary
 import javax.inject.Inject
 import javax.inject.Singleton
 
+/**
+ * Map from a [DictionaryEntity] to a [Dictionary]
+ */
 @Singleton
-internal class DictionaryEntityToDictionary @Inject constructor() : Mapper<DictionaryEntity, Dictionary> {
+internal class DictionaryEntityToDictionary @Inject constructor() :
+    Mapper<DictionaryEntity, Dictionary> {
+    /** @suppress */
     override suspend operator fun invoke(from: DictionaryEntity): Dictionary = Dictionary(
         id = from.id,
         version = from.version,

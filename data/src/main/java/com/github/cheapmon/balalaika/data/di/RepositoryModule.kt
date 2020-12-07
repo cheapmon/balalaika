@@ -7,6 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 
+/** Repository dependency injection module */
 @Module
 @InstallIn(ApplicationComponent::class)
 internal class RepositoryModule {

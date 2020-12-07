@@ -20,28 +20,16 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import com.github.cheapmon.balalaika.data.db.dictionary.DictionaryEntity
+import com.github.cheapmon.balalaika.model.DataCategory
 
 /**
- * Data category of a dictionary entry
+ * Database representation of a [data category][DataCategory]
  *
- * A dictionary might hold many different pieces of information, for example:
- * - Orthographic information
- * - Part of speech
- * - Morphology
- * - Example sentences
- * - Pronunciation of words
+ * Differentiation is done through the [widget] property. For example, pieces of information which
+ * do not represent the same type of data, but share a common presentation will have the same
+ * [WidgetType], but not the same [CategoryEntity].
  *
- * Additionally, each piece of information might be displayed differently.
- * Since a lot of languages are only sparsely documented and might require very unique data
- * categories to represent information, we cannot possibly provide all data categories which might
- * be used in a dictionary context.
- *
- * Instead of data category _type_, we simply differentiate based on data category _presentation_.
- * This is done through the [widget] property. For example, pieces of information which do not
- * represent the same type of data, but share a common presentation will have the same [WidgetType],
- * but not the same [CategoryEntity]. This kind of differentiation enables a flexible and wide-spread
- * language support, which is one of the main goals of this project.
- *
+ * @see DataCategory
  * @see WidgetType
  */
 @Entity(

@@ -21,6 +21,14 @@ import com.github.cheapmon.balalaika.data.db.category.CategoryEntity
 import com.github.cheapmon.balalaika.data.db.view.DictionaryViewEntity
 import com.github.cheapmon.balalaika.data.db.view.DictionaryViewWithCategories
 
+/**
+ * [Dictionary configuration][DictionaryConfig] linked with the [sort category][category] and
+ * [dictionary view][view]
+ *
+ * @property config Dictionary config
+ * @property category Category associated with this [config]
+ * @property view Dictionary view associated with this [config]
+ */
 internal data class DictionaryConfigWithRelations(
     @Embedded val config: DictionaryConfig,
     @Relation(

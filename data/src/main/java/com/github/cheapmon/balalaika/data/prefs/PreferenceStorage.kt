@@ -17,8 +17,11 @@ package com.github.cheapmon.balalaika.data.prefs
 
 import kotlinx.coroutines.flow.Flow
 
+/** Storage for user preferences */
 internal interface PreferenceStorage {
+    /** Currently opened dictionary */
     val openDictionary: Flow<String?>
 
+    /** Set open dictionary */
     suspend fun setOpenDictionary(dictionaryId: String?)
 }

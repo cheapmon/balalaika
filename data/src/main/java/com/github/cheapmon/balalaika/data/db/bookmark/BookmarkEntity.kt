@@ -15,14 +15,20 @@
  */
 package com.github.cheapmon.balalaika.data.db.bookmark
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.Index
-import androidx.room.PrimaryKey
+import androidx.room.*
 import com.github.cheapmon.balalaika.data.db.dictionary.DictionaryEntity
 import com.github.cheapmon.balalaika.data.db.lexeme.LexemeEntity
+import com.github.cheapmon.balalaika.model.Bookmark
 
+/**
+ * Database representation of a [bookmark][Bookmark]
+ *
+ * @property id Unique identifier of this bookmark entity
+ * @property dictionaryId Unique identifier of the dictionary this bookmark belongs to
+ * @property lexemeId Unique identifier of the lexeme this bookmark belongs to
+ *
+ * @see Bookmark
+ */
 @Entity(
     foreignKeys = [
         ForeignKey(

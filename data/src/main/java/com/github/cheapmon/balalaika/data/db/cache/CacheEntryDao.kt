@@ -42,6 +42,7 @@ internal interface CacheEntryDao {
     @Query("DELETE FROM cache_entries")
     suspend fun clear()
 
+    /** Total number of cache entries */
     @Query("SELECT COUNT(*) FROM cache_entries")
     suspend fun count(): Int
 }
