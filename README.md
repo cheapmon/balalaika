@@ -11,7 +11,7 @@ Without Android Studio, follow these steps:
     - Extract the `.zip` file
     - Download and install by running
         ```
-        ./tools/bin/sdkmanager --install "platforms;android-29" --sdk_root=$HOME/android-sdk
+        ./tools/bin/sdkmanager --install "platforms;android-30" --sdk_root=$HOME/android-sdk
         ```
     - Accept the License Agreement by typing `y`
 3. Clone the repository
@@ -35,6 +35,9 @@ Without Android Studio, follow these steps:
 <img src="screenshot/xhosa-screen1.png?raw=true" alt="Dictionary" width="250"><img src="screenshot/xhosa-screen2.png?raw=true" alt="Additional functions" width="250"><img src="screenshot/xhosa-screen3.png?raw=true" alt="Preferences" width="250">
 
 ## Resources
+Details about the project's structure and the CSV data model can be found in
+[`PROJECT.md`](PROJECT.md).
+
 Balalaika was conceptualized and implemented as part of my master's thesis and is still in active development.
 For additional information, please refer to the following sources:
 - _Sonja Bosch, Thomas Eckart, Bettina Klimek, Dirk Goldhahn and Uwe Quasthoff (2018): Preparation and Usage of Xhosa Lexicographical Data for a Multilingual, Federated Environment at 11th Edition of the Language Resources and Evaluation Conference LREC 2018, Miyazaki (Japan)._
