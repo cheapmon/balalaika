@@ -114,7 +114,12 @@ private fun SearchHeader(
                     onQuerySubmit(query, restriction)
                 },
                 label = { Text(text = stringResource(R.string.search_query)) },
-                maxLines = 1
+                maxLines = 1,
+                trailingIcon = {
+                    IconButton(onClick = { onQueryChange(null) }) {
+                        Icon(asset = Icons.Default.Close)
+                    }
+                }
             )
             if (restriction != null) {
                 TextButton(onClick = onClickRestriction) {
