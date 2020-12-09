@@ -1,14 +1,9 @@
 package com.github.cheapmon.balalaika.ui.selection
 
 import androidx.compose.animation.Crossfade
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.LinearProgressIndicator
-import androidx.compose.material.Tab
-import androidx.compose.material.TabRow
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CloudDownload
 import androidx.compose.material.icons.filled.LibraryBooks
@@ -21,6 +16,7 @@ import androidx.compose.ui.viewinterop.viewModel
 import androidx.navigation.NavController
 import com.github.cheapmon.balalaika.MainViewModel
 import com.github.cheapmon.balalaika.R
+import com.github.cheapmon.balalaika.model.Dictionary
 import com.github.cheapmon.balalaika.model.DownloadableDictionary
 import com.github.cheapmon.balalaika.model.InstalledDictionary
 import com.github.cheapmon.balalaika.model.SimpleDictionary
@@ -63,11 +59,12 @@ fun DictionaryScreen(
 
     val onOpen: (InstalledDictionary) -> Unit = { activityViewModel.openDictionary(it) }
     val onClose: (InstalledDictionary) -> Unit = { activityViewModel.closeDictionary() }
-    val onAdd: (DownloadableDictionary) -> Unit = {
+    val onAdd: (DownloadableDictionary) -> Unit = { dic ->
         scope.launch {
-            activityViewModel.installDictionary(it)
+            activityViewModel.installDictionary(dic)
                 .onStart { progress = true }
                 .onCompletion {
+                    activityViewModel.openDictionary(dic.installed())
                     progress = false
                     viewModel.refresh()
                 }.collect()
@@ -159,3 +156,15 @@ private fun Body(
         }.exhaustive
     }
 }
+
+private fun DownloadableDictionary.installed(): InstalledDictionary = InstalledDictionary(
+    dictionary = Dictionary(
+        id = id,
+        version = version,
+        name = name,
+        summary = summary,
+        authors = authors,
+        additionalInfo = additionalInfo
+    ),
+    isOpened = false
+)
