@@ -16,15 +16,10 @@
 package com.github.cheapmon.balalaika.ui.selection
 
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import com.github.cheapmon.balalaika.data.repositories.DictionaryRepository
 import com.github.cheapmon.balalaika.model.SimpleDictionary
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 
 /** View model for [SelectionFragment] */
 class SelectionViewModel @ViewModelInject constructor(
@@ -33,16 +28,14 @@ class SelectionViewModel @ViewModelInject constructor(
     private val refresh = MutableStateFlow(false)
 
     /** All installed dictionaries */
-    val installedDictionaries: LiveData<List<SimpleDictionary>> =
+    val installedDictionaries: Flow<List<SimpleDictionary>> =
         combine(refresh, dictionaries.getOpenDictionary()) { _, d -> d }
             .flatMapLatest { dictionaries.getInstalledDictionaries(it) }
             .map { list -> list.sortedBy { !it.isOpened } }
-            .asLiveData()
 
     /** All downloadable dictionaries */
-    val downloadableDictionaries: LiveData<List<SimpleDictionary>> =
+    val downloadableDictionaries: Flow<List<SimpleDictionary>> =
         refresh.flatMapLatest { dictionaries.getDownloadableDictionaries() }
-            .asLiveData()
 
     fun refresh() {
         refresh.value = !refresh.value

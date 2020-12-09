@@ -8,7 +8,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CloudDownload
 import androidx.compose.material.icons.filled.LibraryBooks
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.VectorAsset
 import androidx.compose.ui.res.stringResource
@@ -24,6 +23,7 @@ import com.github.cheapmon.balalaika.ui.BalalaikaScaffold
 import com.github.cheapmon.balalaika.util.exhaustive
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
@@ -51,9 +51,14 @@ fun DictionaryScreen(
 
     var selectedTab: DictionaryTab by remember { mutableStateOf(DictionaryTab.Library) }
     var progress: Boolean by remember { mutableStateOf(false) }
+    var listProgress: Boolean by remember { mutableStateOf(false) }
 
-    val installedDictionaries by viewModel.installedDictionaries.observeAsState()
-    val downloadableDictionaries by viewModel.downloadableDictionaries.observeAsState()
+    val installedDictionaries by viewModel.installedDictionaries
+        .collectAsState(initial = emptyList())
+    val downloadableDictionaries by viewModel.downloadableDictionaries
+        .onStart { listProgress = true }
+        .onEach { listProgress = false }
+        .collectAsState(initial = emptyList())
 
     val scope = rememberCoroutineScope()
 
@@ -86,7 +91,7 @@ fun DictionaryScreen(
         title = stringResource(id = R.string.menu_selection)
     ) {
         Column {
-            if (progress) {
+            if (progress || listProgress) {
                 LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             }
             Tabs(
