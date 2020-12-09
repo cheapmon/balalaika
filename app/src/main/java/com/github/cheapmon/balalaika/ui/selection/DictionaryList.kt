@@ -1,10 +1,10 @@
 package com.github.cheapmon.balalaika.ui.selection
 
-import androidx.compose.material.Text
 import androidx.compose.foundation.layout.ExperimentalLayout
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.lazy.LazyColumnFor
 import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LibraryBooks
@@ -22,6 +22,7 @@ import com.github.cheapmon.balalaika.model.InstalledDictionary
 import com.github.cheapmon.balalaika.model.SimpleDictionary
 import com.github.cheapmon.balalaika.theme.BalalaikaTheme
 import com.github.cheapmon.balalaika.theme.DangerTheme
+import com.github.cheapmon.balalaika.theme.HighlightTheme
 import com.github.cheapmon.balalaika.theme.itemSpacing
 import com.github.cheapmon.balalaika.util.DarkThemeProvider
 import com.github.cheapmon.balalaika.util.exhaustive
@@ -81,16 +82,31 @@ private fun InstalledDictionaryCard(
     onClose: (InstalledDictionary) -> Unit = {},
     onRemove: (InstalledDictionary) -> Unit = {}
 ) {
-    DictionaryCard(
-        dictionary = dictionary,
-        modifier = modifier
-    ) {
-        ReadActions(
+    val card = @Composable {
+        DictionaryCard(
             dictionary = dictionary,
-            onOpen = onOpen,
-            onClose = onClose,
-            onRemove = onRemove
-        )
+            modifier = modifier
+        ) {
+            ReadActions(
+                dictionary = dictionary,
+                onOpen = onOpen,
+                onClose = onClose,
+                onRemove = onRemove,
+                dangerTheme = {
+                    if (dictionary.isOpened) {
+                        it()
+                    } else {
+                        DangerTheme(content = it)
+                    }
+                }
+            )
+        }
+    }
+
+    if (dictionary.isOpened) {
+        HighlightTheme(content = card)
+    } else {
+        BalalaikaTheme(content = card)
     }
 }
 
@@ -113,7 +129,8 @@ private fun ReadActions(
     dictionary: InstalledDictionary,
     onOpen: (InstalledDictionary) -> Unit = {},
     onClose: (InstalledDictionary) -> Unit = {},
-    onRemove: (InstalledDictionary) -> Unit = {}
+    onRemove: (InstalledDictionary) -> Unit = {},
+    dangerTheme: @Composable (@Composable () -> Unit) -> Unit = { DangerTheme(content = it) }
 ) {
     FlowRow(mainAxisSpacing = itemSpacing) {
         if (dictionary.isOpened) {
@@ -131,7 +148,7 @@ private fun ReadActions(
                 )
             }
         }
-        DangerTheme {
+        dangerTheme {
             TextButton(onClick = { onRemove(dictionary) }) {
                 Text(
                     text = stringResource(id = R.string.selection_action_remove)

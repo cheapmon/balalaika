@@ -1,6 +1,5 @@
 package com.github.cheapmon.balalaika.theme
 
-import androidx.compose.material.Text
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -48,6 +47,30 @@ fun DangerTheme(
         darkColors.copy(primary = red200)
     } else {
         lightColors.copy(primary = red700)
+    }
+
+    BalalaikaTheme(darkTheme = darkTheme, colors = colors, content = content)
+}
+
+@Composable
+fun HighlightTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
+    val colors = if (darkTheme) {
+        darkColors.copy(
+            primary = darkColors.surface,
+            surface = darkColors.primary,
+            onPrimary = darkColors.onSurface,
+            onSurface = darkColors.onPrimary
+        )
+    } else {
+        lightColors.copy(
+            primary = lightColors.surface,
+            surface = lightColors.primary,
+            onPrimary = lightColors.onSurface,
+            onSurface = lightColors.onPrimary
+        )
     }
 
     BalalaikaTheme(darkTheme = darkTheme, colors = colors, content = content)
