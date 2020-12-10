@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.tooling.preview.PreviewParameter
@@ -30,8 +31,14 @@ fun BalalaikaTheme(
     colors: Colors? = null,
     content: @Composable () -> Unit
 ) {
+    val finalColors = if (isSecretActive) {
+        secretColors
+    } else {
+        colors ?: if (darkTheme) darkColors else lightColors
+    }
+
     MaterialTheme(
-        colors = colors ?: if (darkTheme) darkColors else lightColors,
+        colors = finalColors,
         typography = typography,
         shapes = shapes,
         content = content
@@ -75,6 +82,24 @@ fun HighlightTheme(
 
     BalalaikaTheme(darkTheme = darkTheme, colors = colors, content = content)
 }
+
+val secretColors = Colors(
+    primary = Color(0xfffa5788),
+    primaryVariant = Color(0xff8c0032),
+    secondary = Color(0xffae52d4),
+    secondaryVariant = Color(0xff4a0072),
+    background = Color(0xfffafafa),
+    surface = Color(0xfffafafa),
+    error = Color(0xffd32f2f),
+    onPrimary = Color(0xfffafafa),
+    onSecondary = Color(0xfffafafa),
+    onBackground = Color(0xff263238),
+    onSurface = Color(0xff263238),
+    onError = Color(0xfffafafa),
+    isLight = true
+)
+
+var isSecretActive = false
 
 @Preview
 @Composable

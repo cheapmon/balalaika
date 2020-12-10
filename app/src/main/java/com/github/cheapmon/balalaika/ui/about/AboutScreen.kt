@@ -2,7 +2,6 @@ package com.github.cheapmon.balalaika.ui.about
 
 import android.net.Uri
 import androidx.annotation.StringRes
-import androidx.compose.material.Text
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.preferredSize
@@ -10,9 +9,10 @@ import androidx.compose.foundation.layout.preferredWidth
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.ListItem
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.VectorAsset
 import androidx.compose.ui.platform.ContextAmbient
@@ -21,6 +21,7 @@ import androidx.navigation.NavController
 import androidx.ui.tooling.preview.Preview
 import com.github.cheapmon.balalaika.R
 import com.github.cheapmon.balalaika.theme.MaterialColors
+import com.github.cheapmon.balalaika.theme.isSecretActive
 import com.github.cheapmon.balalaika.theme.listItemIconSize
 import com.github.cheapmon.balalaika.theme.onSurfaceLight
 import com.github.cheapmon.balalaika.ui.BalalaikaScaffold
@@ -61,6 +62,7 @@ fun AboutScreen(
                 onClick = { onOpenUrl(licenseUrl) }
             )
             Divider()
+            Secret()
         }
     }
 }
@@ -106,6 +108,32 @@ private fun InfoItem(
     ) {
         Text(text = stringResource(id = textId))
     }
+}
+
+@Composable
+private fun Secret() {
+    var count by remember { mutableStateOf(0) }
+
+    EmptyInfoItem()
+    EmptyInfoItem()
+    EmptyInfoItem(
+        enabled = true,
+        onClick = {
+            count++
+            if (count == 7) {
+                isSecretActive = !isSecretActive
+                count = 0
+            }
+        }
+    )
+}
+
+@Composable
+private fun EmptyInfoItem(
+    enabled: Boolean = false,
+    onClick: () -> Unit = {}
+) {
+    ListItem(modifier = Modifier.clickable(onClick = onClick, enabled = enabled)) {}
 }
 
 @Preview(showBackground = true)
